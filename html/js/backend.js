@@ -1,13 +1,13 @@
 var backend = this;
 
-backend.dev = false;
+backend.dev = true;
 
 if(!backend.dev){
 	backend.usuando = "45.32.161.183";
 	//backend.usuando = "localhost";
 }else{
-	backend.usuando = "45.32.160.1";
-	//backend.usuando = "localhost";
+	// backend.usuando = "45.32.160.1";
+	backend.usuando = "192.168.1.6";
 }
 
 backend.conexionEnvio = function (datos,callback){

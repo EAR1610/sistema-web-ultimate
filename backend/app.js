@@ -1,5 +1,5 @@
 var redis = require('redis');
-var dev = false;
+var dev = true;
 
 /*
 Este codigo es el core del sistema
