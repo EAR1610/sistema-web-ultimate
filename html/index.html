@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Engineering Inicio</title>
+    <title>Money Engineering Super Sistemas</title>
 
     <!-- css -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
 	<link rel="shortcut icon" href="img/money_credit.ico.ico" />
-    <link href="assets/animate.css" rel="stylesheet">
+    <link href="assets/css/animate.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 	<link rel="manifest" href="manifest.json">
 	<!-- Toastr style -->
@@ -51,7 +51,7 @@
                     <div align='center'>
 				 <small>.</small>
 			     <h3 class="modal-title-center" id="commercial"style=" color:white;">Money Engineering ® </h3>
-			     <h4 class="modal-title-center" id="commercial"style="color:white;">Enterprise 2021 </h4>
+			     <h4 class="modal-title-center" id="commercial"style="color:white;">SuperSistemas 2023 </h4>
 			    </div>
                 </div>
 
@@ -74,15 +74,7 @@
 					<p class="row">
 						<div class="col-xs-6 col-sm-6 col-md-6" style="cursor:pointer;" onclick="javascript:credict();">
 							<img src="img/credit.png" style="width: 187px;">
-						</div>
-						<br>
-						<div class="col-xs-6 col-sm-6 col-md-6" style="cursor:pointer;" onclick="javascript:zimple();">
-							<img src="img/zimple.png" style="width: 187px;">
-						</div>
-						<br>
-						<div class="col-xs-6 col-sm-6 col-md-6" style="cursor:pointer;" onclick="javascript:store();">
-							<img src="img/store.png" style="width: 187px;">
-						</div>
+						</div>						
 					</p>
 				</div>
 				<div class="modal-footer">
@@ -180,26 +172,23 @@
 				block.arrays = [$("#correo_usuario").val(),$("#pass_usuario").val()];
 				block.obj = {"r":"iniciar_sesion","d":block.arrays};
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
-					var valor = JSON.parse(salida);
+					var valor = JSON.parse(salida);					
 					if(!valor.e){
 						var hoy = moment().format('YYYY-MM-DD');
 						window.sessionStorage.setItem("Money-vars-token",JSON.stringify(valor.d));
 						window.localStorage.setItem("Money-vars-token-dura-"+hoy,JSON.stringify(valor.d));
+						console.log(valor.d[3]);
 						if(valor.d[3]=="0"){
-							location.href = "./panel_root";
+							location.href = "./panel_root"; //SUPER ADMIN
 						}else if(valor.d[3]=="1"){
-							location.href = "./panel_super";
+							location.href = "./panel_super"; //(SOLOCITAR AL SUPERADMIN)
 						}else if(valor.d[3]=="2"){
-							location.href = "./panel_users";
+							location.href = "./panel_users"; //ASESOR
 						}else if(valor.d[3]=="3"){
 							location.href = "./panel_client";
 						}else if(valor.d[3]=="5"){
-                            location.href = "./panel_admin";
-                        }else if(valor.d[3]=="6"){
-                            location.href = "./panel_zimple";
-                        }else if(valor.d[3]=="7"){
-                            location.href = "./panel_store";
-                        }
+                            location.href = "./panel_admin"; //ROL ADMINISTRADOR
+                        } 
 					}else{
 						if(valor.d[1]=="1"){
 							toastr.warning('Esta cuenta No Existe','System notification!');
@@ -225,7 +214,7 @@
 					block.arrays = [$("#correo_usuario").val(),$("#pass_usuario").val(),window.sessionStorage.getItem("Money-vars-indice-perfil")];
 					block.obj = {"r":"registro_cuenta","d":block.arrays};
 					backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
-						var valor = JSON.parse(salida);
+						var valor = JSON.parse(salida);						
 						if(!valor.e){
 							toastr.success('Registrado con exito, el administrador lo habilitará','System notification!');
 							$("#correo_usuario").val("");

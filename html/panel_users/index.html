@@ -142,8 +142,7 @@
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <label>Nacionalidad</label>
                         <select class="form-control m-b" id="pais_selecionadom">
-                            <option value="1">Colombia</option>
-                            <option value="2">Venezuela</option>
+                            <option value="1">Guatemala</option>
                         </select>
                     </div>
 
@@ -158,9 +157,10 @@
                     </div>
 
                     <div class="col-sm-6 col-md-6 col-xs-6" id="cedula_divm">
-                            <div class="form-group"><label>Cedula/Dni</label> <input id="numero_idm" type="text"
-                                                                                     placeholder="Inserte su numero de documento"
-                                                                                     class="form-control"></div>
+                        <div class="form-group"><label>DPI</label> <input id="numero_idm" type="text"
+                            placeholder="Inserte su numero de documento"
+                            class="form-control">
+                        </div>
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12">
@@ -174,9 +174,9 @@
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
                             <div class="form-group"><label>Primer nombre</label> <input id="nombre_id1m"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        class="form-control">
+                                type="text"
+                                placeholder=""
+                                class="form-control">
                             </div>
                         </form>
                     </div>
@@ -184,9 +184,9 @@
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
                             <div class="form-group"><label>Segundo nombre</label> <input id="nombre_id2m"
-                                                                                         type="text"
-                                                                                         placeholder=""
-                                                                                         class="form-control">
+                                type="text"
+                                placeholder=""
+                                class="form-control">
                             </div>
                         </form>
                     </div>
@@ -194,9 +194,9 @@
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
                             <div class="form-group"><label>Primer apellido</label> <input id="apellido_id1m"
-                                                                                          type="text"
-                                                                                          placeholder=""
-                                                                                          class="form-control">
+                                type="text"
+                                placeholder=""
+                                class="form-control">
                             </div>
                         </form>
                     </div>
@@ -204,9 +204,9 @@
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
                             <div class="form-group"><label>Segundo apellido</label> <input id="apellido_id2m"
-                                                                                           type="text"
-                                                                                           placeholder=""
-                                                                                           class="form-control">
+                                type="text"
+                                placeholder=""
+                                class="form-control">
                             </div>
                         </form>
                     </div>
@@ -214,9 +214,9 @@
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
                             <div class="form-group"><label>Dirección</label> <input id="direccion_ubicam"
-                                                                                    type="text"
-                                                                                    placeholder="Inserte la dirección"
-                                                                                    class="form-control"></div>
+                                type="text"
+                                placeholder="Inserte la dirección"
+                                class="form-control"></div>
                         </form>
                     </div>
 
@@ -244,9 +244,10 @@
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
                             <div class="form-group"><label>Telefono fijo</label> <input id="telefono_fijom"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        class="form-control">
+                                type="text"
+                                maxlength="8"
+                                placeholder=""
+                                class="form-control">
                             </div>
                         </form>
                     </div>
@@ -254,9 +255,10 @@
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
                             <div class="form-group"><label>Telefono celular</label> <input id="telefono_celm"
-                                                                                           type="text"
-                                                                                           placeholder=""
-                                                                                           class="form-control">
+                                type="text"
+                                placeholder=""
+                                maxlength="8"
+                                class="form-control">
                             </div>
                         </form>
                     </div>
@@ -264,7 +266,7 @@
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
                             <div class="form-group"><label>Correo electronico</label> <input
-                                    id="correo_electronicom" type="email" placeholder="" class="form-control">
+                                id="correo_electronicom" type="email" placeholder="" class="form-control">
                             </div>
                         </form>
                     </div>
@@ -350,7 +352,7 @@
                     <form role="search" class="navbar-form-custom">
                         
                         <div class="form-group pull-right">
-                            <p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px;margin-top: 0px;border-radius: 67px 36% 3% -9%; height: 34px; background: #448ed300; position: absolute;/: ;bottom: 9px;"/>
+                            <p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px;margin-top: 0px;border-radius: 67px 36% 3% -9%; height: 34px; background: #448ed300; position: absolute; bottom: 9px;"/>
                         </div>
                     </form>
                 </center>
@@ -384,14 +386,14 @@
                             </div>
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
-                                <label>Cedula del cliente</label>
-                                <div class="input-group"><input placeholder="Inserte cedula" id="text_cedula_cliente" type="text" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" class="btn btn-primary"><i class="fa fa-search"></i>
+                                <label>DPI del cliente</label>
+                                <div class="input-group"><input placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                             </div>
 
                             <div class="col-sm-6 col-md-6 col-xs-12">
                                 <form role="form">
-                                    <div class="form-group"><label>Nombre y apellido</label> <input
+                                    <div class="form-group"><label>DPI, nombre del cliente y apellido</label> <input
                                             id="text_nombre_cliente"
                                             type="text" disabled
                                             placeholder=""
@@ -536,7 +538,7 @@
 								<table class="table table-striped" >
 									<thead>
 									<tr align="center">
-										<th>Nombre y cedula</th>
+										<th>Nombre y DPI</th>
 										<th>Monto</th>
 										<th>Fecha</th>
 										<th>Opciones</th>
@@ -558,13 +560,13 @@
 
                     <div class="ibox ">
                         <div class="ibox-title">
-                            Total recaudo: <label id="text_recolectado"></label>
+                            Total recaudado: <label id="text_recolectado"></label>
                         </div>
                     </div>
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Pago de cuota</h5> <label id="text_recolectado"></label>
-                            <span class="pull-right" style="font-size: medium;" id="queda_debiendo">$0</span>
+                            <span class="pull-right" style="font-size: medium;" id="queda_debiendo">Q0</span>
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
@@ -613,22 +615,22 @@
 							</div>
 
                             <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
-                                Credito aprobado: <br>$<span id="cuento_prestame">0</span>
+                                Credito aprobado: <br>Q<span id="cuento_prestame">0</span>
                             </div>
                             <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%;  margin-top: 4%;">
                                 Número de cuotas: <br><span id="dias_prestame">0</span>
                             </div>
                             <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
-                                Valor de cuota: <br>$<span id="valor_prestame">0</span>
+                                Valor de cuota: <br>Q<span id="valor_prestame">0</span>
                             </div>
                             <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
-                                Saldo pendiente: <br>$<span id="pago_prestame">0</span>
+                                Saldo pendiente: <br>Q<span id="pago_prestame">0</span>
                             </div>
                             <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
-                                Valor entregado: <br>$<span id="entregado_prestame">0</span>
+                                Valor entregado: <br>Q<span id="entregado_prestame">0</span>
                             </div>
                             <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
-                                Valor de descuento: <br>$<span id="descuento_prestame">0</span>
+                                Valor de descuento: <br>Q<span id="descuento_prestame">0</span>
                             </div>
 							
                             <div class="col-sm-12 col-md-12 col-xs-12" id="refinanciar_div" align="center" style="display:none;">
@@ -729,10 +731,10 @@
         </div>
         <div class="footer" style="display:none;">
             <div class="float-right">
-                Conexión:<strong id="conectado_server">false</strong>.
+                Conexión:<strong id="conectado_server">false</strong>
             </div>
             <div>
-                <strong>Copyright</strong> Money engeneering &copy; 2019
+                <strong>Copyright</strong> Money engeneering SuperSistemas &copy; 2023
             </div>
         </div>
 
@@ -853,7 +855,7 @@
 		var yes = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
 		
 		for(var q=0; q < yes.length; q++){
-			block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> Cedula: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p><p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p></div></div>';
+			block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> DPI: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p><p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p></div></div>';
 		}
 
 		$("#listado_tarjeta").html(block.tarjetero);
@@ -911,6 +913,7 @@
         block.obj = {"r": "down_geo", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e) {
                 block.listao=valor.d[1];
 				
@@ -936,13 +939,13 @@
 					$("#listado_tarjeta").html("");
 					$('.slick_demo_2').slick('unslick');
 				}
-				
+				console.log(valor.d);
 				window.localStorage.setItem("Money-vars-tarjetas_old",JSON.stringify(valor.d[1]));
 				
 				block.lisas = [];
 				
 				for(var q=0; q< block.listao.length; q++){
-					block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> Cedula: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p></div></div>';
+					block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p></div></div>';
 				}
 				
 				$("#listado_tarjeta").html(block.tarjetero);
@@ -1454,7 +1457,7 @@
                     block.iteds = block.pasero[wq];
                     block.iteds[2]= block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
-                    block.inefd = block.inefd + '<tr><td>'+block.iteds[1]+'</td><td>$'+block.iteds[2]+'</td></tr>';
+                    block.inefd = block.inefd + '<tr><td>'+block.iteds[1]+'</td><td>Q'+block.iteds[2]+'</td></tr>';
                 }
                 $("#lista_gastos_exe").html(block.inefd);
             }
@@ -1466,6 +1469,11 @@
         block.motivo = $("#motivo_gasto").val();
         block.gasto = $("#monto_gasto").val();
 
+        if(block.motivo == '' || block.gasto == ''){
+            toastr.warning('Hay campos vacíos', 'System notification!');
+            return;
+        }
+        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -1567,7 +1575,7 @@
             if (!valor.e) {
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');
-                $("#text_recolectado").text("$"+valor.d[1]);
+                $("#text_recolectado").text("Q"+valor.d[1]);
             }
         });
     }
@@ -1699,7 +1707,7 @@
 				block.montoCuota = block.montoCuota.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
 				block.montoCuota = block.montoCuota.split('').reverse().join('').replace(/^[\.]/, '');
 
-				block.menj = "Esta seguro que recibe un monto de  $" + montoCuota + "? ";
+				block.menj = "Esta seguro que recibe un monto de  Q" + montoCuota + "? ";
 
 				swal({
 					title: "Cancelacion de cuota y/o abono?",
@@ -2063,7 +2071,7 @@
 
         block.nav = navegador();
 
-        if ($("#numero_idm").val() !== "") {
+        if ($("#numero_idm").val() !== "") {            
             if (window.localStorage.getItem("Money-vars-token") !== null) {
                 block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
             } else {
@@ -2073,8 +2081,10 @@
             block.arrays = [block.tokens[1], $("#numero_idm").val(), block.nav, $("#tipo_letram").val(), window.sessionStorage.getItem("Money-vars-tipo")];
 
             block.obj = {"r": "consultar_cedula", "d": block.arrays};
+            console.log('Antes de la conexión al Backend');
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
+                console.log(valor);
                 if (!valor.e) {
                     block.todo = valor.d[1];
                     block.nombre = block.todo[0];
@@ -2468,7 +2478,7 @@
             });
 
         } else {
-            toastr.warning('Falta cedula del cliente', 'System notification!');
+            toastr.warning('Falta DPI del cliente', 'System notification!');
         }
     });
 
@@ -2594,18 +2604,23 @@
 			
 			var frutos = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
 			block.barra = '';
-			for(var k = 0; k < frutos.length; k++){
-				if(frutos[k].c == $("#text_cedula_cliente2").val()){
-					block.barra = block.barra + ' <a class="btn btn-primary btn-rounded" href="javascript:fijar_monto('+String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+');"> '+frutos[k].u+' => $'+frutos[k].m+' </a> ';
-				}
-			}
+            console.log(frutos);
+            if(frutos !== null){
+                for(var k = 0; k < frutos.length; k++){
+                    if(frutos[k].c == $("#text_cedula_cliente2").val()){
+                        block.barra = block.barra + ' <a class="btn btn-primary btn-rounded" href="javascript:fijar_monto('+String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+');"> '+frutos[k].u+' => $'+frutos[k].m+' </a> ';
+                    }
+                }
+            } else {
+                toastr.warning("No se ha encontrado ninguna coincidencia", "System notification");
+            }
 			
 			$("#cedula_elecion").css("display","block");
 			$("#cedula_elecion").html(block.barra);
 			
 			
         } else {
-            toastr.warning('Falta cedula del cliente', 'System notification!');
+            toastr.warning('Falta DPI del cliente', 'System notification!');
         }
     });
 

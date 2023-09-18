@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibo token y idaseor
+			recibo token y idaseor
 		*/
 		
 		if (arrays.length==2){
@@ -33,14 +33,14 @@ eje = function(arrays,origen,redisClient) {
 								}else{
 									redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
 										var ines = JSON.parse(sreply);
-										reject([false,"4",ines.length]);
+										reject([false,"4",ines]);
 									});
 								}
                             });
                         }else{
 							redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
 								var ines = JSON.parse(sreply);
-								reject([false,"4",ines.length]);
+								reject([false,"4",ines]);
 							});
                         }
                     });

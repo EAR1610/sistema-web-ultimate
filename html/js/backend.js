@@ -19,24 +19,22 @@ backend.conexionEnvio = function (datos,callback){
             var ws = new WebSocket("ws://" + backend.usuando + ":3000");
         }
 
-		ws.onopen = function(){
+		ws.onopen = function(){			
 			$("#conectado_server")[0].innerText ="true";
 			ws.send(datos);
 		};
 		ws.onmessage = function (evt) {
-			ws.close();
+			ws.close();			
 			return callback(evt.data);
 		};
 		ws.onerror = function (evt) {
-			 toastr.error('Error en la conexion de internet','System notification!');
+			toastr.error('Error en la conexion de internet','System notification!');
 			$("#conectado_server")[0].innerText ="false";
 		};
 		window.onbeforeunload = function(event) {
 			ws.close();
-
 		};
-	}else{
+	} else {
 	   return callback(JSON.stringify({"e":true,"m":"WebSocket NOT supported by your Browser"}));
 	}
 };
-

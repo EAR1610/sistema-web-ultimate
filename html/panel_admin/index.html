@@ -2,7 +2,6 @@
 <html>
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Money Engineering Admin</title>
@@ -14,7 +13,7 @@
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
-    <link href="../css/datetimepicker.css" rel="stylesheet">
+    <link href="../css/datetimepicker.css" rel="stylesheet">    
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
 
@@ -93,7 +92,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 	
@@ -338,8 +337,7 @@
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <label>Nacionalidad</label>
                         <select class="form-control m-b" id="pais_selecionadom">
-                            <option value="1">Colombia</option>
-                            <option value="2">Venezuela</option>
+                            <option value="1">Guatemala</option>
                         </select>
                     </div>
 
@@ -354,7 +352,7 @@
                     </div>
 
                     <div class="form-group col-sm-6 col-md-6 col-xs-12" id="cedula_divm">
-                        <label>Cedula/Dni</label>
+                        <label>DPI</label>
                         <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_idm" type="text" class="form-control">
                             <span class="input-group-append"> <button type="button" id="consultar_registram" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
@@ -370,50 +368,57 @@
 
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
-                            <div class="form-group"><label>Primer nombre</label> <input id="nombre_id1m"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        class="form-control">
+                            <div class="form-group"><label>Primer nombre</label> 
+                                <input id="nombre_id1m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control">
                             </div>
                         </form>
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
-                            <div class="form-group"><label>Segundo nombre</label> <input id="nombre_id2m"
-                                                                                         type="text"
-                                                                                         placeholder=""
-                                                                                         class="form-control">
+                            <div class="form-group"><label>Segundo nombre</label> 
+                                <input id="nombre_id2m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control"
+                                >
                             </div>
                         </form>
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
-                            <div class="form-group"><label>Primer apellido</label> <input id="apellido_id1m"
-                                                                                          type="text"
-                                                                                          placeholder=""
-                                                                                          class="form-control">
+                            <div class="form-group"><label>Primer apellido</label> 
+                                <input id="apellido_id1m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control">
                             </div>
                         </form>
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
-                            <div class="form-group"><label>Segundo apellido</label> <input id="apellido_id2m"
-                                                                                           type="text"
-                                                                                           placeholder=""
-                                                                                           class="form-control">
+                            <div class="form-group"><label>Segundo apellido</label>
+                                <input id="apellido_id2m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control">
                             </div>
                         </form>
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
                         <form role="form">
-                            <div class="form-group"><label>Dirección</label> <input id="direccion_ubicam"
-                                                                                    type="text"
-                                                                                    placeholder="Inserte la dirección"
-                                                                                    class="form-control"></div>
+                            <div class="form-group"><label>Dirección</label>
+                                <input id="direccion_ubicam"
+                                    type="text"
+                                    placeholder="Inserte la dirección"
+                                    class="form-control">
+                                </div>
                         </form>
                     </div>
 
@@ -440,20 +445,22 @@
 
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
-                            <div class="form-group"><label>Telefono Movil</label> <input id="telefono_fijom"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        class="form-control">
+                            <div class="form-group"><label>Telefono Movil</label>
+                                <input id="telefono_fijom"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control">
                             </div>
                         </form>
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
-                            <div class="form-group"><label>Telefono Fijo</label> <input id="telefono_celm"
-                                                                                           type="text"
-                                                                                           placeholder=""
-                                                                                           class="form-control">
+                            <div class="form-group"><label>Telefono Fijo</label> 
+                                <input id="telefono_celm"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control">
                             </div>
                         </form>
                     </div>
@@ -487,7 +494,7 @@
     </div>
 	
 	
-    <div class="modal inmodal" id="popop_new_cliente_edit" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- <div class="modal inmodal" id="popop_new_cliente_edit" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div  class="modal-content animated bounceInRight modalete" style="left: -24%;width: 789px;margin: 30px auto;">
                 <div class="modal-header" style="text-align: inherit;padding: 1px 15px;">
@@ -665,7 +672,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
@@ -683,41 +690,31 @@
                     </div>
                 </li>
                 <li>
-
                     <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:crear_infor();">Registrar</a></li>
                         <li><a href="javascript:cliente_lista();">Consultar</a></li>
                     </ul>
-
-
                 </li>
                 <li>
-
                     <a href="#"><i class="fa fa-copy"></i> <span class="nav-label">Contrato</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:crear_contrato();">Registrar</a></li>
                         <li><a href="javascript:vers_contratos();">Consultar</a></li>
                     </ul>
-
                 </li>
-
                 <li>
-
                     <a href="#"><i class="fa fa-hand-holding-usd"></i> <span class="nav-label">Administración</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo();">Liquidación</a></li>
                     </ul>
-
                 </li>
 
                 <li>
                     <a id="couta_search" href="javascript:buscar_mapa();"><i class="fa fa-map-marker"></i> <span
-                            class="nav-label">Mapa de clientes</span></a>
+                    class="nav-label">Mapa de clientes</span></a>
                 </li>
-
             </ul>
-
         </div>
     </nav>
 
@@ -728,7 +725,6 @@
                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
                     </a>
                     <center>
-
                     <form role="search" class="navbar-form-custom">
                         <div class="form-group pull-right">
                             <img alt="image" src="../img/logos.png" style="width: 195px;margin-top: 11px;"/>
@@ -737,69 +733,12 @@
                 </center>
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                            <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-messages">
-                            <li>
-                                <div class="dropdown-messages-box">
-                                    <a class="dropdown-item float-left" href="profile.html">
-                                        <img alt="image" class="rounded-circle" src="../img/a7.jpg">
-                                    </a>
-                                    <div class="media-body">
-                                        <small class="float-right">46h ago</small>
-                                        <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>.
-                                        <br>
-                                        <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li>
-                                <div class="dropdown-messages-box">
-                                    <a class="dropdown-item float-left" href="profile.html">
-                                        <img alt="image" class="rounded-circle" src="../img/a4.jpg">
-                                    </a>
-                                    <div class="media-body ">
-                                        <small class="float-right text-navy">5h ago</small>
-                                        <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica
-                                        Smith</strong>. <br>
-                                        <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li>
-                                <div class="dropdown-messages-box">
-                                    <a class="dropdown-item float-left" href="profile.html">
-                                        <img alt="image" class="rounded-circle" src="../img/profile.jpg">
-                                    </a>
-                                    <div class="media-body ">
-                                        <small class="float-right">23h ago</small>
-                                        <strong>Monica Smith</strong> love <strong>Kim Smith</strong>. <br>
-                                        <small class="text-muted">2 days ago at 2:30 am - 11.06.2014</small>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li>
-                                <div class="text-center link-block">
-                                    <a href="mailbox.html" class="dropdown-item">
-                                        <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-
                     <li>
                         <a href="javascript:salida_sistema();">
                             <i class="fa fa-sign-out"></i> Salir
                         </a>
                     </li>
                 </ul>
-
             </nav>
         </div>
 
@@ -824,7 +763,7 @@
                                     <thead>
                                     <tr align="center">
                                         <th>Nombre</th>
-                                        <th>Cedula</th>
+                                        <th>DPI</th>
                                         <th>Dirección</th>
                                         <th>Celular</th>
                                         <th>Opción</th>
@@ -869,7 +808,7 @@
 
                             <div class="col-sm-6 col-md-6 col-xs-12">
                                 <form role="form">
-                                    <div class="form-group"><label>Prestamo minimo <strong id="prestamo_principal_ini">$1.000</strong></label>
+                                    <div class="form-group"><label>Prestamo minimo <strong id="prestamo_principal_ini">Q1.000</strong></label>
                                         <input id="prestamo_principal"
                                                type="range"
                                                class="form-control" disabled min="1000" max="50000"></div>
@@ -886,7 +825,7 @@
 
                             <div class="col-sm-6 col-md-6 col-xs-12">
                                 <form role="form">
-                                    <div class="form-group"><label>Prestamo maximo <strong id="prestamo_principal_ini2">$50.000</strong></label>
+                                    <div class="form-group"><label>Prestamo maximo <strong id="prestamo_principal_ini2">Q50.000</strong></label>
                                         <input id="prestamo_principal2"
                                                type="range"
                                                class="form-control" disabled min="50000" max="99999999"></div>
@@ -1026,10 +965,7 @@
                                         id="configurar_directa"
                                         type="button">Configurar
                                 </button>
-
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -1057,7 +993,7 @@
                                     </div>
                                     <div class="col-xs-12">
                                             <form role="form">
-                                                <div class="form-group"><label>Cedula del asesor</label> <input
+                                                <div class="form-group"><label>DPI del asesor</label> <input
                                                         id="text_cedula_asesor"
                                                         type="text" disabled
                                                         placeholder=""
@@ -1076,7 +1012,7 @@
                                 <div class="profile-info">
 
                                     <div class="form-group col-xs-6">
-                                        <label>Cedula del cliente</label>
+                                        <label>DPI del cliente</label>
                                         <div class="input-group"><input disabled placeholder="Inserte cedula" id="text_cedula_cliente" type="text" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" disabled class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                                     </div>
@@ -1324,11 +1260,7 @@
                                     </tbody>
                                 </table>
                             </div>
-
-
-
                         </div>
-
                     </div>
                 </div>
 
@@ -1415,8 +1347,7 @@
                             <div class="col-sm-6 col-md-3 col-xs-12">
                                 <label>Nacionalidad</label>
                                 <select class="form-control m-b" id="pais_selecionadomd">
-                                    <option value="1">Colombia</option>
-                                    <option value="2">Venezuela</option>
+                                    <option value="1">Guatemala</option>
                                 </select>
                             </div>
 
@@ -1431,7 +1362,7 @@
                             </div>
 
                             <div class="form-group col-sm-6 col-md-6 col-xs-6" id="cedula_divmd">
-                                <label>Cedula/Dni</label>
+                                <label>DPI</label>
                                 <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_idmd" type="text" class="form-control"> <span class="input-group-append">
                                     <button type="button" id="consultar_registramd" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
@@ -1487,10 +1418,12 @@
 
                             <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
                                 <form role="form">
-                                    <div class="form-group"><label>Dirección</label> <input id="direccion_ubicamd"
-                                                                                            type="text"
-                                                                                            placeholder="Inserte la dirección"
-                                                                                            class="form-control"></div>
+                                    <div class="form-group"><label>Dirección</label>
+                                        <input id="direccion_ubicamd"
+                                            type="text"
+                                            placeholder="Inserte la dirección"
+                                            class="form-control">
+                                        </div>
                                 </form>
                             </div>
 
@@ -1586,8 +1519,15 @@
             <input type="file" id="foto3md" accept="image/*" style="display:none;">
             <input type="file" id="foto4md" accept="image/*" style="display:none;">
 
+        </div>    
+        <div class="footer" style="display:none;">
+            <div class="float-right">
+                Conexión:<strong id="conectado_server">falsa</strong>.
+            </div>
+            <div>
+                <strong>Copyright</strong> Money Engineering SuperSistemas&copy; 2023
+            </div>
         </div>
-
     </div>
 </div>
 
@@ -4588,10 +4528,10 @@
     $("#boton_pdf").click(function () {
         var divContents = $("#liquidacion_page").html();
         var printWindow = window.open('', '', 'height=400,width=800');
-        printWindow.document.write('<html><head><title>Listado de contratos de un asesor</title>');
-        printWindow.document.write('</head><body >');
+        printWindow.document.write(`<html><head><title>Listado de contratos de un asesor</title>`);
+        printWindow.document.write(`</head><body>`);
         printWindow.document.write(divContents);
-        printWindow.document.write('</body></html>');
+        printWindow.document.write('< /body></html>');        
         printWindow.document.close();
         printWindow.print();
     });
@@ -4687,7 +4627,6 @@
     }
 
     function cliente_lista() {
-
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -4952,11 +4891,10 @@
                 toastr.warning('No posee contratos para generar ruta', 'System notification!');
             }
         });
-
     }
 
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMtw9w0lIUfU8TcuAdPdDgNZuc9p_J2-Y&callback=myMap"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMtw9w0lIUfU8TcuAdPdDgNZuc9p_J2-Y&callback=myMap()"></script> -->
 </body>
 </html>
