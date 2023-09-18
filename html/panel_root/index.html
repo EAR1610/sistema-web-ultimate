@@ -174,7 +174,6 @@
 									<div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
 								</form>
 							</div>
-							
 							<div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
 								<button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
 							</div>
@@ -368,7 +367,7 @@
 					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
 				}
 				
-				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon];
+				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon,block.det];
 				block.obj = {"r":"crea_direccion","d":block.arrays};
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
 					var valor = JSON.parse(salida);

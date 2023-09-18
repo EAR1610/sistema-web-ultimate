@@ -1034,7 +1034,7 @@
                                 <select class="form-control m-b" id="tipo_cargo">
                                     <option value="">Seleccione</option>
                                     <option value="a">Asesor</option>
-                                    <option value="b">Ayudante</option>
+                                    <!-- <option value="b">Ayudante</option> -->
                                     <option value="c">Supervisor</option>
                                     <option value="d">Administrador</option>
                                 </select>
@@ -1042,7 +1042,7 @@
 
                             <div class="col-lg-12" id="moto_detalle" style="display:none;">
                                 <form role="form">
-                                    <div class="form-group"><label>Moto asignada</label>
+                                    <div class="form-group"><label>Vehiculo asignado</label>
                                         <input id="moto_detalle_list"
                                             type="text"
                                             placeholder="Inserte marca y numero de placa de la moto"
@@ -1835,7 +1835,6 @@
                             <h5>Migrar de cliente a nuevos contratos</h5>
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
-
 							<div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
                                     <div class="form-group"><label>Cedula</label> <input
@@ -2249,10 +2248,10 @@
                             block.dias = parseInt(block.cuotas[w][2]);
                             block.resul = parseInt(block.monq * (block.poce / 100)) ;
                             block.reas = (block.monq + block.resul) / block.dias;
-                            block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'Q1.');
+                            block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                             block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/,'');
                             block.reas = parseInt(block.reas);
-                            block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'Q1.');
+                            block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                             block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/,'')
                             $("#utilidad_prestada_peso").html(block.resul);
                             $("#utilidad_cuota").html(block.reas);
@@ -2274,10 +2273,9 @@
 
 
     function format(input) {
-
-        var num = input.value.replace(/\./g,'');
+        var num = input.value.replace(/\./g,'');        
         if(!isNaN(num)){
-            num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'Q1.');
+            num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
             num = num.split('').reverse().join('').replace(/^[\.]/,'');
             input.value = num;
 
@@ -2296,16 +2294,16 @@
                             block.dias = parseInt(block.cuotas[w][2]);
                             block.resul = parseInt(block.monq * (block.poce / 100));
                             block.reas = (block.monq + block.resul) / block.dias;
-                            block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'Q1.');
+                            block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                             block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/,'');
                             block.reas = parseInt(block.reas);
-                            block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'Q1.');
+                            block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                             block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/,'')
                             $("#utilidad_prestada_peso").html(block.resul);
                             $("#utilidad_cuota").html(block.reas);
                         }
                     }
-                }else{
+                } else {
                     $("#utilidad_prestada_peso").html("0");
                     $("#utilidad_prestada").html("0");
                     $("#utilidad_cuota").html("0");
@@ -3901,11 +3899,11 @@
                        }
 
 
-						if(block.cobarar<block.favolr){
+						if (block.cobarar<block.favolr){
 							block.cobfavol ='<i class="fa fa-arrow-up" style="color:#28a745"></i> '+(block.favolr - block.cobarar);
-						}else if(block.cobarar>block.favolr){
+						} else if(block.cobarar>block.favolr){
 							block.cobfavol ='<i class="fa fa-arrow-down" style="color:#dc3545"></i> '+block.cobarar;
-						}else if(block.cobarar==block.favolr){
+						} else if(block.cobarar==block.favolr){
 							block.cobfavol ='<i class="fa fa-check" style="color:blue;"></i> 0';
 						}
 
@@ -3915,12 +3913,8 @@
                         block.totaldu = block.sale2.split('').reverse().join('').replace(/^[\.]/,'');
 
 						block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td></td><td></td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.clienes[7]+'_'+block.ince+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
-
 					}
-
 					$("#listado_operacion_asesore").html(block.unids);
-
-
                 }
 
             }else{
@@ -3978,7 +3972,7 @@
 							block.evals = block.contra[3].replace(".","");
 							block.evals2 = block.evals.replace(".","");
 							block.totaldu = parseInt(block.evals2) * ( parseInt(block.contra[7]) / 100) + parseInt(block.evals2);
-							block.totaldu = block.totaldu.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'Q1.');
+							block.totaldu = block.totaldu.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 							block.totaldu = block.totaldu.split('').reverse().join('').replace(/^[\.]/,'');
 
 							block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td></td><td></td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.clienes[7]+'_'+block.ince+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
@@ -4079,8 +4073,7 @@
 
     function descontar(e){
         block.tecla = (document.all) ? e.keyCode : e.which;        
-        if (block.tecla==13) {
-
+        if (block.tecla==13) {            
             block.unews = $("#lista_asesores_general").val();
             block.inew = block.unews.split("_");
             block.asesorId = block.inew[0];
@@ -4146,14 +4139,14 @@
     function descontarws(e){
         var cedula2 = e.srcElement.id,cedula3 = cedula2.split("_"),cedula = cedula3[1],fechao = cedula3[2];
         block.monto_pago = $("#descontarte_" + cedula+"_"+fechao).val();
-
+        console.log(block.monto_pago);
 		if(block.monto_pago!=="" && block.monto_pago!=="0" && block.monto_pago!==undefined){
 
 			if(block.monto_pago.length==1 && block.monto_pago!=="0"){
-				block.nume = block.monto_pago * 1000;
+				block.nume = block.monto_pago;
 				$("#descontarte_" + cedula+"_"+fechao).val(block.nume);
 				$("#descontarte_" + cedula+"_"+fechao).focus().setCursorPosition(1);
-			}else if($("#descontarte_" + cedula).val()=="000"){
+			}else if($("#descontarte_" + cedula).val()=="000"){                
 				$("#descontarte_" + cedula+"_"+fechao).val(0);
 				$("#descontarte_" + cedula+"_"+fechao).val("");
 			}
@@ -4174,10 +4167,9 @@
 					block.recoem = parseInt(block.recoem) + parseInt(block.monto_pago);
 					block.recoem = block.recoem.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
 					block.recoem = block.recoem.split('').reverse().join('').replace(/^[\.]/, '');
-					$("#text_recolectado").text("Q"+block.recoem);                    
+					$("#text_recolectado").text("Q"+block.recoem);             
 				}
 			}
-
 		}
     }
 
@@ -5212,7 +5204,6 @@
             block.tipo = $("#tipo_letram").val();
         }
 
-
 		if (window.localStorage.getItem("Money-vars-token") !== null) {
 			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
 		} else {
@@ -5372,9 +5363,8 @@
 
         if ($("#telefono_fijomd").val() == "") {
             block.telefofijo = "0";
-        }
-        
-                if (block.perfil == null) {
+        }        
+        if (block.perfil == null) {
 			block.perfil = "default_profile_photo.jpg";
 		}
 		if (block.normal == null) {
@@ -5386,12 +5376,10 @@
 		if(block.fronatls==null){
             block.fronatls="default_invoice.png";
         }
-
         if (block.perfil == null) {
 			toastr.warning('Falta adjuntar foto frontal del usuario', 'System notification!');
 			block.blo = 1;
         }
-
 		if (block.normal == null) {
 			toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'System notification!');
 			block.blo = 1;
@@ -5400,7 +5388,6 @@
 			toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'System notification!');
 			block.blo = 1;
         }
-
 		if(block.blo==1){
 			toastr.warning('Falta datos', 'System notification!');
 		}else if (block.numero == "") {
@@ -5422,11 +5409,9 @@
         } else if (block.asesorSuperAsis == "") {
             toastr.warning('Falta seleccion de tipo del usuario', 'System notification!');
         }else{
-
             if (block.alias == "") {
                 block.alias = "No asignado";
             }
-
             block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias];
 
             block.obj = {"r": "crear_cliente_admin", "d": block.arrays};

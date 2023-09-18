@@ -1,5 +1,5 @@
 var redis = require('redis');
-var dev = true;
+var dev = false;
 
 /*
 Este codigo es el core del sistema
@@ -11,8 +11,8 @@ Solo una variable me indica si estoy en produccion o desarrollo
 //8ICmRsaUHMS5caKp55cVvE09QKEtMQYU@redis-18996.c1.us-west-2-2.ec2.cloud.redislabs.com:18996
 if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
-	var redisClient = redis.createClient({host : 'redis-18996.c1.us-west-2-2.ec2.cloud.redislabs.com', port : 18996});
-	redisClient.auth('8ICmRsaUHMS5caKp55cVvE09QKEtMQYU',function(err,reply) {
+	var redisClient = redis.createClient({host : 'redis-12290.c281.us-east-1-2.ec2.cloud.redislabs.com', port : 12290});
+	redisClient.auth('CzVcCYGcIPW59svaNEeG4i8xVoJjW1tH',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
@@ -46,7 +46,7 @@ redisClient.on('error',function() {
 simpre asiganre la clave de acceso del root
 */
 
-var arrays = ["admin@money.com","<0001<Money","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
+var arrays = ["admin@money.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
 redisClient.set("usuario_admin@money.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });

@@ -325,17 +325,20 @@
                     <a id="couta_sear" href="javascript:registrar_gastos();"><i class="fa fa-money"></i> <span
                             class="nav-label">Gastos</span></a>
                 </li>
-				<li>
+				<!-- <li>
                     <a id="couta_sear2" href="javascript:pendiente_link();"><i class="fa fa-refresh"></i> <span
                             class="nav-label">Pendiente</span></a>
-                </li>
-				<li>
+                </li> -->
+				<!-- <li>
                     <a id="couta_sear2" href="javascript:papel();"><i class="fa fa-cogs"></i> <span
                             class="nav-label">Papeleria</span></a>
-                </li>
+                </li> -->
                 <li>
                     <a id="couta_search" href="javascript:buscar_mapa();"><i class="fa fa-map-marker"></i> <span
                             class="nav-label">Mapa de clientes</span></a>
+                </li>
+                <li>
+                    <a href="javascript:ubicaciones_operaciones();"><i class="fa fa-map-marker"></i> <span class="nav-label">Ubicaciones</span></a>
                 </li>
             </ul>
 
@@ -410,7 +413,6 @@
                                             class="form-control"></div>
                                 </form>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -441,7 +443,17 @@
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-3 col-xs-12">
+                            <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha</label> <input
+                                            id="fechaActual"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"></div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
                                 <form role="form">
                                     <label>Frecuencia de pago</label>
                                     <select class="form-control m-b" id="selector_frecuencia">
@@ -454,7 +466,7 @@
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-3 col-xs-12">
+                            <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
                                     <div class="form-group"><label>Cuotas a descontar</label> <input
                                             id="cuota_descontar_sistema"
@@ -464,7 +476,7 @@
                                 </form>
                             </div>
 
-                        <div class="col-sm-12 col-md-12 col-xs-12" style="display:none;">
+                        <div class="col-sm-12 col-md-12 col-xs-12" style="padding: 4%;margin-left: 8%;">
                             <blockquote style="background-color: #8abbe678;padding: 4%;margin-left: -9%;" class="row col-sm-12 col-md-12 col-xs-12">
                                 <div class="col-sm-6 col-md-4 col-xs-12">
                                     <form role="form">
@@ -473,12 +485,12 @@
                                 </div>
                                 <div class="col-sm-6 col-md-4 col-xs-12">
                                     <form role="form">
-                                        <div class="form-group"><label>Utilidad en peso</label> <br> $<label id="utilidad_prestada_peso">0</label></div>
+                                        <div class="form-group"><label>Utilidad en Quetzales</label> <br> Q<label id="utilidad_prestada_peso">0</label></div>
                                     </form>
                                 </div>
                                 <div class="col-sm-6 col-md-4 col-xs-12">
                                     <form role="form">
-                                        <div class="form-group"><label>Valor de la cuota</label> <br> $<label id="utilidad_cuota">0</label></div>
+                                        <div class="form-group"><label>Valor de la cuota</label> <br> Q<label id="utilidad_cuota">0</label></div>
                                     </form>
                                 </div>
                             </blockquote>
@@ -587,8 +599,8 @@
                             </div>
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
-                                <label>Cedula del cliente</label>
-                                <div class="input-group"><input placeholder="Inserte cedula" id="text_cedula_cliente2" type="text" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente2" class="btn btn-primary"><i class="fa fa-search"></i>
+                                <label>DPI del cliente</label>
+                                <div class="input-group"><input placeholder="Inserte cedula" id="text_cedula_cliente2" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente2" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                             </div>
 
@@ -645,6 +657,82 @@
                                 </div>
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row" id="lista_ubicacniones_div">
+                    <div class="col-lg-12">
+                        <div class="ibox ">
+                            <div class="ibox-title">
+                                <h5>Registro de ubicaciones</h5>
+                                    <button class="btn btn-primary btn-sm pull-right" id="limpiar_agrega" type="button" style="margin-top: -7px;">Limpiar</button>
+                            </div>
+                            <div class="ibox-content row" style="margin-left:0px;margin-right:0px;">
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_departamento" >
+                                    <label>Departamento</label>
+                                    <select class="form-control m-b" id="tipo_departamento">
+                                        <option value="0"></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_departamento" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar departamento</label> <input id="add_departamento_text" type="text" placeholder="Inserte nombre de departamento" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_ciudades" >
+                                    <label>Ciudad</label>
+                                    <select class="form-control m-b" id="tipo_ciudades">
+                                        <option value="0"></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_ciudades" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar ciudad</label> <input id="add_ciudad_text" type="text" placeholder="Inserte nombre de ciudad" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_barrio" >
+                                    <label>Barrio</label>
+                                    <select class="form-control m-b" id="tipo_barrio">
+                                        <option value=""></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar barrio</label> <input id="add_barrio_text" type="text" placeholder="Inserte nombre del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+                                    <button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
+                                </div>
+                                <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+                                    <button class="btn btn-danger btn-block" id="eliminar_direccion" type="button" >Eliminar</button>
+                                </div>
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -919,7 +1007,7 @@
 				
                 var map;
                 var mapOptions = {
-					center: {lat: 10.97, lng: -74.82},
+					center: {lat: 16.930351030698695, lng: -89.8912385219706},                    
                     mapTypeId: 'roadmap',
 					zoom: 15,
 					gestureHandling: 'greedy'
@@ -1087,6 +1175,7 @@
         $("#crear_contrato_form_dos").css("display","none");
         $("#crear_contrato_form").css("display","none");
         $("#googleMap").css("display","none");
+        $("#lista_ubicacniones_div").css("display","none");
     }
 
     function format(input) {
@@ -1482,6 +1571,7 @@
 
         block.arrays = [block.tokens[1],block.motivo,block.gasto,block.tokens[5]];
         block.obj = {"r": "crear_gasto", "d": block.arrays};
+        
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
@@ -1526,6 +1616,7 @@
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
 		$("#pendiente_form").css("display", "none");
+        $("#lista_ubicacniones_div").css("display","none");
     }
 
     extraer_gastos();
@@ -1560,6 +1651,7 @@
         }
 
         block.arrays = [block.tokens[1]];
+        
         block.obj = {"r": "down_configuracion", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -1569,6 +1661,8 @@
         });
 
         block.arrays = [block.tokens[1],block.tokens[5]];
+        console.log(block.arrays);
+        console.log("hi");
         block.obj = {"r": "sumatoria_diario", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -1756,7 +1850,7 @@
                     var valor = JSON.parse(salida);
                     $("#text_cedula_cliente").prop("disabled",false);
                     if (!valor.e) {
-                        toastr.success('Creado con éxito teniendo en cuenta '+valor.d[1]+' contratos en la esta empresa y '+valor.d[2]+' contratos en otra empresa ', 'System notification!');
+                        toastr.success('Creado con éxito teniendo en cuenta '+valor.d[1]+' contratos en esta empresa y '+valor.d[2]+' contratos en otra empresa ', 'System notification!');
 
                         if(parseInt(block.descontar)>0){
                             window.sessionStorage.setItem("Money-vars-descontar-cuota",block.quedo_cuota);
@@ -1913,10 +2007,10 @@
     $("#apellido_id1").prop("disabled", true);
     $("#apellido_id2").prop("disabled", true);
 
-    $("#nombre_id1m").prop("disabled", true);
-    $("#nombre_id2m").prop("disabled", true);
-    $("#apellido_id1m").prop("disabled", true);
-    $("#apellido_id2m").prop("disabled", true);
+    $("#nombre_id1m").prop("disabled", false);
+    $("#nombre_id2m").prop("disabled", false);
+    $("#apellido_id1m").prop("disabled", false);
+    $("#apellido_id2m").prop("disabled", false);
 
     listar_cuotas();
 
@@ -2080,8 +2174,7 @@
 
             block.arrays = [block.tokens[1], $("#numero_idm").val(), block.nav, $("#tipo_letram").val(), window.sessionStorage.getItem("Money-vars-tipo")];
 
-            block.obj = {"r": "consultar_cedula", "d": block.arrays};
-            console.log('Antes de la conexión al Backend');
+            block.obj = {"r": "consultar_cedula", "d": block.arrays};            
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
                 console.log(valor);
@@ -2608,7 +2701,7 @@
             if(frutos !== null){
                 for(var k = 0; k < frutos.length; k++){
                     if(frutos[k].c == $("#text_cedula_cliente2").val()){
-                        block.barra = block.barra + ' <a class="btn btn-primary btn-rounded" href="javascript:fijar_monto('+String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+');"> '+frutos[k].u+' => $'+frutos[k].m+' </a> ';
+                        block.barra = block.barra + ' <a class="btn btn-primary btn-rounded" href="javascript:fijar_monto('+String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+');"> '+frutos[k].u+' => Q'+frutos[k].m+' </a> ';
                     }
                 }
             } else {
@@ -2838,6 +2931,7 @@
         $("#crear_contrato_form_dos").css("display", "none");
         $("#cobrar_couta").css("display", "initial");
         $("#crear_gastos").css("display","none");
+        $("#lista_ubicacniones_div").css("display","none");
     }
 
     window.sessionStorage.setItem("Money-perfil","contrato");
@@ -2854,7 +2948,7 @@
         $("#crear_contrato_form_dos").css("display", "initial");
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
-
+        $("#lista_ubicacniones_div").css("display","none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -2981,6 +3075,230 @@
             });
         }
     });
+
+    $("#limpiar_agrega").click(function(){
+			$("#view_departamento").css("display","initial");
+			$("#view_ciudades").css("display","initial");
+			$("#view_barrio").css("display","initial");
+			$("#add_barrio").css("display","none");
+			$("#add_barrio_text").val("");
+			$("#add_departamento").css("display","none");
+			$("#add_departamento_text").val("");
+			$("#add_ciudades").css("display","none");
+			$("#add_ciudad_text").val("");
+			$("#tipo_barrio option[value=0]").attr("selected",true);
+			$("#tipo_ciudades option[value=0]").attr("selected",true);
+			$("#tipo_departamento option[value=0]").attr("selected",true);
+		});
+		
+		$("#tipo_departamento").change(function(){
+			if($("#tipo_departamento").val()=="add"){
+				$("#view_departamento").css("display","none");
+				$("#add_departamento").css("display","initial");
+				$("#view_ciudades").css("display","none");
+				$("#add_ciudades").css("display","initial");
+				$("#view_barrio").css("display","none");
+				$("#add_barrio").css("display","initial");
+			}else{
+				extraer_ciudades();
+			}
+		});
+		
+		$("#tipo_ciudades").change(function(){
+			if($("#tipo_ciudades").val()=="add"){
+				$("#view_ciudades").css("display","none");
+				$("#add_ciudades").css("display","initial");
+				$("#view_barrio").css("display","none");
+				$("#add_barrio").css("display","initial");
+			}else{
+				extraer_barrios();
+			}
+		});
+		
+		$("#tipo_barrio").change(function(){
+			if($("#tipo_barrio").val()=="add"){
+				$("#view_barrio").css("display","none");
+				$("#add_barrio").css("display","initial");
+			}else{
+			    block.departe = $("#tipo_departamento").val();
+			    block.cuidad = $("#tipo_ciudades").val();
+			    block.barrios = $("#tipo_barrio").val();
+
+                if(window.localStorage.getItem("Money-vars-token")!==null){
+                    block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+                }else{
+                    block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+                }
+
+                block.arrays = [block.tokens[1],block.departe,block.cuidad,block.barrios];
+                block.obj = {"r":"ver_direccion_root","d":block.arrays};
+                backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+                    var valor = JSON.parse(salida);
+                    if(!valor.e){
+                        $("#add_barrio_lat_text").val(valor.d[1]);
+                        $("#add_barrio_lon_text").val(valor.d[2]);
+                    }
+                });
+
+            }
+		});
+    function ubicaciones_operaciones(){
+			$("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+			$("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
+        $("#crear_gastos").css("display","none");
+			$("#lista_ubicacniones_div").css("display","initial");
+			
+			if(window.localStorage.getItem("Money-vars-token")!==null){
+				block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+			}else{
+				block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+			}
+			
+			block.arrays = [block.tokens[1]];
+			block.obj = {"r":"extraer_departamentos","d":block.arrays};
+			backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+				var valor = JSON.parse(salida);
+				if(!valor.e){
+					block.lista = valor.d[1];
+					block.nuevo = "";
+					for(var e=0; e<block.lista.length; e++){
+						block.nuevo = block.nuevo + '<option value="'+block.lista[e]+'">'+block.lista[e]+'</option>';
+					}
+					$("#tipo_departamento").html($("#tipo_departamento").html()+block.nuevo);
+				}
+			});
+		}
+    
+        $("#eliminar_direccion").click(function(){
+			if($("#tipo_barrio").val()!=="add" && $("#tipo_barrio").val()!=="" && $("#tipo_ciudades").val()!=="add" && $("#tipo_ciudades").val()!=="" && $("#tipo_departamento").val()!=="add" && $("#tipo_departamento").val()!==""){
+				
+				if(window.localStorage.getItem("Money-vars-token")!==null){
+					block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+				}else{
+					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+				}
+				
+				block.arrays = [block.tokens[1],$("#tipo_departamento").val(),$("#tipo_ciudades").val(),$("#tipo_barrio").val()];
+				block.obj = {"r":"elimina_direccion","d":block.arrays};
+				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+					var valor = JSON.parse(salida);
+					if(!valor.e){
+						$("#limpiar_agrega").click();
+						ubicaciones_operaciones();
+						toastr.success('Procesado con éxito','System notification!');
+					}
+				});
+				
+			}else{
+				toastr.warning('Seleccione "Departamento" > "Ciudad" > "Barrio" para poder eliminar ','System notification!');
+			}
+		});
+		
+		$("#crear_direccion").click(function(){
+			
+			if($("#view_departamento").css("display")!=="none"){
+				block.depa = $("#tipo_departamento").val();
+			}else{
+				block.depa = $("#add_departamento_text").val();
+			}
+						
+			if($("#view_ciudades").css("display")!=="none"){
+				block.ciud = $("#tipo_ciudades").val();
+			}else{
+				block.ciud = $("#add_ciudad_text").val();
+			}
+						
+			if($("#view_barrio").css("display")!=="none"){
+				block.barr = $("#tipo_barrio").val();
+			}else{
+				block.barr = $("#add_barrio_text").val();
+			}
+			
+			block.lat = $("#add_barrio_lat_text").val();
+			
+			block.lon = $("#add_barrio_lon_text").val();
+			
+			if(block.lon.substr(0,1)!=="." && block.lat.substr(0,1)!=="." && block.depa!=="" && block.ciud!=="" && block.barr!=="" && block.lat!=="" && block.lon!=="" && block.lat.indexOf(".")>-1 && block.lon.indexOf(".")>-1 && block.lon.indexOf("-")>-1 && block.lat.indexOf("e")==-1 && block.lon.indexOf("e")==-1 && block.lat.indexOf(",")==-1 && block.lon.indexOf(",")==-1){
+				
+				
+				if(window.localStorage.getItem("Money-vars-token")!==null){
+					block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+				}else{
+					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+				}
+				
+				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon,block.det];
+				block.obj = {"r":"crea_direccion","d":block.arrays};
+				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+					var valor = JSON.parse(salida);
+					if(!valor.e){
+						$("#add_barrio_lon_text").val("");
+						$("#add_barrio_lat_text").val("");
+						$("#add_barrio_text").val("");
+
+						// $("#limpiar_agrega").click();
+						//ubicaciones_operaciones();
+						toastr.success('Procesado con éxito','System notification!');
+					}
+				});
+				
+			}else{
+				toastr.warning('Faltan datos para registrar o coordenadas erradas','System notification!');
+			}
+		});
+
+        function extraer_ciudades(){
+			block.depart = $("#tipo_departamento").val();
+			$("#tipo_ciudades").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+			
+			if(window.localStorage.getItem("Money-vars-token")!==null){
+				block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+			}else{
+				block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+			}
+			
+			block.arrays = [block.tokens[1],block.depart];
+			block.obj = {"r":"extraer_ciudades","d":block.arrays};
+			backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+				var valor = JSON.parse(salida);
+				if(!valor.e){
+					block.lista = valor.d[1];
+					block.nuevo = "";
+					for(var e = 0; e < block.lista.length; e++){
+						block.nuevo = block.nuevo + '<option value="'+block.lista[e]+'">'+block.lista[e]+'</option>';
+					}
+					$("#tipo_ciudades").html($("#tipo_ciudades").html()+block.nuevo);
+				}
+			});
+		}
+        function extraer_barrios(){
+			block.depart = $("#tipo_departamento").val();
+			block.cuidad = $("#tipo_ciudades").val();
+			$("#tipo_barrio").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+			
+			if(window.localStorage.getItem("Money-vars-token")!==null){
+				block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+			}else{
+				block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+			}
+			
+			block.arrays = [block.tokens[1],block.depart,block.cuidad];
+			block.obj = {"r":"extraer_barrios","d":block.arrays};
+			backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+				var valor = JSON.parse(salida);
+				if(!valor.e){
+					block.lista = valor.d[1];
+					block.nuevo = "";
+					for(var e = 0; e < block.lista.length; e++){
+						block.nuevo = block.nuevo + '<option value="'+block.lista[e]+'">'+block.lista[e]+'</option>';
+					}
+					$("#tipo_barrio").html($("#tipo_barrio").html()+block.nuevo);
+				}
+			});
+		}
 
     $("#monto_num_prestamo2").change(function () {
         block.numero = $("#monto_num_prestamo2").val();
