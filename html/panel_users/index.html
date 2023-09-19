@@ -891,6 +891,7 @@
     }
 
     function monto_meter(cedula,fecha){
+        console.log(cedula, fecha);
 		window.sessionStorage.setItem("Money-vars-fecha",fecha);
         $("#text_cedula_cliente2").val(cedula);
         $("#buscar_cedula_cliente2").click();
