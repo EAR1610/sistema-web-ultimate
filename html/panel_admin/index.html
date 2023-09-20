@@ -1555,13 +1555,21 @@
 <script>
 
     var firebaseConfig = {
-        apiKey: "AIzaSyDprSYitdwL_Kqs76EJFi5a9KM0wBbPFS4",
-        authDomain: "credit-menco.firebaseapp.com",
-        databaseURL: "https://credit-menco.firebaseio.com",
-        projectId: "credit-menco",
-        storageBucket: "credit-menco.appspot.com",
-        messagingSenderId: "631541589343",
-        appId: "1:631541589343:web:3399faa037e7b22f"
+
+        apiKey: "AIzaSyCKm7s6lyrf6qojY04kNYDt6DkM4P4vzoE",
+        authDomain: "prestamos-6c36a.firebaseapp.com",
+        projectId: "prestamos-6c36a",
+        storageBucket: "prestamos-6c36a.appspot.com",
+        messagingSenderId: "815768429932",
+        appId: "1:815768429932:web:6d50bac5c91e2150f97f49",
+        measurementId: "G-7DY4VZWSC5"
+        // apiKey: "AIzaSyDprSYitdwL_Kqs76EJFi5a9KM0wBbPFS4",
+        // authDomain: "credit-menco.firebaseapp.com",
+        // databaseURL: "https://credit-menco.firebaseio.com",
+        // projectId: "credit-menco",
+        // storageBucket: "credit-menco.appspot.com",
+        // messagingSenderId: "631541589343",
+        // appId: "1:631541589343:web:3399faa037e7b22f"
     };
     firebase.initializeApp(firebaseConfig);
 	
@@ -1697,6 +1705,7 @@
 
             var storageRef = firebase.storage().ref();
             var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+            console.log(uploadTask);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -2114,6 +2123,7 @@
 
             var storageRef = firebase.storage().ref();
             var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+            console.log("Aqui se esta guardando"+uploadTask);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;

@@ -367,8 +367,9 @@
 					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
 				}
 				
-				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon,block.det];
+				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon];
 				block.obj = {"r":"crea_direccion","d":block.arrays};
+				console.log(block.arrays)
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
 					var valor = JSON.parse(salida);
 					if(!valor.e){
@@ -530,6 +531,7 @@
 				var valor = JSON.parse(salida);
 				if(!valor.e){
 					block.lista = valor.d[1];
+					console.log(lista);
 					block.nuevo = "";
 					for(var e = 0; e < block.lista.length; e++){
 						block.nuevo = block.nuevo + '<option value="'+block.lista[e]+'">'+block.lista[e]+'</option>';

@@ -1207,7 +1207,7 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
 .navbar-fixed-top .navbar-form-custom .form-control { height: 50px}
 .navbar-fixed-top,
 .navbar-static-top {
-  background: #3d3d3d;
+  background: #0322ac;
 }
 .fixed-nav #wrapper {
   margin-top: 0;
@@ -4299,7 +4299,7 @@ samp {
   padding: 12px 10px;
   margin: 0;
   border-radius: 0;
-  background: #2f4050;
+  background: #0aa8bd;
   color: #fff;
   text-align: center;
   border-right: 1px solid #334556;
@@ -4891,7 +4891,7 @@ code {
   background-color: #ffffff;
   color: inherit;
   padding: 15px 20px 20px 20px;
-  border-color: #e7eaec38
+  border-color: #e7eaec38;
   border-image: none;
   border-style: solid solid none;
   border-width: 1px 0;

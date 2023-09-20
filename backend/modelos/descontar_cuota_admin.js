@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibe varios datos no me acuerdo cuantos 
+			Recibe varios datos no me acuerdo cuantos 
 		*/
 		
 		if (arrays.length==6){

@@ -18,6 +18,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         if ( typeof module === "object" && typeof module.exports === "object" ) {
             window.$ = window.jQuery = require('jquery');
@@ -624,6 +625,8 @@
                     <a href="#"><i class="fa fa-hand-holding-usd"></i> <span class="nav-label">Administración</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo();">Liquidación</a></li>
+                        <li><a href="javascript:informe_completo_cobros();">Consultar cobros</a></li>
+                        <li><a href="javascript:informe_completo_gastos();">Consultar gastos</a></li>
                     </ul>
                     <!--<ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo_finanza();">Finanza</a></li>
@@ -1720,6 +1723,8 @@
                         <div class="ibox-title">
                             <h5>Liquidación</h5>
                         </div>
+                        
+                        
 
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
@@ -1772,6 +1777,103 @@
                         </div>
                     </div>
                 </div>
+
+                
+                <div class="col-lg-12" id="consulta_cobros">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Busqueda de consultas por fecha</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>Id asesor</label>
+                                <select class="form-control m-b" id="id_asesor_consulta">
+                                </select>
+
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_asesor"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
+                                <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
+                                        id="busqueda_directa"
+                                        type="button">Buscar
+                                </button>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 50px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>DPI</th>
+                                        <th>Nombre Cliente</th>
+                                        <th>Dirección</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="listado_consultas_por_fechas">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12" id="consulta_gastos">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Busqueda de gastos por fecha</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>Id asesor</label>
+                                <select class="form-control m-b" id="id_asesor_gastos_consulta">
+                                </select>
+
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_gasto"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
+                                <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
+                                        id="busqueda_gasto"
+                                        type="button">Buscar
+                                </button>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 50px;">
+                                <table class="table table-striped" >
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Motivo de gasto</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="lista_gastos_exe">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="col-lg-12" id="contratos_view">
                     <div class="ibox ">
@@ -2221,6 +2323,10 @@
         $("#recaduos_ink").css("display", "none");
         $("#migrar_cion_div").css("display", "block");
         $("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
+
 	}
 
     $("#selector_cuotas_selec").change(function(){
@@ -2510,6 +2616,51 @@
         }
 
 	});
+
+    $("#busqueda_gasto").click(function(){
+        extraer_gastos();
+    });
+
+    $("#id_asesor_gastos_consulta").change(function(){
+        //$("#id_asesor_gastos_consulta").val();
+        console.log($("#id_asesor_gastos_consulta").val());
+    });
+
+    //Funcion para extraer datos con fecha pasandole la fecha al array
+    function extraer_gastos() {
+    if (window.localStorage.getItem("Money-vars-token") !== null) {
+        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    } else {
+        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    }
+    var fecha = $("#fecha_gasto").val()
+    block.estraa = $("#id_asesor_gastos_consulta").val();
+    console.log(block.estraa)
+	block.estraaq = block.estraa.split("_");
+	block.estra = block.estraaq[0];
+	block.cedulasesor = block.estraaq[1];
+    block.arrays = [block.tokens[1], block.estraa, fecha];
+    console.log(block.arrays);
+    block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
+    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        var valor = JSON.parse(salida);
+        console.log(valor);
+        if (!valor.e) {
+            block.pasero = JSON.parse(valor.d[1]);
+            block.inefd = '';
+            for (var wq = 0; wq < block.pasero.length; wq++) {
+                block.iteds = block.pasero[wq];
+                block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+            }
+            $("#lista_gastos_exe").html(block.inefd);
+        }
+    });
+}
+
+    
+
 
     block.filein = document.querySelector("#foto1m");
     block.filein.onchange = function (e) {
@@ -2990,6 +3141,7 @@
 			}
 
 			block.arrays = [block.tokens[1],$("#base_monto").val(),block.ecto[0]];
+            console.log(block.arrays)
 			block.obj = {"r": "save_base_asesor", "d": block.arrays};
 			backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 				var valor = JSON.parse(salida);
@@ -3427,6 +3579,7 @@
         $("#lista_enorme").html("");
         block.oso="";
         block.obj = {"r": "contratos_lista", "d": block.arrays};
+        console.log(block.arrays);
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
@@ -3494,10 +3647,11 @@
 
         block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];
         block.obj = {"r": "contratos_lista_all", "d": block.arrays};
+        console.log(block.arrays);
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-
+                console.log(valor);
                 block.oso="";
                 block.dat0s =valor.d[1][0];
                 block.unox = JSON.parse(block.dat0s[0]);
@@ -4020,7 +4174,30 @@
         });
     }
 
+    function aplicaBase(){
+        block.unew = $("#lista_asesores_general").val();
+        block.resq = block.unew.split("_");
+        block.asesoreId=block.resq[0];
 
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        var estado = true;
+        block.arrays = [block.tokens[1],block.asesoreId];
+        block.obj = {"r": "sumatoria_diario", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {  
+                console.log(valor.d[2]); 
+				if(valor.d[2]!=="0"){
+					estado = false;
+				}
+            }
+        });
+        return estado;
+    }
     function sumatoria(){
 
         block.unew = $("#lista_asesores_general").val();
@@ -4040,16 +4217,19 @@
             if (!valor.e) {                
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
-
-				if(valor.d[2]!=="0"){
+                const button = document.getElementById('registro_base');
+				if(valor.d[2]!=="0" && valor.d[2]!==0){
+                    button.setAttribute('disabled', '');
 					valor.d[2] = valor.d[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 					valor.d[2] = valor.d[2].split('').reverse().join('').replace(/^[\.]/,'');
 				}else{
+                    button.removeAttribute('disabled');
 					valor.d[2] = 0;
 					valor.d[3] = "";
 				}
                 $("#base_anterior").text("Base anterior: Q"+valor.d[2]+ " Guardado: "+ valor.d[3]);
                 $("#text_recolectado").text("Q"+valor.d[1]);
+                $("#text_base").text("Q"+valor.d[2]);
                 window.sessionStorage.setItem("sumatoria_"+block.asesoreId,valor.d[1]);
                 window.sessionStorage.setItem("liquidacion_accion",block.asesoreId);
             }
@@ -4061,6 +4241,8 @@
     $("#lista_asesores_general").change(function () {
 		block.esf = $("#lista_asesores_general")["0"].options.selectedIndex;
         block.tesq = $("#lista_asesores_general")["0"][block.esf].innerHTML.split("ID: ");
+        console.log(block.esf);
+        console.log(block.tesq);
 		window.sessionStorage.setItem("asesore_lis_limp",block.tesq[1]);
 		sumatoria();
 		$("#listado_operacion_asesore").html("");
@@ -4178,7 +4360,7 @@
 	}
 
 	$("#registro_base").click(function(){
-		$("#modal_base").modal("show");
+        $("#modal_base").modal("show");
 	});
 
 	$("#seguro_admin").click(function(){
@@ -5122,6 +5304,9 @@
         $("#recaduos_ink").css("display", "none");
         $("#migrar_cion_div").css("display", "none");
         $("#suplanter").css("display", "block");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 
 
 		window.sessionStorage.setItem("Money-vars-foto-id-reverso",block.daata[3]);
@@ -5590,6 +5775,9 @@
     $("#create_clientes_listo").css("display", "none");
     $("#contratos_view").css("display", "none");
     $("#cliente_lista_admi").css("display", "none");
+    $("#consulta_cobros").css("display", "none");
+    $("#consulta_gastos").css("display", "none");
+
 
 
     function asesores_panel() {
@@ -5614,6 +5802,9 @@
         $("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 		  $("#suplanter").css("display", "none");
     }
 
@@ -5639,6 +5830,9 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 		  $("#suplanter").css("display", "none");
     }
 
@@ -5664,6 +5858,9 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 		  $("#suplanter").css("display", "none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -5734,6 +5931,9 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 		  $("#suplanter").css("display", "none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -5787,6 +5987,9 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 		  $("#suplanter").css("display", "none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -5841,6 +6044,9 @@
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
 		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -6010,10 +6216,54 @@
                 }
                 $("#tipo_cargo_dos").html(block.listax);
                 $("#id_asesor").html(block.listax2);
+                $("#id_asesor_consulta").html(block.listax2);
+                $("#id_asesor_gastos_consulta").html(block.listax2);
+
+                
             }
         });
     }
 
+    // function cargarListas_asigandos_consultas(){
+
+    //     if (window.localStorage.getItem("Money-vars-token") !== null) {
+    //         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    //     } else {
+    //         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    //     }
+
+    //     block.arrays = [block.tokens[1]];
+    //     block.obj = {"r": "listar_asesores", "d": block.arrays};
+    //     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+    //     var valor = JSON.parse(salida);
+    //     if (!valor.e) {
+    //         block.todo = valor.d[1];
+    //         var selectAsesorConsulta = document.getElementById("id_asesor_consulta");
+    //         selectAsesorConsulta.innerHTML = ""; // Limpia el contenido actual del select
+
+    //         // Itera sobre los datos de los asesores y crea las opciones para el select
+    //         for (var t = 0; t < block.todo.length; t++) {
+    //             block.item = JSON.parse(block.todo[t]);
+    //             if (block.item[4] == "2") {
+    //                 block.cedula = block.item[5] + block.item[6];
+    //             } else {
+    //                 block.cedula = block.item[6];
+    //             }
+    //             block.nom = block.item[7] + ' ' + block.item[9] + ' - ' + block.cedula;
+    //             var option = document.createElement("option");
+    //             option.value = block.item[22] + '_asesor_' + block.item[23] + '_' + block.item[7] + '_' + block.item[9];
+    //             option.textContent = block.nom;
+    //             console.log(selectAsesorConsulta.appendChild(option));
+    //         }
+    //     }
+    // });
+
+
+
+
+    // }
+
+  
     function asignar_supervisor_asesor() {
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
@@ -6036,6 +6286,9 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 		  $("#suplanter").css("display", "none");
 
         cargarListas_asigandos();
@@ -6166,6 +6419,7 @@
 
             block.lista = '';
             block.arrays = [block.tokens[1], block.list, block.tokens[4], $("#id_asesor").val()];
+            console.log(block.arrays);
             block.obj = {"r": "lista_asigandos_fecha2", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
@@ -6218,6 +6472,9 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 		  $("#suplanter").css("display", "none");
 
         block.dis = new Date();
@@ -6373,7 +6630,50 @@
 	}
 
 	$("#listado_liengenerela").html("");
+     
+    $("listado_consultas_por_fechas").html("");
+
 	window.sessionStorage.setItem("numero_lista","0");
+
+     
+    function consulta_cobrosFecha(){
+        block.num = window.sessionStorage.getItem("numero_lista");
+
+    if (window.localStorage.getItem("Money-vars-token") !== null) {
+        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    } else {
+        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    }
+
+    block.listadi = "";
+    block.arrays = [block.tokens[1], block.num];
+    block.obj = { "r": "lista_cliente_basic", "d": block.arrays }; //falta
+    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        var valor = JSON.parse(salida);
+        if (!valor.e) {
+            if (valor.d[1] !== null) {
+                block.item = JSON.parse(valor.d[1]);
+                console.log(block.item = JSON.parse(valor.d[1]));
+                window.localStorage.setItem("Money-vars-cliente-" + block.item[7], valor.d[1]);
+                block.cedula = block.item[6];
+                block.nomre = block.item[7];
+                block.direcion = block.item[12];
+                block.listadi = block.listadi + '<tr><td>' + block.cedula + '</td><td>' + block.nomre + '</td><td>' + block.direcion + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.nomre + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                $("#listado_consultas_por_fechas").append(block.listadi);
+                block.nexr = parseInt(block.num) + 1;
+                window.sessionStorage.setItem("numero_lista", block.nexr);
+                consulta_cobrosFecha();
+            }
+        } else if (valor.d[1] == "4" && parseInt(block.num) < parseInt(valor.d[2])) {
+            console.log("Else-If");
+            block.nexr = parseInt(block.num) + 1;
+            window.sessionStorage.setItem("numero_lista", block.nexr);
+            consulta_cobrosFecha();
+        } else {
+            return;
+        }
+    });
+    }
 
     function consulta_x(){
         block.num = window.sessionStorage.getItem("numero_lista");        
@@ -6517,6 +6817,9 @@
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
 		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+
 
 		window.sessionStorage.setItem("numero_lista","0");
         consulta_x();
@@ -6646,8 +6949,75 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "block");
 		$("#migrar_cion_div").css("display", "none");
-		  $("#suplanter").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
     }
+
+    function informe_completo_cobros(){
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#consulta_cobros").css("display", "initial");
+        cargarListas_asigandos();
+
+        window.sessionStorage.setItem("numero_lista","0");
+        consulta_cobrosFecha();
+
+
+    }
+
+    function informe_completo_gastos(){
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "initial");
+        
+
+        cargarListas_asigandos();
+
+    }
+
 
 
 
@@ -6673,7 +7043,9 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
-		  $("#suplanter").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
     }
 
 
@@ -6699,7 +7071,10 @@
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
-		  $("#suplanter").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        
     }
 
     var actuesli = moment().format('DD/MM/YYYY');
@@ -6728,6 +7103,8 @@
         $("#recaduos_ink").css("display", "none");
 		$("#migrar_cion_div").css("display", "none");
         $("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
     }
 
 	var map;

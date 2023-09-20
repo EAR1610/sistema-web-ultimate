@@ -12,9 +12,8 @@ eje = function(arrays,origen,redisClient) {
 		/*
 		recibo tokens, cedula ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL]
 		*/
-			
+
 		if (arrays.length==11){
-		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
@@ -41,7 +40,7 @@ eje = function(arrays,origen,redisClient) {
 							
 							if(reply!==null){
 								var info = JSON.parse(reply);
-								var extric = info[11];
+								var extric = info[11]; 
 
 								redisClient.keys("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_*",function(ersr,replsy) {
 									if(replsy.length>0){
@@ -75,32 +74,25 @@ eje = function(arrays,origen,redisClient) {
 											var moment = require("moment");
 											
 											/*
-											creo la cantidad de cuotas que require segunel ciclo que tengan
+												creo la cantidad de cuotas que require según el ciclo que tengan
 											*/
 											
-											var fes =[];
-											if(arrays[10]=="2"){
-												
-												var cuotaD = arrays[8].replace(".",""),
-													cuotaD2 = cuotaD.replace(".",""),
-													tiempo = arrays[4],
-													indi = moment().format('E'),
-													residuo = 7 - indi,
-													prox = moment().add(residuo, 'days').format('YYYY-MM-DD');
-												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0});
-												
-												for(var k = 1; k < tiempo+1; k++){
-													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD');
-													fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+											var fes =[];											
+											if(arrays[10]=="2"){ //FRECUENCIA DE PAGO: SEMANAL												
+												var cuotaD = arrays[8].replace(".", ""),
+												cuotaD2 = cuotaD.replace(".", ""),
+												tiempo = arrays[4],
+												indi = moment().isoWeekday(), // Obtener el día de la semana actual
+												prox = moment().isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual												
+												for (var k = 1; k < tiempo + 1; k++) {
+													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+													fes.push({"cp": cuotaD2, "ct": false, "fe": prox2, "pe": 0});													
 													prox = prox2;
 												}
-												
-												if(fes.length > parseInt(arrays[4])){
+												if (fes.length > parseInt(arrays[4])) {
 													fes.pop();
-												}
-												
-											}else if(arrays[10]=="1"){
-												
+												}																																				
+											} else if(arrays[10]=="1"){ //FRECUENCIA DE PAGO DIARIA												
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													indi = moment().format('E'),
@@ -108,7 +100,6 @@ eje = function(arrays,origen,redisClient) {
 													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4],
 													acum=1;
-
 												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0});
 												for(var k = 1; k < tiempo; k++){
 
@@ -116,15 +107,13 @@ eje = function(arrays,origen,redisClient) {
 														var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
 														prox = prox2;
-
-													}else if(k==residuo){
+													} else if(k==residuo){
 														prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 														acum++;
-
 														var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
 														prox = prox2;
-													}else if(k>residuo){
+													} else if(k>residuo){
 														if(acum==7){
 															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 															acum=1;
@@ -134,52 +123,35 @@ eje = function(arrays,origen,redisClient) {
 														prox = prox2;
 														acum++;
 													}
-
 													 if(k==1){
 														 tiempo++;
 													 }
-
-												}
-												
+												}											
 												if(fes.length > parseInt(arrays[4])){
 													fes.pop();
-												}
-												
-											}else if(arrays[10]=="3"){
-												
+												}												
+											}else if(arrays[10]=="3"){ //PAGO QUINCENAL
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													prox = moment().format('YYYY-MM-DD'),
-													tiempo = arrays[4];
-													
-												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0});
+													tiempo = arrays[4];																										
 												for(var k = 1; k < tiempo+1; k++){
 													var prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');
 													fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
 													prox = prox2;
-												}
-												
-											}else if(arrays[10]=="4"){
-												
-											
+												}												
+											} else if(arrays[10]=="4"){	//PAGO MENSUAL									
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													prox = moment().format('YYYY-MM-DD'),
-													tiempo = arrays[4];
-													
-												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0});
-												for(var k = 1; k < tiempo; k++){
+													tiempo = arrays[4];																									
+												for(var k = 1; k < 3; k++){
 													var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
 													fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
 													prox = prox2;
-												}
-												
-											}
-											
-											
-											if(fes.length>0){
-												
-												
+												}												
+											}																						
+											if(fes.length>0){										
 												var desc = parseInt(arrays[6]);
 												if(desc>0){
 													for(d = 0;d < desc; d++){
@@ -188,19 +160,11 @@ eje = function(arrays,origen,redisClient) {
 													arrays.push(fes);
 												}else{
 													arrays.push(fes);
-												}
-												
-												console.log(arrays);
-												
+												}																								
 												redisClient.keys("registry_*",function(err,cant){
-													var consecutivo = cant.length + 1;
-													
-													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/
-																
-													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;
-													
-													console.log(oriegn);
-													
+													var consecutivo = cant.length + 1;													
+													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/																
+													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;													
 													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arrays),function(err,reply) {
 														
 														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {
@@ -217,34 +181,25 @@ eje = function(arrays,origen,redisClient) {
 																	resolve([true, miEmpresa, otrasEmpresa]);
 																});
 															}
-														});
-														
-													});
-													
-												});			   
-												
+														});														
+													});													
+												});			   												
 											}else{
 												reject([false,"8"]);
-											}
-											
+											}											
 										}
 									});
 								});
-
 							}
-						});
-					
-					}
-					
+						});					
+					}					
 				}else{
 					reject([false,"2"]);
 				}
-			});
-			
+			});			
 		}else{
 			reject([false,"3"]);
-		}
-		
+		}		
 	});
 };
 

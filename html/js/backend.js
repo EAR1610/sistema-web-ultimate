@@ -5,12 +5,12 @@ backend.dev = false;
 if(!backend.dev){
 	// backend.usuando = "45.32.161.183";
 	backend.usuando = "192.168.1.207";
-}else{
+} else {
 	// backend.usuando = "45.32.160.1";
 	backend.usuando = "192.168.1.207";
 }
 
-backend.conexionEnvio = function (datos,callback){
+backend.conexionEnvio = function (datos,callback){	
 	if ("WebSocket" in window){
 
         if (!backend.dev) {
@@ -20,21 +20,21 @@ backend.conexionEnvio = function (datos,callback){
         }
 
 		ws.onopen = function(){			
-			$("#conectado_server")[0].innerText ="true";
+			$("#conectado_server")[0].innerText ="true";			
 			ws.send(datos);
 		};
 		ws.onmessage = function (evt) {
-			ws.close();			
+			ws.close();						
 			return callback(evt.data);
 		};
 		ws.onerror = function (evt) {
-			toastr.error('Error en la conexion de internet','System notification!');
+			toastr.error('Error en la conexion de internet','System notification!');			
 			$("#conectado_server")[0].innerText ="false";
 		};
-		window.onbeforeunload = function(event) {
+		window.onbeforeunload = function(event) {			
 			ws.close();
 		};
-	} else {
+	} else {		
 	   return callback(JSON.stringify({"e":true,"m":"WebSocket NOT supported by your Browser"}));
 	}
 };

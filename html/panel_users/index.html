@@ -571,9 +571,12 @@
 
 
                     <div class="ibox ">
-                        <div class="ibox-title">
-                            Total recaudado: <label id="text_recolectado"></label>
+                        <div class="ibox-title" style="display: flex; justify-content: space-around;">
+                            <div>Base diaria: <label id="text_base"></label></div>
+                            <div>Total recaudado: <label id="text_recolectado"></label></div>
+                            <div>Total gastos: <label id="text_gastos"></label></div>
                         </div>
+
                     </div>
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -620,6 +623,9 @@
                                 <button class="btn btn-primary btn-block" id="status_prestamo"
                                         type="button">Procesar pago
                                 </button>
+                                <!-- <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_pdf"><i class="fa fa-file-pdf"></i></button>
+                                </form> -->
                             </div>
 							
 							<div class="col-sm-12 col-md-12 col-xs-12" id="cedula_elecion" align="center" style="display:none; margin-top:2%">
@@ -661,7 +667,7 @@
                     </div>
                 </div>
                 
-                <div class="row" id="lista_ubicacniones_div">
+                <div class="row" id="lista_ubicacniones_div" style="display:none">
                     <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-title">
@@ -890,8 +896,7 @@
         salida_sistema();
     }
 
-    function monto_meter(cedula,fecha){
-        console.log(cedula, fecha);
+    function monto_meter(cedula,fecha){    
 		window.sessionStorage.setItem("Money-vars-fecha",fecha);
         $("#text_cedula_cliente2").val(cedula);
         $("#buscar_cedula_cliente2").click();
@@ -1028,7 +1033,6 @@
 					$("#listado_tarjeta").html("");
 					$('.slick_demo_2').slick('unslick');
 				}
-				console.log(valor.d);
 				window.localStorage.setItem("Money-vars-tarjetas_old",JSON.stringify(valor.d[1]));
 				
 				block.lisas = [];
@@ -1119,7 +1123,7 @@
 
         if ($("#monto_prestar_ya_admin").val()!=="" && $("#selector_cuotas_selec").val()!=="") {
 
-            if(window.sessionStorage.getItem("Lista_cuota")!==null) {
+            if(window.sessionStorage.getItem("Lista_cuota")!==null) {                
                 block.cuotas = JSON.parse(window.sessionStorage.getItem("Lista_cuota"));
                 block.limitos = JSON.parse(window.sessionStorage.getItem("Configuracion"));
                 block.min = parseInt(block.limitos[1]);
@@ -1155,7 +1159,7 @@
                                 block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                                 block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
                                 $("#utilidad_prestada_peso").html(block.resul);
-                                $("#utilidad_cuota").html(block.reas);
+                                $("#utilidad_cuota").html(block.reas);                                
                             }
                         }
 
@@ -1554,6 +1558,29 @@
         });
     }
 
+    // function totalGastos(){
+    //     if (window.localStorage.getItem("Money-vars-token") !== null) {
+    //         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    //     } else {
+    //         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    //     }
+    //     let gastos =0;
+    //     block.arrays = [block.tokens[1],block.tokens[5]];
+    //     block.obj = {"r": "extrae_gastos", "d": block.arrays};
+    //     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+    //         var valor = JSON.parse(salida);
+    //         if (!valor.e) {
+    //             block.pasero = JSON.parse(valor.d[1]);
+                
+    //             for(var i= 0; i< block.pasero.length; i++){
+    //                 gastos += parseInt(block.pasero[i][2]);
+    //             }
+    //             $("#text_gastos").text("Q"+gastos);
+    //         }
+    //     });
+    //     return gastos;
+    // }
+
     $("#gasto_executar").click(function () {
 
         block.motivo = $("#motivo_gasto").val();
@@ -1662,15 +1689,15 @@
         });
 
         block.arrays = [block.tokens[1],block.tokens[5]];
-        console.log(block.arrays);
-        console.log("hi");
         block.obj = {"r": "sumatoria_diario", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            if (!valor.e) {
+            if (!valor.e) {                
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');
+                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
                 $("#text_recolectado").text("Q"+valor.d[1]);
+                $("#text_base").text("Q"+valor.d[2]);
+                // totalGastos();
             }
         });
     }
@@ -1729,11 +1756,11 @@
 					}else{
 						//falta
 						block.espera = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-						block.espera = block.espera.split('').reverse().join('').replace(/^[\.]/,'');
-						block.compl = "Espera por pago \n $"+block.espera;
+						block.espera = block.espera.split('').reverse().join('').replace(/^[\.]/,'');                        
+						block.compl = "Espera por pago \n Q"+block.espera;
 						block.coloe = "#ffc107";
 					}
-
+                    
 					block.fes = block.cuotas[13][x].fe.split("-");
 					block.conve = parseInt(block.fes[1]) - 1;
 					block.yeart = block.fes[0];
@@ -1830,13 +1857,12 @@
             block.asesor = $("#selector_asesores_lista").val();
             block.monto_prestar = $("#monto_prestar_ya_admin").val();
             block.frecuencia = $("#selector_frecuencia").val();
-            block.dias = $("#selector_cuotas_selec").val();
+            block.dias = $("#selector_cuotas_selec").val();            
             block.fecha_prestamo = $("#fechaActual").val();
             block.descontar = $("#cuota_descontar_sistema").val();
             block.porcentaje = $("#utilidad_prestada").html();
             block.quedo_cuota = $("#utilidad_cuota").html();
-            block.dias = block.dias - block.descontar;
-
+            block.dias = block.dias - block.descontar;                        
             if(block.descontar<block.dias){
 
                 if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -1846,7 +1872,7 @@
                 }
 
                 block.arrays = [block.tokens[1],window.sessionStorage.getItem("Money-vars-registrado"),block.tokens[5],block.monto_prestar,block.dias,block.fecha_prestamo,block.descontar,block.porcentaje,block.quedo_cuota,block.tokens[4],block.frecuencia];
-                block.obj = {"r": "crear_contrato", "d": block.arrays};
+                block.obj = {"r": "crear_contrato", "d": block.arrays};                
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                     var valor = JSON.parse(salida);
                     $("#text_cedula_cliente").prop("disabled",false);
@@ -1985,7 +2011,7 @@
         block.obj = {"r": "listar_cuotas", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            if (!valor.e) {
+            if (!valor.e) {                
                 block.lista = valor.d[1];
                 block.nuevo = "";
                 block.nuevo2 = "<option value=''>Seleccione</option>";
@@ -2042,7 +2068,7 @@
             block.obj = {"r": "consultar_cedula", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
-                if (!valor.e) {
+                if (!valor.e) {                    
                     block.todo = valor.d[1];
                     block.nombre = block.todo[0];
 
@@ -2384,7 +2410,7 @@
         block.obj = {"r": "extraer_ciudades", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            if (!valor.e) {
+            if (!valor.e) {                
                 block.lista = valor.d[1];
                 block.nuevo = "";
                 for (var e = 0; e < block.lista.length; e++) {
@@ -2424,7 +2450,7 @@
     block.obj = {"r": "extraer_departamentos", "d": block.arrays};
     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
         var valor = JSON.parse(salida);
-        if (!valor.e) {
+        if (!valor.e) {            
             block.lista = valor.d[1];
             block.nuevo = "";
             for (var e = 0; e < block.lista.length; e++) {
@@ -2476,7 +2502,7 @@
         block.obj = {"r": "extraer_barrios", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            if (!valor.e) {
+            if (!valor.e) {                
                 block.lista = valor.d[1];
                 block.nuevo = "";
                 for (var e = 0; e < block.lista.length; e++) {
@@ -2487,17 +2513,17 @@
         });
     }
 
-    $("#tipo_ciudades").change(function () {
-        if ($("#tipo_ciudades").val() !== "") {
-            extraer_barrios();
-        }
-    });
+    // $("#tipo_ciudades").change(function () {
+    //     if ($("#tipo_ciudades").val() !== "") {
+    //         extraer_barrios();
+    //     }
+    // });
 
-    $("#tipo_departamento").change(function () {
-        if ($("#tipo_departamento").val() !== "") {
-            extraer_ciudades();
-        }
-    });
+    // $("#tipo_departamento").change(function () {
+    //     if ($("#tipo_departamento").val() !== "") {
+    //         extraer_ciudades();
+    //     }
+    // });
 
     $("#tipo_ciudadesm").change(function () {
         if ($("#tipo_ciudadesm").val() !== "") {
@@ -2506,7 +2532,7 @@
     });
 
     $("#tipo_departamentom").change(function () {
-        if ($("#tipo_departamentom").val() !== "") {
+        if ($("#tipo_departamentom").val() !== "") {            
             extraer_ciudadesm();
         }
     });
@@ -2533,13 +2559,13 @@
             block.obj = {"r": "buscar_cliente", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
-                if (!valor.e) {
+                if (!valor.e) {  
                     block.partes = JSON.parse(valor.d[1]);
                     block.nomre = block.partes[7] +" "+block.partes[8] +" "+block.partes[9] +" "+block.partes[10];
                      $("#text_nombre_cliente").val(block.nomre);
                     window.sessionStorage.setItem("Money-vars-registrado",block.partes[7]);
                     $("#foto_user_clien").attr("src",block.partes[1]);
-                }else{
+                } else {
                     if(valor.d[1]=="6"){
 						 block.frito = JSON.parse(valor.d[2]);
 						if(block.frito[1]=="1"){
@@ -2559,7 +2585,7 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado en otra empresa(Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'System notification!');                        
 						block.partes = JSON.parse(valor.d[3][0]);
 						block.nomre = block.partes[7] +" "+block.partes[8] +" "+block.partes[9] +" "+block.partes[10];
 						 $("#text_nombre_cliente").val(block.nomre);
@@ -2594,48 +2620,46 @@
 		}
 						
 		block.arrays = [block.tokens[1],block.tokens[5],"",id,cedula];
-		block.obj = {"r": "buscar_cliente2", "d": block.arrays};
+		block.obj = {"r": "buscar_cliente2", "d": block.arrays};        
 		backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-			var valor = JSON.parse(salida);
-			if (!valor.e) {
-				block.cuotas = valor.d[1];
-				block.cliente = valor.d[2];
-				
+			var valor = JSON.parse(salida);            
+			if (!valor.e) {                
+                block.cuotas = valor.d[1];                
+				block.cliente = valor.d[2];								
 				block.limpo = block.cuotas[3].replace(".","");
 				block.limpo2 = block.limpo.replace(".","");
 				block.valoes = (parseInt(block.limpo2) * (parseInt(block.cuotas[7]) / 100) ) + parseInt(block.limpo2);
 				block.contador_cuotas = 0;
 				block.extraer = JSON.parse(block.cliente);
 				block.acumo = 0;
-				block.todosCal =[];
-				
+				block.todosCal =[];				
 				for(var x = 0; x < block.cuotas[13].length; x++){
-					if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0){
-						block.contador_cuotas++;
+                    if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0){
+                        block.contador_cuotas++;                        
 					}
-
-					if(block.cuotas[13][x].pe!==0){
-					   block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);
+                    
+					if(block.cuotas[13][x].pe!==0){                        
+                        block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);                        
 						//abono
 						block.abono = block.cuotas[13][x].pe.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 						block.abono = block.abono.split('').reverse().join('').replace(/^[\.]/,'');
 						block.compl = "Abono \n $"+block.abono;
 						block.coloe = "#343a40";
 					}else if(block.cuotas[13][x].ct == true){
-						block.acumo = block.acumo + parseInt(block.cuotas[13][x].cp);
+                        block.acumo = block.acumo + parseInt(block.cuotas[13][x].cp);                        
 						//completa
-						block.completo = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+						block.completo = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                        
 						block.completo = block.completo.split('').reverse().join('').replace(/^[\.]/,'');
 						block.compl = "Pago cuota \n $"+block.completo;
 						block.coloe = "#28a745";
 					}else{
-						//falta
-						block.espera = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-						block.espera = block.espera.split('').reverse().join('').replace(/^[\.]/,'');
-						block.compl = "Espera por pago \n $"+block.espera;
+                        //falta                        
+						block.espera = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                        
+						block.espera = block.espera.split('').reverse().join('').replace(/^[\.]/,'');                        
+						block.compl = "Espera por pago \n Q"+block.espera;
 						block.coloe = "#ffc107";
 					}
-
+                    
 					block.fes = block.cuotas[13][x].fe.split("-");
 					block.conve = parseInt(block.fes[1]) - 1;
 					block.yeart = block.fes[0];
@@ -2661,10 +2685,10 @@
 					$("#entregado_prestame").text("0");
 					$("#dias_prestame").text("0");
 				}
-								
-				$("#cuento_prestame").text(block.cuotas[3]);
+								                
+				$("#cuento_prestame").text(block.cuotas[3]);                
 				$("#dias_prestame").text(block.contador_cuotas);
-				$("#valor_prestame").text(block.cuotas[8]);
+				$("#valor_prestame").text(block.cuotas[8]);                
 				$("#pago_prestame").text(block.valoes-block.acumo);
 				$("#entregado_prestame").text(block.cuotas[3]);
 				$("#descuento_prestame").text("0");
@@ -2697,8 +2721,7 @@
 			$("#cuotas_coun").css("display","none");
 			
 			var frutos = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
-			block.barra = '';
-            console.log(frutos);
+			block.barra = '';            
             if(frutos !== null){
                 for(var k = 0; k < frutos.length; k++){
                     if(frutos[k].c == $("#text_cedula_cliente2").val()){
@@ -2857,6 +2880,7 @@
         $("#configuracion_general").css("display", "none");
         $("#busqueda_asignaciones").css("display", "none");
         $("#cobrar_couta").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#googleMap").css("display", "none");
         $("#crear_gastos").css("display", "none");
         $("#configuracion_general_cuotas").css("display", "none");
@@ -2912,9 +2936,10 @@
 
     $(document).keypress(function (e) {
         if (e.which == 13) {
+            e.preventDefault();
             if(window.sessionStorage.getItem("Money-perfil")!==null){
                 block.perfil = window.sessionStorage.getItem("Money-perfil");
-                if(block.perfil == "descontar"){
+                if(block.perfil == "descontar"){                    
                     $("#buscar_cedula_cliente2").click();
                 }else if(block.perfil == "contrato"){
                     $("#buscar_cedula_cliente").click();
@@ -3144,8 +3169,8 @@
             }
 		});
     function ubicaciones_operaciones(){
-			$("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
-			$("#googleMap").css("display","none");
+        $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+        $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#cobrar_couta").css("display", "none");

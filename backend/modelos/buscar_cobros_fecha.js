@@ -9,55 +9,39 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibo el token
+		recibe token y idasesor
 		*/
 		
-		if (arrays.length==1){//token,dueño
+		if (arrays.length==3){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
+				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
+					
+					var moment = require("moment");
+					// var dia = moment().format('YYYY-MM-DD');
+					var coando = "monto_"+arrays[1]+"_*_"+arrays[2]+"_*"
 					
 					/*
-						extraigo las lista de cuotas que tengo
+					toma los monto y los suma
 					*/
 					
-					redisClient.keys('cuotas_estaticas_'+decoded.d+'_*',function(err3,reply3){
-						if(reply3.length > 0){
-							
-							
-							/*
-							ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
-							*/
-							
-							var litado = [];
-							function iterar(ind,arrs){
-								if(ind == arrs.length){
-									
-									/*
-									resulvo resultado
-									*/
-									
-									resolve([true,litado]);
-								}else{
-									redisClient.get(arrs[ind],function(err,reply) {
-										if(reply!==null){
-											litado.push(reply);
-											ind++;
-											iterar(ind,arrs);
-										}else{
-											ind++;
-											iterar(ind,arrs);
-										}
-									});
-								}
+					redisClient.keys(coando,function(err3,reply3){
+						if(reply3!==null){
+							data = []
+							for(var i = 0; i < reply3.length; i ++){
+								var explit  = reply3[i].split("_");
+								
+								info=[i,explit[2],explit[4]+":"+explit[5]];
+								data[i] = info;
+								resolve([true,data]);
+								
 							}
 							
-							iterar(0,reply3);
 						}else{
-							reject([false,"4"]);
+							resolve([true,data]);
 						}
 					});
 					
