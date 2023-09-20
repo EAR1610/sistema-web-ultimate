@@ -20,7 +20,7 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
 					
-					var moment = require("moment");
+					// var moment = require("moment");
 					// var dia = moment().format('YYYY-MM-DD');
 					var coando = "monto_"+arrays[1]+"_*_"+arrays[2]+"_*"
 					
@@ -33,13 +33,44 @@ eje = function(arrays,origen,redisClient) {
 							data = []
 							for(var i = 0; i < reply3.length; i ++){
 								var explit  = reply3[i].split("_");
+								console.log("ID DEL CONTRATO:  "+explit[7]);
+								// cliente =[];
+								// redisClient.get("registro_contrato_"+arrays[1],function(err,reply) {
+									
+								// 	var contrato = JSON.parse(reply);
+									
+								// 	for (const string of contrato) {
+								// 		// if (explit[7]!=null){
+								// 		// 	const partes = string.split("_");
+								// 		// 	const ultimoElemento = partes[partes.length - 1];
+								// 		// 	console.log(ultimoElemento);
+								// 		// 	console.log(explit[7]);
+								// 		// 	if (parseInt(ultimoElemento) ===explit[7] ) {
+								// 		// 	console.log("encontrado");
+								// 		// 	var cliente = redisClient.get("cliente_"+partes[1], function (qersr, reply_cliente) {
+								// 		// 		if(reply_cliente!==null){
+								// 		// 			cliente.push(JSON.parse(reply_cliente));
+								// 		// 			console.log(reply_cliente);
+								// 		// 			console.log(cliente);
+								// 		// 		}
+								// 		// 		else{
+								// 		// 			cliente.push(reply_cliente);
+								// 		// 		}
+								// 		// 	});
+								// 		// 	}
+								// 		// }
+										
+								// 	  }
+									  
+									  
+								// });
+
 								
-								info=[i,explit[2],explit[4]+":"+explit[5]];
+								info=[i,explit[2],explit[4]+":"+explit[5],explit[7]];
 								data[i] = info;
-								resolve([true,data]);
 								
 							}
-							
+							resolve([true,data]);
 						}else{
 							resolve([true,data]);
 						}
