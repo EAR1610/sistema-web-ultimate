@@ -26,11 +26,13 @@
 
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
     <script>
         if ( typeof module === "object" && typeof module.exports === "object" ) {
             window.$ = window.jQuery = require('jquery');
         }
     </script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 
     <style>
         @media (max-width: 576px) {
@@ -612,6 +614,7 @@
                                     <div class="form-group"><label>Monto a pagar</label> <input
                                             id="cuotas_coun"
                                             type="number"
+                                            min="0"
                                             placeholder=""
                                             class="form-control"></div>
                                 </form>
@@ -623,9 +626,9 @@
                                 <button class="btn btn-primary btn-block" id="status_prestamo"
                                         type="button">Procesar pago
                                 </button>
-                                <!-- <form role="form" style="margin-top: 24px;display:grid;">
+                                <form role="form" style="margin-top: 24px;display:grid;">
                                     <button type="button" class="btn btn-danger" id="boton_pdf"><i class="fa fa-file-pdf"></i></button>
-                                </form> -->
+                                </form>
                             </div>
 							
 							<div class="col-sm-12 col-md-12 col-xs-12" id="cedula_elecion" align="center" style="display:none; margin-top:2%">
@@ -880,11 +883,10 @@
 <script src="../js/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="../js/imagen_tool.js"></script>
 <script src="../js/backend.js"></script>
-
-
-<script>
+<script src="../../backend/modelos/generar_ticket.js"></script>
+<script>    
 	$("#page-wrapper").css("height","");
-	
+
     var block = this;
 
     function salida_sistema() {
@@ -1558,28 +1560,33 @@
         });
     }
 
-    // function totalGastos(){
-    //     if (window.localStorage.getItem("Money-vars-token") !== null) {
-    //         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-    //     } else {
-    //         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-    //     }
-    //     let gastos =0;
-    //     block.arrays = [block.tokens[1],block.tokens[5]];
-    //     block.obj = {"r": "extrae_gastos", "d": block.arrays};
-    //     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-    //         var valor = JSON.parse(salida);
-    //         if (!valor.e) {
-    //             block.pasero = JSON.parse(valor.d[1]);
+    function totalGastos(){
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        let gastos =0;
+        block.arrays = [block.tokens[1],block.tokens[5]];
+        block.obj = {"r": "extrae_gastos", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
                 
-    //             for(var i= 0; i< block.pasero.length; i++){
-    //                 gastos += parseInt(block.pasero[i][2]);
-    //             }
-    //             $("#text_gastos").text("Q"+gastos);
-    //         }
-    //     });
-    //     return gastos;
-    // }
+                for(var i= 0; i< block.pasero.length; i++){
+                    gastos += parseInt(block.pasero[i][2]);
+                }
+                $("#text_gastos").text("Q"+gastos);
+            }
+        });
+        return gastos;
+    }    
+
+    $("#boton_pdf").click(function () {
+        let datos = ["Supersistemas", "Hugo", "435", "1985"];
+        generarTicket(datos);
+    });
 
     $("#gasto_executar").click(function () {
 
@@ -1697,7 +1704,7 @@
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
                 $("#text_recolectado").text("Q"+valor.d[1]);
                 $("#text_base").text("Q"+valor.d[2]);
-                // totalGastos();
+                totalGastos();
             }
         });
     }
@@ -1946,8 +1953,7 @@
         $("#foto4m").click();
     });
 	
-	function eliminar_pendiente(id){
-		
+	function eliminar_pendiente(id){		
 		if (window.localStorage.getItem("Money-vars-token") !== null) {
 			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
 		} else {
@@ -1962,8 +1968,7 @@
 				toastr.success('Agregado correctamente', 'System notification!');
 				pendiente_link();
 			}
-		});
-		
+		});		
 	}
 
 	$("#guarda_pendiente").click(function () {
@@ -2132,30 +2137,27 @@
                             block.seguApe = "";
                         }
 
-
                         $("#nombre_id1").val(block.primNom);
                         $("#nombre_id2").val(block.seguNom);
                         $("#apellido_id1").val(block.primApe);
                         $("#apellido_id2").val(block.seguApe);
                         $("#numero_id").prop("disabled", true);
                         $("#tipo_letra").prop("disabled", true);
-
                     }
                 }else{
 					if(valor.d[1]=="5"){
 						block.frito = JSON.parse(valor.d[2]);
-						if(block.frito[1]=="1"){
+						if (block.frito[1]=="1"){
 							block.des = "El cliente no quiere pagar (Clavo)";
-						}else if(block.frito[1]=="2"){
+						} else if(block.frito[1]=="2"){
 							block.des = "El cliente no se encuentra (Volado)";
-						}else if(block.frito[1]=="3"){
+						} else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
 						toastr.warning(block.des, 'System notification!');
 					}
 				}
-            });
-            
+            });            
             setTimeout(function(){
             	$("#nombre_id1").prop("disabled", true);
                 $("#nombre_id2").prop("disabled", true);
@@ -2179,7 +2181,6 @@
     });
 
     $("#consultar_registram").click(function () {
-
         function navegador() {
             var agente = window.navigator.userAgent;
             var navegadores = ["Chrome", "Firefox", "Safari"];
@@ -2198,9 +2199,7 @@
             } else {
                 block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
             }
-
             block.arrays = [block.tokens[1], $("#numero_idm").val(), block.nav, $("#tipo_letram").val(), window.sessionStorage.getItem("Money-vars-tipo")];
-
             block.obj = {"r": "consultar_cedula", "d": block.arrays};            
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
@@ -2461,6 +2460,7 @@
         }
     });
 
+  
     function extraer_barrios() {
         block.depart = $("#tipo_departamento").val();
         block.cuidad = $("#tipo_ciudades").val();
@@ -2708,18 +2708,13 @@
 				$("#dias_prestame").text("0");
 				$("#refinanciar_div").css("display","none");
 				$('#calendar').fullCalendar("destroy");
-			}
-			
-		});
-		
+			}			
+		});		
 	}
 
     $("#buscar_cedula_cliente2").click(function () {
-
-        if ($("#text_cedula_cliente2").val() !== "") {
-			
-			$("#cuotas_coun").css("display","none");
-			
+        if ($("#text_cedula_cliente2").val() !== "") {		
+			$("#cuotas_coun").css("display","none");			
 			var frutos = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
 			block.barra = '';            
             if(frutos !== null){
@@ -2730,12 +2725,9 @@
                 }
             } else {
                 toastr.warning("No se ha encontrado ninguna coincidencia", "System notification");
-            }
-			
+            }			
 			$("#cedula_elecion").css("display","block");
-			$("#cedula_elecion").html(block.barra);
-			
-			
+			$("#cedula_elecion").html(block.barra);						
         } else {
             toastr.warning('Falta DPI del cliente', 'System notification!');
         }
@@ -2863,7 +2855,6 @@
                     toastr.success('Registrado correctamente', 'System notification!');
                 }
             });
-
         }
     });
 
@@ -2914,8 +2905,7 @@
 					$("#lista_pendiente").html("");
 				}
 			}
-		});
-		
+		});		
 	}
 
     function asesores_panel() {
@@ -2948,7 +2938,6 @@
         }
     });
 
-
     function descontar_cuotax() {
         down_configuracion();
         window.sessionStorage.setItem("Money-perfil","descontar");
@@ -2961,7 +2950,6 @@
     }
 
     window.sessionStorage.setItem("Money-perfil","contrato");
-
 
 	function papel(){
 		$("#barba").modal("show");
@@ -3420,7 +3408,7 @@
 	$("#refinanciar_div").css("display","none");
 
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMtw9w0lIUfU8TcuAdPdDgNZuc9p_J2-Y&callback=myMap" ></script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMtw9w0lIUfU8TcuAdPdDgNZuc9p_J2-Y&callback=myMap" ></script>
 </body>
 </html>

@@ -657,22 +657,16 @@
                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
                     </a>
 
-                    <form role="search" class="navbar-form-custom">
-                    	
+                    <form role="search" class="navbar-form-custom">                
                         <div class="form-group pull-right">
-                        	<p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px;margin-top: 0px;border-radius: 67px 36% 3% -9%; height: 34px; background: #448ed300; position: absolute; bottom: 9px;"/>
-                        </div>
-
-
-     
-                      
+                        	<p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px;margin-top: 0px;border-radius: 67px 36% 3% -9%; height: 50px; background: #448ed300; position: absolute; bottom: 9px;"/>
+                        </div> 
                     </form>
-
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
                         <a href="javascript:salida_sistema();">
-                            <i class="fa fa-sign-out"></i> Salir
+                            <i class="fa fa-sign-out"></i> Cerrar sesión
                         </a>
                     </li>
                 </ul>
@@ -1782,20 +1776,20 @@
                 <div class="col-lg-12" id="consulta_cobros">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Busqueda de consultas por fecha</h5>
+                            <h5>Busqueda de cobros por fecha</h5>
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
                             <div class="col-sm-6 col-md-4 col-xs-12">
                                 <label>Id asesor</label>
-                                <select class="form-control m-b" id="id_asesor_consulta">
+                                <select class="form-control m-b" id="id_asesor_cobros">
                                 </select>
 
                             </div>
 
                             <div class="col-sm-6 col-md-4 col-xs-12">
                                 <form role="form">
-                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_asesor"
+                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_busqueda_cobros"
                                                                                                       type="date"
                                                                                                       placeholder="Inserte fecha de asignación"
                                                                                                       class="form-control">
@@ -1805,7 +1799,7 @@
 
                             <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
                                 <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
-                                        id="busqueda_directa"
+                                        id="busqueda_cobros"
                                         type="button">Buscar
                                 </button>
                             </div>
@@ -2621,6 +2615,10 @@
         extraer_gastos();
     });
 
+    $("#busqueda_cobros").click(function(){
+        extraer_cobros();
+    });
+
     $("#id_asesor_gastos_consulta").change(function(){
         //$("#id_asesor_gastos_consulta").val();
         console.log($("#id_asesor_gastos_consulta").val());
@@ -2657,9 +2655,43 @@
             $("#lista_gastos_exe").html(block.inefd);
         }
     });
-}
+}   
 
-    
+
+
+function extraer_cobros() {
+    if (window.localStorage.getItem("Money-vars-token") !== null) {
+        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    } else {
+        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    }
+    var fecha = $("#fecha_busqueda_cobros").val()
+    block.estraa = $("#id_asesor_cobros").val();
+    console.log(block.estraa)
+	block.estraaq = block.estraa.split("_");
+	block.estra = block.estraaq[0];
+	block.cedulasesor = block.estraaq[1];
+    block.arrays = [block.tokens[1], block.estraa, fecha];
+    console.log(block.arrays);
+    block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
+    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        var valor = JSON.parse(salida);
+        console.log(valor);
+
+        
+        // if (!valor.e) {
+        //     // block.pasero = JSON.parse(valor.d[1]);
+        //     block.inefd = '';
+        //     for (var wq = 0; wq < block.pasero.length; wq++) {
+        //         block.iteds = block.pasero[wq];
+        //         block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+        //         block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+        //         block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+        //     }
+        //     $("#lista_gastos_exe").html(block.inefd);
+        // }
+    });
+}    
 
 
     block.filein = document.querySelector("#foto1m");
@@ -2747,6 +2779,8 @@
         });
     };
 
+
+    
     block.filein = document.querySelector("#foto4m");
     block.filein.onchange = function (e) {
         block.files = e.target.files;
@@ -6218,7 +6252,7 @@
                 $("#id_asesor").html(block.listax2);
                 $("#id_asesor_consulta").html(block.listax2);
                 $("#id_asesor_gastos_consulta").html(block.listax2);
-
+                $("#id_asesor_cobros").html(block.listax2);
                 
             }
         });
@@ -6636,44 +6670,44 @@
 	window.sessionStorage.setItem("numero_lista","0");
 
      
-    function consulta_cobrosFecha(){
-        block.num = window.sessionStorage.getItem("numero_lista");
+    // function consulta_cobrinforme_completo_cobrososFecha(){
+    //     block.num = window.sessionStorage.getItem("numero_lista");
 
-    if (window.localStorage.getItem("Money-vars-token") !== null) {
-        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-    } else {
-        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-    }
+    // if (window.localStorage.getItem("Money-vars-token") !== null) {
+    //     block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    // } else {
+    //     block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    // }
 
-    block.listadi = "";
-    block.arrays = [block.tokens[1], block.num];
-    block.obj = { "r": "lista_cliente_basic", "d": block.arrays }; //falta
-    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-        var valor = JSON.parse(salida);
-        if (!valor.e) {
-            if (valor.d[1] !== null) {
-                block.item = JSON.parse(valor.d[1]);
-                console.log(block.item = JSON.parse(valor.d[1]));
-                window.localStorage.setItem("Money-vars-cliente-" + block.item[7], valor.d[1]);
-                block.cedula = block.item[6];
-                block.nomre = block.item[7];
-                block.direcion = block.item[12];
-                block.listadi = block.listadi + '<tr><td>' + block.cedula + '</td><td>' + block.nomre + '</td><td>' + block.direcion + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.nomre + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
-                $("#listado_consultas_por_fechas").append(block.listadi);
-                block.nexr = parseInt(block.num) + 1;
-                window.sessionStorage.setItem("numero_lista", block.nexr);
-                consulta_cobrosFecha();
-            }
-        } else if (valor.d[1] == "4" && parseInt(block.num) < parseInt(valor.d[2])) {
-            console.log("Else-If");
-            block.nexr = parseInt(block.num) + 1;
-            window.sessionStorage.setItem("numero_lista", block.nexr);
-            consulta_cobrosFecha();
-        } else {
-            return;
-        }
-    });
-    }
+    // block.listadi = "";
+    // block.arrays = [block.tokens[1], block.num];
+    // block.obj = { "r": "lista_cliente_basic", "d": block.arrays }; //falta
+    // backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+    //     var valor = JSON.parse(salida);
+    //     if (!valor.e) {
+    //         if (valor.d[1] !== null) {
+    //             block.item = JSON.parse(valor.d[1]);
+    //             console.log(block.item = JSON.parse(valor.d[1]));
+    //             window.localStorage.setItem("Money-vars-cliente-" + block.item[7], valor.d[1]);
+    //             block.cedula = block.item[6];
+    //             block.nomre = block.item[7];
+    //             block.direcion = block.item[12];
+    //             block.listadi = block.listadi + '<tr><td>' + block.cedula + '</td><td>' + block.nomre + '</td><td>' + block.direcion + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.nomre + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+    //             $("#listado_consultas_por_fechas").append(block.listadi);
+    //             block.nexr = parseInt(block.num) + 1;
+    //             window.sessionStorage.setItem("numero_lista", block.nexr);
+    //             consulta_cobrosFecha();
+    //         }
+    //     } else if (valor.d[1] == "4" && parseInt(block.num) < parseInt(valor.d[2])) {
+    //         console.log("Else-If");
+    //         block.nexr = parseInt(block.num) + 1;
+    //         window.sessionStorage.setItem("numero_lista", block.nexr);
+    //         consulta_cobrosFecha();
+    //     } else {
+    //         return;
+    //     }
+    // });
+    // }
 
     function consulta_x(){
         block.num = window.sessionStorage.getItem("numero_lista");        
