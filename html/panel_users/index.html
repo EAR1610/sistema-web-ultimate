@@ -35,6 +35,7 @@
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 
     <script>
+    //_______________________________________________________________________________________________
     function generarPDFDePrueba() {
         
         var doc = new window.jspdf.jsPDF({
@@ -47,20 +48,14 @@
         // Llama a la función imprimir_texto con datos de prueba
         imprimir_texto(doc, 'RECIBO DE PAGO', doc.internal.pageSize.getWidth() / 2, 10, 12, 'black', 'center');
         imprimir_texto(doc, 'Fecha: 22/09/2023', 10, 20, 12, 'black', 'left');
-        imprimir_texto(doc, 'Hora: 10:00:00', doc.internal.pageSize.getWidth() / 2 + 10, 20, 12, 'black', 'left');
-        imprimir_texto(doc, 'Asesor: Eddy', 10, 25, 12, 'black', 'left');
-        imprimir_texto(doc, 'Cliente: América', 10, 30, 12, 'black', 'left');
-        imprimir_texto(doc, 'CuotaNo: 2384923', 10, 35, 12, 'black', 'left');
-        imprimir_texto(doc, 'Monto: Q. 11,000.00', doc.internal.pageSize.getWidth() / 2 + 10, 35, 12, 'black', 'left');
-        imprimir_texto(doc, 'Saldo Anterior: 2384923', 10, 40, 12, 'black', 'left');
-        imprimir_texto(doc, 'Saldo Actual: 2384923', 10, 45, 12, 'black', 'left');
+        imprimir_texto(doc, 'Hora: 10:00:00', 10, 25, 12, 'black', 'left');
+        imprimir_texto(doc, 'Asesor: Eddy', 10, 30, 12, 'black', 'left');
+        imprimir_texto(doc, 'Cliente: América', 10, 35, 12, 'black', 'left');
+        imprimir_texto(doc, 'CuotaNo: 2384923', 10, 40, 12, 'black', 'left');
+        imprimir_texto(doc, 'Monto: Q. 11,000.00', 10, 45, 12, 'black', 'left');
+        imprimir_texto(doc, 'Saldo Anterior: 2384923', 10, 50, 12, 'black', 'left');
+        imprimir_texto(doc, 'Saldo Actual: 2384923', 10, 55, 12, 'black', 'left');
 
-
-
-
-
-
- 
         // Guarda o muestra el PDF, según tus necesidades.
         // Por ejemplo, para guardarlo con el nombre "documento.pdf":
         doc.save('ticket.pdf');
@@ -78,6 +73,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('boton_pdff').addEventListener('click', function() {
             generarPDFDePrueba(); // Llama a la función para generar el PDF al hacer clic en el botón
+           
         });
     });
 

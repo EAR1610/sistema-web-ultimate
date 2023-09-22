@@ -1877,28 +1877,11 @@
                             <h5>Consulta de contrato</h5>
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
-
-                            <div class="col-sm-3 col-md-3 col-xs-12">
-                                    <div class="form-group"> <input
-                                        id="buscar_contra"
-                                        type="text" 
-                                        placeholder="DPI"
-                                        maxlength="13"
-                                        class="form-control">
-                                    </div>
-                            </div>
-
+                            
                             <div class="col-sm-3 col-md-3 col-xs-12 " >
                                 <select class="form-control m-b" id="lista_asesores_general3">
                                 </select>
                             </div>
-
-                            <div class="col-sm-6 col-md-6 col-xs-12">
-                                <button class="btn btn-primary" style="float: right;" onclick="javascript:crear_contrato();"
-                                        type="button">Nuevo cliente
-                                </button>
-                            </div>
-
 
                             <div class="table-responsive">
                                 <table class="table table-striped">
@@ -1934,35 +1917,18 @@
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
-                            <div class="col-sm-3 col-md-3 col-xs-12">
-                                    <div class="form-group"> <input
-                                        id="buscar_contra"
-                                        type="text" 
-                                        placeholder="DPI"
-                                        maxlength="13"
-                                        class="form-control">
-                                    </div>
-                            </div>
-
                             <div class="col-sm-3 col-md-3 col-xs-12 " >
                                 <select class="form-control m-b" id="id_asesor_cierre">
                                 </select>
                             </div>
 
-                            <!-- <div class="col-sm-6 col-md-6 col-xs-12">
-                                <button class="btn btn-primary" style="float: right;" onclick="javascript:crear_contrato();"
-                                        type="button">Nuevo cliente
-                                </button>
-                            </div> -->
-
-
                             <div class="table-responsive">
                                 <table class="table table-striped">
                                     <div class="ibox ">
                                         <div class="ibox-title" style="display: flex; justify-content: space-around;">
-                                            <div>Base diaria: <label id="text_base"></label></div>
-                                            <div>Total recaudado: <label id="text_recolectado"></label></div>
-                                            <div>Total gastos: <label id="text_gastos"></label></div>
+                                            <div>Base diaria: <label id="text_baseAsesor"></label></div>
+                                            <div>Total recaudado: <label id="text_recolectadoAsesor"></label></div>
+                                            <div>Total gastos: <label id="text_gastosAsesor"></label></div>
                                         </div>
                                     </div>
                                 </table>
@@ -1998,7 +1964,7 @@
                                             <th>Monto</th>
                                         </tr>
                                         </thead>
-                                        <tbody align="center" id="lista_gastos_exe">
+                                        <tbody align="center" id="lista_gastos_exeAsesor">
                                         </tbody>
                                 </table>
                             </div>
@@ -2710,14 +2676,15 @@
 
     //Funcion para extraer datos con fecha pasandole la fecha al array
     function extraer_gastos() {
-    if (window.localStorage.getItem("Money-vars-token") !== null) {
-        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-    } else {
-        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-    }
+            
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
     var fecha = $("#fecha_gasto").val()
     block.estraa = $("#id_asesor_gastos_consulta").val();
-    console.log(block.estraa)
 	block.estraaq = block.estraa.split("_");
 	block.estra = block.estraaq[0];
 	block.cedulasesor = block.estraaq[1];
@@ -2726,22 +2693,50 @@
     block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
         var valor = JSON.parse(salida);
-        console.log(valor);
-        if (!valor.e) {
-            block.pasero = JSON.parse(valor.d[1]);
-            block.inefd = '';
-            for (var wq = 0; wq < block.pasero.length; wq++) {
-                block.iteds = block.pasero[wq];
-                block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
-                block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                block.inefd = '';
+                for (var wq = 0; wq < block.pasero.length; wq++) {
+                    block.iteds = block.pasero[wq];
+                    block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                    block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+                }
+                $("#lista_gastos_exe").html(block.inefd);
             }
-            $("#lista_gastos_exe").html(block.inefd);
+        });
+    
+    }   
+
+    function extraer_gastosAsesor() {
+        
+        $("#lista_gastos_exeAsesor").empty();
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
-    });
-}   
-
-
+    
+        var fecha = new Date().toISOString().split('T')[0];
+        block.estraa = $("#id_asesor_cierre").val();
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+                if (!valor.e) {
+                    block.pasero = JSON.parse(valor.d[1]);
+                    block.inefd = '';
+                    for (var wq = 0; wq < block.pasero.length; wq++) {
+                        block.iteds = block.pasero[wq];
+                        block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                        block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                        block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+                    }
+                    $("#lista_gastos_exeAsesor").html(block.inefd);
+                    
+                }
+        });        
+    }
 
 function extraer_cobros() {
     if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -6450,6 +6445,68 @@ function extraer_cobros() {
             }
         });
     }
+
+    $("#id_asesor_cierre").change(function(){        
+        if($("#id_asesor_cierre").val()!==""){
+            block.ase = $("#id_asesor_cierre").val();
+            $("#lista_enorme").html("");
+            listado_contratos("0");
+
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+
+            block.arrays = [block.tokens[1]];  
+            block.obj = {"r": "down_configuracion", "d": block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                if (!valor.e && valor.d[1] !== null) {
+                    window.sessionStorage.setItem("Configuracion",valor.d[1]);
+                }
+            });
+            
+            block.arrays = [block.tokens[1],block.ase];
+            console.log(block.arrays);
+            block.obj = {"r": "sumatoria_diario", "d": block.arrays}; //Obtiene el token y el ID del asesor
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);            
+                console.log(valor);
+                if (!valor.e) {                
+                    valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                    valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
+                    $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
+                    $("#text_baseAsesor").text("Q"+valor.d[2]);
+                    totalGastos();
+                }
+            });
+        }
+        extraer_gastosAsesor();
+    });
+
+    function totalGastos(){
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        let gastos = 0;
+        block.arrays = [block.tokens[1],$("#id_asesor_cierre").val()];
+        block.obj = {"r": "extrae_gastos", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                
+                for(var i= 0; i< block.pasero.length; i++){
+                    gastos += parseInt(block.pasero[i][2]);
+                }
+                $("#text_gastosAsesor").text("Q"+gastos);
+            }
+        });
+        return gastos;
+    }  
 
     // function cargarListas_asigandos_consultas(){
 
