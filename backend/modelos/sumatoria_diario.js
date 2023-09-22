@@ -11,7 +11,6 @@ eje = function(arrays,origen,redisClient) {
 		/*
 		recibe token y idasesor
 		*/
-		
 		if (arrays.length==2){
 		
 			var jwt = require('jsonwebtoken');
@@ -23,14 +22,12 @@ eje = function(arrays,origen,redisClient) {
 					var moment = require("moment");
 					var dia = moment().format('YYYY-MM-DD');
 					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"
-					
 					/*
 					toma los monto y los suma
 					*/
 					
 					redisClient.keys(coando,function(err3,reply3){
 						if(reply3.length > 0){
-							
 							var total=0;
 							for(var es = 0; es < reply3.length; es ++){
 								var explit  = reply3[es].split("_");
@@ -49,7 +46,7 @@ eje = function(arrays,origen,redisClient) {
 								
 							}
 							
-						}else{
+						}else{ 
 							redisClient.get("base_"+arrays[1],function(ersr,replcy) {
 								if(replcy==null){
 									resolve([true,0,0,"Sin base"]);

@@ -59,7 +59,7 @@ eje = function(arrays,origen,redisClient) {
 											/*
 											extraigo informacion de cliente
 											*/
-											
+											console.log(infeos[13]);
 											redisClient.get("cliente_"+inus[1],function(errs,datse){
 											
 												if(datse!==null) {

@@ -34,6 +34,55 @@
     </script>
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 
+    <script>
+    function generarPDFDePrueba() {
+        
+        var doc = new window.jspdf.jsPDF({
+            unit: 'mm',
+            format: [80,Infinity],
+            format: [80, 100]
+        });
+
+        
+        // Llama a la función imprimir_texto con datos de prueba
+        imprimir_texto(doc, 'RECIBO DE PAGO', doc.internal.pageSize.getWidth() / 2, 10, 12, 'black', 'center');
+        imprimir_texto(doc, 'Fecha: 22/09/2023', 10, 20, 12, 'black', 'left');
+        imprimir_texto(doc, 'Hora: 10:00:00', doc.internal.pageSize.getWidth() / 2 + 10, 20, 12, 'black', 'left');
+        imprimir_texto(doc, 'Asesor: Eddy', 10, 25, 12, 'black', 'left');
+        imprimir_texto(doc, 'Cliente: América', 10, 30, 12, 'black', 'left');
+        imprimir_texto(doc, 'CuotaNo: 2384923', 10, 35, 12, 'black', 'left');
+        imprimir_texto(doc, 'Monto: Q. 11,000.00', doc.internal.pageSize.getWidth() / 2 + 10, 35, 12, 'black', 'left');
+        imprimir_texto(doc, 'Saldo Anterior: 2384923', 10, 40, 12, 'black', 'left');
+        imprimir_texto(doc, 'Saldo Actual: 2384923', 10, 45, 12, 'black', 'left');
+
+
+
+
+
+
+ 
+        // Guarda o muestra el PDF, según tus necesidades.
+        // Por ejemplo, para guardarlo con el nombre "documento.pdf":
+        doc.save('ticket.pdf');
+    }
+
+    function imprimir_texto(doc, texto, x, y, size, color, align) {
+        doc.setFontSize(size);
+        doc.setTextColor(color);
+        doc.text(texto, x, y, {align: align});
+        
+        
+
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('boton_pdff').addEventListener('click', function() {
+            generarPDFDePrueba(); // Llama a la función para generar el PDF al hacer clic en el botón
+        });
+    });
+
+    </script>
+
     <style>
         @media (max-width: 576px) {
             .profile-info{
@@ -305,7 +354,7 @@
                 <li class="nav-header">
                     <div class="dropdown profile-element">
                         <img alt="image" src="../img/profile_small.png"
-                             style="margin-top: -24px;width: 137px;height: 40px;"/>
+                             style="margin-left: auto;width: 100px;height: 60px;"/>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html">
                             <span class="block m-t-xs font-bold" style="margin-left: 30%;">Asesor</span>
                         </a>
@@ -322,6 +371,9 @@
                 <li>
                     <a id="couta_search" href="javascript:descontar_cuotax();"><i class="fa fa-check-square"></i> <span
                             class="nav-label">Cobro de cuotas</span></a>
+                </li>
+                <li>
+                    <a id="couta_sear" href="javascript:consultar_Contratos()"><span class="nav-label">Consultar Contrato</a>
                 </li>
                 <li>
                     <a id="couta_sear" href="javascript:registrar_gastos();"><i class="fa fa-money"></i> <span
@@ -366,7 +418,7 @@
                     
                     <li>
                         <a href="javascript:salida_sistema();">
-                            <i class="fa fa-sign-out"></i> Salir
+                            <i class="fa fa-sign-out"></i> Cerrar sesión
                         </a>
                     </li>
                 </ul>
@@ -627,7 +679,7 @@
                                         type="button">Procesar pago
                                 </button>
                                 <form role="form" style="margin-top: 24px;display:grid;">
-                                    <button type="button" class="btn btn-danger" id="boton_pdf"><i class="fa fa-file-pdf"></i></button>
+                                    <button type="button" class="btn btn-danger" id="boton_pdff"><i class="fa fa-file-pdf"></i></button>
                                 </form>
                             </div>
 							
@@ -742,6 +794,37 @@
                                 </div>
                                 
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12" id="contratos_view" style="display:none;">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Consulta de contrato</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">                                    
+        
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Fecha de prestamo </th>
+                                        <th>A pagar</th>
+                                        <th>DPI</th>
+                                        <th>Nombre cliente</th>                                        
+                                        <th>Prestamo</th>
+                                        <th>Porcentaje</th>
+                                        <th>Cuotas</th>
+                                        <th>Ayudante</th>
+                                        <th>Supervidor</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="lista_enorme">
+                                    </tbody>
+                                </table>
+                            </div>                
                         </div>
                     </div>
                 </div>
@@ -899,10 +982,134 @@
     }
 
     function monto_meter(cedula,fecha){    
-		window.sessionStorage.setItem("Money-vars-fecha",fecha);
+		window.sessionStorage.setItem("Money-vars-fecha",fecha);    
         $("#text_cedula_cliente2").val(cedula);
         $("#buscar_cedula_cliente2").click();
         $("#cuotas_coun").focus();
+        listado_contratos("0");
+    }
+
+    //Parte de consultar contrato panel users
+    block.unico = "0";
+	listado_contratos(block.unico);
+	$("#lista_enorme").append("");
+
+    function listado_contratos(mun){
+        block.unico =  parseInt(mun);
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];
+        block.obj = {"r": "contratos_lista_all", "d": block.arrays};        
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+        if (!valor.e) {            
+            block.oso="";
+            block.dat0s =valor.d[1][0];
+            block.unox = JSON.parse(block.dat0s[0]);
+            block.dosx = block.dat0s[1];
+            block.tresx = block.dat0s[2];
+            block.cuatrosx = JSON.parse(block.dat0s[3]);
+
+            if(block.dosx.length>0){
+                block.exta2 = block.dosx[3];
+                block.exta = block.exta2.split("_");
+                block.superv = block.exta[3] + " " +block.exta[4];
+            }else{
+                block.superv = "No asignado";
+            }
+            if(block.tresx.length>0) {
+                block.exta2a = JSON.parse(block.tresx);
+                block.extaa = block.exta2a[3].split("_");
+                block.ayudan = block.extaa[3] + " " +block.extaa[4];
+            }else{
+                block.ayudan = "No asignado";
+            }
+
+            block.esf = $("#lista_asesores_general3")["0"].options.selectedIndex;
+            block.tesq = $("#lista_asesores_general3")["0"][block.esf].label.split("ID:");            
+            block.calsulo = block.unox[13];
+            block.sumas = 0;
+            for(var u= 0; u<block.calsulo.length; u++){
+                if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
+                    block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
+                }else if(block.calsulo[u].pe!==0){
+                    block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
+                }
+            }
+
+            block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+            block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');            
+            block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
+
+            block.unico++;
+            listado_contratos(block.unico);
+            $("#lista_enorme").append(block.oso);
+
+        }else if(valor.d[2]!==0 && valor.d[2]>block.unico){
+
+            block.unico++;
+            listado_contratos(block.unico);
+        }
+    });
+}
+
+
+    // $("#lista_asesores_general3").change(function(){
+    //     if($("#lista_asesores_general3").val()!==""){
+    //         block.ase = $("#lista_asesores_general3").val();
+    //         $("#lista_enorme").html("");
+    //         listado_contratos("0");
+    //     }
+    // });
+
+    function asesores_lista_ajustada() {
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.listax2 = '<option value="">Seleccione</option>';
+        block.listax3 = '<option value="">Seleccione asesor</option>';
+        block.lista = '';
+        block.arrays = [block.tokens[1]];
+        block.obj = {"r": "listar_asesores", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.todo = valor.d[1];
+                block.aline =[];
+                for (var t = 0; t < block.todo.length; t++) {
+                    block.item = JSON.parse(block.todo[t]);
+                    block.aline.push([block.item[22],block.item[6]]);
+                    block.listax2 = block.listax2 + '<option value="' + block.item[22] + '_'+ block.item[6] +'_'+ block.item[1] +'">' + block.item[7] + ' ' + block.item[9] + ' ID: ' + block.item[22] + '</option>';
+                    block.listax3 = block.listax3 + '<option value="' + block.item[22] + '">' + block.item[7] + ' ' + block.item[9] + ' ID: ' + block.item[22] + '</option>';
+                }
+                $("#lista_asesores_general").html(block.listax2);
+                $("#lista_asesores_general3").html(block.listax3);
+
+                liquidar_sincro(block.aline);
+            }
+        });
+    }
+
+    asesores_lista_ajustada();
+
+    //__________________________________
+
+    function registrar_gastos(){
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","block");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
     }
 	
 	$("#procesar_aplico").click(function(){
@@ -1006,13 +1213,12 @@
         }
 
         block.arrays = [block.tokens[1],block.tokens[4],block.tokens[5]];
-        block.obj = {"r": "down_geo", "d": block.arrays};
+        block.obj = {"r": "down_geo2", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);    
             if (!valor.e) {
-                block.listao=valor.d[1];
-				
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+				console.log(block.listao);
                 var map;
                 var mapOptions = {
 					center: {lat: 16.930351030698695, lng: -89.8912385219706},                    
@@ -1117,8 +1323,6 @@
                 toastr.warning('No posee contratos para generar ruta', 'System notification!');
             }
         });
-		
-		
     }
 
     $("#selector_cuotas_selec").change(function(){
@@ -1136,13 +1340,9 @@
                     block.evad = $("#monto_prestar_ya_admin").val();
                     block.resa = block.evad.replace(".","");
                     block.resa2 = block.resa.replace(".","");
-                    block.nuevomonto = parseInt(block.resa2);
-					
-					console.log(block.nuevomonto);
+                    block.nuevomonto = parseInt(block.resa2);										
                     
-					if(block.nuevomonto> block.min && block.nuevomonto<block.max) {
-
-						console.log(block.min,block.max);
+					if(block.nuevomonto> block.min && block.nuevomonto<block.max) {						
 
                         for (var w = 0; w < block.cuotas.length; w++) {
                             if (block.cuotas[w][2] == $("#selector_cuotas_selec").val()) {
@@ -1175,14 +1375,78 @@
         }
     });
 
-    function registrar_gastos(){
+    function consultar_Contratos(){
         $("#pendiente_form").css("display","none");
-        $("#crear_gastos").css("display","block");
+        $("#crear_gastos").css("display","none");
         $("#cobrar_couta").css("display","none");
         $("#crear_contrato_form_dos").css("display","none");
         $("#crear_contrato_form").css("display","none");
         $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","block");
         $("#lista_ubicacniones_div").css("display","none");
+        listado_contratos("0");
+    }
+    
+    block.unico = 0;
+    listado_contratos(block.unico);
+    $("#lista_enorme").append("");
+    
+    function listado_contratos(mun){        
+        block.unico =  parseInt(mun);
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1],block.tokens[4],block.unico,block.tokens[5].toString()];
+        block.obj = {"r": "contratos_lista_all", "d": block.arrays};         
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+
+            var valor = JSON.parse(salida);            
+            if (!valor.e) {            
+                block.oso="";
+                block.dat0s =valor.d[1][0];
+                block.unox = JSON.parse(block.dat0s[0]);
+                block.dosx = block.dat0s[1];
+                block.tresx = block.dat0s[2];
+                block.cuatrosx = JSON.parse(block.dat0s[3]);
+                if (block.dosx.length>0) {
+                    block.exta2 = block.dosx[3];
+                    block.exta = block.exta2.split("_");
+                    block.superv = block.exta[3] + " " +block.exta[4];
+                } else {
+                    block.superv = "No asignado";
+                }
+                if(block.tresx.length>0) {
+                    block.exta2a = JSON.parse(block.tresx);
+                    block.extaa = block.exta2a[3].split("_");
+                    block.ayudan = block.extaa[3] + " " +block.extaa[4];
+                } else {
+                    block.ayudan = "No asignado";
+                }                                
+                block.calsulo = block.unox[13];
+                block.sumas = 0;
+                for(var u= 0; u<block.calsulo.length; u++){
+                    if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
+                        block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
+                    }else if(block.calsulo[u].pe!==0){
+                        block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
+                    }
+                }
+                block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');                
+                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
+                block.unico++;
+                listado_contratos(block.unico);
+                $("#lista_enorme").append(block.oso);
+            } else if(valor.d[2]!==0 && valor.d[2]>block.unico){
+                block.unico++;
+                listado_contratos(block.unico);
+            }
+
+        });
     }
 
     function format(input) {
@@ -1253,14 +1517,11 @@
             var uploadTask = storageRef.child('images/' + blob.name).put(blob);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
+                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;                        
                         switch (snapshot.state) {
-                            case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
+                            case firebase.storage.TaskState.PAUSED:                                
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1296,13 +1557,10 @@
             var uploadTask = storageRef.child('images/' + blob.name).put(blob);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, function(snapshot) {
                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
                 switch (snapshot.state) {
                     case firebase.storage.TaskState.PAUSED:
-                        console.log('Upload is paused');
                         break;
                     case firebase.storage.TaskState.RUNNING:
-                        console.log('Upload is running');
                         break;
                 }
             }, function(error) {
@@ -1339,13 +1597,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1382,13 +1637,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1424,13 +1676,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1466,13 +1715,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
             function(snapshot) {
                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
                 switch (snapshot.state) {
                     case firebase.storage.TaskState.PAUSED:
-                        console.log('Upload is paused');
                         break;
                     case firebase.storage.TaskState.RUNNING:
-                        console.log('Upload is running');
                         break;
                 }
             }, function(error) {
@@ -1508,13 +1754,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
         function(snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED:
-                    console.log('Upload is paused');
                     break;
                 case firebase.storage.TaskState.RUNNING:
-                    console.log('Upload is running');
                     break;
             }
         }, function(error) {
@@ -1643,8 +1886,10 @@
     $("#crear_contrato_form").css("display", "none");
     $("#crear_contrato_form_dos").css("display", "none");
 	$("#pendiente_form").css("display", "none");
+    $("contratos_view").css("display", "none");
 
     function buscar_mapa(){
+        $("contratos_view").css("display", "none");
         $("#googleMap").css("display","initial");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
@@ -1678,15 +1923,14 @@
 
     }
 
-    function down_configuracion() {
+    function down_configuracion() {        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-        block.arrays = [block.tokens[1]];
-        
+        block.arrays = [block.tokens[1]];        
         block.obj = {"r": "down_configuracion", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -1696,9 +1940,9 @@
         });
 
         block.arrays = [block.tokens[1],block.tokens[5]];
-        block.obj = {"r": "sumatoria_diario", "d": block.arrays};
+        block.obj = {"r": "sumatoria_diario", "d": block.arrays}; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
+            var valor = JSON.parse(salida);            
             if (!valor.e) {                
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
@@ -1713,18 +1957,17 @@
 
     function procesarDescuento(Numcuota,cedula){
         
-		if (window.localStorage.getItem("Money-vars-token") !== null) {
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 		
 		block.tempFecha = window.sessionStorage.getItem("Money-vars-fecha");
-
+        
         block.arrays = [block.tokens[1],block.tokens[5],Numcuota,cedula[0],cedula[1]];
         block.obj = {"r": "descontar_cuota", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-					
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {            
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
 				toastr.success('Procesado correctamente', 'System notification!');
@@ -1744,8 +1987,7 @@
 				for(var x = 0; x < block.cuotas[13].length; x++){
 					if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0){
 						block.contador_cuotas++;
-					}
-					
+					}					
 					if(block.cuotas[13][x].pe!==0){
 					   block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);
 						//abono
@@ -1806,7 +2048,7 @@
 				down_configuracion();
 				
 			}else{
-				toastr.warning('No exite cuotas con este usuario', 'System notification!');
+				toastr.warning('No exite cuotas con este usuario', '¡Atención!');
 				$("#queda_debiendo").text("0");
 				$("#pago_prestame").text("0");
 				$("#deuda_prestame").text("0");
@@ -1817,10 +2059,8 @@
 				$("#dias_prestame").text("0");
 				$("#refinanciar_div").css("display","none");
 				$('#calendar').fullCalendar("destroy");
-			}
-			
-        });
-		
+			}			
+        });		
     }
 
     $("#status_prestamo").click(function () {
@@ -2203,7 +2443,6 @@
             block.obj = {"r": "consultar_cedula", "d": block.arrays};            
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
-                console.log(valor);
                 if (!valor.e) {
                     block.todo = valor.d[1];
                     block.nombre = block.todo[0];
@@ -2606,7 +2845,7 @@
         block.cedula = window.sessionStorage.getItem("Money-vars-registrado");
     });
 	
-	function fijar_monto(id,cedula){
+	function fijar_monto(id,cedula){        
 		window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));
 		$("#cuotas_coun").css("display","block");
 		$("#cedula_elecion").css("display","none");
@@ -2712,15 +2951,17 @@
 		});		
 	}
 
-    $("#buscar_cedula_cliente2").click(function () {
+    $("#buscar_cedula_cliente2").click(function () {        
+        var clientePago;
         if ($("#text_cedula_cliente2").val() !== "") {		
 			$("#cuotas_coun").css("display","none");			
 			var frutos = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
-			block.barra = '';            
+			block.barra = '';
             if(frutos !== null){
                 for(var k = 0; k < frutos.length; k++){
                     if(frutos[k].c == $("#text_cedula_cliente2").val()){
                         block.barra = block.barra + ' <a class="btn btn-primary btn-rounded" href="javascript:fijar_monto('+String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+');"> '+frutos[k].u+' => Q'+frutos[k].m+' </a> ';
+                        clientePago = frutos[k];                        
                     }
                 }
             } else {
@@ -2822,8 +3063,7 @@
                     block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
                     $("#text_nombre_cliente").val(block.escrito);
                     $("#text_cedula_cliente").val(block.numero);
-                    $("#text_alias_cliente").prop("disabled", false);
-					console.log(block.numero);
+                    $("#text_alias_cliente").prop("disabled", false);					
                     window.sessionStorage.setItem("Money-vars-registrado",block.numero);
                     window.sessionStorage.removeItem("Money-vars-foto-id-reversom");
                     window.sessionStorage.removeItem("Money-vars-foto-id-normalm");
@@ -2876,6 +3116,7 @@
         $("#crear_gastos").css("display", "none");
         $("#configuracion_general_cuotas").css("display", "none");
         $("#pendiente_form").css("display", "initial");
+        $("contratos_view").css("display", "none");
 		
 		if (window.localStorage.getItem("Money-vars-token") !== null) {
 			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -2944,9 +3185,10 @@
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
-        $("#cobrar_couta").css("display", "initial");
+        $("#cobrar_couta").css("display", "block");
         $("#crear_gastos").css("display","none");
         $("#lista_ubicacniones_div").css("display","none");
+        $("#contratos_view").css("display", "none");
     }
 
     window.sessionStorage.setItem("Money-perfil","contrato");
@@ -2954,6 +3196,18 @@
 	function papel(){
 		$("#barba").modal("show");
 	}
+
+    function consultarContrato(){
+
+        $("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
+        $("#crear_gastos").css("display","none");
+        $("contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display","none");
+
+    }
 	
     function crear_contrato_link() {
         window.sessionStorage.setItem("Money-perfil","contrato");
@@ -2962,6 +3216,7 @@
         $("#crear_contrato_form_dos").css("display", "initial");
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
+        $("#contratos_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -3160,10 +3415,11 @@
         $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "none");
-        $("#crear_contrato_form_dos").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");        
         $("#cobrar_couta").css("display", "none");
-        $("#crear_gastos").css("display","none");
-			$("#lista_ubicacniones_div").css("display","initial");
+        $("#crear_gastos").css("display","none");      
+        $("#contratos_view").css("display","none");
+        $("#lista_ubicacniones_div").css("display","initial");
 			
 			if(window.localStorage.getItem("Money-vars-token")!==null){
 				block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3395,7 +3651,7 @@
 		backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
-				console.log(valor.d[1]);//falta sumar y mostrar
+				//falta sumar y mostrar
 			}
 			
 			$("#monto_inser").val("");

@@ -627,6 +627,7 @@
                         <li><a href="javascript:informe_completo();">Liquidación</a></li>
                         <li><a href="javascript:informe_completo_cobros();">Consultar cobros</a></li>
                         <li><a href="javascript:informe_completo_gastos();">Consultar gastos</a></li>
+                        <li><a href="javascript:informe_completo_cierre();">Cierre</a></li>
                     </ul>
                     <!--<ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo_finanza();">Finanza</a></li>
@@ -1811,9 +1812,10 @@
                                         <th>Nombre Cliente</th>
                                         <th>Dirección</th>
                                         <th>Monto</th>
+                                        <th>Hora</th>
                                     </tr>
                                     </thead>
-                                    <tbody align="center" id="listado_consultas_por_fechas">
+                                    <tbody align="center" id="listado_cobros_por_fechas">
                                     </tbody>
                                 </table>
                             </div>
@@ -1924,6 +1926,87 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-12" id="cierre_view">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Consulta de cierre</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-3 col-md-3 col-xs-12">
+                                    <div class="form-group"> <input
+                                        id="buscar_contra"
+                                        type="text" 
+                                        placeholder="DPI"
+                                        maxlength="13"
+                                        class="form-control">
+                                    </div>
+                            </div>
+
+                            <div class="col-sm-3 col-md-3 col-xs-12 " >
+                                <select class="form-control m-b" id="id_asesor_cierre">
+                                </select>
+                            </div>
+
+                            <!-- <div class="col-sm-6 col-md-6 col-xs-12">
+                                <button class="btn btn-primary" style="float: right;" onclick="javascript:crear_contrato();"
+                                        type="button">Nuevo cliente
+                                </button>
+                            </div> -->
+
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <div class="ibox ">
+                                        <div class="ibox-title" style="display: flex; justify-content: space-around;">
+                                            <div>Base diaria: <label id="text_base"></label></div>
+                                            <div>Total recaudado: <label id="text_recolectado"></label></div>
+                                            <div>Total gastos: <label id="text_gastos"></label></div>
+                                        </div>
+                                    </div>
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <div class="ibox-title">
+                                    <h5>Consulta de cobros</h5>
+                                </div>
+                                <div class="table-responsive" style="margin-top: 50px;">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr align="center">
+                                            <th>DPI</th>
+                                            <th>Nombre Cliente</th>
+                                            <th>Dirección</th>
+                                            <th>Monto</th>
+                                            <th>Hora</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody align="center" id="listado_cobros_por_fechas">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <div class="ibox-title">
+                                    <h5>Consulta de gatos</h5>
+                                </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr align="center">
+                                            <th>Motivo de gasto</th>
+                                            <th>Monto</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody align="center" id="lista_gastos_exe">
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <div class="col-lg-12" id="migrar_cion_div">
 					<div class="ibox ">
@@ -2319,6 +2402,7 @@
         $("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 
 	}
@@ -2667,7 +2751,6 @@ function extraer_cobros() {
     }
     var fecha = $("#fecha_busqueda_cobros").val()
     block.estraa = $("#id_asesor_cobros").val();
-    console.log(block.estraa)
 	block.estraaq = block.estraa.split("_");
 	block.estra = block.estraaq[0];
 	block.cedulasesor = block.estraaq[1];
@@ -2675,10 +2758,79 @@ function extraer_cobros() {
     console.log(block.arrays);
     block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        block.contador= 0;
         var valor = JSON.parse(salida);
-        console.log(valor);
-
+        console.log("LOS MONTOS: ");
+        //console.log(valor);
+        var clientPromises = [];
+        if (valor.d[1].length > 0){
+            
+            block.montos = valor.d[1];
+            for (var i=0; i<block.montos.length;i++){
+            block.contador=i;
+            block.arrays=[block.tokens[1], block.estraa, valor.d[valor.d.length - 1]];
+            block.arrays[2] = block.montos[i][block.montos[i].length - 1];
+            //console.log(block.montos[i]);
+            block.obj = {"r": "buscar_cliente_contrato", "d": block.arrays};
+            block.montoAct = block.montos[block.contador];
+            clientPromises.push(new Promise(function(resolve,reject){
+                backend.conexionEnvio(JSON.stringify(block.obj), function(salida){
+                if (salida!=null){
+                    response = JSON.parse(salida);
+                    datoscliente = JSON.parse(response.d[1]);
+                    var nombre= datoscliente[8]+" "+datoscliente[9]+" "+datoscliente[10]+" "+datoscliente[11];
+                    var fila = [datoscliente[7],nombre,datoscliente[12].toString()];
+                    var clientes = JSON.parse(localStorage.getItem('clientes'))||[];
+                    var clientesAct = [...clientes,fila];
+                    console.log(clientesAct);
+                    localStorage.setItem('clientes',JSON.stringify(clientesAct));
+                    resolve();
+                    // console.log(block.obj.d);
+                    // console.log(block.montos[block.contador]);
+                    // var direccion = 
+                    // block.inefd +='<tr><td>' + datoscliente[7] + '</td><td>' + nombre + '</td><td>'+ direccion+ '</td><td>' + block.montoAct[0]+ '</td><td>' + block.montoAct[1]+'</td></tr>';
+                    // console.log(block.inefd);
+                    // $("#listado_cobros_por_fechas").html(block.inefd);
+                }else{
+                    reject();
+                }
+                
+            });
+            }))
+        }
+            
+        }else{
+            console.log("menos que 1");
+            console.log(block.inefd);
+            $("#listado_cobros_por_fechas").html(block.inefd);
+        }
+        var montos = JSON.parse(localStorage.getItem('montos'))||[];
+        var montosAct = [...montos,block.montos];
+        localStorage.setItem('montos',JSON.stringify(montosAct));
+        //registros.map(registro => registro[0]);
+    //     var clientes_listado = JSON.parse(localStorage.getItem('clientes'));
+    //     console.log(clientes_listado);
+    //     block.inefd='';
+    //     console.log("montos: "+block.montos.length+"   clientes:"+clientes_listado.length);
+    //     if (block.montos.length==clientes_listado.length){
+    //         var cobro =[], cliente=[], registro=[];
+    //         console.log(block.montos);
+    //         for(var j=0; j<block.montos.length;j++){
+    //             cobro = block.montos[j];
+    //             console.log(cobro);
+    //             cliente = clientes_listado[j];
+    //             console.log(cliente);
+    //             block.inefd +='<tr><td>' + cliente[0] + '</td><td>' + cliente[1] + '</td><td>'+ cliente[2]+ '</td><td>' + cobro[0]+ '</td><td>' + cobro[1]+'</td></tr>';
+    //             console.log(block.inefd);
+    //         }
+    //     $("#listado_cobros_por_fechas").html(block.inefd);
         
+    // }else{
+    //     $("#listado_cobros_por_fechas").html(block.inefd);
+    // }
+    //localStorage.setItem('clientes',JSON.stringify([]));
+    block.montos=[];
+    clientes_listado=[];
         // if (!valor.e) {
         //     // block.pasero = JSON.parse(valor.d[1]);
         //     block.inefd = '';
@@ -2686,13 +2838,46 @@ function extraer_cobros() {
         //         block.iteds = block.pasero[wq];
         //         block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
         //         block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
-        //         block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+        //         
         //     }
         //     $("#lista_gastos_exe").html(block.inefd);
         // }
+        Promise.all(clientPromises).then(function(){
+            listar_contratos();
+        });
+        
     });
-}    
 
+    
+
+    
+}    
+    function listar_contratos(){
+        var clientes_listado = JSON.parse(localStorage.getItem('clientes'));
+        console.log(clientes_listado);
+        block.inefd='';
+        block.montos=JSON.parse(localStorage.getItem('montos'));
+        console.log("montos: "+block.montos.length+"   clientes:"+clientes_listado.length);
+        if (block.montos.length==clientes_listado.length){
+            var cobro =[], cliente=[], registro=[];
+            console.log(block.montos);
+            for(var j=0; j<block.montos.length;j++){
+                cobro = block.montos[j];
+                console.log(cobro);
+                cliente = clientes_listado[j];
+                console.log(cliente);
+                block.inefd +='<tr><td>' + cliente[0] + '</td><td>' + cliente[1] + '</td><td>'+ cliente[2]+ '</td><td>' + cobro[0]+ '</td><td>' + cobro[1]+'</td></tr>';
+                console.log(block.inefd);
+            }
+        $("#listado_cobros_por_fechas").html(block.inefd);
+        
+    }else{
+        $("#listado_cobros_por_fechas").html(block.inefd);
+    }
+        block.montos=[];
+        //localStorage.setItem('clientes',JSON.stringify([]));
+        //localStorage.setItem('montos',JSON.stringify([]));
+    }
 
     block.filein = document.querySelector("#foto1m");
     block.filein.onchange = function (e) {
@@ -3680,8 +3865,7 @@ function extraer_cobros() {
         }
 
         block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];
-        block.obj = {"r": "contratos_lista_all", "d": block.arrays};
-        console.log(block.arrays);
+        block.obj = {"r": "contratos_lista_all", "d": block.arrays};        
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
@@ -3760,7 +3944,7 @@ function extraer_cobros() {
 
 	}
 
-    $("#lista_asesores_general3").change(function(){
+    $("#lista_asesores_general3").change(function(){        
         if($("#lista_asesores_general3").val()!==""){
             block.ase = $("#lista_asesores_general3").val();
             $("#lista_enorme").html("");
@@ -5340,6 +5524,7 @@ function extraer_cobros() {
         $("#suplanter").css("display", "block");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 
 
@@ -5811,6 +5996,7 @@ function extraer_cobros() {
     $("#cliente_lista_admi").css("display", "none");
     $("#consulta_cobros").css("display", "none");
     $("#consulta_gastos").css("display", "none");
+    $("#cierre_view").css("display", "none");
 
 
 
@@ -5838,6 +6024,7 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
     }
@@ -5866,6 +6053,7 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
     }
@@ -5894,6 +6082,7 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -5967,6 +6156,7 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6023,6 +6213,7 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6080,6 +6271,7 @@ function extraer_cobros() {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -6253,6 +6445,7 @@ function extraer_cobros() {
                 $("#id_asesor_consulta").html(block.listax2);
                 $("#id_asesor_gastos_consulta").html(block.listax2);
                 $("#id_asesor_cobros").html(block.listax2);
+                $("#id_asesor_cierre").html(block.listax2);
                 
             }
         });
@@ -6322,6 +6515,7 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6508,6 +6702,7 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6853,6 +7048,7 @@ function extraer_cobros() {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
 
 
 		window.sessionStorage.setItem("numero_lista","0");
@@ -6986,6 +7182,7 @@ function extraer_cobros() {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("cierre_view").css("display", "none");
     }
 
     function informe_completo_cobros(){
@@ -7012,11 +7209,12 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
 		$("#suplanter").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
         $("#consulta_cobros").css("display", "initial");
         cargarListas_asigandos();
 
         window.sessionStorage.setItem("numero_lista","0");
-        consulta_cobrosFecha();
+        //consulta_cobrosFecha();
 
 
     }
@@ -7045,10 +7243,47 @@ function extraer_cobros() {
 		$("#migrar_cion_div").css("display", "none");
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
+        $("#cierre_view").css("display", "none");
         $("#consulta_gastos").css("display", "initial");
+        
         
 
         cargarListas_asigandos();
+
+    }
+
+    function informe_completo_cierre(){
+
+        console.log("Se esta llamando al formulario de cierre")
+
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "initial");
+
+        cargarListas_asigandos();
+       
 
     }
 
@@ -7080,6 +7315,7 @@ function extraer_cobros() {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
     }
 
 
@@ -7108,6 +7344,7 @@ function extraer_cobros() {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
         
     }
 
@@ -7139,6 +7376,7 @@ function extraer_cobros() {
         $("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
     }
 
 	var map;

@@ -18,7 +18,7 @@ eje = function(arrays,origen,redisClient) {
 		if (arrays.length==1){
 		
 			var jwt = require('jsonwebtoken');
-			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
+			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {				
 				if (err) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="3"){

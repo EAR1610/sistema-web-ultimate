@@ -16,6 +16,8 @@
     <link href="../css/datetimepicker.css" rel="stylesheet">    
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 
     <script>
         if ( typeof module === "object" && typeof module.exports === "object" ) {
@@ -1234,9 +1236,12 @@
 
                             <div class="col-sm-6 col-md-1 col-xs-6" >
                                 <form role="form" style="margin-top: 24px;display:grid;">
-                                    <button type="button" class="btn btn-danger" id="boton_pdf"><i class="fa fa-file-pdf"></i></button>
+                                    <button type="button" class="btn btn-danger" id="boton_pdff"><i class="fa fa-file-pdf"></i></button>
                                 </form>
                             </div>
+
+                            
+                           
 
 
 
@@ -1582,10 +1587,68 @@
 <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
+
+
 <script>
+    // Define la función para generar el PDF de prueba
+    // Define la función para generar el PDF de prueba
+    function generarPDFDePrueba() {
+        var doc = new window.jspdf.jsPDF({
+            unit: 'mm',
+            format: [80,Infinity]
+        }); // Crea una instancia de jsPDF.
 
-	$("#page-wrapper").css("height","");
+        // Llama a la función imprimir_texto con datos de prueba
+        imprimir_texto(doc, 'Nombre: Juan Pérez', 10, 10, 12, 'black', 'left');
+        imprimir_texto(doc, 'Email: juan@example.com', 10, 20, 12, 'black', 'left');
+        imprimir_texto(doc, 'Teléfono: 123-456-7890', 10, 30, 12, 'black', 'left');
 
+        // Guarda o muestra el PDF, según tus necesidades.
+        // Por ejemplo, para guardarlo con el nombre "documento.pdf":
+        doc.save('documento.pdf');
+    }
+
+    function imprimir_texto(doc, texto, x, y, size, color, align) {
+        doc.setFontSize(size);
+        doc.setTextColor(color);
+        doc.text(texto, x, y, {align: align});
+    }
+
+    // Agrega un controlador de eventos al botón
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('boton_pdff').addEventListener('click', function() {
+            generarPDFDePrueba(); // Llama a la función para generar el PDF al hacer clic en el botón
+        });
+    });
+
+</script>
+
+
+
+
+
+
+
+<script>
+//    import { jsPDF } from "jspdf";
+
+// 	$("#page-wrapper").css("height","");
+
+    //____________________________________________
+
+//     function generarPDFDePrueba() {
+//         var doc = new jsPDF(); // Crea una instancia de jsPDF.
+
+//         // Llama a la función imprimir_texto con datos de prueba
+//         imprimir_texto('Nombre: Juan Pérez', 10, 10, 12, 'black', 'left');
+//         imprimir_texto('Email: juan@example.com', 10, 20, 12, 'black', 'left');
+//         imprimir_texto('Teléfono: 123-456-7890', 10, 30, 12, 'black', 'left');
+
+//         // Guarda o muestra el PDF, según tus necesidades.
+//         // Por ejemplo, para guardarlo con el nombre "documento.pdf":
+//         doc.save('documento.pdf');
+// }
+    
     var block = this;
 
     function salida_sistema() {
@@ -2548,7 +2611,7 @@
         }
 
         block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];
-        block.obj = {"r": "contratos_lista_all", "d": block.arrays};
+        block.obj = {"r": "contratos_lista_all", "d": block.arrays};        
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {

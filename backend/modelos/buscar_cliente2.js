@@ -13,7 +13,7 @@ eje = function(arrays,origen,redisClient) {
 		*/
 		
 		
-		if (arrays.length==5){
+		if (arrays.length==5){		
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
@@ -48,23 +48,17 @@ eje = function(arrays,origen,redisClient) {
 								redisClient.get(reply[0], function (ersr, reeply) {
 									var interno = JSON.parse(reeply);
 									resolve([true,interno,sreeply]);
-									
 								});
-							
 							});
 						}
-						
 				    });
-					
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

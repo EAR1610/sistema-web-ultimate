@@ -26,7 +26,7 @@ eje = function(arrays,origen,redisClient) {
 						Busco contrato y traigo la informacion
 						*/
 						redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {
-							
+							console.log(arrays[3]);
 							if(reply.length>0){
 								
 								var origena = reply[0],cedulax = origena.split("_") ;
@@ -116,8 +116,8 @@ eje = function(arrays,origen,redisClient) {
 										});
 																							
 										var fechaq = moment().format('YYYY-MM-DD_hh_mm_ss'),asesorw = arrays[1];
-										redisClient.set("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3],"true", function (errex, rewprlyx) {
-											console.log("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3]);
+										redisClient.set("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3]+"_"+cedulax[1],"true", function (errex, rewprlyx) {
+											console.log("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3]+"_"+cedulax[1]);
 											console.log("sumado en diario "+arrays[2]); 
 										});
 

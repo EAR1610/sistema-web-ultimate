@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibe token y idasesor
+		Recibo un array con los valores token,idasesor,idempresa;
 		*/
 		
 		if (arrays.length==3){
@@ -19,63 +19,96 @@ eje = function(arrays,origen,redisClient) {
 				if (err) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
-					
-					// var moment = require("moment");
-					// var dia = moment().format('YYYY-MM-DD');
-					var coando = "monto_"+arrays[1]+"_*_"+arrays[2]+"_*"
-					
-					/*
-					toma los monto y los suma
-					*/
-					
-					redisClient.keys(coando,function(err3,reply3){
-						if(reply3!==null){
-							data = []
-							for(var i = 0; i < reply3.length; i ++){
-								var explit  = reply3[i].split("_");
-								console.log("ID DEL CONTRATO:  "+explit[7]);
-								// cliente =[];
-								// redisClient.get("registro_contrato_"+arrays[1],function(err,reply) {
-									
-								// 	var contrato = JSON.parse(reply);
-									
-								// 	for (const string of contrato) {
-								// 		// if (explit[7]!=null){
-								// 		// 	const partes = string.split("_");
-								// 		// 	const ultimoElemento = partes[partes.length - 1];
-								// 		// 	console.log(ultimoElemento);
-								// 		// 	console.log(explit[7]);
-								// 		// 	if (parseInt(ultimoElemento) ===explit[7] ) {
-								// 		// 	console.log("encontrado");
-								// 		// 	var cliente = redisClient.get("cliente_"+partes[1], function (qersr, reply_cliente) {
-								// 		// 		if(reply_cliente!==null){
-								// 		// 			cliente.push(JSON.parse(reply_cliente));
-								// 		// 			console.log(reply_cliente);
-								// 		// 			console.log(cliente);
-								// 		// 		}
-								// 		// 		else{
-								// 		// 			cliente.push(reply_cliente);
-								// 		// 		}
-								// 		// 	});
-								// 		// 	}
-								// 		// }
-										
-								// 	  }
-									  
-									  
-								// });
 
+
+					/*
+					busco registro de montos del asesor
+					*/
+					var comando = "monto_"+arrays[1]+"_*_"+arrays[2]+"_*"
+					redisClient.keys(comando,function(err,replyv) {
+						
+						//console.log(err,reply);
+						if(replyv!==null){
+												
+							var reply = JSON.parse(replyv);
+							if(reply.length>0){
 								
-								info=[i,explit[2],explit[4]+":"+explit[5],explit[7]];
-								data[i] = info;
+								/*
+								al tener los registros los intero etilo kanban usando recursividad
+								*/
 								
+								var lista = [];
+								function recurso(ind,arrs){
+									if(ind==arrs.length){
+										
+										/*
+										revuelvo
+										*/
+										
+										resolve([true,lista]);
+										
+									}else{
+										var elementos  = arrs[ind].split("_");
+										var inus = arrs[ind].split("_");
+										console.log(arrs[ind]);
+										redisClient.get(arrs[ind],function(exrrs,daxtse){
+											
+											var infeos = JSON.parse(daxtse);
+											
+											/*
+											extraigo informacion de cliente
+											*/
+											console.log(infeos[13]);
+											redisClient.get("cliente_"+inus[1],function(errs,datse){
+											
+												if(datse!==null) {
+													var infes = JSON.parse(datse);
+
+													var uno = infes[8],
+														tres = infes[10],
+														cedua = infes[7],
+														direc = infes[12],
+														tele = infes[17];
+													
+													/*
+													tomo la direccion y la reuno en un array
+													*/
+													
+													redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
+														if(dastse!==null){
+															
+															var latos = JSON.parse(dastse);
+															lista.push({"u":uno+" "+tres,"c":cedua,"a":latos[0],"o":latos[1],"d":direc,"e":tele,"id":inus[5],"m":infeos[3],"f":infeos[5]});
+															ind++;
+															recurso(ind, arrs);
+														
+														}else{
+															ind++;
+															recurso(ind, arrs);
+														}
+													});
+												}else{
+													ind++;
+													recurso(ind, arrs);
+												}
+												
+											});
+										
+										});
+
+									}
+								}
+
+								recurso(0,reply);
+
+							}else{
+								reject([false,"4"]);
 							}
-							resolve([true,data]);
 						}else{
-							resolve([true,data]);
+							reject([false,"4"]);
 						}
 					});
-					
+
 				}else{
 					reject([false,"2"]);
 				}

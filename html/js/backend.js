@@ -4,10 +4,10 @@ backend.dev = false;
 
 if(!backend.dev){
 	// backend.usuando = "45.32.161.183";
-	backend.usuando = "192.168.1.207";
+	backend.usuando = "192.168.1.6";
 } else {
 	// backend.usuando = "45.32.160.1";
-	backend.usuando = "192.168.1.207";
+	backend.usuando = "192.168.1.6";
 }
 
 backend.conexionEnvio = function (datos,callback){	
