@@ -24,6 +24,157 @@
             window.$ = window.jQuery = require('jquery');
         }
     </script>
+    <script>
+
+        function generarPDFCobros() {
+                var doc = new window.jspdf.jsPDF({
+                    // unit: 'mm',
+                    // format: [80,Infinity]
+                }); // Crea una instancia de jsPDF.
+
+                    // Datos de prueba
+                            // Datos de prueba
+                var datos = [
+                    { etiqueta: 'DPI', valor: 'Juan Pérez' },
+                    { etiqueta: 'Nombre Cliente', valor: 'juan@example.com' },
+                    { etiqueta: 'Dirección', valor: '123-456-7890' },
+                    { etiqueta: 'Monto', valor: '$100.00' },
+                    { etiqueta: 'Hora', valor: '10:00 AM' }
+                ];
+
+                // Imprime el encabezado en color verde
+                doc.setTextColor(0, 128, 0);
+                doc.text('Etiqueta', 10, 10);
+                doc.text('Valor', 60, 10);
+
+                // Imprime cada dato en una nueva línea
+                doc.setTextColor('black');
+                for (var i = 0; i < datos.length; i++) {
+                    imprimir_texto(doc, datos[i].etiqueta, 10, 20 + (i * 10), 12, 'black', 'left');
+                    imprimir_texto(doc, datos[i].valor, 60, 20 + (i * 10), 12, 'black', 'left');
+                }
+
+                // Guarda el PDF
+                doc.save('documento.pdf');
+}
+
+            function imprimir_texto(doc, texto, x, y, size, color, align) {
+                doc.setFontSize(size);
+                doc.setTextColor(color);
+                doc.text(texto, x, y, {align: align});
+            }
+            // Agrega un controlador de eventos al botón
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('boton_Reporte_Cobros').addEventListener('click', function() {
+                    generarPDFCobros(); // Llama a la función para generar el PDF al hacer clic en el botón
+                });
+            });
+    
+    </script>
+     <script>
+       function generarPDFGastos() {
+        var doc = new window.jspdf.jsPDF();
+
+        
+        var tabla = document.getElementById('lista_gastos_exe');
+        var datos = [];
+        for (var i = 0; i < tabla.rows.length; i++) {
+            datos.push({
+                motivo: tabla.rows[i].cells[0].innerText,
+                monto: tabla.rows[i].cells[1].innerText
+            });
+        }
+
+        doc.setFillColor(0, 128, 0);
+        doc.rect(0, 35, 210, 10, 'F');
+        doc.setFontSize(18);
+        doc.text("PRESTAMOS SS", 105, 10, null, null, "center");
+        doc.text("Reporte de gastos", 105, 20, null, null, "center");
+        doc.setFontSize(12);
+        doc.text(NombreEmpresa, 105, 30, null, null, "center");
+
+        // Imprime los títulos de las columnas
+        doc.setTextColor(255, 255, 255); // Cambia el color del texto a blanco para que sea visible en el fondo verde
+        doc.text('Motivo de gasto', 10, 40);
+        doc.text('Monto', 160, 40);
+
+        // Imprime cada dato en una nueva línea
+        for (var i = 0; i < datos.length; i++) {
+            doc.setTextColor(0, 0, 0); // Cambia el color del texto a negro para los datos
+            imprimir_texto(doc, datos[i].motivo.toString(), 10, 50 + (i * 10), 12, 'black', 'left');
+            imprimir_texto(doc, datos[i].monto.toString(), 160, 50 + (i * 10), 12, 'black', 'right');
+            if (i < datos.length - 1) {
+                doc.line(10, 55 + (i * 10), 200, 55 + (i * 10));
+            }
+        }
+
+        // Guarda el PDF
+        doc.save('documento.pdf');
+    }
+    
+    function imprimir_texto(doc, texto, x, y, size, color, align) {
+    doc.setFontSize(size);
+    doc.setTextColor(color);
+    doc.text(texto, x, y,{align: align});
+}
+        // Agrega un controlador de eventos al botón
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('boton_Reporte_Gastos').addEventListener('click', function() {
+                generarPDFGastos();
+            });
+        });
+
+
+
+
+        // function generarPDFGastos() {
+        //     var doc = new window.jspdf.jsPDF();
+
+        //     // Recoge los datos de la tabla
+        //     var tabla = document.getElementById('lista_gastos_exe');
+        //     var datos = [];
+        //     for (var i = 0; i < tabla.rows.length; i++) {
+        //         datos.push({
+        //             etiqueta: tabla.rows[i].cells[0].innerText,
+        //             valor: tabla.rows[i].cells[1].innerText
+        //         });
+        //     }
+
+        //     // Imprime el encabezado en color verde
+        //     doc.setTextColor(0, 128, 0);
+        //     doc.text("Nombre de la empresa"+NombreEmpresa, 20, 20);
+        //     doc.text('Motivo de gasto', 10, 10);
+        //     doc.text('Monto', 60, 10);
+
+        //     // Imprime cada dato en una nueva línea
+        //     doc.setTextColor('black');
+        //     for (var i = 0; i < datos.length; i++) {
+        //         imprimir_texto(doc, datos[i].etiqueta, 10, 20 + (i * 10), 12, 'black', 'left');
+        //         imprimir_texto(doc, datos[i].valor, 60, 20 + (i * 10), 12, 'black', 'left');
+        //     }
+
+        //     // Guarda el PDF
+        //     doc.save('documento.pdf');
+        // }
+
+        // function imprimir_texto(doc, texto, x, y, size, color, align) {
+        //     doc.setFontSize(size);
+        //     doc.setTextColor(color);
+        //     doc.text(texto, x, y, {align: align});
+        // }
+
+        // // Agrega un controlador de eventos al botón
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     document.getElementById('boton_Reporte_Gastos').addEventListener('click', function() {
+        //         generarPDFGastos();
+        //     });
+        // });
+
+    </script>
+
+
+
+    
 
     <style>
         @media (max-width: 576px) {
@@ -1743,7 +1894,7 @@
 
                             <div class="col-sm-6 col-md-1 col-xs-6" style="display:none">
                                 <form role="form" style="margin-top: 24px;display:grid;">
-                                    <button type="button" class="btn btn-danger" id="boton_pdf"><i class="fa fa-file-pdf"></i></button>
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte"><i class="fa fa-file-pdf"></i></button>
                                 </form>
                             </div>
 
@@ -1803,6 +1954,9 @@
                                         id="busqueda_cobros"
                                         type="button">Buscar
                                 </button>
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte_Cobros"><i class="fa fa-file-pdf"></i></button>
+                                </form>
                             </div>
                             <div class="table-responsive" style="margin-top: 50px;">
                                 <table class="table table-striped">
@@ -1853,6 +2007,10 @@
                                         id="busqueda_gasto"
                                         type="button">Buscar
                                 </button>
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte_Gastos"><i class="fa fa-file-pdf"></i></button>
+                                </form>
+
                             </div>
                             <div class="table-responsive" style="margin-top: 50px;">
                                 <table class="table table-striped" >
@@ -2326,6 +2484,7 @@
 	$("#page-wrapper").css("height","");
 
     var block = this;
+    var NombreEmpresa = "";
 
     function salida_sistema() {
         window.sessionStorage.clear(); 
@@ -7149,6 +7308,7 @@ function extraer_cobros() {
 
 
     function down_configuracion() {
+      
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -7182,6 +7342,7 @@ function extraer_cobros() {
                 $("#nit_empresa").val(block.lista[15]);
                 $("#dire_empresa").val(block.lista[14]);
                 $("#nom_empresa").val(block.lista[13]);
+                NombreEmpresa = block.lista[13];
             }else{
 				toastr.warning('Configure el perfil de su empresa', 'System notification!');
 				asig_configuracion();

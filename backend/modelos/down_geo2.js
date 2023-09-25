@@ -62,7 +62,7 @@ eje = function(arrays,origen,redisClient) {
 											// console.log(infeos[13]);
 
                                             var fechaHoy = new Date().toISOString().split('T')[0];
-                                            var clientesHoy = infeos[13].filter(cliente => cliente.fe == fechaHoy);
+                                            var clientesHoy = infeos[13].filter(cliente => cliente.fe == fechaHoy && cliente.ct === false);
                                             
                                             if(clientesHoy.length){
                                                 redisClient.get("cliente_"+inus[1],function(errs,datse){

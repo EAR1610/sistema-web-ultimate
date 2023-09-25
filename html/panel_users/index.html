@@ -842,6 +842,7 @@
                                     <div class="form-group"><label>Monto de gasto</label> <input
                                             id="monto_gasto"
                                             type="number"
+                                            min="0"
                                             placeholder=""
                                             class="form-control"></div>
                                 </form>
@@ -962,7 +963,6 @@
 <script src="../js/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="../js/imagen_tool.js"></script>
 <script src="../js/backend.js"></script>
-<script src="../../backend/modelos/generar_ticket.js"></script>
 <script>    
 	$("#page-wrapper").css("height","");
 
@@ -1100,6 +1100,7 @@
 
     function registrar_gastos(){
         $("#pendiente_form").css("display","none");
+        $("#lista_ubicacniones_div").css("display","none");
         $("#crear_gastos").css("display","block");
         $("#cobrar_couta").css("display","none");
         $("#crear_contrato_form_dos").css("display","none");
@@ -1214,7 +1215,6 @@
             var valor = JSON.parse(salida);    
             if (!valor.e) {
                 block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
-				console.log(block.listao);
                 var map;
                 var mapOptions = {
 					center: {lat: 16.930351030698695, lng: -89.8912385219706},                    
@@ -1828,12 +1828,16 @@
     });
 
     $("#gasto_executar").click(function () {
-
         block.motivo = $("#motivo_gasto").val();
         block.gasto = $("#monto_gasto").val();
 
         if(block.motivo == '' || block.gasto == ''){
             toastr.warning('Hay campos vacíos', 'System notification!');
+            return;
+        }
+
+        if(block.gasto <= 0) {
+            toastr.warning('El gasto no debe ser negativo', 'System notification!');
             return;
         }
         
@@ -3407,15 +3411,16 @@
 
             }
 		});
-    function ubicaciones_operaciones(){
-        $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
-        $("#googleMap").css("display","none");
-        $("#crear_contrato_form").css("display", "none");
-        $("#crear_contrato_form_dos").css("display", "none");        
-        $("#cobrar_couta").css("display", "none");
-        $("#crear_gastos").css("display","none");      
-        $("#contratos_view").css("display","none");
-        $("#lista_ubicacniones_div").css("display","initial");
+
+        function ubicaciones_operaciones(){
+            $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+            $("#googleMap").css("display","none");
+            $("#crear_contrato_form").css("display", "none");
+            $("#crear_contrato_form_dos").css("display", "none");        
+            $("#cobrar_couta").css("display", "none");
+            $("#crear_gastos").css("display","none");      
+            $("#contratos_view").css("display","none");
+            $("#lista_ubicacniones_div").css("display","initial");
 			
 			if(window.localStorage.getItem("Money-vars-token")!==null){
 				block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3464,7 +3469,6 @@
 		});
 		
 		$("#crear_direccion").click(function(){
-			
 			if($("#view_departamento").css("display")!=="none"){
 				block.depa = $("#tipo_departamento").val();
 			}else{
@@ -3496,17 +3500,17 @@
 					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
 				}
 				
-				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon,block.det];
+				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon];
 				block.obj = {"r":"crea_direccion","d":block.arrays};
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
-					var valor = JSON.parse(salida);
+                    var valor = JSON.parse(salida);
 					if(!valor.e){
 						$("#add_barrio_lon_text").val("");
 						$("#add_barrio_lat_text").val("");
 						$("#add_barrio_text").val("");
 
-						// $("#limpiar_agrega").click();
-						//ubicaciones_operaciones();
+						$("#limpiar_agrega").click();
+						ubicaciones_operaciones();
 						toastr.success('Procesado con éxito','System notification!');
 					}
 				});
