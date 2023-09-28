@@ -9,27 +9,28 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibo token
+			recibo token
 		*/
 		
 		if (arrays.length==1){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
+				console.log("decoded.t es:")
+				console.log(decoded);
 				if (err) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="0"){
 					
 					/*
-					extraigo lista de supervidors asignados a la empresa
+						extraigo lista de supervidors asignados a la empresa
 					*/
-					
+					console.log('listado_'+decoded.d+'_supervisor_*');
 					redisClient.keys('listado_'+decoded.d+'_supervisor_*',function(err3,reply3){
 						if(reply3.length > 0){
 							
 							/*
-							
-							guardo los datos en array mediante kanban
+								guardo los datos en array mediante kanban
 							*/
 							
 							var litado = [];
@@ -49,22 +50,18 @@ eje = function(arrays,origen,redisClient) {
 									});
 								}
 							}
-							
 							iterar(0,reply3);
 						}else{
 							reject([false,"4"]);
 						}
 					});
-					
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

@@ -178,13 +178,13 @@
 						if(valor.d[3]=="0"){
 							location.href = "./panel_root"; //SUPER ADMIN
 						}else if(valor.d[3]=="1"){
-							location.href = "./panel_super"; //(SOLOCITAR AL SUPERADMIN)
+							location.href = "./panel_super"; //(SOLICITAR AL SUPERADMIN)
 						}else if(valor.d[3]=="2"){
 							location.href = "./panel_users"; //ASESOR
 						}else if(valor.d[3]=="3"){
 							location.href = "./panel_client";
 						}else if(valor.d[3]=="4"){
-							toastr.warning('Los supervisores no pueden acceder al sistema','¡Atención!');
+                            location.href = "./panel_admin"; //ROL SUPERVISOR
 						}else if(valor.d[3]=="5"){
                             location.href = "./panel_admin"; //ROL ADMINISTRADOR
                         } 

@@ -11,9 +11,7 @@ eje = function(arrays,origen,redisClient) {
 		/*
 			recibo token y idaseor
 		*/
-		
 		if (arrays.length==2){
-		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
@@ -21,7 +19,7 @@ eje = function(arrays,origen,redisClient) {
 				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="5"){
 					
 					/*
-					emito lista de clientes basica segun su orden
+						emito lista de clientes basica segun su orden
 					*/
 					
                     redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
@@ -44,16 +42,13 @@ eje = function(arrays,origen,redisClient) {
 							});
                         }
                     });
-
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

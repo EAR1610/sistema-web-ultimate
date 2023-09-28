@@ -23,10 +23,12 @@
     <link href="../css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'>
     <link href="../css/plugins/slick/slick.css" rel="stylesheet">
     <link href="../css/plugins/slick/slick-theme.css" rel="stylesheet">
-
+    
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/@nimblehq/bluetooth-printer/dist/index.min.js"></script>
+    <script src="https://jspm.dev/es-browser.js"></script>
     <script>
         if ( typeof module === "object" && typeof module.exports === "object" ) {
             window.$ = window.jQuery = require('jquery');
@@ -35,45 +37,123 @@
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 
     <script>
-    //_______________________________________________________________________________________________
-    function generarPDFDePrueba() {
+        import { BluetoothPrinter } from "@nimblehq/bluetooth-printer";
+        async function printReceipt(file) {
+      // Obtenga el recibo PDF
+            const receipt = await fs.readFile(file);
+
+      // Imprima el recibo
+            await printer.print(receipt);
+        }
+    function generarPDFPago() {
         
+        const printer = new BluetoothPrinter();
+
+        
+
         var doc = new window.jspdf.jsPDF({
             unit: 'mm',
             format: [80,Infinity],
             format: [80, 100]
         });
 
-        
-        // Llama a la función imprimir_texto con datos de prueba
-        imprimir_texto(doc, 'RECIBO DE PAGO', doc.internal.pageSize.getWidth() / 2, 10, 12, 'black', 'center');
-        imprimir_texto(doc, 'Fecha: 22/09/2023', 10, 20, 12, 'black', 'left');
-        imprimir_texto(doc, 'Hora: 10:00:00', 10, 25, 12, 'black', 'left');
-        imprimir_texto(doc, 'Asesor: Eddy', 10, 30, 12, 'black', 'left');
-        imprimir_texto(doc, 'Cliente: América', 10, 35, 12, 'black', 'left');
-        imprimir_texto(doc, 'CuotaNo: 2384923', 10, 40, 12, 'black', 'left');
-        imprimir_texto(doc, 'Monto: Q. 11,000.00', 10, 45, 12, 'black', 'left');
-        imprimir_texto(doc, 'Saldo Anterior: 2384923', 10, 50, 12, 'black', 'left');
-        imprimir_texto(doc, 'Saldo Actual: 2384923', 10, 55, 12, 'black', 'left');
+        let fecha = new Date().toLocaleString();
+        let nombreCliente = ticketClienteImpresion.extraer[8] + ' ' +ticketClienteImpresion.extraer[9];
+        let apellidoCliente = ticketClienteImpresion.extraer[10] + ' ' +ticketClienteImpresion.extraer[11];
+        let NoCuota = ticketClienteImpresion.contador_cuotas;
+        let montoAPagar = parseInt(ticketClienteImpresion.cuotas[8]);
+        let saldoPendiente = ticketClienteImpresion.valoes - ticketClienteImpresion.acumo;
+        let saldoAnterior = montoAPagar + saldoPendiente;
+        let infoSesion = JSON.parse(sessionStorage.getItem('Money-vars-token'));
+        let infoSeparada = infoSesion[6].split(" ");
+        let nombreAsesor = infoSeparada.slice(0, 2).join(" ");
+        let apellidoAsesor = infoSeparada.slice(2).join(" ");
 
-        // Guarda o muestra el PDF, según tus necesidades.
-        // Por ejemplo, para guardarlo con el nombre "documento.pdf":
-        doc.save('ticket.pdf');
+
+        doc.setFontSize(18);
+        doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+        doc.setFont('Helvetica', 'bold')
+        imprimir_texto(doc, 'TICKET DE PAGO', doc.internal.pageSize.getWidth() / 2, 10, 12, 'black', 'center');
+
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineDash([3, 3], 0);
+        doc.line(10, 15, doc.internal.pageSize.getWidth() - 10, 15); 
+
+
+        doc.setFont('Helvetica', 'bold');
+        imprimir_texto(doc, 'Fecha: ', 10, 20, 12, 'black', 'left');
+        doc.setFont('Helvetica', 'normal');
+        imprimir_texto(doc, fecha.toString(), 25, 20, 12, 'black', 'left');
+
+        doc.setFont('Helvetica', 'bold');
+        imprimir_texto(doc, 'Asesor: ', 10, 25, 12, 'black', 'left');
+        doc.setFont('Helvetica', 'normal');
+        imprimir_texto(doc, nombreAsesor, 27, 25, 12, 'black', 'left');
+        imprimir_texto(doc, apellidoAsesor, 10, 30, 12, 'black', 'left');
+
+        doc.setFont('Helvetica', 'bold');
+        imprimir_texto(doc, 'Cliente: ', 10, 35, 12, 'black', 'left');
+        doc.setFont('Helvetica', 'normal');
+        imprimir_texto(doc, nombreCliente, 28 ,35 ,12 ,'black' ,'left');
+        imprimir_texto(doc, apellidoCliente, 10, 40, 12, 'black', 'left');
+
+        doc.setFont('Helvetica', 'bold');
+        imprimir_texto(doc, 'No cuota: ', 10, 45, 12, 'black', 'left');
+        doc.setFont('Helvetica', 'normal');
+        imprimir_texto(doc,NoCuota.toString() ,30 ,45 ,12 ,'black' ,'left');
+
+        doc.setFont('Helvetica', 'bold');
+        imprimir_texto(doc,'Monto a pagar: ',10 ,50 ,12 ,'black' ,'left');
+        doc.setFont('Helvetica', 'normal');
+        imprimir_texto(doc,'Q' + montoAPagar.toString() ,45 ,50 ,12 ,'black' ,'left');
+
+        doc.setFont('Helvetica', 'bold');
+        imprimir_texto(doc,'Saldo pendiente: ',10 ,55 ,12 ,'black' ,'left');
+        doc.setFont('Helvetica', 'normal');
+        imprimir_texto(doc,'Q' + saldoPendiente.toString() ,47 ,55 ,12 ,'black' ,'left');
+
+        doc.setFont('Helvetica', 'bold');
+        imprimir_texto(doc,'Saldo anterior: ',10 ,60 ,12 ,'black' ,'left');
+        doc.setFont('Helvetica', 'normal');
+        imprimir_texto(doc,'Q' + saldoAnterior.toString() ,45 ,60 ,12 ,'black' ,'left');
+
+        
+        // doc.setFontSize(18);
+        // doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+        // doc.setFont('Helvetica', 'bold')
+        // imprimir_texto(doc, 'TICKET DE PAGO', doc.internal.pageSize.getWidth() / 2, 10, 12, 'black', 'center');
+        // doc.setLineWidth(0.5);
+        // doc.setDrawColor(0, 0, 0);
+        // doc.setLineDash([3, 3], 0);
+        // doc.line(10, 12, 70, 12);
+
+        
+
+        // imprimir_texto(doc, 'Fecha: ' + fecha, 10, 20, 12, 'black', 'left');
+        // imprimir_texto(doc, 'Asesor: ' + nombreAsesor, 10, 25, 12, 'black', 'left');
+        // imprimir_texto(doc, apellidoAsesor, 10, 30, 12, 'black', 'left');
+        // imprimir_texto(doc, 'Cliente: '+ nombreCliente, 10, 35, 12, 'black', 'left');
+        // imprimir_texto(doc, apellidoCliente, 10, 40, 12, 'black', 'left');
+        // imprimir_texto(doc, 'No cuota: ' + NoCuota, 10, 45, 12, 'black', 'left');
+        // imprimir_texto(doc, 'Monto a pagar: Q' + montoAPagar, 10, 50, 12, 'black', 'left');
+        // imprimir_texto(doc, 'Saldo pendiente: Q' + saldoPendiente, 10, 55, 12, 'black', 'left');
+        // imprimir_texto(doc, 'Saldo anterior: Q' + saldoAnterior, 10, 60, 12, 'black', 'left');
+        const file = 'ticket_'+fecha.toString()+'.pdf'
+        doc.save(file);
+        printReceipt(file);
     }
 
     function imprimir_texto(doc, texto, x, y, size, color, align) {
         doc.setFontSize(size);
         doc.setTextColor(color);
         doc.text(texto, x, y, {align: align});
-        
-        
+    }   
 
-    }
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('boton_pdff').addEventListener('click', function() {
-            generarPDFDePrueba(); // Llama a la función para generar el PDF al hacer clic en el botón
-           
+            generarPDFPago();                  
         });
     });
 
@@ -624,7 +704,7 @@
                         <div class="ibox-title" style="display: flex; justify-content: space-around;">
                             <div>Base diaria: <label id="text_base"></label></div>
                             <div>Total recaudado: <label id="text_recolectado"></label></div>
-                            <div>Total gastos: <label id="text_gastos"></label></div>
+                            <div>Total gastos: <label id="text_gastos">Q0</label></div>
                         </div>
 
                     </div>
@@ -944,13 +1024,24 @@
 <script>
 
     var firebaseConfig = {
-		apiKey: "AIzaSyB1i8Vx6jWV5szRQujd5fNW6TfFLiru-Tc",
-		authDomain: "demostrativo-web.firebaseapp.com",
-		databaseURL: "https://demostrativo-web.firebaseio.com",
-		projectId: "demostrativo-web",
-		storageBucket: "demostrativo-web.appspot.com",
-		messagingSenderId: "1038105645545",
-		appId: "1:1038105645545:web:9affa6ce337fb51a"
+
+        apiKey: "AIzaSyCKm7s6lyrf6qojY04kNYDt6DkM4P4vzoE",
+        authDomain: "prestamos-6c36a.firebaseapp.com",
+        databaseURL: "https://prestamos-6c36a-default-rtdb.firebaseio.com/",
+        projectId: "prestamos-6c36a",
+        storageBucket: "prestamos-6c36a.appspot.com",
+        messagingSenderId: "815768429932",
+        appId: "1:815768429932:web:6d50bac5c91e2150f97f49",
+        measurementId: "G-7DY4VZWSC5"
+
+
+		// apiKey: "AIzaSyB1i8Vx6jWV5szRQujd5fNW6TfFLiru-Tc",
+		// authDomain: "demostrativo-web.firebaseapp.com",
+		// databaseURL: "https://demostrativo-web.firebaseio.com",
+		// projectId: "demostrativo-web",
+		// storageBucket: "demostrativo-web.appspot.com",
+		// messagingSenderId: "1038105645545",
+		// appId: "1:1038105645545:web:9affa6ce337fb51a"
 	};
 	
     firebase.initializeApp(firebaseConfig);
@@ -967,6 +1058,8 @@
 	$("#page-wrapper").css("height","");
 
     var block = this;
+    var ticketCuotaImpresion;
+    var ticketClienteImpresion;
 
     function salida_sistema() {
          window.sessionStorage.clear(); window.localStorage.clear();
@@ -1805,7 +1898,7 @@
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
-        let gastos =0;
+        let gastos = 0;
         block.arrays = [block.tokens[1],block.tokens[5]];
         block.obj = {"r": "extrae_gastos", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
@@ -1923,7 +2016,8 @@
 
     }
 
-    function down_configuracion() {        
+    function down_configuracion() { 
+        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -1943,9 +2037,9 @@
         block.obj = {"r": "sumatoria_diario", "d": block.arrays}; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);            
-            if (!valor.e) {                
+            if (!valor.e) {           
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
+                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');     
                 $("#text_recolectado").text("Q"+valor.d[1]);
                 $("#text_base").text("Q"+valor.d[2]);
                 totalGastos();
@@ -1967,14 +2061,14 @@
         
         block.arrays = [block.tokens[1],block.tokens[5],Numcuota,cedula[0],cedula[1]];
         block.obj = {"r": "descontar_cuota", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {            
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {   
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
 				toastr.success('Procesado correctamente', 'System notification!');
 				block.cuotas = valor.d[1];
 				block.cliente = valor.d[2];
 				
-				$("#cuotas_coun").val("");
+				$("#cuotas_coun").val("");				
 				
 				block.limpo = block.cuotas[3].replace(".","");
 				block.limpo2 = block.limpo.replace(".","");
@@ -1983,6 +2077,7 @@
 				block.extraer = JSON.parse(block.cliente);
 				block.acumo = 0;
 				block.todosCal =[];
+                ticketCuotaImpresion = block.cuotas[13];
 				
 				for(var x = 0; x < block.cuotas[13].length; x++){
 					if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0){
@@ -2063,8 +2158,11 @@
         });		
     }
 
-    $("#status_prestamo").click(function () {
+    /*
+        Al hacer clic en el botón, se realiza lo siguiente: Se obtiene el valor ingresado en monto a pagar y se evalua.
+    */
 
+    $("#status_prestamo").click(function () {
         if($("#cuotas_coun").val()!=="" && $("#cuotas_coun").val()!=="0") {
 			
 			block.loire = $("#cuotas_coun").val();
@@ -2845,7 +2943,7 @@
         block.cedula = window.sessionStorage.getItem("Money-vars-registrado");
     });
 	
-	function fijar_monto(id,cedula){        
+	function fijar_monto(id,cedula){    
 		window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));
 		$("#cuotas_coun").css("display","block");
 		$("#cedula_elecion").css("display","none");
@@ -2924,14 +3022,14 @@
 					$("#entregado_prestame").text("0");
 					$("#dias_prestame").text("0");
 				}
-								                
-				$("#cuento_prestame").text(block.cuotas[3]);                
-				$("#dias_prestame").text(block.contador_cuotas);
-				$("#valor_prestame").text(block.cuotas[8]);                
-				$("#pago_prestame").text(block.valoes-block.acumo);
-				$("#entregado_prestame").text(block.cuotas[3]);
-				$("#descuento_prestame").text("0");
-				$("#text_nombre_cliente2").val(block.extraer[8]+" "+block.extraer[9]+" "+block.extraer[10]+" "+block.extraer[11]);
+                ticketClienteImpresion = block;
+				$("#cuento_prestame").text(block.cuotas[3]);   //Creditos aprobados
+				$("#dias_prestame").text(block.contador_cuotas); //num_cuotas
+				$("#valor_prestame").text(block.cuotas[8]);      // cuota a pagar      
+				$("#pago_prestame").text(block.valoes-block.acumo); // saldo pendiente
+				$("#entregado_prestame").text(block.cuotas[3]); //Saldo entregado
+				$("#descuento_prestame").text("0"); //
+				$("#text_nombre_cliente2").val(block.extraer[8]+" "+block.extraer[9]+" "+block.extraer[10]+" "+block.extraer[11]); //Nombre1, Nombre2, Apellido1, Apellido2
 				
 				recargarCalendar(block.todosCal);
 				

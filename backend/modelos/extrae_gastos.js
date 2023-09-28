@@ -11,7 +11,6 @@ eje = function(arrays,origen,redisClient) {
 		/*
 		Recibo un array con los valores token,y idasesor
 		*/
-		
 		if (arrays.length==2){
 		
 			var jwt = require('jsonwebtoken');

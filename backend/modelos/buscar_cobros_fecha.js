@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		Recibo un array con los valores token,idasesor,idempresa;
+			recibe token y idasesor
 		*/
 		
 		if (arrays.length==3){
@@ -18,76 +18,69 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
-
-
-					/*
-					busco registro de montos del asesor
-					*/
+				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5" || decoded.t == "4") {
+					
+					// var moment = require("moment");
+					// var dia = moment().format('YYYY-MM-DD');
 					var comando = "monto_"+arrays[1]+"_*_"+arrays[2]+"_*_*"
-					redisClient.keys(comando,function(err,replyv) {
-						
-						//console.log(err,reply);
-						if(replyv!==null){
-												
-							var reply = JSON.parse(replyv);
-                            console.log(reply);
-							if(reply.length>0){
-								
-								/*
-								al tener los registros los intero etilo kanban usando recursividad
-								*/
-								
-								var lista = [];
-								function recurso(ind,arrs){
-									if(ind==arrs.length){
-										
-										/*
-										revuelvo
-										*/
-										
-										resolve([true,lista]);
-										
-									}else{
-										var elementos  = arrs[ind].split("_");
-										const cedula = elementos[elementos.length-1];
-										console.log(arrs[ind]);
-										redisClient.get("cliente_"+cedula,function(exrrs,cliente){
-											
-											var datoscliente = JSON.parse(cliente);
-											let nombre= datoscliente[8]+" "+datoscliente[9]+" "+datoscliente[10]+" "+datoscliente[11];
-                                            let registro = [datoscliente[7],nombre,datoscliente[12],elementos[2],elementos[4]+":"+elementos[5]];
-                                            console.log(registro);
-                                            lista.push(registro);
-											/*
-											extraigo informacion de cliente
-											*/
-											
-										
-										});
-                                        ind++;
-									}
+					console.log(comando);
+					
+					/*
+						toma los monto y los suma
+					*/
+					
+					redisClient.keys(comando,function(err3,reply3){
+						if(reply3!==null){
+							var lista = []
+							//var reply_montos = JSON.parse(reply3);
+							
+							// for (var i=0; i<reply3.length;i++){
+							// 	 elementos  = reply3[i].split("_");
+							// 	 cedula = elementos[elementos.length-1];
+							// 	 clientes.push(cedula);
+							// }
+
+							function recurso(ind,arrs){
+								if (ind==arrs.length) {
+									const moment = require('moment');
+									console.log(lista);
+									// Convertir la hora a un objeto moment()
+									lista.forEach((item) => {
+										item.hora = moment(item.hora, 'hh:mm A');
+									});
+									
+									// Ordenar el JSON por la hora
+									lista.sort((a, b) => {
+										return a.hora.diff(b.hora);
+									});
+									lista.forEach((item) => {
+										item.hora = item.hora.format('hh:mm A');
+									});
+									resolve([true,lista]);
+								} else {
+									var partes = arrs[ind].split("_");
+									redisClient.get("cliente_"+partes[partes.length-1], function(error,replycliente){
+										if (replycliente!=null){
+											var datoscliente = JSON.parse(replycliente);
+											var nombre = datoscliente[8]+" "+datoscliente[9]+" "+datoscliente[10]+" "+datoscliente[11];
+											lista.push({"dpi":datoscliente[7], "nombre":nombre, "direccion":datoscliente[12],"monto":partes[2],"hora":partes[4]+":"+partes[5]+" "+partes[6]});
+											ind++;
+											recurso(ind,arrs);
+										}
+									});
 								}
-
-								recurso(0,reply);
-
-							}else{
-								reject([false,"4"]);
-							}
+							}recurso(0,reply3);
 						}else{
-							reject([false,"4"]);
+							resolve([false,lista]);
 						}
 					});
-
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

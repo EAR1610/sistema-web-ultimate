@@ -5,10 +5,11 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Engineering Super Sistemas</title>
+    <title>Money SS Superadministrador</title>
     <link rel="shortcut icon" href="../assets/img/money_credit.ico"/>
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="../assets/css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="../assets/css/animate.css" rel="stylesheet">
     <link href="../assets/css/style.css" rel="stylesheet">
@@ -24,151 +25,394 @@
             window.$ = window.jQuery = require('jquery');
         }
     </script>
+
     <script>
 
-        function generarPDFCobros() {
-                var doc = new window.jspdf.jsPDF({
-                    // unit: 'mm',
-                    // format: [80,Infinity]
-                }); // Crea una instancia de jsPDF.
+        function generarPDFCobros(){
+            var doc = new window.jspdf.jsPDF();
+            var img = new Image();
 
-                    // Datos de prueba
-                            // Datos de prueba
-                var datos = [
-                    { etiqueta: 'DPI', valor: 'Juan Pérez' },
-                    { etiqueta: 'Nombre Cliente', valor: 'juan@example.com' },
-                    { etiqueta: 'Dirección', valor: '123-456-7890' },
-                    { etiqueta: 'Monto', valor: '$100.00' },
-                    { etiqueta: 'Hora', valor: '10:00 AM' }
-                ];
+            var fecha = new Date();
+            var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
 
-                // Imprime el encabezado en color verde
-                doc.setTextColor(0, 128, 0);
-                doc.text('Etiqueta', 10, 10);
-                doc.text('Valor', 60, 10);
-
-                // Imprime cada dato en una nueva línea
-                doc.setTextColor('black');
-                for (var i = 0; i < datos.length; i++) {
-                    imprimir_texto(doc, datos[i].etiqueta, 10, 20 + (i * 10), 12, 'black', 'left');
-                    imprimir_texto(doc, datos[i].valor, 60, 20 + (i * 10), 12, 'black', 'left');
+            var tabla = document.getElementById('listado_cobros_por_fechas');
+            var datos = [];
+            var total = 0; 
+            for (var i = 0; i < tabla.rows.length; i++) {
+                var montoTexto = tabla.rows[i].cells[3].innerText;
+                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                if (!isNaN(montoNumero)) {
+                    datos.push({
+                        dpi: tabla.rows[i].cells[0].innerText,
+                        nombre: tabla.rows[i].cells[1].innerText,
+                        direccion: tabla.rows[i].cells[2].innerText,
+                        monto: montoNumero,
+                        hora: tabla.rows[i].cells[4].innerText
+                    });
+                    total += montoNumero; 
                 }
-
-                // Guarda el PDF
-                doc.save('documento.pdf');
-}
-
-            function imprimir_texto(doc, texto, x, y, size, color, align) {
-                doc.setFontSize(size);
-                doc.setTextColor(color);
-                doc.text(texto, x, y, {align: align});
             }
-            // Agrega un controlador de eventos al botón
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('boton_Reporte_Cobros').addEventListener('click', function() {
-                    generarPDFCobros(); // Llama a la función para generar el PDF al hacer clic en el botón
-                });
-            });
-    
-    </script>
-     <script>
-       function generarPDFGastos() {
-        var doc = new window.jspdf.jsPDF();
+            
+            doc.setFillColor(0, 0, 255);
+            doc.rect(0, 35, 210, 10, 'F');
+            doc.setFontSize(18);
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+            doc.setFont('Helvetica', 'bold')
+            doc.text(NombreEmpresa, 105, 10, null, null, "center");
+            doc.text("Reporte de cobros", 105, 20, null, null, "center");
+            doc.setFontSize(10);
+
+            doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+
+
+            doc.setTextColor(255, 255, 255); 
+            doc.text('DPI', 10, 40);
+            doc.text('Nombre Cliente', 40, 40);
+            doc.text('Dirección', 110, 40);
+            doc.text('Monto', 160, 40);
+            doc.text('Hora', 180, 40);
+
+            var y = 50;
+            var maxPageHeight = doc.internal.pageSize.height - 20; 
+
+            for (var i = 0; i < datos.length; i++) {
+                if (y > maxPageHeight) {
+                    doc.addPage();
+                    y = 20; 
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('DPI', 10, y);
+                    doc.text('Nombre Cliente', 40, y);
+                    doc.text('Dirección', 110, y);
+                    doc.text('Monto', 160, y);
+                    doc.text('Hora', 180, y);
+                    y += 10; 
+                }
+                doc.setTextColor(0, 0, 0); 
+                doc.setFont("bold");
+                doc.setFontSize(8)
+                doc.text(datos[i].dpi.toString(), 10, y);
+                doc.text(datos[i].nombre.toString(), 40, y);
+                doc.text(datos[i].direccion.toString(), 110, y);
+                doc.text("Q"+datos[i].monto.toString(), 160, y);
+               
+                doc.text(datos[i].hora.toString(),180,y)
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    if (y + 15 > maxPageHeight) { 
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.line(10, y + 5, 200, y + 5); 
+                }
+                y += 10; 
+            }
+
+            if (y > maxPageHeight) {
+                doc.addPage();
+                y = 20;
+            }
 
         
-        var tabla = document.getElementById('lista_gastos_exe');
-        var datos = [];
-        for (var i = 0; i < tabla.rows.length; i++) {
-            datos.push({
-                motivo: tabla.rows[i].cells[0].innerText,
-                monto: tabla.rows[i].cells[1].innerText
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Helvetica', 'bold'); 
+            doc.text('Total monto', 10, y);
+            doc.text("Q" + total.toString(), 160, y);
+            doc.setFont('Helvetica'); 
+
+            doc.save('Reporte de gastos por cobros ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
+            
+        }
+
+        function imprimir_texto(doc, texto, x, y, size, color, align) {
+            doc.setFontSize(size);
+            doc.setTextColor(color);
+            doc.text(texto, x, y,{align: align});
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('boton_Reporte_Cobros').addEventListener('click', function() {
+                generarPDFCobros();
             });
-        }
+        });
 
-        doc.setFillColor(0, 128, 0);
-        doc.rect(0, 35, 210, 10, 'F');
-        doc.setFontSize(18);
-        doc.text("PRESTAMOS SS", 105, 10, null, null, "center");
-        doc.text("Reporte de gastos", 105, 20, null, null, "center");
-        doc.setFontSize(12);
-        doc.text(NombreEmpresa, 105, 30, null, null, "center");
 
-        // Imprime los títulos de las columnas
-        doc.setTextColor(255, 255, 255); // Cambia el color del texto a blanco para que sea visible en el fondo verde
-        doc.text('Motivo de gasto', 10, 40);
-        doc.text('Monto', 160, 40);
+    
+    </script>
 
-        // Imprime cada dato en una nueva línea
-        for (var i = 0; i < datos.length; i++) {
-            doc.setTextColor(0, 0, 0); // Cambia el color del texto a negro para los datos
-            imprimir_texto(doc, datos[i].motivo.toString(), 10, 50 + (i * 10), 12, 'black', 'left');
-            imprimir_texto(doc, datos[i].monto.toString(), 160, 50 + (i * 10), 12, 'black', 'right');
-            if (i < datos.length - 1) {
-                doc.line(10, 55 + (i * 10), 200, 55 + (i * 10));
+     <script>
+        function generarPDFGastos() {
+            
+            var doc = new window.jspdf.jsPDF();
+
+            var fecha = new Date();
+            var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+
+            var tabla = document.getElementById('lista_gastos_exe');
+            var datos = [];
+            var total = 0; 
+            for (var i = 0; i < tabla.rows.length; i++) {
+                var montoTexto = tabla.rows[i].cells[1].innerText;
+                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                if (!isNaN(montoNumero)) {
+                    datos.push({
+                        motivo: tabla.rows[i].cells[0].innerText,
+                        monto: montoNumero
+                    });
+                    total += montoNumero; 
+                } 
             }
+
+            doc.setFillColor(0, 0, 255);
+            doc.rect(0, 35, 210, 10, 'F');
+            doc.setFontSize(18);
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+            doc.setFont('Helvetica', 'bold')
+            doc.text(NombreEmpresa, 105, 10, null, null, "center");
+            doc.text("Reporte de gastos", 105, 20, null, null, "center");
+            doc.setFontSize(12);
+            
+            
+            doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+           
+            doc.setTextColor(255, 255, 255); 
+            doc.text('Motivo de gasto', 10, 40);
+            doc.text('Monto', 160, 40);
+
+            var y = 50;
+            var maxPageHeight = doc.internal.pageSize.height - 20; 
+
+            
+            for (var i = 0; i < datos.length; i++) {
+                
+                if (y > maxPageHeight) {
+                    doc.addPage();
+                    y = 20; 
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('Motivo de gasto', 10, y);
+                    doc.text('Monto', 160, y);
+                    y += 10; 
+                }
+                doc.setTextColor(0, 0, 0); 
+                doc.setFont("bold");
+                doc.setFontSize(10)
+                doc.text(datos[i].motivo.toString(), 10, y);
+                doc.text("Q"+datos[i].monto.toString(), 160, y);
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    doc.line(10, y + 5, 200, y + 5);
+                }
+                y += 10; 
+            }
+
+            
+            if (y > maxPageHeight) {
+                doc.addPage();
+                y = 20;
+            }
+
+            
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Helvetica', 'bold'); 
+            doc.text('Total', 10, y);
+            doc.text("Q" + total.toString(), 160, y);
+            doc.setFont('Helvetica');        
+
+            doc.save('Reporte de gastos por fechas ' + fechaFormateada + ' Hora:' + hora + '.pdf');        
         }
 
-        // Guarda el PDF
-        doc.save('documento.pdf');
-    }
     
     function imprimir_texto(doc, texto, x, y, size, color, align) {
-    doc.setFontSize(size);
-    doc.setTextColor(color);
-    doc.text(texto, x, y,{align: align});
-}
-        // Agrega un controlador de eventos al botón
+        doc.setFontSize(size);
+        doc.setTextColor(color);
+        doc.text(texto, x, y,{align: align});
+    }
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('boton_Reporte_Gastos').addEventListener('click', function() {
                 generarPDFGastos();
             });
         });
 
+    </script>
+
+    <script>
+
+       
+        function generarPDFCierre(){
+
+            var doc = new window.jspdf.jsPDF();
+
+            var fecha = new Date();
+            var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+
+        
+            var baseDiaria = document.getElementById('text_baseAsesor').textContent;
+            var totalRecaudado = document.getElementById('text_recolectadoAsesor').textContent;
+            var totalGastos = document.getElementById('text_gastosAsesor').textContent;
+            var totalSistema = document.getElementById('text_total_sistema').textContent;
+            var totalAsesor = document.getElementById('text_total_asesor').value;
+            var totalDiferencia = document.getElementById('text_diferencia_cierre').textContent;
+            var selectElement = document.getElementById('id_asesor_cierre');
+            var nombreAsesorReportee = selectElement.options[selectElement.selectedIndex].text;
+            
+            //Gastos
+            var tabla = document.getElementById('lista_gastos_exeAsesor');
+            var filas = tabla.getElementsByTagName('tr');
+            var datos = [];
+            var total = 0;
+
+            // //Cobros
+            // var tabla = document.getElementById('listado_cobros_cierre');
+            // var filas2 = tabla1.getElementsByTagName('tr');
+            // var datos2 = [];
+            
+
+
+           
+            doc.setFontSize(18);
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+            doc.setFont('Helvetica', 'bold')
+            doc.text(NombreEmpresa, 105, 10, null, null, "center");
+            doc.text("Reporte de cierre", 105, 20, null, null, "center");
+            doc.setFontSize(10);
+
+            doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+            doc.text("Nombre de asesor: "+nombreAsesorReportee, 10, 50);
+
+
+            doc.setFillColor(200, 200, 200); 
+            doc.rect(0, 55, 210, 10, 'F');
+            doc.text('Base diaria: ' + baseDiaria, 10, 60);
+            doc.text('Total recaudado: ' + totalRecaudado, 70, 60);
+            doc.text('Total gastos: ' + totalGastos, 140, 60);
+
+            doc.text("Total sistema: "+totalSistema, 10, 70);
+            doc.text("Total asesor: "+totalAsesor, 70, 70);
+            doc.text("Diferencia: "+totalDiferencia, 140, 70);
 
 
 
-        // function generarPDFGastos() {
-        //     var doc = new window.jspdf.jsPDF();
+            //Consulta de cobros
 
-        //     // Recoge los datos de la tabla
-        //     var tabla = document.getElementById('lista_gastos_exe');
-        //     var datos = [];
-        //     for (var i = 0; i < tabla.rows.length; i++) {
-        //         datos.push({
-        //             etiqueta: tabla.rows[i].cells[0].innerText,
-        //             valor: tabla.rows[i].cells[1].innerText
-        //         });
-        //     }
+            doc.text("Consulta de cobros de: "+nombreAsesorReportee, 10, 90);
+            
 
-        //     // Imprime el encabezado en color verde
-        //     doc.setTextColor(0, 128, 0);
-        //     doc.text("Nombre de la empresa"+NombreEmpresa, 20, 20);
-        //     doc.text('Motivo de gasto', 10, 10);
-        //     doc.text('Monto', 60, 10);
+            
+            doc.setFillColor(200, 200, 200);
+            doc.rect(0, 95, 210, 10, 'F');
+            doc.text('DPI', 10, 100);
+            doc.text('Nombre Cliente', 50, 100);
+            doc.text('Dirección', 110, 100);
+            doc.text('Monto', 160, 100);
+            doc.text('Hora', 190, 100);
+            //_________________________________
 
-        //     // Imprime cada dato en una nueva línea
-        //     doc.setTextColor('black');
-        //     for (var i = 0; i < datos.length; i++) {
-        //         imprimir_texto(doc, datos[i].etiqueta, 10, 20 + (i * 10), 12, 'black', 'left');
-        //         imprimir_texto(doc, datos[i].valor, 60, 20 + (i * 10), 12, 'black', 'left');
-        //     }
+        
+    
+            
+          
+            doc.text("Gastos de: "+nombreAsesorReportee, 10, 150);
+            doc.setFillColor(200, 200, 200); 
+            doc.rect(0, 155, 210, 10, 'F');
+            doc.text('Motivo de gasto', 10, 160);
+            doc.text('Monto', 170, 160);
 
-        //     // Guarda el PDF
-        //     doc.save('documento.pdf');
-        // }
 
-        // function imprimir_texto(doc, texto, x, y, size, color, align) {
-        //     doc.setFontSize(size);
-        //     doc.setTextColor(color);
-        //     doc.text(texto, x, y, {align: align});
-        // }
+            //Gatos
+            for (var i = 0; i < filas.length; i++) {
+                var celdas = filas[i].getElementsByTagName('td');
+                if (celdas.length === 2) {
+                    var motivo = celdas[0].textContent;
+                    var monto = parseFloat(celdas[1].textContent.replace('Q', '')); 
+                    datos.push({ motivo: motivo, monto: monto });
+                    total += monto;
+                }
+            }
 
-        // // Agrega un controlador de eventos al botón
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     document.getElementById('boton_Reporte_Gastos').addEventListener('click', function() {
-        //         generarPDFGastos();
-        //     });
-        // });
+
+
+            var y = 170;
+            var maxPageHeight = doc.internal.pageSize.height - 20;
+
+
+            for (var i = 0; i < datos.length; i++) {
+                if (y > maxPageHeight) {
+                    doc.addPage();
+                    y = 20;
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('Motivo de gasto', 10, y);
+                    doc.text('Monto', 170, y);
+                    y += 10;
+                }
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("bold");
+                doc.setFontSize(10);
+                doc.text(datos[i].motivo.toString(), 10, y);
+                doc.text("Q" + datos[i].monto.toString(), 170, y);
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    doc.line(10, y + 5, 200, y + 5);
+                }
+                y += 10;
+            }
+
+
+            
+            if (y > maxPageHeight) {
+                doc.addPage();
+                y = 20;
+            }
+            //_______________________________________________________
+
+            // //Cobros
+            // for (var i = 0; i < filas.length; i++) {
+            //     var celdas = filas[i].getElementsByTagName('td');
+            //     if (celdas.length === 2) {
+            //         var motivo = celdas[0].textContent;
+            //         var monto = parseFloat(celdas[1].textContent.replace('Q', '')); 
+            //         datos.push({ motivo: motivo, monto: monto });
+            //         total += monto;
+            //     }
+            // }
+
+
+
+
+           
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Helvetica', 'bold'); 
+            doc.text('Total', 10, y);
+            doc.text("Q" + + total.toFixed(2), 170, y);
+            doc.setFont('Helvetica');      
+
+
+
+
+            doc.save('Reporte Cierre".pdf');
+
+        }
+
+        function imprimir_texto(doc, texto, x, y, size, color, align) {
+            doc.setFontSize(size);
+            doc.setTextColor(color);
+            doc.text(texto, x, y,{align: align});
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('boton_pdf_cierre').addEventListener('click', function() {
+                generarPDFCierre();
+            });
+        });
+
+
 
     </script>
 
@@ -741,7 +985,7 @@
                         <li><a href="javascript:asesores_panel();">Registrar</a></li>
                         <li><a href="javascript:asesores_lista();">Consultar asesores</a></li>
                         <li><a href="javascript:asesores_supervisores();">Consultar supervisores</a></li>
-                        <li><a href="javascript:asesores_ayudante();">Consultar ayudante</a></li>
+                        <!-- <li><a href="javascript:asesores_ayudante();">Consultar ayudante</a></li> -->
                     </ul>
 
                 </li>
@@ -780,9 +1024,9 @@
                         <li><a href="javascript:informe_completo_gastos();">Consultar gastos</a></li>
                         <li><a href="javascript:informe_completo_cierre();">Cierre</a></li>
                     </ul>
-                    <!--<ul class="nav nav-second-level collapse">
+                    <!-- <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo_finanza();">Finanza</a></li>
-                    </ul>-->
+                    </ul> -->
 
 
                 </li>
@@ -808,7 +1052,6 @@
                 <div class="navbar-header">
                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
                     </a>
-
                     <form role="search" class="navbar-form-custom">                
                         <div class="form-group pull-right">
                         	<p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px;margin-top: 0px;border-radius: 67px 36% 3% -9%; height: 50px; background: #448ed300; position: absolute; bottom: 9px;"/>
@@ -1018,16 +1261,13 @@
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             <div class="col-sm-6 col-md-4 col-xs-12" align="center" style="padding: 5%;">
-                                <img id="foto_m1" src="../img/default.jpg"
-                                     style="width:169px;height:164px;cursor:pointer;">
+                                <img id="foto_m1" src="../img/default.jpg" style="width:169px;height:164px;cursor:pointer;">
                             </div>
                             <div class="col-sm-6 col-md-4 col-xs-12" align="center" style="padding: 5%;">
-                                <img id="foto_m2" src="../img/foto_cedula_front.png"
-                                     style="width:inherit;height:134px;cursor:pointer;">
+                                <img id="foto_m2" src="../img/foto_cedula_front.png" style="width:inherit;height:134px;cursor:pointer;">
                             </div>
                             <div class="col-sm-6 col-md-4 col-xs-12" align="center" style="padding: 5%;">
-                                <img id="foto_m3" src="../img/foto_cedula_back.png"
-                                     style="width:inherit;height:134px;cursor:pointer;">
+                                <img id="foto_m3" src="../img/foto_cedula_back.png" style="width:inherit;height:134px;cursor:pointer;">
                             </div>
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
@@ -1049,8 +1289,7 @@
 
                             <div class="form-group col-sm-6 col-md-6 col-xs-6" id="cedula_div">
                                 <label>DPI</label>
-                                <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_id" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="consultar_registra" class="btn btn-primary"><i class="fa fa-search"></i>
-                                        </button> </span></div>
+                                <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_id" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="consultar_registra" class="btn btn-primary"><i class="fa fa-search"></i></button></span></div>
                             </div>
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
@@ -1185,7 +1424,7 @@
                                     <option value="a">Asesor</option>
                                     <!-- <option value="b">Ayudante</option> -->
                                     <option value="c">Supervisor</option>
-                                    <option value="d">Administrador</option>
+                                    <!-- <option value="d">Supervisor</option> -->
                                 </select>
                             </div>
 
@@ -1375,7 +1614,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-6" id="lista_asi_sup">
+                <div class="col-md-12" id="lista_asi_sup">
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Lista de Supervisores asignados</h5>
@@ -2053,8 +2292,8 @@
                                         <th>Prestamo</th>
                                         <th>Porcentaje</th>
                                         <th>Cuotas</th>
-                                        <th>Ayudante</th>
-                                        <th>Supervidor</th>
+                                        <!-- <th>Ayudante</th>
+                                        <th>Supervidor</th> -->
                                         <th>Opciones</th>
                                     </tr>
                                     </thead>
@@ -2075,9 +2314,17 @@
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
-                            <div class="col-sm-3 col-md-3 col-xs-12 " >
-                                <select class="form-control m-b" id="id_asesor_cierre">
+                            <div class="col-md-6 col-xs-12" >
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <select class="form-control m-b" id="id_asesor_cierre" style="margin-right: 20px;">
+                                    </select>
+                                    <button type="button" class="btn btn-danger px-5" id="boton_pdf_cierre"><i class="fa fa-file-pdf"></i></button>
+                                </div>                            
+                                <!-- <select class="form-control m-b" id="id_asesor_cierre">
                                 </select>
+                                <div style="margin-top: 24px; display: flex; align-items: center;">
+                                    <button type="button" class="btn btn-danger" id="boton_pdf_cierre"><i class="fa fa-file-pdf"></i></button>
+                                </div> -->
                             </div>
 
                             <div class="table-responsive">
@@ -2090,6 +2337,18 @@
                                         </div>
                                     </div>
                                 </table>
+                            </div>
+                            <div class="table-responsive table-responsive-sm">
+                                <div class="ibox">
+                                    <div style="display: flex; justify-content:space-evenly; flex-wrap: wrap;">
+                                        <div>Total Sistema: <label id="text_total_sistema"></label></div>
+                                        <div>Total entregado por asesor: Q.<input type="number" id="text_total_asesor"></div>
+                                        <div>Diferencia: <label id="text_diferencia_cierre"></label></div>
+                                        <button class="btn btn-primary btn-md" id="registrar_cierre"
+                                                type="button">Registrar cierre
+                                    </button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="table-responsive">
                                 <div class="ibox-title">
@@ -2106,14 +2365,14 @@
                                             <th>Hora</th>
                                         </tr>
                                         </thead>
-                                        <tbody align="center" id="listado_cobros_por_fechas">
+                                        <tbody align="center" id="listado_cobros_cierre">
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <div class="table-responsive">
                                 <div class="ibox-title">
-                                    <h5>Consulta de gatos</h5>
+                                    <h5>Consulta de gastos</h5>
                                 </div>
                                 <table class="table table-striped">
                                     <thead>
@@ -2450,13 +2709,22 @@
 
 <script>
     var firebaseConfig = {
-		apiKey: "AIzaSyB1i8Vx6jWV5szRQujd5fNW6TfFLiru-Tc",
-		authDomain: "demostrativo-web.firebaseapp.com",
-		databaseURL: "https://demostrativo-web.firebaseio.com",
-		projectId: "demostrativo-web",
-		storageBucket: "demostrativo-web.appspot.com",
-		messagingSenderId: "1038105645545",
-		appId: "1:1038105645545:web:9affa6ce337fb51a"
+        
+        apiKey: "AIzaSyCKm7s6lyrf6qojY04kNYDt6DkM4P4vzoE",
+        authDomain: "prestamos-6c36a.firebaseapp.com",
+        databaseURL: "https://prestamos-6c36a-default-rtdb.firebaseio.com/",
+        projectId: "prestamos-6c36a",
+        storageBucket: "prestamos-6c36a.appspot.com",
+        messagingSenderId: "815768429932",
+        appId: "1:815768429932:web:6d50bac5c91e2150f97f49",
+        measurementId: "G-7DY4VZWSC5"
+		// apiKey: "AIzaSyB1i8Vx6jWV5szRQujd5fNW6TfFLiru-Tc",
+		// authDomain: "demostrativo-web.firebaseapp.com",
+		// databaseURL: "https://demostrativo-web.firebaseio.com",
+		// projectId: "demostrativo-web",
+		// storageBucket: "demostrativo-web.appspot.com",
+		// messagingSenderId: "1038105645545",
+		// appId: "1:1038105645545:web:9affa6ce337fb51a"
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -2485,6 +2753,7 @@
 
     var block = this;
     var NombreEmpresa = "";
+    var nombreAsesorReporte = "";
 
     function salida_sistema() {
         window.sessionStorage.clear(); 
@@ -2638,13 +2907,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -2780,7 +3046,6 @@
                             closeOnConfirm: true
                         }, function () {
                             block.infeas = JSON.parse(valor.d[2]);
-                            console.log(block.infeas);
                             $("#su_nombre_id1").val(block.infeas[7]);
                             $("#su_nombre_id2").val(block.infeas[8]);
                             $("#su_apellido_id1").val(block.infeas[9]);
@@ -2825,12 +3090,11 @@
     });
 
     $("#busqueda_cobros").click(function(){
-        extraer_cobros();
+        extraer_cobros("#id_asesor_cobros","#listado_cobros_por_fechas",false);
     });
 
     $("#id_asesor_gastos_consulta").change(function(){
         //$("#id_asesor_gastos_consulta").val();
-        console.log($("#id_asesor_gastos_consulta").val());
     });
 
     //Funcion para extraer datos con fecha pasandole la fecha al array
@@ -2842,15 +3106,14 @@
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-    var fecha = $("#fecha_gasto").val()
-    block.estraa = $("#id_asesor_gastos_consulta").val();
-	block.estraaq = block.estraa.split("_");
-	block.estra = block.estraaq[0];
-	block.cedulasesor = block.estraaq[1];
-    block.arrays = [block.tokens[1], block.estraa, fecha];
-    console.log(block.arrays);
-    block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
-    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        var fecha = $("#fecha_gasto").val()
+        block.estraa = $("#id_asesor_gastos_consulta").val();
+        block.estraaq = block.estraa.split("_");
+        block.estra = block.estraaq[0];
+        block.cedulasesor = block.estraaq[1];
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
         var valor = JSON.parse(salida);
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
@@ -2897,131 +3160,46 @@
         });        
     }
 
-function extraer_cobros() {
+function extraer_cobros(id_asesor, id_tabla, hoy) {
     if (window.localStorage.getItem("Money-vars-token") !== null) {
         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
     } else {
         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
     }
-    var fecha = $("#fecha_busqueda_cobros").val()
-    block.estraa = $("#id_asesor_cobros").val();
+    var fecha = hoy ? moment().format('YYYY-MM-DD') : $("#fecha_busqueda_cobros").val();
+    
+    console.log(fecha);
+    block.estraa = $(id_asesor).val();
+    console.log(block.estraa);
 	block.estraaq = block.estraa.split("_");
 	block.estra = block.estraaq[0];
 	block.cedulasesor = block.estraaq[1];
     block.arrays = [block.tokens[1], block.estraa, fecha];
-    console.log(block.arrays);
     block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-        block.contador= 0;
         var valor = JSON.parse(salida);
-        console.log("LOS MONTOS: ");
-        //console.log(valor);
-        var clientPromises = [];
-        if (valor.d[1].length > 0){
-            
-            block.montos = valor.d[1];
-            for (var i=0; i<block.montos.length;i++){
-            block.contador=i;
-            block.arrays=[block.tokens[1], block.estraa, valor.d[valor.d.length - 1]];
-            block.arrays[2] = block.montos[i][block.montos[i].length - 1];
-            //console.log(block.montos[i]);
-            block.obj = {"r": "buscar_cliente_contrato", "d": block.arrays};
-            block.montoAct = block.montos[block.contador];
-            clientPromises.push(new Promise(function(resolve,reject){
-                backend.conexionEnvio(JSON.stringify(block.obj), function(salida){
-                if (salida!=null){
-                    response = JSON.parse(salida);
-                    datoscliente = JSON.parse(response.d[1]);
-                    var nombre= datoscliente[8]+" "+datoscliente[9]+" "+datoscliente[10]+" "+datoscliente[11];
-                    var fila = [datoscliente[7],nombre,datoscliente[12].toString()];
-                    var clientes = JSON.parse(localStorage.getItem('clientes'))||[];
-                    var clientesAct = [...clientes,fila];
-                    console.log(clientesAct);
-                    localStorage.setItem('clientes',JSON.stringify(clientesAct));
-                    resolve();
-                    // console.log(block.obj.d);
-                    // console.log(block.montos[block.contador]);
-                    // var direccion = 
-                    // block.inefd +='<tr><td>' + datoscliente[7] + '</td><td>' + nombre + '</td><td>'+ direccion+ '</td><td>' + block.montoAct[0]+ '</td><td>' + block.montoAct[1]+'</td></tr>';
-                    // console.log(block.inefd);
-                    // $("#listado_cobros_por_fechas").html(block.inefd);
-                }else{
-                    reject();
-                }
-                
-            });
-            }))
+        var cobro;
+        block.inefd='';
+        if(valor.d[1].length>0){
+            for(var j=0; j<valor.d[1].length;j++){
+                cobro = valor.d[1][j];
+                block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
+            }
+            $(id_tabla).html(block.inefd);
         }
-            
-        }else{
-            console.log("menos que 1");
-            console.log(block.inefd);
-            $("#listado_cobros_por_fechas").html(block.inefd);
-        }
-        var montos = JSON.parse(localStorage.getItem('montos'))||[];
-        var montosAct = [...montos,block.montos];
-        localStorage.setItem('montos',JSON.stringify(montosAct));
-        //registros.map(registro => registro[0]);
-    //     var clientes_listado = JSON.parse(localStorage.getItem('clientes'));
-    //     console.log(clientes_listado);
-    //     block.inefd='';
-    //     console.log("montos: "+block.montos.length+"   clientes:"+clientes_listado.length);
-    //     if (block.montos.length==clientes_listado.length){
-    //         var cobro =[], cliente=[], registro=[];
-    //         console.log(block.montos);
-    //         for(var j=0; j<block.montos.length;j++){
-    //             cobro = block.montos[j];
-    //             console.log(cobro);
-    //             cliente = clientes_listado[j];
-    //             console.log(cliente);
-    //             block.inefd +='<tr><td>' + cliente[0] + '</td><td>' + cliente[1] + '</td><td>'+ cliente[2]+ '</td><td>' + cobro[0]+ '</td><td>' + cobro[1]+'</td></tr>';
-    //             console.log(block.inefd);
-    //         }
-    //     $("#listado_cobros_por_fechas").html(block.inefd);
-        
-    // }else{
-    //     $("#listado_cobros_por_fechas").html(block.inefd);
-    // }
-    //localStorage.setItem('clientes',JSON.stringify([]));
-    block.montos=[];
-    clientes_listado=[];
-        // if (!valor.e) {
-        //     // block.pasero = JSON.parse(valor.d[1]);
-        //     block.inefd = '';
-        //     for (var wq = 0; wq < block.pasero.length; wq++) {
-        //         block.iteds = block.pasero[wq];
-        //         block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-        //         block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
-        //         
-        //     }
-        //     $("#lista_gastos_exe").html(block.inefd);
-        // }
-        Promise.all(clientPromises).then(function(){
-            listar_contratos();
-        });
-        
     });
 
-    
-
-    
 }    
     function listar_contratos(){
         var clientes_listado = JSON.parse(localStorage.getItem('clientes'));
-        console.log(clientes_listado);
         block.inefd='';
         block.montos=JSON.parse(localStorage.getItem('montos'));
-        console.log("montos: "+block.montos.length+"   clientes:"+clientes_listado.length);
         if (block.montos.length==clientes_listado.length){
             var cobro =[], cliente=[], registro=[];
-            console.log(block.montos);
             for(var j=0; j<block.montos.length;j++){
                 cobro = block.montos[j];
-                console.log(cobro);
                 cliente = clientes_listado[j];
-                console.log(cliente);
                 block.inefd +='<tr><td>' + cliente[0] + '</td><td>' + cliente[1] + '</td><td>'+ cliente[2]+ '</td><td>' + cobro[0]+ '</td><td>' + cobro[1]+'</td></tr>';
-                console.log(block.inefd);
             }
         $("#listado_cobros_por_fechas").html(block.inefd);
         
@@ -3047,13 +3225,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3090,13 +3265,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3133,13 +3305,10 @@ function extraer_cobros() {
             var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,function(snapshot) {
 				var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-				console.log('Upload is ' + progress + '% done');
 				switch (snapshot.state) {
 					case firebase.storage.TaskState.PAUSED:
-						console.log('Upload is paused');
 						break;
 					case firebase.storage.TaskState.RUNNING:
-						console.log('Upload is running');
 						break;
 				}
 			}, function(error) {
@@ -3175,13 +3344,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3217,13 +3383,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3260,13 +3423,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3302,13 +3462,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3345,13 +3502,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3387,13 +3541,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3429,13 +3580,10 @@ function extraer_cobros() {
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -3514,7 +3662,6 @@ function extraer_cobros() {
 			}
 
 			block.arrays = [block.tokens[1],$("#base_monto").val(),block.ecto[0]];
-            console.log(block.arrays)
 			block.obj = {"r": "save_base_asesor", "d": block.arrays};
 			backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 				var valor = JSON.parse(salida);
@@ -3952,7 +4099,6 @@ function extraer_cobros() {
         $("#lista_enorme").html("");
         block.oso="";
         block.obj = {"r": "contratos_lista", "d": block.arrays};
-        console.log(block.arrays);
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
@@ -3994,11 +4140,9 @@ function extraer_cobros() {
 
                     //block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td><td>'+block.tresx[24]+'_'+block.unox[0]+'</td> <td>'+block.tresx[6]+'</td> <td>'+block.tresx[7]+' '+block.tresx[9]+'</td><td>'+block.asesor+'</td><td>$'+block.unox[3]+'</td> <td>'+block.unox[7]+'</td> <td>$'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li><li><a class="dropdown-item"  href="javascript:eliminar_edit_ya('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-pencil"></i> &nbsp Editar</a></li><li><a class="dropdown-item" href="javascript:refinanciar_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+')"><i class="fa fa-retweet"></i> &nbsp Refinanciar</a></li> <li class="dropdown-divider"></li><li><a class="dropdown-item"  href="javascript:impresion_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-print"></i> &nbsp Imprimir</a></li> <li class="dropdown-divider"></li> </ul></div></td></tr>';
 
-					//console.log(block.unox);
 					block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td><td>'+block.tresx[24]+'_'+block.unox[0]+'</td> <td>'+block.tresx[6]+'</td> <td>'+block.tresx[7]+' '+block.tresx[9]+'</td><td>'+block.asesor+'</td><td>Q'+block.unox[3]+'</td> <td>'+block.unox[7]+'</td> <td>Q'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li><li><a class="dropdown-item"  href="javascript:eliminar_edit_ya('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-pencil"></i> &nbsp Editar</a></li></ul></div></td></tr>';
 
                 }
-                console.log(block)
                 $("#lista_enorme").html(block.oso);
             }
         });
@@ -4019,11 +4163,10 @@ function extraer_cobros() {
         }
 
         block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];
-        block.obj = {"r": "contratos_lista_all", "d": block.arrays};        
+        block.obj = {"r": "contratos_lista_all", "d": block.arrays}; 
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-                console.log(valor);
                 block.oso="";
                 block.dat0s =valor.d[1][0];
                 block.unox = JSON.parse(block.dat0s[0]);
@@ -4048,7 +4191,6 @@ function extraer_cobros() {
 
                 block.esf = $("#lista_asesores_general3")["0"].options.selectedIndex;
                 block.tesq = $("#lista_asesores_general3")["0"][block.esf].label.split("ID:");
-                console.log(block);
 				block.calsulo = block.unox[13];
 				block.sumas = 0;
 				for(var u= 0; u<block.calsulo.length; u++){
@@ -4061,8 +4203,7 @@ function extraer_cobros() {
 
 				block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
-                console.log(block)
-				block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
+				block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
 
                 block.unico++;
                 listado_contratos(block.unico);
@@ -4143,7 +4284,6 @@ function extraer_cobros() {
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-                console.log(valor.d);
             }
         });
 
@@ -4163,8 +4303,6 @@ function extraer_cobros() {
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-				console.log(valor.d[1]);
-
 				//moveToLocation(10.9833827,-74.836216);
 
 				/*$("#flotante3").css("display","block");
@@ -4316,7 +4454,6 @@ function extraer_cobros() {
                             closeOnConfirm: true
                         }, function () {
                             block.infeas = JSON.parse(valor.d[2]);
-                            console.log(block.infeas);
                             $("#nombre_id1").val(block.infeas[7]);
                             $("#nombre_id2").val(block.infeas[8]);
                             $("#apellido_id1").val(block.infeas[9]);
@@ -4562,7 +4699,6 @@ function extraer_cobros() {
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {  
-                console.log(valor.d[2]); 
 				if(valor.d[2]!=="0"){
 					estado = false;
 				}
@@ -4613,8 +4749,6 @@ function extraer_cobros() {
     $("#lista_asesores_general").change(function () {
 		block.esf = $("#lista_asesores_general")["0"].options.selectedIndex;
         block.tesq = $("#lista_asesores_general")["0"][block.esf].innerHTML.split("ID: ");
-        console.log(block.esf);
-        console.log(block.tesq);
 		window.sessionStorage.setItem("asesore_lis_limp",block.tesq[1]);
 		sumatoria();
 		$("#listado_operacion_asesore").html("");
@@ -4693,7 +4827,6 @@ function extraer_cobros() {
     function descontarws(e){
         var cedula2 = e.srcElement.id,cedula3 = cedula2.split("_"),cedula = cedula3[1],fechao = cedula3[2];
         block.monto_pago = $("#descontarte_" + cedula+"_"+fechao).val();
-        console.log(block.monto_pago);
 		if(block.monto_pago!=="" && block.monto_pago!=="0" && block.monto_pago!==undefined){
 
 			if(block.monto_pago.length==1 && block.monto_pago!=="0"){
@@ -4728,7 +4861,6 @@ function extraer_cobros() {
     }
 
 	function buscar_error(){
-		console.log("El error eres tu");
 	}
 
 	$("#registro_base").click(function(){
@@ -6179,8 +6311,7 @@ function extraer_cobros() {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
-
-		  $("#suplanter").css("display", "none");
+        $("#suplanter").css("display", "none");
     }
 
     function informe_completo_finanza() {
@@ -6325,6 +6456,7 @@ function extraer_cobros() {
         block.obj = {"r": "listar_supervisores", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e) {
                 block.todo = valor.d[1];
                 for (var t = 0; t < block.todo.length; t++) {
@@ -6593,6 +6725,8 @@ function extraer_cobros() {
                     block.nom = block.item[7] + ' ' + block.item[9] + ' - ' + block.cedula;
                     block.listax = block.listax + '<option value="' + block.item[22] + '_asesor_' + block.item[23] + '_' + block.item[7] + '_' + block.item[9] + '">' + block.nom + '</option>';
                     block.listax2 = block.listax2 + '<option value="' + block.item[22] + '">' + block.item[7] + ' ' + block.item[9] + ' ID:' + block.item[22] + '</option>';
+                    nombreAsesorReporte= block.item[7] + ' ' + block.item[9] + ' ID:' + block.item[22];
+                    console.log(nombreAsesorReporte);
                 }
                 $("#tipo_cargo_dos").html(block.listax);
                 $("#id_asesor").html(block.listax2);
@@ -6601,9 +6735,25 @@ function extraer_cobros() {
                 $("#id_asesor_cobros").html(block.listax2);
                 $("#id_asesor_cierre").html(block.listax2);
                 
+                
             }
         });
     }
+
+    $("#text_total_asesor").change(function(){
+        const totalAsesor = parseFloat($('#text_total_asesor').val());
+        const totalSistema = parseFloat($('#text_total_sistema').text().slice(1));
+        const diferencia = totalAsesor - totalSistema;
+        console.log(totalAsesor);
+        console.log($('#text_total_sistema').text());
+        console.log(diferencia);
+        if (totalAsesor!="" && totalSistema!=""){
+            $("#text_diferencia_cierre").text("Q"+diferencia);
+            //registrarCierre();
+        }else{
+            console.log("INGRESE EL TOTAL ASESOR")
+        }
+    });
 
     $("#id_asesor_cierre").change(function(){        
         if($("#id_asesor_cierre").val()!==""){
@@ -6627,21 +6777,22 @@ function extraer_cobros() {
             });
             
             block.arrays = [block.tokens[1],block.ase];
-            console.log(block.arrays);
             block.obj = {"r": "sumatoria_diario", "d": block.arrays}; //Obtiene el token y el ID del asesor
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);            
-                console.log(valor);
                 if (!valor.e) {                
-                    valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                    valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
                     $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                     $("#text_baseAsesor").text("Q"+valor.d[2]);
+                    const base = parseFloat($("#text_baseAsesor").text().slice(1));
+                    const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
+                    const totalSistema = base + recaudado;
+                    $("#text_total_sistema").text("Q"+totalSistema);
                     totalGastos();
                 }
             });
         }
         extraer_gastosAsesor();
+        extraer_cobros("#id_asesor_cierre","#listado_cobros_cierre",true);
     });
 
     function totalGastos(){
@@ -6662,6 +6813,10 @@ function extraer_cobros() {
                     gastos += parseInt(block.pasero[i][2]);
                 }
                 $("#text_gastosAsesor").text("Q"+gastos);
+                const base = parseFloat($("#text_baseAsesor").text().slice(1));
+                const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
+                const totalSistema = base + recaudado-gastos;
+                $("#text_total_sistema").text("Q"+totalSistema);
             }
         });
         return gastos;
@@ -6696,7 +6851,6 @@ function extraer_cobros() {
     //             var option = document.createElement("option");
     //             option.value = block.item[22] + '_asesor_' + block.item[23] + '_' + block.item[7] + '_' + block.item[9];
     //             option.textContent = block.nom;
-    //             console.log(selectAsesorConsulta.appendChild(option));
     //         }
     //     }
     // });
@@ -6716,7 +6870,7 @@ function extraer_cobros() {
         $("#lista_ase").css("display", "none");
         $("#crear").css("display", "none");
         $("#busqueda_asignaciones").css("display", "initial");
-        $("#lista_asi_ayu").css("display", "initial");
+        $("#lista_asi_ayu").css("display", "none");
         $("#lista_asi_sup").css("display", "initial");
         $("#configuracion_general").css("display", "none");
         $("#configuracion_general_cuotas").css("display", "none");
@@ -6863,7 +7017,6 @@ function extraer_cobros() {
 
             block.lista = '';
             block.arrays = [block.tokens[1], block.list, block.tokens[4], $("#id_asesor").val()];
-            console.log(block.arrays);
             block.obj = {"r": "lista_asigandos_fecha2", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
@@ -7098,7 +7251,6 @@ function extraer_cobros() {
     //     if (!valor.e) {
     //         if (valor.d[1] !== null) {
     //             block.item = JSON.parse(valor.d[1]);
-    //             console.log(block.item = JSON.parse(valor.d[1]));
     //             window.localStorage.setItem("Money-vars-cliente-" + block.item[7], valor.d[1]);
     //             block.cedula = block.item[6];
     //             block.nomre = block.item[7];
@@ -7110,7 +7262,6 @@ function extraer_cobros() {
     //             consulta_cobrosFecha();
     //         }
     //     } else if (valor.d[1] == "4" && parseInt(block.num) < parseInt(valor.d[2])) {
-    //         console.log("Else-If");
     //         block.nexr = parseInt(block.num) + 1;
     //         window.sessionStorage.setItem("numero_lista", block.nexr);
     //         consulta_cobrosFecha();
@@ -7123,7 +7274,7 @@ function extraer_cobros() {
     function consulta_x(){
         block.num = window.sessionStorage.getItem("numero_lista");        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
-            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));            
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
@@ -7150,7 +7301,6 @@ function extraer_cobros() {
                     consulta_x();
                 }
             }else if(valor.d[1]=="4" && parseInt(block.num)<parseInt(valor.d[2]) ){
-                console.log("Else-If");
 				block.nexr = parseInt(block.num) + 1;
 				window.sessionStorage.setItem("numero_lista", block.nexr);
 				consulta_x();
@@ -7400,7 +7550,7 @@ function extraer_cobros() {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
-        $("cierre_view").css("display", "none");
+        $("#cierre_view").css("display", "none");
     }
 
     function informe_completo_cobros(){
@@ -7471,8 +7621,6 @@ function extraer_cobros() {
     }
 
     function informe_completo_cierre(){
-
-        console.log("Se esta llamando al formulario de cierre")
 
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");

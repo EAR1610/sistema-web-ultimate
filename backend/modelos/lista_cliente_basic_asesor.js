@@ -9,53 +9,45 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-			recibo token
+			recibo token y idaseor
 		*/
-
-		if (arrays.length==1){
-		
+		if (arrays.length == 2 || arrays.length == 3){
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
+				
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "4" || decoded.t=="5"){
+				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "4" || decoded.t == "5"){
 					
 					/*
-						segun el token me extraigo los asesores que pertenecen a esta empresa
+						emito lista de clientes basica segun su orden
 					*/
-					
-					redisClient.keys('listado_'+decoded.d+'_asesor_*',function(err3,reply3){
-						if(reply3.length > 0){
-							
-							/*recursividad para guardar los datos*/
-							
-							var litado = [];
-							function iterar(ind,arrs){
-								if(ind == arrs.length){
-									resolve([true,litado]);
-								} else {
-									redisClient.get(arrs[ind],function(err,reply) {
-										if (reply!==null) {
-											litado.push(reply);
-											ind++;
-											iterar(ind,arrs);
-										} else {
-											ind++;
-											iterar(ind,arrs);
-										}
+					console.log("registro_client_"+decoded.d);
+                    redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
+                        if(sreply!==null) {
+                            var ines = JSON.parse(sreply);
+                            redisClient.get(ines[arrays[2]], function (ewwr, sreplwy) {
+								if(sreplwy!==null){
+									resolve([true, sreplwy,0]);
+								}else{
+									redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
+										var ines = JSON.parse(sreply);
+										reject([false,"6",ines]);
 									});
 								}
-							}
-							iterar(0,reply3);
-						}else{
-							reject([false,"4"]);
-						}
-					});
+                            });
+                        }else{
+							redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
+								var ines = JSON.parse(sreply);
+								reject([false,"6",ines]);
+							});
+                        }
+                    });
 				}else{
 					reject([false,"2"]);
 				}
 			});
-		}else{
+		} else {
 			reject([false,"3"]);
 		}
 	});

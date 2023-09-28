@@ -4,16 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Engineering Admin</title>
+    <title>Money SS Supervisor</title>
     <link rel="shortcut icon" href="../img/favicon-credit-card.ico"/>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="../css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="../css/animate.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
-    <link href="../css/datetimepicker.css" rel="stylesheet">    
+    <link href="../css/datetimepicker.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -23,6 +24,211 @@
         if ( typeof module === "object" && typeof module.exports === "object" ) {
             window.$ = window.jQuery = require('jquery');
         }
+
+        var NombreEmpresa = "";
+        var nombreAsesorReporte = "";
+
+        function generarPDFCobros(){
+            var doc = new window.jspdf.jsPDF();
+            var img = new Image();
+
+            var fecha = new Date();
+            var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+
+            var tabla = document.getElementById('listado_cobros_por_fechas');
+            var datos = [];
+            var total = 0;
+            var selectElement = document.getElementById('id_asesor_cobros');
+            var datosAsesor = selectElement.options[selectElement.selectedIndex].text;
+            var nombreAsesorReportee = datosAsesor.match(/^(.*?)\sID:/)[1];
+
+            for (var i = 0; i < tabla.rows.length; i++) {
+                var montoTexto = tabla.rows[i].cells[3].innerText;
+                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                if (!isNaN(montoNumero)) {
+                    datos.push({
+                        dpi: tabla.rows[i].cells[0].innerText,
+                        nombre: tabla.rows[i].cells[1].innerText,
+                        direccion: tabla.rows[i].cells[2].innerText,
+                        monto: montoNumero,
+                        hora: tabla.rows[i].cells[4].innerText
+                    });
+                    total += montoNumero; 
+                }
+            }
+            
+            doc.setFillColor(200, 200, 200);
+            doc.rect(0, 35, 210, 10, 'F');
+            doc.setFontSize(18);
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+            doc.setFont('Helvetica', 'bold')
+            doc.text(NombreEmpresa, 105, 10, null, null, "center");
+            doc.text("Reporte de cobros", 105, 20, null, null, "center");
+            doc.setFontSize(10);
+
+            doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+            doc.text("Nombre de asesor: "+nombreAsesorReportee, 100, 30);
+
+            doc.setTextColor(255, 255, 255); 
+            doc.text('DPI', 10, 40);
+            doc.text('Nombre Cliente', 40, 40);
+            doc.text('Dirección', 110, 40);
+            doc.text('Monto', 160, 40);
+            doc.text('Hora', 180, 40);
+
+            var y = 50;
+            var maxPageHeight = doc.internal.pageSize.height - 20; 
+
+            for (var i = 0; i < datos.length; i++) {
+                if (y > maxPageHeight) {
+                    doc.addPage();
+                    y = 20; 
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('DPI', 10, y);
+                    doc.text('Nombre Cliente', 40, y);
+                    doc.text('Dirección', 110, y);
+                    doc.text('Monto', 160, y);
+                    doc.text('Hora', 180, y);
+                    y += 10; 
+                }
+                doc.setTextColor(0, 0, 0); 
+                doc.setFont("bold");
+                doc.setFontSize(8)
+                doc.text(datos[i].dpi.toString(), 10, y);
+                doc.text(datos[i].nombre.toString(), 40, y);
+                doc.text(datos[i].direccion.toString(), 110, y);
+                doc.text("Q"+datos[i].monto.toString(), 160, y);
+               
+                doc.text(datos[i].hora.toString(),180,y)
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    if (y + 15 > maxPageHeight) { 
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.line(10, y + 5, 200, y + 5); 
+                }
+                y += 10; 
+            }
+
+            if (y > maxPageHeight) {
+                doc.addPage();
+                y = 20;
+            }
+
+        
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Helvetica', 'bold'); 
+            doc.text('Total monto', 10, y);
+            doc.text("Q" + total.toString(), 160, y);
+            doc.setFont('Helvetica'); 
+
+            doc.save('Reporte de gastos por cobros ' + fechaFormateada + ' Hora:' + hora + '.pdf');            
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('boton_Reporte_Cobros').addEventListener('click', function() {
+                generarPDFCobros();
+            });
+        });
+
+        function generarPDFGastos() {
+            
+            var doc = new window.jspdf.jsPDF();
+
+            var fecha = new Date();
+            var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+
+            var tabla = document.getElementById('lista_gastos_exe');
+            var datos = [];
+            var total = 0;
+            var selectElement = document.getElementById('id_asesor_gastos_consulta');
+            var datosAsesor = selectElement.options[selectElement.selectedIndex].text;
+            var nombreAsesorReportee = datosAsesor.match(/^(.*?)\sID:/)[1];
+
+            for (var i = 0; i < tabla.rows.length; i++) {
+                var montoTexto = tabla.rows[i].cells[1].innerText;
+                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                if (!isNaN(montoNumero)) {
+                    datos.push({
+                        motivo: tabla.rows[i].cells[0].innerText,
+                        monto: montoNumero
+                    });
+                    total += montoNumero; 
+                } 
+            }
+
+            doc.setFillColor(200, 200, 200);
+            doc.rect(0, 35, 210, 10, 'F');
+            doc.setFontSize(18);
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+            doc.setFont('Helvetica', 'bold');
+            doc.text(NombreEmpresa, 105, 10, null, null, "center");
+            doc.text("Reporte de gastos", 105, 20, null, null, "center");
+            doc.setFontSize(12);
+            
+            doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+            doc.text("Nombre de asesor: "+nombreAsesorReportee, 100, 30);
+
+            doc.setTextColor(255, 255, 255);
+            doc.text('Motivo de gasto', 10, 40);
+            doc.text('Monto', 160, 40);
+
+            var y = 50;
+            var maxPageHeight = doc.internal.pageSize.height - 20; 
+
+            
+            for (var i = 0; i < datos.length; i++) {
+                
+                if (y > maxPageHeight) {
+                    doc.addPage();
+                    y = 20; 
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('Motivo de gasto', 10, y);
+                    doc.text('Monto', 160, y);
+                    y += 10; 
+                }
+                doc.setTextColor(0, 0, 0); 
+                doc.setFont("bold");
+                doc.setFontSize(10)
+                doc.text(datos[i].motivo.toString(), 10, y);
+                doc.text("Q"+datos[i].monto.toString(), 160, y);
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    doc.line(10, y + 5, 200, y + 5);
+                }
+                y += 10; 
+            }
+
+            
+            if (y > maxPageHeight) {
+                doc.addPage();
+                y = 20;
+            }
+
+            
+            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
+
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Helvetica', 'bold'); 
+            doc.text('Total', 10, y);
+            doc.text("Q" + total.toString(), 160, y);
+            doc.setFont('Helvetica');        
+
+            doc.save('Reporte de gastos por fechas ' + fechaFormateada + ' Hora:' + hora + '.pdf');        
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('boton_Reporte_Gastos').addEventListener('click', function() {
+                generarPDFGastos();
+            });
+        });
+
     </script>
 
     <style>
@@ -307,195 +513,6 @@
 	</div>
 
 
-    <div class="modal inmodal" id="popop_new_cliente" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div  class="modal-content animated bounceInRight modalete" style="left: -24%;width: 789px;margin: 30px auto;">
-                <div class="modal-header" style="text-align: inherit;padding: 1px 15px;">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Creación de cliente</h4>
-                </div>
-                <div class="modal-body row" style="margin-left: 0px;margin-right: 0px;">
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                        <img id="foto_m4m" src="../img/default.jpg"
-                             style="height: 111px;cursor:pointer;">
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                        <img id="foto_m1m" src="../img/foto_cedula_front.png"
-                             style="height: 111px;cursor:pointer;">
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                        <img id="foto_m2m" src="../img/foto_cedula_back.png"
-                             style="height:111px;cursor:pointer;">
-                    </div>
-                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                        <img id="foto_m3m" src="../img/foto_resivo.png"
-                             style="width:167px;height:111px;cursor:pointer;">
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12">
-                        <label>Nacionalidad</label>
-                        <select class="form-control m-b" id="pais_selecionadom">
-                            <option value="1">Guatemala</option>
-                        </select>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" id="letra_venezuelam">
-                        <label>Tipo</label>
-                        <select class="form-control m-b" id="tipo_letram">
-                            <option>V</option>
-                            <option>E</option>
-                            <option>J</option>
-                            <option>G</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-sm-6 col-md-6 col-xs-12" id="cedula_divm">
-                        <label>DPI</label>
-                        <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_idm" type="text" class="form-control">
-                            <span class="input-group-append"> <button type="button" id="consultar_registram" class="btn btn-primary"><i class="fa fa-search"></i>
-                                        </button> </span></div>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" >
-                        <form role="form">
-                            <div class="form-group"><label>Alias</label> <input
-                                    id="alias_text" type="text" placeholder="" class="form-control">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
-                        <form role="form">
-                            <div class="form-group"><label>Primer nombre</label> 
-                                <input id="nombre_id1m"
-                                    type="text"
-                                    placeholder=""
-                                    class="form-control">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
-                        <form role="form">
-                            <div class="form-group"><label>Segundo nombre</label> 
-                                <input id="nombre_id2m"
-                                    type="text"
-                                    placeholder=""
-                                    class="form-control"
-                                >
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
-                        <form role="form">
-                            <div class="form-group"><label>Primer apellido</label> 
-                                <input id="apellido_id1m"
-                                    type="text"
-                                    placeholder=""
-                                    class="form-control">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
-                        <form role="form">
-                            <div class="form-group"><label>Segundo apellido</label>
-                                <input id="apellido_id2m"
-                                    type="text"
-                                    placeholder=""
-                                    class="form-control">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
-                        <form role="form">
-                            <div class="form-group"><label>Dirección</label>
-                                <input id="direccion_ubicam"
-                                    type="text"
-                                    placeholder="Inserte la dirección"
-                                    class="form-control">
-                                </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12">
-                        <label>Departamento</label>
-                        <select class="form-control m-b" id="tipo_departamentom">
-                            <option value="">Seleccione</option>
-                        </select>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12">
-                        <label>Ciudad</label>
-                        <select class="form-control m-b" id="tipo_ciudadesm">
-                            <option value="">Seleccione</option>
-                        </select>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12">
-                        <label>Barrio</label>
-                        <select class="form-control m-b" id="tipo_barriom">
-                            <option value="">Seleccione</option>
-                        </select>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12">
-                        <form role="form">
-                            <div class="form-group"><label>Telefono Movil</label>
-                                <input id="telefono_fijom"
-                                    type="text"
-                                    placeholder=""
-                                    class="form-control">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12">
-                        <form role="form">
-                            <div class="form-group"><label>Telefono Fijo</label> 
-                                <input id="telefono_celm"
-                                    type="text"
-                                    placeholder=""
-                                    class="form-control">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3 col-xs-12">
-                        <form role="form">
-                            <div class="form-group"><label>Correo electronico</label> <input
-                                    id="correo_electronicom" type="email" placeholder="" class="form-control">
-                            </div>
-                        </form>
-                    </div>
-
-
-                    <div class="col-xs-12"  style="margin-top: 1px;margin-right: 4%;">
-                        <form role="form">
-                            <button class="btn btn-primary btn-sm" style="margin-left: 14px;" id="registro_finalm"
-                                    type="button">Registrar en sistema
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="col-xs-12 " style="margin-top: 1px">
-                        <form role="form">
-                            <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-	
-	
     <!-- <div class="modal inmodal" id="popop_new_cliente_edit" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div  class="modal-content animated bounceInRight modalete" style="left: -24%;width: 789px;margin: 30px auto;">
@@ -684,24 +701,24 @@
                         <img alt="image" src="../img/profile_small.png"
                              style="margin-top: -24px;width: 137px;height: 40px;"/>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html">
-                            <span class="block m-t-xs font-bold" style="margin-left: 21%;">Administrador</span>
+                            <span class="block m-t-xs font-bold" style="margin-left: 21%;">Supervisor</span>
                         </a>
                     </div>
                     <div class="logo-element">
                         ME
                     </div>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:crear_infor();">Registrar</a></li>
                         <li><a href="javascript:cliente_lista();">Consultar</a></li>
                     </ul>
-                </li>
+                </li> -->
                 <li>
-                    <a href="#"><i class="fa fa-copy"></i> <span class="nav-label">Contrato</span><span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-copy"></i> <span class="nav-label">Contratos de asesores</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="javascript:crear_contrato();">Registrar</a></li>
+                        <!-- <li><a href="javascript:crear_contrato();">Registrar</a></li> -->
                         <li><a href="javascript:vers_contratos();">Consultar</a></li>
                     </ul>
                 </li>
@@ -709,9 +726,10 @@
                     <a href="#"><i class="fa fa-hand-holding-usd"></i> <span class="nav-label">Administración</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo();">Liquidación</a></li>
+                        <li><a href="javascript:informe_completo_cobros();">Consultar cobros</a></li>
+                        <li><a href="javascript:informe_completo_gastos();">Consultar gastos</a></li>
                     </ul>
-                </li>
-
+                </li>              
                 <li>
                     <a id="couta_search" href="javascript:buscar_mapa();"><i class="fa fa-map-marker"></i> <span
                     class="nav-label">Mapa de clientes</span></a>
@@ -726,18 +744,16 @@
                 <div class="navbar-header">
                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
                     </a>
-                    <center>
                     <form role="search" class="navbar-form-custom">
                         <div class="form-group pull-right">
-                            <img alt="image" src="../img/logos.png" style="width: 195px;margin-top: 11px;"/>
+                            <p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px;margin-top: 0px;border-radius: 67px 36% 3% -9%; height: 34px; background: #448ed300; position: absolute; bottom: 9px;"/>
                         </div>
                     </form>
-                </center>
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
                         <a href="javascript:salida_sistema();">
-                            <i class="fa fa-sign-out"></i> Salir
+                            <i class="fa fa-sign-out"></i> Cerrar sesión
                         </a>
                     </li>
                 </ul>
@@ -749,7 +765,7 @@
 
             <div class="row">
 
-                <div class="col-lg-12" id="cliente_lista_admi">
+                <!-- <div class="col-lg-12" id="cliente_lista_admi">
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Lista de clientes</h5>
@@ -777,7 +793,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="col-lg-6" id="lista_asi_ayu">
                     <div class="ibox ">
@@ -1240,11 +1256,6 @@
                                 </form>
                             </div>
 
-                            
-                           
-
-
-
                             <div class="table-responsive">
                                 <table class="table table-striped sortable" >
                                     <thead>
@@ -1269,6 +1280,109 @@
                     </div>
                 </div>
 
+                <div class="col-lg-12" id="consulta_cobros" style="display:none;">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Busqueda de cobros por fecha</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>Id asesor</label>
+                                <select class="form-control m-b" id="id_asesor_cobros">
+                                </select>
+
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_busqueda_cobros"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
+                                <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
+                                        id="busqueda_cobros"
+                                        type="button">Buscar
+                                </button>
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte_Cobros"><i class="fa fa-file-pdf"></i></button>
+                                </form>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 50px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>DPI</th>
+                                        <th>Nombre Cliente</th>
+                                        <th>Dirección</th>
+                                        <th>Monto</th>
+                                        <th>Hora</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="listado_cobros_por_fechas">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12" id="consulta_gastos" style="display:none;">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Busqueda de gastos por fecha</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>Id asesor</label>
+                                <select class="form-control m-b" id="id_asesor_gastos_consulta">
+                                </select>
+
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_gasto"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
+                                <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
+                                        id="busqueda_gasto"
+                                        type="button">Buscar
+                                </button>
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte_Gastos"><i class="fa fa-file-pdf"></i></button>
+                                </form>
+
+                            </div>
+                            <div class="table-responsive" style="margin-top: 50px;">
+                                <table class="table table-striped" >
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Motivo de gasto</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="lista_gastos_exe">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="col-lg-12" id="contratos_view">
                     <div class="ibox ">
@@ -1277,40 +1391,26 @@
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
-                            <div class="col-sm-3 col-md-3 col-xs-12">
-                                    <div class="form-group"> <input
-                                            id="buscar_contra"
-                                            type="number" placeholder="Cedula/dni"
-                                            class="form-control"></div>
-                            </div>
-
-                            <div class="col-sm-3 col-md-3 col-xs-12 " >
+                            <div class="col-md-6 col-xs-12 " >
                                 <select class="form-control m-b" id="lista_asesores_general3">
                                 </select>
                             </div>
-
-                            <div class="col-sm-6 col-md-6 col-xs-12">
-                                <button class="btn btn-primary" style="float: right;" onclick="javascript:crear_contrato();"
-                                        type="button">Nuevo cliente
-                                </button>
-                            </div>
-
 
                             <div class="table-responsive">
                                 <table class="table table-striped">
                                     <thead>
                                     <tr>
                                         <th>Fecha de prestamo </th>
-                                        <th>Id prestamo </th>
-                                        <th>Cedula</th>
+                                        <th>A pagar</th>
+                                        <th>DPI</th>
                                         <th>Nombre cliente</th>
                                         <th>Asesor</th>
                                         <th>Prestamo</th>
+                                        <th>Porcentaje</th>
                                         <th>Cuotas</th>
-                                        <th>Valor</th>
-                                        <th>Ayudante</th>
-                                        <th>Supervidor</th>
-                                        <th>Opciones</th>
+                                        <!-- <th>Ayudante</th>
+                                        <th>Supervidor</th> -->
+                                        <!-- <th>Opciones</th> -->
                                     </tr>
                                     </thead>
                                     <tbody id="lista_enorme">
@@ -1318,190 +1418,6 @@
                                 </table>
                             </div>
 
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-12" id="create_clientes_listo">
-                    <div class="ibox ">
-                        <div class="ibox-title">
-                            <h5>Creación de cliente</h5>
-                        </div>
-                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                                <img id="foto_m4md" src="../img/default.jpg"
-                                     style="height: 111px;cursor:pointer;">
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                                <img id="foto_m1md" src="../img/foto_cedula_front.png"
-                                     style="height: 111px;cursor:pointer;">
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                                <img id="foto_m2md" src="../img/foto_cedula_back.png"
-                                     style="height:111px;cursor:pointer;">
-                            </div>
-                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
-                                <img id="foto_m3md" src="../img/foto_resivo.png"
-                                     style="width:167px;height:111px;cursor:pointer;">
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <label>Nacionalidad</label>
-                                <select class="form-control m-b" id="pais_selecionadomd">
-                                    <option value="1">Guatemala</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" id="letra_venezuelamd">
-                                <label>Tipo</label>
-                                <select class="form-control m-b" id="tipo_letramd">
-                                    <option>V</option>
-                                    <option>E</option>
-                                    <option>J</option>
-                                    <option>G</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group col-sm-6 col-md-6 col-xs-6" id="cedula_divmd">
-                                <label>DPI</label>
-                                <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_idmd" type="text" class="form-control"> <span class="input-group-append">
-                                    <button type="button" id="consultar_registramd" class="btn btn-primary"><i class="fa fa-search"></i>
-                                        </button> </span></div>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <form role="form">
-                                    <label>Asesor</label>
-                                    <select class="form-control m-b" id="selector_asesores_listad">
-                                    </select>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
-                                <form role="form">
-                                    <div class="form-group"><label>Primer nombre</label> <input id="nombre_id1md"
-                                                                                                type="text"
-                                                                                                placeholder=""
-                                                                                                class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
-                                <form role="form">
-                                    <div class="form-group"><label>Segundo nombre</label> <input id="nombre_id2md"
-                                                                                                 type="text"
-                                                                                                 placeholder=""
-                                                                                                 class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
-                                <form role="form">
-                                    <div class="form-group"><label>Primer apellido</label> <input id="apellido_id1md"
-                                                                                                  type="text"
-                                                                                                  placeholder=""
-                                                                                                  class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
-                                <form role="form">
-                                    <div class="form-group"><label>Segundo apellido</label> <input id="apellido_id2md"
-                                                                                                   type="text"
-                                                                                                   placeholder=""
-                                                                                                   class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
-                                <form role="form">
-                                    <div class="form-group"><label>Dirección</label>
-                                        <input id="direccion_ubicamd"
-                                            type="text"
-                                            placeholder="Inserte la dirección"
-                                            class="form-control">
-                                        </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <label>Departamento</label>
-                                <select class="form-control m-b" id="tipo_departamentomd">
-                                    <option value="">Seleccione</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <label>Ciudad</label>
-                                <select class="form-control m-b" id="tipo_ciudadesmd">
-                                    <option value="">Seleccione</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <label>Barrio</label>
-                                <select class="form-control m-b" id="tipo_barriomd">
-                                    <option value="">Seleccione</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <form role="form">
-                                    <div class="form-group"><label>Telefono Movil</label> <input id="telefono_fijomd"
-                                                                                                type="numer"
-                                                                                                placeholder=""
-                                                                                                class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <form role="form">
-                                    <div class="form-group"><label>Telefono Fijo</label> <input id="telefono_celmd"
-                                                                                                   type="number"
-                                                                                                   placeholder=""
-                                                                                                   class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12">
-                                <form role="form">
-                                    <div class="form-group"><label>Correo electronico</label> <input
-                                            id="correo_electronicomd" type="email" placeholder="" class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xs-12" >
-                                <form role="form">
-                                    <div class="form-group"><label>Alias</label> <input
-                                            id="alias_textd" type="text" placeholder="" class="form-control">
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="col-xs-12"  style="margin-top: 1px;margin-right: 4%;">
-                                <form role="form">
-                                    <button class="btn btn-primary btn-sm" style="margin-left: 14px;" id="registro_finalmd"
-                                            type="button">Registrar en sistema
-                                    </button>
-                                </form>
-                            </div>
-
-                            <div class="col-xs-12 " style="margin-top: 1px">
-                                <form role="form">
-                                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
-                                </form>
-                            </div>
 
                         </div>
                     </div>
@@ -1563,11 +1479,13 @@
 
         apiKey: "AIzaSyCKm7s6lyrf6qojY04kNYDt6DkM4P4vzoE",
         authDomain: "prestamos-6c36a.firebaseapp.com",
+        databaseURL: "https://prestamos-6c36a-default-rtdb.firebaseio.com/",
         projectId: "prestamos-6c36a",
         storageBucket: "prestamos-6c36a.appspot.com",
         messagingSenderId: "815768429932",
         appId: "1:815768429932:web:6d50bac5c91e2150f97f49",
         measurementId: "G-7DY4VZWSC5"
+        
         // apiKey: "AIzaSyDprSYitdwL_Kqs76EJFi5a9KM0wBbPFS4",
         // authDomain: "credit-menco.firebaseapp.com",
         // databaseURL: "https://credit-menco.firebaseio.com",
@@ -1768,17 +1686,13 @@
 
             var storageRef = firebase.storage().ref();
             var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-            console.log(uploadTask);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1814,13 +1728,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1855,13 +1766,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1896,13 +1804,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1938,13 +1843,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -1980,13 +1882,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -2022,13 +1921,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -2063,13 +1959,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -2105,13 +1998,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -2147,13 +2037,10 @@
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -2186,17 +2073,13 @@
 
             var storageRef = firebase.storage().ref();
             var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-            console.log("Aqui se esta guardando"+uploadTask);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED:
-                                console.log('Upload is paused');
                                 break;
                             case firebase.storage.TaskState.RUNNING:
-                                console.log('Upload is running');
                                 break;
                         }
                     }, function(error) {
@@ -2615,35 +2498,44 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
+
                 block.oso="";
                 block.dat0s =valor.d[1][0];
                 block.unox = JSON.parse(block.dat0s[0]);
-                block.dosx = JSON.parse(block.dat0s[1]);
-                block.tresx = JSON.parse(block.dat0s[2]);
-                block.cinco = JSON.parse(block.dat0s[2]);
+                block.dosx = block.dat0s[1];
+                block.tresx = block.dat0s[2];
+                block.cuatrosx = JSON.parse(block.dat0s[3]);
 
-                if(block.dat0s[3].length>0){
-                    block.cuatrox = JSON.parse(block.dat0s[3]);
-                    block.exta = block.cuatrox[3].split("_");
-                    block.exta2 = block.cuatrox[2].split("_");
+                if(block.dosx.length>0){
+					block.exta2 = block.dosx[3];
+					block.exta = block.exta2.split("_");
                     block.superv = block.exta[3] + " " +block.exta[4];
                 }else{
                     block.superv = "No asignado";
                 }
-                if(block.dat0s[4].length>0) {
-                    block.cincox = JSON.parse(block.dat0s[4]);
-                    block.extav = block.cincox[3].split("_");
-                    block.exta2f = block.cincox[2].split("_");
-                    block.ayudan = block.extav[3] + " " +block.extav[4];
+                if(block.tresx.length>0) {
+                    block.exta2a = JSON.parse(block.tresx);
+					block.extaa = block.exta2a[3].split("_");
+                    block.ayudan = block.extaa[3] + " " +block.extaa[4];
                 }else{
                     block.ayudan = "No asignado";
                 }
 
                 block.esf = $("#lista_asesores_general3")["0"].options.selectedIndex;
                 block.tesq = $("#lista_asesores_general3")["0"][block.esf].label.split("ID:");
-                block.asesor = block.tesq[0];
+				block.calsulo = block.unox[13];
+				block.sumas = 0;
+				for(var u= 0; u<block.calsulo.length; u++){
+					if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
+						block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
+					}else if(block.calsulo[u].pe!==0){
+						block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
+					}
+				}
 
-                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td><td>'+block.tresx[24]+'_'+block.unox[0]+'</td> <td>'+block.tresx[6]+'</td> <td>'+block.tresx[7]+' '+block.tresx[9]+'</td><td>'+block.asesor+'</td><td>$'+block.unox[3]+'</td> <td>'+block.unox[7]+'</td> <td>$'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item" href="javascript:refinanciar_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+')"><i class="fa fa-retweet"></i> &nbsp Refinanciar</a></li> <li class="dropdown-divider"></li><li><a class="dropdown-item"  href="javascript:impresion_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-print"></i> &nbsp Imprimir</a></li> </ul></div></td></tr>';
+                block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
+				block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td></tr>';
 
                 block.unico++;
                 listado_contratos(block.unico);
@@ -2679,7 +2571,6 @@
                     //window.sessionStorage.removeItem("asesore_list_liquida_"+block.asesorId);
                     //toastr.success('Procesado con éxito', 'System notification!');
                     setTimeout(function(){
-                        console.log(block.elims);
                         liquidar_sincro([block.elims])
                     },4000);
                     //Tiempo real
@@ -2785,9 +2676,6 @@
         block.obj = {"r": "eliminar_asociar", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            if (!valor.e) {
-                console.log(valor.d);
-            }
         });
 
     }
@@ -2902,7 +2790,6 @@
                             closeOnConfirm: true
                         }, function () {
                             block.infeas = JSON.parse(valor.d[2]);
-                            console.log(block.infeas);
                             $("#nombre_id1").val(block.infeas[7]);
                             $("#nombre_id2").val(block.infeas[8]);
                             $("#apellido_id1").val(block.infeas[9]);
@@ -3240,7 +3127,8 @@
         $("#liquidacion_page2").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
-        $("#cliente_lista_admi").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        // $("#cliente_lista_admi").css("display", "none");
     }
 
     $("#lista_asesores_general").change(function () {
@@ -4315,8 +4203,8 @@
     $("#asig_supervidor").css("display", "none");
     $("#liquidacion_page").css("display", "none");
     $("#liquidacion_page2").css("display", "none");
-    $("#contratos_view").css("display", "none");
-    $("#cliente_lista_admi").css("display", "none");
+    $("#contratos_view").css("display", "block");
+    // $("#cliente_lista_admi").css("display", "none");
 
 
     function crear_contrato() {
@@ -4335,7 +4223,7 @@
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
-        $("#cliente_lista_admi").css("display", "none");
+        // $("#cliente_lista_admi").css("display", "none");
 
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -4405,6 +4293,80 @@
 
     asesores_lista_ajustada();
 
+    $("#busqueda_gasto").click(function(){
+        extraer_gastos();
+    });
+
+    $("#busqueda_cobros").click(function(){
+        extraer_cobros();
+    });
+
+    //Funcion para extraer datos con fecha pasandole la fecha al array
+    function extraer_gastos() {
+        $("#lista_gastos_exe").empty();
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        var fecha = $("#fecha_gasto").val()
+        block.estraa = $("#id_asesor_gastos_consulta").val();
+        block.estraaq = block.estraa.split("_");
+        block.estra = block.estraaq[0];
+        block.cedulasesor = block.estraaq[1];
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                block.inefd = '';
+                for (var wq = 0; wq < block.pasero.length; wq++) {
+                    block.iteds = block.pasero[wq];
+                    block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                    block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+                }
+                $("#lista_gastos_exe").html(block.inefd);
+            } else {
+                toastr.warning("No hay gastos registrados para la fecha establecida", "Atención");
+            }
+        });
+    }
+
+    function extraer_cobros() {
+        $("#listado_cobros_por_fechas").empty();
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {    
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        var fecha = $("#fecha_busqueda_cobros").val()
+        block.estraa = $("#id_asesor_cobros").val();
+        block.estraaq = block.estraa.split("_");
+        block.estra = block.estraaq[0];
+        block.cedulasesor = block.estraaq[1];
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            var cobro;
+            block.inefd='';
+            if(valor.d[1].length>0){
+                for(var j=0; j<valor.d[1].length;j++){
+                    cobro = valor.d[1][j];
+                    block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
+                }
+                $("#listado_cobros_por_fechas").html(block.inefd);
+            } else {
+                toastr.warning("No hay cobros registrados para la fecha establecida", "Atención");
+            }
+        });
+    }
+
     function ver_imagen(uno, dos, tres) {
         $("#idfoto").attr("src", uno);
         $("#caratula").attr("src", dos);
@@ -4472,6 +4434,9 @@
                 }
                 $("#tipo_cargo_dos").html(block.listax);
                 $("#id_asesor").html(block.listax2);
+                $("#id_asesor_consulta").html(block.listax2);
+                $("#id_asesor_gastos_consulta").html(block.listax2);
+                $("#id_asesor_cobros").html(block.listax2);
             }
         });
     }
@@ -4492,7 +4457,7 @@
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
-        $("#cliente_lista_admi").css("display", "none");
+        // $("#cliente_lista_admi").css("display", "none");
 
         cargarListas_asigandos();
     }
@@ -4651,7 +4616,6 @@
 
     function consulta_x(){
         block.num = window.sessionStorage.getItem("numero_lista");
-
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -4659,18 +4623,18 @@
         }
         block.listadi ="";
         block.arrays = [block.tokens[1],$("#lista_asesores_general2").val(),block.num];
-        block.obj = {"r": "lista_cliente_basic", "d": block.arrays};
+        block.obj = {"r": "lista_cliente_basic_asesor", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
                 if(valor.d[1]!==null) {
                     block.item = JSON.parse(valor.d[1]);
-                    block.cedula = block.item[6];
-                    block.nomre = block.item[7];
-                    block.nomre2 = block.item[8];
-                    block.apellido = block.item[9];
-                    block.apellido2 = block.item[10];
-                    block.direcion = block.item[11];
+                    block.cedula = block.item[7];
+                    block.nomre = block.item[8];
+                    block.nomre2 = block.item[9];
+                    block.apellido = block.item[10];
+                    block.apellido2 = block.item[11];
+                    block.direcion = block.item[12];
                     block.telefono = block.item[16];
                     block.listadi = block.listadi + '<tr><td>' + block.nomre + ' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><a href="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</a></td></tr>';
                     $("#listado_liengenerela").append(block.listadi);
@@ -4678,12 +4642,13 @@
                     window.sessionStorage.setItem("numero_lista", block.nexr);
                     consulta_x();
                 }
-            }else{
-                if(valor.d[1]=="4"){
-                    $("#listado_liengenerela").html("");
-                    window.sessionStorage.setItem("numero_lista","0");
-                }
             }
+            // else{
+            //     if(valor.d[1]=="4"){
+            //         $("#listado_liengenerela").html("");
+            //         window.sessionStorage.setItem("numero_lista","0");
+            //     }
+            // }
         });
     }
 
@@ -4699,26 +4664,26 @@
         alert(cedula);
     }
 
-    function cliente_lista() {
-        $("#crear_contrato_form").css("display", "none");
-        $("#crear_contrato_form_dos").css("display", "none");
-        $("#lista_ayu").css("display", "none");
-        $("#lista_sup").css("display", "none");
-        $("#lista_ase").css("display", "none");
-        $("#asig_supervidor").css("display", "none");
-        $("#lista_asi_ayu").css("display", "none");
-        $("#lista_asi_sup").css("display", "none");
-        $("#configuracion_general").css("display", "none");
-        $("#busqueda_asignaciones").css("display", "none");
-        $("#configuracion_general_cuotas").css("display", "none");
-        $("#liquidacion_page2").css("display", "none");
-        $("#liquidacion_page").css("display", "none");
-        $("#create_clientes_listo").css("display", "none");
-        $("#contratos_view").css("display", "none");
-        $("#cliente_lista_admi").css("display", "initial");
-        $("#listado_liengenerela").html("");
-        window.sessionStorage.setItem("numero_lista","0");
-    }
+    // function cliente_lista() {
+    //     $("#crear_contrato_form").css("display", "none");
+    //     $("#crear_contrato_form_dos").css("display", "none");
+    //     $("#lista_ayu").css("display", "none");
+    //     $("#lista_sup").css("display", "none");
+    //     $("#lista_ase").css("display", "none");
+    //     $("#asig_supervidor").css("display", "none");
+    //     $("#lista_asi_ayu").css("display", "none");
+    //     $("#lista_asi_sup").css("display", "none");
+    //     $("#configuracion_general").css("display", "none");
+    //     $("#busqueda_asignaciones").css("display", "none");
+    //     $("#configuracion_general_cuotas").css("display", "none");
+    //     $("#liquidacion_page2").css("display", "none");
+    //     $("#liquidacion_page").css("display", "none");
+    //     $("#create_clientes_listo").css("display", "none");
+    //     $("#contratos_view").css("display", "none");
+    //     $("#cliente_lista_admi").css("display", "initial");
+    //     $("#listado_liengenerela").html("");
+    //     window.sessionStorage.setItem("numero_lista","0");
+    // }
 
     $("#configurar_directa").click(function () {
         block.refinanciacioinCoun = $("#count_refinansacion").val();
@@ -4852,11 +4817,73 @@
         $("#liquidacion_page").css("display", "initial");
         $("#liquidacion_page2").css("display", "initial");
         $("#contratos_view").css("display", "none");
-        $("#cliente_lista_admi").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        // $("#cliente_lista_admi").css("display", "none");
 
     }
 
+    function informe_completo_gastos(){
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#consulta_gastos").css("display", "initial");
+        
+        cargarListas_asigandos();
+    }
 
+    function informe_completo_cobros(){
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#consulta_cobros").css("display", "initial");
+        cargarListas_asigandos();
+
+        window.sessionStorage.setItem("numero_lista","0");
+        //consulta_cobrosFecha();
+    }
 
     function vers_contratos(){
         $("#crear_contrato_form").css("display", "none");
@@ -4873,10 +4900,11 @@
         $("#liquidacion_page2").css("display", "none");
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
         $("#contratos_view").css("display", "initial");
-        $("#cliente_lista_admi").css("display", "none");
+        // $("#cliente_lista_admi").css("display", "none");
     }
-
 
     function crear_infor(){
         $("#contratos_view").css("display", "none");
@@ -4893,8 +4921,9 @@
         $("#configuracion_general_cuotas").css("display", "none");
         $("#liquidacion_page2").css("display", "none");
         $("#liquidacion_page").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
         $("#create_clientes_listo").css("display", "initial");
-        $("#cliente_lista_admi").css("display", "none");
+        // $("#cliente_lista_admi").css("display", "none");
 
 
     }

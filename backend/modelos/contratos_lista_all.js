@@ -9,34 +9,26 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibe token
+			Recibe token
 		*/
-		
 		if (arrays.length==4){
-		
 			var jwt = require('jsonwebtoken');
-			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {				
+			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {	
 				if (err) {
 					reject([false,"1"]);
-				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="5" || decoded.t == "2") {
-
+				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="5" || decoded.t == "2" || decoded.t == "4") {
 					var litado =[];
-					
 					/*
-					organizo los contratos 
+						organizo los contratos 
 					*/
-					
 					redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
 						if(redpsly!==null) {
 							var infex = JSON.parse(redpsly);
-							
 							if(infex[arrays[2]]!==null && infex[arrays[2]]!==undefined){
-							
 								var ogens = infex[arrays[2]].split("_");
 								var esde = ogens[5];
 								redisClient.get(infex[arrays[2]], function (edrr3, repdly3) {
 									if(repdly3!==null) {
-
 										var infe = JSON.parse(repdly3),
 											cedula = infe[1],
 											fecha = infe[5],
@@ -45,23 +37,18 @@ eje = function(arrays,origen,redisClient) {
 											fech2 = vesd[2] + "_" + vesd[1] + "_" + vesd[0];
 										
 										/*
-										exraigo clientes
+											exraigo clientes
 										*/
 										
 										redisClient.get("cliente_"+cedula, function (serr, srepsy) {
-											
 											if(srepsy!==null){
-												
 												redisClient.keys("asig_supervisor_*"+fech2+"_"+ruta, function (sesrr, srepslsy) {
 													if (srepslsy.length > 0) {
-														
 														/*
-														verifico que tengan supervidor o ayudante
+															verifico que tengan supervidor o ayudante
 														*/
-														
 														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
 															if (srepslsyx.length > 0) {
-																
 																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {
 																	redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {
 																		litado.push([repdly3, srepslsy2xq, srepslsy2x,srepsy,esde]);
@@ -70,68 +57,53 @@ eje = function(arrays,origen,redisClient) {
 																});
 																
 															}else{
-																
-																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {
+																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) { //JEFE TERMINAN ACA
 																	litado.push([repdly3, srepslsy2xq, [],srepsy,esde]);
 																	resolve([true, litado]);
 																});
 																
 															}
 														});
-														
 													}else{
-														
 														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
 															if (srepslsyx.length > 0) {
-																
 																redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {
 																	litado.push([repdly3, [], srepslsy2x,srepsy,esde]);
 																	resolve([true, litado]);
 																});
-																
 															}else{
-																
 																litado.push([repdly3, [], [],srepsy,esde]);
-																resolve([true, litado]);													
+																resolve([true, litado]);
 															}
 														});
-														
 													}
-													
 												});
-
-											}else{
+											} else {
 												redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
 													var redpslys = JSON.parse(redpsly);
 													reject([false,"4",redpslys.length]);
 												});
 											}
-											
 										});
-									}else{
+									} else {
 										redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
 											var redpslys = JSON.parse(redpsly);
 											reject([false,"4",redpslys.length]);
 										});
 									}
 								});
-
 							}
-						}else{
+						} else {
 							reject([false,"4","0"]);
 						}
 					});
-
-
-				} else{
+				} else {
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

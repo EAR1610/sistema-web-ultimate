@@ -11,11 +11,13 @@ eje = function(arrays,origen,redisClient) {
 		/*
 		recibe token, y idasesor
 		*/
-		
+		console.log(arrays.length);
 		if (arrays.length==2){//token1 y token4
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
+				console.log("decoded.t is:")
+				console.log(decoded.t);
 				if (err) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="5"){
@@ -40,7 +42,7 @@ eje = function(arrays,origen,redisClient) {
 									console.log("cliente_"+inus[1]);
 									
 									/*
-									extrae cliente
+										extrae cliente
 									*/
 									
 									redisClient.get("cliente_"+inus[1],function(errs,datse){
@@ -71,26 +73,20 @@ eje = function(arrays,origen,redisClient) {
 											recurso(ind, arrs);
 										}
 									});
-
 								}
 							}
-
 							recurso(0,reply);
-
 						}else{
 							reject([false,"4"]);
 						}
 					});
-
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 
