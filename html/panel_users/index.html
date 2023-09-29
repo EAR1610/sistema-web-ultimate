@@ -37,17 +37,17 @@
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 
     <script>
-        import { BluetoothPrinter } from "@nimblehq/bluetooth-printer";
-        async function printReceipt(file) {
-      // Obtenga el recibo PDF
-            const receipt = await fs.readFile(file);
+    //     import { BluetoothPrinter } from "@nimblehq/bluetooth-printer";
+    //     async function printReceipt(file) {
+    //   // Obtenga el recibo PDF
+    //         const receipt = await fs.readFile(file);
 
-      // Imprima el recibo
-            await printer.print(receipt);
-        }
+    //   // Imprima el recibo
+    //         await printer.print(receipt);
+    //     }
     function generarPDFPago() {
         
-        const printer = new BluetoothPrinter();
+        //const printer = new BluetoothPrinter();
 
         
 
@@ -139,9 +139,14 @@
         // imprimir_texto(doc, 'Monto a pagar: Q' + montoAPagar, 10, 50, 12, 'black', 'left');
         // imprimir_texto(doc, 'Saldo pendiente: Q' + saldoPendiente, 10, 55, 12, 'black', 'left');
         // imprimir_texto(doc, 'Saldo anterior: Q' + saldoAnterior, 10, 60, 12, 'black', 'left');
-        const file = 'ticket_'+fecha.toString()+'.pdf'
-        doc.save(file);
-        printReceipt(file);
+        
+        
+        // const file = 'ticket_'+fecha.toString()+'.pdf'
+        // doc.save(file);
+        // printReceipt(file);
+
+        doc.autoPrint(); 
+        doc.output('dataurlnewwindow');
     }
 
     function imprimir_texto(doc, texto, x, y, size, color, align) {
@@ -798,7 +803,7 @@
                     </div>
                 </div>
                 
-                <div class="row" id="lista_ubicacniones_div" style="display:none">
+                <div class="col-lg-12" id="lista_ubicacniones_div" style="display:initial">
                     <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-title">
@@ -868,7 +873,6 @@
                                 <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
                                     <button class="btn btn-danger btn-block" id="eliminar_direccion" type="button" >Eliminar</button>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>

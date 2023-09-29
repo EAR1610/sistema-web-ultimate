@@ -317,7 +317,7 @@
 							<table class="table">
 								<thead>
 								<tr>
-									<th colspan="3" style="color:white;background-color:#28a745cc;">Cuotas completas</th>
+									<th colspan="3" style="color:white;background-color:#28a745cc;">Contratos completos</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -384,7 +384,7 @@
 							<table class="table">
 								<thead>
 								<tr>
-									<th colspan="3" style="color:white;background-color:#007bffcc;">Recaudo</th>
+									<th colspan="3" style="color:white;background-color:#007bffcc;">Recaudado de cuotas incompletas</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -406,7 +406,7 @@
 							<table class="table">
 								<thead>
 								<tr>
-									<th colspan="3" style="color:white;background-color:#ffc107cc;">Estimado</th>
+									<th colspan="3" style="color:white;background-color:#ffc107cc;">Estimación del monto pendiente</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -442,7 +442,7 @@
 							</table>
 						</div>
 						
-						<div class="col-sm-4 col-md-4 col-xs-12">
+						<!-- <div class="col-sm-4 col-md-4 col-xs-12">
 							<table class="table">
 								<thead>
 								<tr>
@@ -500,10 +500,8 @@
 								</tr>
 								</tbody>
 							</table>
-						</div>
-						
+						</div> -->
 					</div>
-					
 				</div>
 				<div class="modal-footer">
 					<label style="margin-top: 6px;" id="capital_neto"></label><button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
@@ -728,11 +726,16 @@
                         <li><a href="javascript:informe_completo();">Liquidación</a></li>
                         <li><a href="javascript:informe_completo_cobros();">Consultar cobros</a></li>
                         <li><a href="javascript:informe_completo_gastos();">Consultar gastos</a></li>
+                        <li><a href="javascript:informe_completo_cierre();">Cierre</a></li>
                     </ul>
                 </li>              
                 <li>
                     <a id="couta_search" href="javascript:buscar_mapa();"><i class="fa fa-map-marker"></i> <span
                     class="nav-label">Mapa de clientes</span></a>
+                </li>
+                <li>
+                    <a id="couta_search" href="javascript:historial_clientes();"><i class="fa fa-users" aria-hidden="true"></i> <span
+                    class="nav-label">Historial de clientes</span></a>
                 </li>
             </ul>
         </div>
@@ -1221,6 +1224,9 @@
 				<div class="col-lg-12" id="liquidacion_page2" style="display:none;">
 					<div class="ibox-title">
 						Total recaudo: <label id="text_recolectado"></label>
+                        <button class="btn btn-primary pull-right" id="registro_base"
+								type="button">Registro de base
+						</button>
 					</div>
 				</div>
 				
@@ -1232,7 +1238,7 @@
 
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
-                            <div class="col-sm-6 col-md-5 col-xs-12">
+                            <div class="col-sm-6 col-md-5 col-xs-12" style="display:none;">
                                 <label>Fecha de pago</label>
                                 <div id="picker-no-time"></div>
                                 <input type="hidden" id="result2" value="" />
@@ -1244,17 +1250,19 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-6 col-md-2 col-xs-6" >
+                            <div class="col-sm-6 col-md-2 col-xs-6">
                                 <form role="form" style="margin-top: 24px;display:grid;">
-                                    <button type="button" class="btn btn-success" id="comporta" >Comportamiento</button>
+                                    <button type="button" class="btn btn-success" id="comporta">Comportamiento</button>
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-1 col-xs-6" >
+                            <div class="col-sm-6 col-md-1 col-xs-6" style="display:none">
                                 <form role="form" style="margin-top: 24px;display:grid;">
-                                    <button type="button" class="btn btn-danger" id="boton_pdff"><i class="fa fa-file-pdf"></i></button>
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte"><i class="fa fa-file-pdf"></i></button>
                                 </form>
                             </div>
+
+
 
                             <div class="table-responsive">
                                 <table class="table table-striped sortable" >
@@ -1273,6 +1281,54 @@
                                     </tr>
                                     </thead>
                                     <tbody align="center" id="listado_operacion_asesore">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12" id="HistorialClientes">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Historial de clientes</h5>
+                        </div>
+
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-5 col-xs-12" style="display:none;">
+                                <label>Fecha de pago</label>
+                                <div id="picker-no-time"></div>
+                                <input type="hidden" id="result2" value="" />
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>DPI del cliente a buscar</label>
+                                <input type="text" id="historial_cliente_dpi" class="form-control" placeholder="Escriba el DPI del cliente a buscar">
+                            </div>
+
+                            <div class="col-sm-6 col-md-2 col-xs-6">
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-success" id="histo_cliente_buscar">Buscar</button>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-1 col-xs-6" style="display:none">
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte"><i class="fa fa-file-pdf"></i></button>
+                                </form>
+                            </div>
+ 
+                            <div class="table-responsive">
+                                <table class="table table-striped sortable" style="margin-top: 15px;">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Cliente</th>
+                                        <th>Cantidad de prestamos otorgados</th>
+                                        <th>Comportamiento</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="listado_historial_cliente">
                                     </tbody>
                                 </table>
                             </div>
@@ -1419,6 +1475,89 @@
                             </div>
 
 
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-12" id="cierre_view">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Consulta de cierre</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-md-6 col-xs-12" >
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <select class="form-control m-b" id="id_asesor_cierre" style="margin-right: 20px;">
+                                    </select>
+                                    <button type="button" class="btn btn-danger px-5" id="boton_pdf_cierre"><i class="fa fa-file-pdf"></i></button>
+                                </div>                            
+                                <!-- <select class="form-control m-b" id="id_asesor_cierre">
+                                </select>
+                                <div style="margin-top: 24px; display: flex; align-items: center;">
+                                    <button type="button" class="btn btn-danger" id="boton_pdf_cierre"><i class="fa fa-file-pdf"></i></button>
+                                </div> -->
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <div class="ibox ">
+                                        <div class="ibox-title" style="display: flex; justify-content: space-around;">
+                                            <div>Base diaria: <label id="text_baseAsesor"></label></div>
+                                            <div>Total recaudado: <label id="text_recolectadoAsesor"></label></div>
+                                            <div>Total gastos: <label id="text_gastosAsesor"></label></div>
+                                        </div>
+                                    </div>
+                                </table>
+                            </div>
+                            <div class="table-responsive table-responsive-sm">
+                                <div class="ibox">
+                                    <div style="display: flex; justify-content:space-evenly; flex-wrap: wrap;">
+                                        <div>Total Sistema: <label id="text_total_sistema"></label></div>
+                                        <div>Total entregado por asesor: Q.<input type="number" id="text_total_asesor"></div>
+                                        <div>Diferencia: <label id="text_diferencia_cierre"></label></div>
+                                        <button class="btn btn-primary btn-md" id="registrar_cierre"
+                                                type="button">Registrar cierre
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <div class="ibox-title">
+                                    <h5>Consulta de cobros</h5>
+                                </div>
+                                <div class="table-responsive" style="margin-top: 50px;">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr align="center">
+                                            <th>DPI</th>
+                                            <th>Nombre Cliente</th>
+                                            <th>Dirección</th>
+                                            <th>Monto</th>
+                                            <th>Hora</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody align="center" id="listado_cobros_cierre">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <div class="ibox-title">
+                                    <h5>Consulta de gastos</h5>
+                                </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr align="center">
+                                            <th>Motivo de gasto</th>
+                                            <th>Monto</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody align="center" id="lista_gastos_exeAsesor">
+                                        </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1572,6 +1711,36 @@
     function salida_sistema() {
          window.sessionStorage.clear(); window.localStorage.clear();
         location.href = "../index.html";
+    }
+
+    function informe_completo_cierre(){
+
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+        $("#flotante2").css("display","none");
+        $("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+        $("#migrar_cion_div").css("display", "none");
+        $("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "initial");
+        cargarListas_asigandos();
     }
 
     if (window.sessionStorage.getItem("Money-vars-token") == null) {
@@ -2137,7 +2306,6 @@
 			backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 				var valor = JSON.parse(salida);
 				if (!valor.e) {
-					//{"e":false,"d":[50000,110000,1,600000,1,1,8000,7350000]}
 					block.penientes = parseInt(valor.d[0]);
 					block.resuduoPendiente = parseInt(valor.d[1]);
 					block.cuantoDieronmocho = parseInt(valor.d[2]);
@@ -2153,12 +2321,26 @@
 					block.sumato14 = parseInt(valor.d[12]);
 					block.sumato15 = parseInt(valor.d[13]);
 					block.sumato16 = parseInt(valor.d[14]);
+					block.sumato19 = parseInt(valor.d[15]);
+					block.sumato18 = parseInt(valor.d[16]);
 					
+					
+					block.tempA1 = parseInt(valor.d[18]); //si no pago nada (sumo los monto no pagados)
+					block.tempA2 = parseInt(valor.d[19]); //numero del anterior
+					block.tempB1 = parseInt(valor.d[20]);  //no pagon completo pero pago un repele (sumos los repeles)
+					block.tempB2 = parseInt(valor.d[21]); //numero del anterior
+					block.tempC1 = parseInt(valor.d[22]);  //si no pagaron (sumo la deuda de lo que debe el asesor) 
+					block.tempC2 = parseInt(valor.d[23]); //numero del anterior
+					block.numMonto = parseInt(valor.d[24]); //monto pago completo completo de hoy
+					block.numCant = parseInt(valor.d[25]); //numero del anterior
+					
+					$("#expeci").html("Monto de quien no pago nada el dia de hoy: Q"+ block.tempA1+" y son: "+block.tempA2+" <br> Monto de quienes pagaron completo pero quedo mocho (sumo el repele): Q"+block.tempB1+" y son: "+block.tempB2+" <br> Monto de todo lo que quedan debiendo los pagos mochos: Q"+block.tempC1+" y son: "+block.tempC2+" <br> Monto de los que pagaron completos hoy: Q"+block.numMonto+" y son :"+block.numCant+" <br>" );
+
 					block.sumato = block.cuantoDieronmocho + block.cuatoincompleta + block.cuatocompleta;
 					block.porce_2 = parseInt((block.cuantoDieronmocho / block.sumato) * 100);
 					block.porce_3 = parseInt((block.cuatoincompleta / block.sumato) * 100);
 					block.porce_1 = parseInt((block.cuatocompleta / block.sumato) * 100);
-					
+
 					if(isNaN(block.porce_1)){
 						block.porce_1 = 0;
 					}
@@ -2168,88 +2350,91 @@
 					if(isNaN(block.porce_3)){
 						block.porce_3 = 0;
 					}
-					
+
 					block.penientesx = block.penientes.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.penientesx = block.penientesx.split('').reverse().join('').replace(/^[\.]/,'');
 					block.incompletax = block.incompleta.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.incompletax = block.incompletax.split('').reverse().join('').replace(/^[\.]/,'');
 					block.completax = block.completa.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.completax = block.completax.split('').reverse().join('').replace(/^[\.]/,'');
-					
+
 					block.sumato2 = block.cuantoDieronmocho + block.cuatocompleta;
 					block.sumato4 = parseInt(block.penientes) + parseInt(block.completa);
 					block.porce_4 = parseInt((block.sumato2 / sumato) * 100);
-					
+
 					if(isNaN(block.porce_4)){
 						block.porce_4 = 0;
 					}
-					
+
 					block.sumato4 = block.sumato4.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumato4 = block.sumato4.split('').reverse().join('').replace(/^[\.]/,'');
-					
+
 					block.sumato7 = block.cuatoincompleta + block.cuantoDieronmocho + block.cuatocompleta;
 					block.sumato3 = block.sumato10;
 					block.sumato3 = block.sumato3.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumato3 = block.sumato3.split('').reverse().join('').replace(/^[\.]/,'');
-					
+
 					$("#com_canti").text(parseInt(block.cuatocompleta));
-					$("#com_valor").text("$"+block.completax);
+					$("#com_valor").text("Q"+block.completax);
 					$("#com_porce").text(block.porce_1+"%");
-					
+
 					$("#incom_canti").text(parseInt(block.cuatoincompleta));
-					$("#incom_valor").text("$"+block.incompletax);
+					$("#incom_valor").text("Q"+block.incompletax);
 					$("#incom_porce").text(block.porce_3+"%");
-					
+
 					$("#mcom_canti").text(parseInt(block.cuantoDieronmocho));
-					$("#mcom_valor").text("$"+penientesx);
+					$("#mcom_valor").text("Q"+penientesx);
 					$("#mcom_porce").text(block.porce_2+"%");
-					
+
 					$("#rcom_canti").text(parseInt(block.sumato2));
-					$("#rcom_valor").text("$"+block.sumato4);
+					$("#rcom_valor").text("Q"+block.sumato4);
 					$("#rcom_porce").text(block.porce_4+"%");
-					
+
 					$("#ecom_canti").text(parseInt(block.sumato7));
-					$("#ecom_valor").text("$"+sumato3);
+					$("#ecom_valor").text("Q"+sumato3);
 					$("#ecom_porce").text("100%");
-					
+
 					block.sumato9x = block.sumato9.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                    block.sumato9x = block.sumato9x.split('').reverse().join('').replace(/^[\.]/,'');
-					$("#todi_capi").text("$"+block.sumato9x);
-					
+                    block.sumato9x = block.sumato9x.split('').reverse().join('').replace(/^[\.]/,'')
+					$("#todi_capi").text("Q"+block.sumato9x);                    
+
 					block.sumato11x = block.sumato11.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumato11x = block.sumato11x.split('').reverse().join('').replace(/^[\.]/,'');
-					$("#inclavos").text("$"+block.sumato11x);
-					$("#cinclavos").text(block.sumato12);
-					
+					$("#inclavos").text("Q"+block.sumato11x);                    
+					$("#cinclavos").text(block.sumato12);                    
+
 					block.sumato13x = block.sumato13.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumato13x = block.sumato13x.split('').reverse().join('').replace(/^[\.]/,'');
-					$("#involados").text("$"+block.sumato13x);
+					$("#involados").text("Q"+block.sumato13x);
 					$("#cinvolados").text(block.sumato14);
-					
+
 					block.sumato15x = block.sumato15.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumato15x = block.sumato15x.split('').reverse().join('').replace(/^[\.]/,'');
-					$("#inficticios").text("$"+block.sumato15x);
+					$("#inficticios").text("Q"+block.sumato15x);
 					$("#cinficticios").text(block.sumato16);
-					
+
 					block.refloes = block.sumato11+ block.sumato13 + block.sumato15;
 					block.sumato17 = block.refloes.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumato17 = block.sumato17.split('').reverse().join('').replace(/^[\.]/,'');
-					
+
 					block.real = block.sumato9 - block.refloes;
 					block.real = block.real.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.real = block.real.split('').reverse().join('').replace(/^[\.]/,'');
-					
-					block.uneaa = "$"+block.sumato9x + " - $" +block.sumato17 + " => Capital Neto $"+block.real;
+
+					block.uneaa = "Q"+block.sumato9x + " - Q" +block.sumato17 + " => Capital Neto Q"+block.real;
 					$("#capital_neto").text(block.uneaa);
-					
+
+
+					block.sumato18 = block.sumato18.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                    block.sumato18 = block.sumato18.split('').reverse().join('').replace(/^[\.]/,'');
+					$("#capital_pendiente").text("El asesor posee "+block.sumato19+" monto pendiente por un total de Q"+block.sumato18);
+
 					$("#modal_comporta").modal("show");
 				}
 			});
-			
-		}else{
-			toastr.warning('Seleccione asesor', 'System notification!');
+		}else {
+			toastr.warning('Seleccione asesor', 'Atención!');
 		}
-		
 	});
 
     $("#crear_contrato").click(function () {
@@ -2280,21 +2465,21 @@
                     var valor = JSON.parse(salida);
                     if (!valor.e) {
                         $("#text_cedula_cliente").prop("disabled",false);
-                        toastr.success('Creado con éxito teniendo en cuenta '+valor.d[1]+' contratos en la esta empresa y '+valor.d[2]+' contratos en otra empresa ', 'System notification!');
+                        toastr.success('Creado con éxito teniendo en cuenta '+valor.d[1]+' contratos en la esta empresa y '+valor.d[2]+' contratos en otra empresa ', 'Éxito!');
                         $("#limpiar_contrato").click();
                     }else{
                         if(valor.d[1]=="4"){
-                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos y no cumple con las condiciones del jefe', 'System notification!');
+                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos y no cumple con las condiciones del jefe', 'Atención!');
                         }
                     }
                 });
 
             }else{
-                toastr.warning('No puede colocar prestamo de '+block.dias+' cuotas y va a descontar '+block.descontar+' cuotas ', 'System notification!');
+                toastr.warning('No puede colocar prestamo de '+block.dias+' cuotas y va a descontar '+block.descontar+' cuotas ', 'Atención!');
             }
 
         }else{
-            toastr.warning('No esta registrado el cliente', 'System notification!');
+            toastr.warning('No esta registrado el cliente', 'Atención!');
         }
     });
 
@@ -2405,7 +2590,7 @@
                     $("#dias_coutas").val("");
                     $("#monto_num_interes").val("");
                     listar_cuotas();
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Éxito!');
                 }
             });
 
@@ -2569,7 +2754,7 @@
                 var valor = JSON.parse(salida);
                 if (!valor.e) {
                     //window.sessionStorage.removeItem("asesore_list_liquida_"+block.asesorId);
-                    //toastr.success('Procesado con éxito', 'System notification!');
+                    //toastr.success('Procesado con éxito', 'Atención!');
                     setTimeout(function(){
                         liquidar_sincro([block.elims])
                     },4000);
@@ -2606,13 +2791,12 @@
         }
 
         if(arrws.length>0){
-            toastr.warning('Espere mientras sincroniza liquidación de asesores', 'System notification!');
+            toastr.warning('Espere mientras sincroniza liquidación de asesores', 'Atención!');
 
             function liqui(ind,arrws){
                 if(ind==arrws.length){
-                    toastr.success('Ha sincronizado todo los datos para liquidar', 'System notification!');
+                    toastr.success('Ha sincronizado todo los datos para liquidar', 'Éxito!');
                 }else{
-
                     block.unids ="";
                     block.arrays = [block.tokens[1],"nada",arrws[ind][0],arrws[ind][1]];
                     block.obj = {"r": "liquida_parte_1", "d": block.arrays};
@@ -2714,7 +2898,7 @@
                         $("#nombre_id2").val("");
                         $("#apellido_id1").val("");
                         $("#apellido_id2").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Éxito!');
 
                     } else {
 
@@ -2727,7 +2911,7 @@
 
                         if(block.antece=="Si"){
                             swal({
-								title: "System notification!",
+								title: "Atención!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -2778,10 +2962,10 @@
                     }
                 }else{
                     if(valor.d[1]=="r"){
-                        toastr.warning('Esta persona esta registrada en otra empresa', 'System notification!');
+                        toastr.warning('Esta persona esta registrada en otra empresa', 'Atención!');
 
                         swal({
-                            title: "System notification!",
+                            title: "Atención!",
                             text: "Desea asociarlo a la empresa?",
                             type: "warning",
                             showCancelButton: true,
@@ -2811,12 +2995,12 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 					}
                 }
             });
         } else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atención!');
         }
 
     });
@@ -2827,7 +3011,6 @@
         if($("#lista_asesores_general").val()!=="" && $("#result2").val()!==""){
 
             $("#listado_operacion_asesore").html("");
-
             block.asesoe = $("#lista_asesores_general").val();
             block.dividio = block.asesoe.split("_");
             block.ides =  block.dividio[0];
@@ -2844,202 +3027,130 @@
             $("#listado_operacion_asesore")["0"].dataset.asesor = block.ides;
 
             if(window.sessionStorage.getItem("asesore_list_liquida_"+block.ides)!==null){
-
-                $("#listado_operacion_asesore").html("");
                 var valor = JSON.parse(window.sessionStorage.getItem("asesore_list_liquida_"+block.ides));
                 if (!valor.e) {
 
-                    block.nuevos  = valor.d[2];
-                    block.listaCoutas = valor.d[1];
-                    block.ordens = JSON.parse(valor.d[3]);
-                    block.nuevso = [];
-                    block.unids="";
+                    $("#listado_operacion_asesore").html("");
+                    block.unids = '';
+                    block.liCoutas = valor.d[1];
 
+                    for(var bc=0; bc< block.liCoutas.length; bc++){
+                        block.clienes = JSON.parse(block.liCoutas[bc][1]);
+                        block.contra = block.liCoutas[bc][0];
+                        block.ince = block.liCoutas[bc][2];
 
-                    function iterae(imd,arraus){
-                        if(imd==arraus.length){
-                            $("#listado_operacion_asesore").html(block.unids);
-                        }else{
-                            block.buno = JSON.parse(arraus[imd][0]);
-                            block.bdos = JSON.parse(arraus[imd][1]);
-                            block.btres = JSON.parse(arraus[imd][2]);
+                        block.pages = 0;
+                        block.deuda = false;
+                        block.favolr = 0;
+                        block.cobarar = 0;
+                        block.sale2 = 0;
+                        var hoy = moment().format('YYYY-MM-DD');
 
-                            block.deuda = false;
-                            var hoy = moment().format('YYYY-MM-DD');
-                            block.paso_fecha = false;
-                            block.cobarar=0;
-                            block.favolr=0;
-                            block.pages =0;
-                            block.recobarar=0;
-                            block.totaldu = 0;
+                        for(var k = 0; k<block.contra[13].length; k++){
 
-                            for(var k = 0; k<block.bdos.length; k++){
-                                block.cuota_hoy = block.bdos[k].cantidad_cuota_paga;
-                                block.totaldu = block.totaldu + parseInt(block.bdos[k].cantidad_cuota_paga);
-                                if(block.bdos[k].completa || block.bdos[k].pendiente!==0){
-                                    if(block.bdos[k].completa){
-                                        block.pages = block.pages + parseInt(block.bdos[k].cantidad_cuota_paga);
-                                    }else{
-                                        block.pages = block.pages + parseInt(block.bdos[k].pendiente);
-                                    }
-                                }
+                            block.sale2 = block.sale2 + parseInt(block.contra[13][k].cp);
+                            if (block.contra[13][k].ct) {
+                                block.sale2 = block.sale2 - parseInt(block.contra[13][k].cp);
+                            }else if(block.contra[13][k].pe!==0){
+                                block.sale2 = block.sale2 - parseInt(block.contra[13][k].pe);
+                            }
 
-                                if(!block.deuda){
-                                    if (block.bdos[k].completa || block.bdos[k].pendiente !== 0) {
-                                        block.favolr++;
-                                    }else{
-                                        block.cobarar++;
-                                    }
-                                    if(block.bdos[k].fecha == hoy){
-                                        block.deuda = true;
-                                    }
+                            if(!block.deuda){
+                                if (block.contra[13][k].ct || block.contra[13][k].pe !== 0) {
+                                    block.favolr++;
                                 }else{
-                                    if (block.bdos[k].completa || block.bdos[k].pendiente !== 0) {
-                                        block.favolr++;
-                                    }
+                                    block.cobarar++;
                                 }
-
+                                if(block.contra[13][k].fe == hoy){
+                                    block.deuda = true;
+                                }
+                            }else{
+                                if (block.contra[13][k].ct || block.contra[13][k].pe !== 0) {
+                                    block.favolr++;
+                                }
                             }
-                            block.totaldu= block.totaldu - block.pages;
-                            block.totaldu = block.totaldu.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                            block.totaldu = block.totaldu.split('').reverse().join('').replace(/^[\.]/,'');
-
-                            if(block.cobarar<block.favolr){
-                                block.cobfavol ='<i class="fa fa-arrow-up" style="color:#28a745"></i> '+(block.favolr - block.cobarar);
-                            }else if(block.cobarar>block.favolr){
-                                block.cobfavol ='<i class="fa fa-arrow-down" style="color:#dc3545"></i> '+block.cobarar;
-                            }else if(block.cobarar==block.favolr){
-								block.cobfavol ='<i class="fa fa-check" style="color:blue;"></i> 0';
-							}
-
-                            window.sessionStorage.setItem("monto_de_"+block.buno[1],block.totaldu);
-                            block.cuota_hoy = block.cuota_hoy.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                            block.cuota_hoy = block.cuota_hoy.split('').reverse().join('').replace(/^[\.]/,'');
-                            block.unids = block.unids + '<tr class="item" id="iten'+imd+'" data-ubic="'+imd+'"><td>'+imd+'</td><td>'+block.btres[7]+' '+block.btres[9]+'</td><td>'+block.btres[21]+'</td><td>$'+block.cuota_hoy+'</td><td></td><td></td><td id="musc_'+block.buno[1]+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.buno[1]+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>$'+block.buno[3]+'</td><td id="montos_'+block.buno[1]+'">$'+block.totaldu+'</td></tr>';
-
-                            imd++;
-                            iterae(imd,arraus);
-                        }
                     }
 
-                    for(var b=0; b<block.ordens.length; b++){
-                        var und = block.ordens[b].split("_");
-                        for(var bc=0; bc<block.ordens.length; bc++){
-                            block.bunox = JSON.parse(listaCoutas[bc][0]);
-                            if(und[1]==block.bunox[1]){
-                                block.nuevso.push(listaCoutas[bc]);
-                            }
-                        }
-                        if(b==block.ordens.length-1){
-                            iterae(0,block.nuevso);
-                        }
-                    }
 
+                        if (block.cobarar<block.favolr){
+                            block.cobfavol ='<i class="fa fa-arrow-up" style="color:#28a745"></i> '+(block.favolr - block.cobarar);
+                        } else if(block.cobarar>block.favolr){
+                            block.cobfavol ='<i class="fa fa-arrow-down" style="color:#dc3545"></i> '+block.cobarar;
+                        } else if(block.cobarar==block.favolr){
+                            block.cobfavol ='<i class="fa fa-check" style="color:blue;"></i> 0';
+                        }
+
+                        block.evals = block.contra[3].replace(".","");
+                        block.evals2 = block.evals.replace(".","");
+                        block.sale2 = block.sale2.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                        block.totaldu = block.sale2.split('').reverse().join('').replace(/^[\.]/,'');
+
+                        block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td></td><td></td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.clienes[7]+'_'+block.ince+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
+                    }
+                    $("#listado_operacion_asesore").html(block.unids);
                 }
-
-            }else{
-
-                toastr.warning('Espere se esta sincronizando la información del asesor', 'System notification!');
+        }else{
+                toastr.warning('Espere se esta sincronizando la información del asesor', 'Atención!');
 
                 block.unids ="";
                 block.arrays = [block.tokens[1],block.fecha,block.ides,block.cedula];
                 block.obj = {"r": "liquida_parte_1", "d": block.arrays};
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                     var valor = JSON.parse(salida);
+                        if (!valor.e) {
 
-                    block.esf = $("#lista_asesores_general")["0"].options.selectedIndex;
-                    block.tesq = $("#lista_asesores_general")["0"][block.esf].label.split("ID:");
+                        $("#listado_operacion_asesore").html("");
 
-                    window.sessionStorage.setItem("asesore_list_liquida_"+block.tesq[1],salida);
-                    window.sessionStorage.setItem("asesore_lis_limp",block.tesq[1]);
-                    if (!valor.e) {
-                        block.nuevos  = valor.d[2];
-                        block.listaCoutas = valor.d[1];
-                        block.ordens = JSON.parse(valor.d[3]);
-                        block.nuevso = [];
+                        block.liCoutas = valor.d[1];
 
-                        function iterae(imd,arraus){
-                            if(imd==arraus.length){
-                                $("#listado_operacion_asesore").html(block.unids);
-                            }else{
-                                block.buno = JSON.parse(arraus[imd][0]);
-                                block.bdos = JSON.parse(arraus[imd][1]);
-                                block.btres = JSON.parse(arraus[imd][2]);
+                        for(var bc=0; bc< block.liCoutas.length; bc++){
+                            block.clienes = JSON.parse(block.liCoutas[bc][1]);
+                            block.contra = block.liCoutas[bc][0];
+                            block.ince = block.liCoutas[bc][2];
 
-                                block.deuda = false;
-                                var hoy = moment().format('YYYY-MM-DD');
-                                block.paso_fecha = false;
-                                block.cobarar=0;
-                                block.favolr=0;
-                                block.pages =0;
-                                block.recobarar=0;
-                                block.totaldu = 0;
+                            block.pages = 0;
+                            block.deuda = false;
+                            block.favolr = 0;
+                            block.cobarar = 0;
+                            var hoy = moment().format('YYYY-MM-DD');
 
-                                for(var k = 0; k<block.bdos.length; k++){
-                                    block.cuota_hoy = block.bdos[k].cantidad_cuota_paga;
-                                    block.totaldu = block.totaldu + parseInt(block.bdos[k].cantidad_cuota_paga);
-                                    if(block.bdos[k].completa || block.bdos[k].pendiente!==0){
-                                        if(block.bdos[k].completa){
-                                            block.pages = block.pages + parseInt(block.bdos[k].cantidad_cuota_paga);
-                                        }else{
-                                            block.pages = block.pages + parseInt(block.bdos[k].pendiente);
-                                        }
-                                    }
-
-                                    if(!block.deuda){
-                                        if (block.bdos[k].completa || block.bdos[k].pendiente !== 0) {
-                                            block.favolr++;
-                                        }else{
-                                            block.cobarar++;
-                                        }
-                                        if(block.bdos[k].fecha == hoy){
-                                            block.deuda = true;
-                                        }
+                            for(var k = 0; k<block.contra[13].length; k++){
+                                if(!block.deuda){
+                                    if (block.contra[13][k].ct || block.contra[13][k].pe !== 0) {
+                                        block.favolr++;
                                     }else{
-                                        if (block.bdos[k].completa || block.bdos[k].pendiente !== 0) {
-                                            block.favolr++;
-                                        }
+                                        block.cobarar++;
                                     }
-
+                                    if(block.contra[13][k].fe == hoy){
+                                        block.deuda = true;
+                                    }
+                                }else{
+                                    if (block.contra[13][k].ct || block.contra[13][k].pe !== 0) {
+                                        block.favolr++;
+                                    }
                                 }
-                                block.totaldu= block.totaldu - block.pages;
-                                block.totaldu = block.totaldu.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                                block.totaldu = block.totaldu.split('').reverse().join('').replace(/^[\.]/,'');
-
-                                if(block.cobarar<block.favolr){
-                                    block.cobfavol ='<i class="fa fa-arrow-up" style="color:#28a745"></i> '+(block.favolr - block.cobarar);
-                                }else if(block.cobarar>block.favolr){
-                                    block.cobfavol ='<i class="fa fa-arrow-down" style="color:#dc3545"></i> '+block.cobarar;
-                                }else if(block.cobarar==block.favolr){
-									block.cobfavol ='<i class="fa fa-check" style="color:blue;"></i> 0';
-								}
-
-                                window.sessionStorage.setItem("monto_de_"+block.buno[1],block.totaldu);
-                                block.cuota_hoy = block.cuota_hoy.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                                block.cuota_hoy = block.cuota_hoy.split('').reverse().join('').replace(/^[\.]/,'');
-                                block.unids = block.unids + '<tr class="item" id="iten'+imd+'" data-ubic="'+imd+'"><td>'+imd+'</td><td>'+block.btres[7]+' '+block.btres[9]+'</td><td>'+block.btres[21]+'</td><td>$'+block.cuota_hoy+'</td><td></td><td></td><td id="musc_'+block.buno[1]+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.buno[1]+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>$'+block.buno[3]+'</td><td id="montos_'+block.buno[1]+'">$'+block.totaldu+'</td></tr>';
-
-                                imd++;
-                                iterae(imd,arraus);
-                            }
                         }
 
-                        for(var b=0; b<block.ordens.length; b++){
-                            var und = block.ordens[b].split("_");
-                            for(var bc=0; bc<block.ordens.length; bc++){
-                                block.bunox = JSON.parse(listaCoutas[bc][0]);
-                                if(und[1]==block.bunox[1]){
-                                    block.nuevso.push(listaCoutas[bc]);
-                                }
-                            }
-                            if(b==block.ordens.length-1){
-                                iterae(0,block.nuevso);
-                            }
-                        }
 
+                            if(block.cobarar<block.favolr){
+                                block.cobfavol ='<i class="fa fa-arrow-up" style="color:#28a745"></i> '+(block.favolr - block.cobarar);
+                            }else if(block.cobarar>block.favolr){
+                                block.cobfavol ='<i class="fa fa-arrow-down" style="color:#dc3545"></i> '+block.cobarar;
+                            }else if(block.cobarar==block.favolr){
+                                block.cobfavol ='<i class="fa fa-check" style="color:blue;"></i> 0';
+                            }
+
+                            block.evals = block.contra[3].replace(".","");
+                            block.evals2 = block.evals.replace(".","");
+                            block.totaldu = parseInt(block.evals2) * ( parseInt(block.contra[7]) / 100) + parseInt(block.evals2);
+                            block.totaldu = block.totaldu.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                            block.totaldu = block.totaldu.split('').reverse().join('').replace(/^[\.]/,'');
+
+                            block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td></td><td></td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.clienes[7]+'_'+block.ince+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
+                        }
+                        $("#listado_operacion_asesore").html(block.unids);
                     }
                 });
-
             }
         }
 
@@ -3062,10 +3173,9 @@
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
                 if (!valor.e) {
-                    toastr.success('Se guardo el orden', 'System notification!');
+                    toastr.success('Se guardo el orden', 'Éxito!');
                 }
             });
-
         }
 
         $('table.sortable').sortable({
@@ -3078,11 +3188,13 @@
                 organizar();
             }
         });
-
     }
 
-    function sumatoria(){
+    $("#registro_base").click(function(){
+        $("#modal_base").modal("show");
+	});
 
+    function sumatoria(){
         block.unew = $("#lista_asesores_general").val();
         block.resq = block.unew.split("_");
         block.asesoreId=block.resq[0];
@@ -3097,15 +3209,50 @@
         block.obj = {"r": "sumatoria_diario", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            if (!valor.e) {
-                valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');
-                $("#text_recolectado").text("$"+valor.d[1]);
+            if (!valor.e) {                
+                valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                
+                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
+                const button = document.getElementById('registro_base');
+				if(valor.d[2]!=="0" && valor.d[2]!==0){
+                    button.setAttribute('disabled', '');
+					valor.d[2] = valor.d[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+					valor.d[2] = valor.d[2].split('').reverse().join('').replace(/^[\.]/,'');
+				}else{
+                    button.removeAttribute('disabled');
+					valor.d[2] = 0;
+					valor.d[3] = "";
+				}
+                $("#base_anterior").text("Base anterior: Q"+valor.d[2]+ " Guardado: "+ valor.d[3]);
+                $("#text_recolectado").text("Q"+valor.d[1]);
+                $("#text_base").text("Q"+valor.d[2]);
                 window.sessionStorage.setItem("sumatoria_"+block.asesoreId,valor.d[1]);
                 window.sessionStorage.setItem("liquidacion_accion",block.asesoreId);
             }
         });
+    }
 
+    function historial_clientes(){
+        $("#HistorialClientes").css("display","initial");
+        $("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#liquidacion_page2").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
     }
 
 
@@ -3127,12 +3274,18 @@
         $("#liquidacion_page2").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#HistorialClientes").css("display","none");
         $("#consulta_cobros").css("display", "none");
         // $("#cliente_lista_admi").css("display", "none");
     }
 
     $("#lista_asesores_general").change(function () {
-        sumatoria();
+        block.esf = $("#lista_asesores_general")["0"].options.selectedIndex;
+        block.tesq = $("#lista_asesores_general")["0"][block.esf].innerHTML.split("ID: ");
+		window.sessionStorage.setItem("asesore_lis_limp",block.tesq[1]);
+		sumatoria();
+		$("#listado_operacion_asesore").html("");
         extraes();
     });
 
@@ -3214,7 +3367,7 @@
                         $("#nombre_id2m").val("");
                         $("#apellido_id1m").val("");
                         $("#apellido_id2m").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atención!');
 
                     } else {
 
@@ -3227,7 +3380,7 @@
 
                         if(block.antece=="Si"){
                             swal({
-								title: "System notification!",
+								title: "Atención!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -3289,13 +3442,13 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 					}
 				}
             });
 
         } else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atención!');
         }
 
     });
@@ -3335,7 +3488,7 @@
                         $("#nombre_id2md").val("");
                         $("#apellido_id1md").val("");
                         $("#apellido_id2md").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atención!');
 
                     } else {
 
@@ -3348,7 +3501,7 @@
 
                         if(block.antece=="Si"){
                             swal({
-								title: "System notification!",
+								title: "Atención!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -3408,13 +3561,13 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 					}
 				}
             });
 
         } else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atención!');
         }
 
     });
@@ -3796,7 +3949,7 @@
             });
 
         } else {
-            toastr.warning('Falta cedula del cliente', 'System notification!');
+            toastr.warning('Falta cedula del cliente', 'Atención!');
         }
     });
 
@@ -3848,31 +4001,31 @@
         }
 
         if (block.perfil == null) {
-            toastr.warning('Falta adjuntar foto frontal del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
         } else if (block.normal == null) {
-            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
         } else if (block.reverso == null) {
-            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
         } else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'System notification!');
+            toastr.warning('Falta telefono celular del cliente', 'Atención!');
         } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'System notification!');
+            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
         } else if (block.contras == "") {
-            toastr.warning('Falta contraseña del perfil', 'System notification!');
+            toastr.warning('Falta contraseña del perfil', 'Atención!');
         } else {
 
             if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -3912,7 +4065,7 @@
                     $("#foto_m2").attr("src", "../img/foto_cedula_front.png");
                     $("#foto_m3").attr("src", "../img/foto_cedula_back.png");
                     $("#cedula_div").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
 
@@ -3966,29 +4119,29 @@
         }
 
         if (block.perfil == null) {
-            toastr.warning('Falta adjuntar foto frontal del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
         } else if (block.normal == null) {
-            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
         } else if (block.reverso == null) {
-            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
         } else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'System notification!');
+            toastr.warning('Falta telefono celular del cliente', 'Atención!');
         } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'System notification!');
+            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
         }else{
 
             if (block.alias == "") {
@@ -4051,7 +4204,7 @@
                     $("#foto_m3m").attr("src", "../img/foto_cedula_back.png");
                     $("#cedula_divm").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
                     $("#popop_new_cliente").modal("hide");
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
         }
@@ -4105,31 +4258,31 @@
         }
 
         if (block.perfil == null) {
-            toastr.warning('Falta adjuntar foto frontal del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
         } else if (block.normal == null) {
-            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
         } else if (block.reverso == null) {
-            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
         } else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'System notification!');
+            toastr.warning('Falta telefono celular del cliente', 'Atención!');
         } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'System notification!');
+            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
         }else if ($("#selector_asesores_listad").val() == "") {
-            toastr.warning('Falta seleccion el asesor', 'System notification!');
+            toastr.warning('Falta seleccion el asesor', 'Atención!');
         }else {
 
             if (block.alias == "") {
@@ -4182,13 +4335,12 @@
                     $("#foto_m2md").attr("src", "../img/foto_cedula_back.png");
                     $("#foto_m3md").attr("src", "../img/foto_resivo.png");
                     $("#cedula_divmd").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
         }
 
     });
-
 
     $("#crear_contrato_form_dos").css("display", "none");
     $("#crear_contrato_form").css("display", "none");
@@ -4204,8 +4356,9 @@
     $("#liquidacion_page").css("display", "none");
     $("#liquidacion_page2").css("display", "none");
     $("#contratos_view").css("display", "block");
+    $("#cierre_view").css("display", "none");
+    $("#HistorialClientes").css("display","none");
     // $("#cliente_lista_admi").css("display", "none");
-
 
     function crear_contrato() {
         $("#lista_ase").css("display", "none");
@@ -4223,8 +4376,9 @@
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#HistorialClientes").css("display","none");
         // $("#cliente_lista_admi").css("display", "none");
-
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -4437,6 +4591,7 @@
                 $("#id_asesor_consulta").html(block.listax2);
                 $("#id_asesor_gastos_consulta").html(block.listax2);
                 $("#id_asesor_cobros").html(block.listax2);
+                $("#id_asesor_cierre").html(block.listax2);
             }
         });
     }
@@ -4457,6 +4612,8 @@
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#HistorialClientes").css("display","none");
         // $("#cliente_lista_admi").css("display", "none");
 
         cargarListas_asigandos();
@@ -4714,7 +4871,7 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-                toastr.success('Se ha configurado correctamente', 'System notification!');
+                toastr.success('Se ha configurado correctamente', 'Atención!');
             }
         });
 
@@ -4817,6 +4974,8 @@
         $("#liquidacion_page").css("display", "initial");
         $("#liquidacion_page2").css("display", "initial");
         $("#contratos_view").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#HistorialClientes").css("display","none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         // $("#cliente_lista_admi").css("display", "none");
@@ -4839,6 +4998,7 @@
         $("#create_clientes_listo").css("display", "none");
         $("#liquidacion_page").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
 		$("#flotante2").css("display","none");
@@ -4869,6 +5029,7 @@
         $("#create_clientes_listo").css("display", "none");
         $("#liquidacion_page").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
 		$("#flotante2").css("display","none");
@@ -4903,11 +5064,16 @@
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#contratos_view").css("display", "initial");
+        $("#HistorialClientes").css("display","none");
+        $("#cierre_view").css("display","none");
+        
         // $("#cliente_lista_admi").css("display", "none");
     }
 
     function crear_infor(){
+        $("#HistorialClientes").css("display","none");
         $("#contratos_view").css("display", "none");
+        $("#cierre_view").css("display", "none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -4990,7 +5156,7 @@
 
 
             }else{
-                toastr.warning('No posee contratos para generar ruta', 'System notification!');
+                toastr.warning('No posee contratos para generar ruta', 'Atención!');
             }
         });
     }

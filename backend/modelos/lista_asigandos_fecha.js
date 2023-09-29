@@ -16,7 +16,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1"){
+				} else if(decoded.t == "1" ||decoded.t == "4"){
 					
 					/*extrae o no la lista de asignaciones e supervisores y ayudantes de ese asesor*/
 					
@@ -40,23 +40,18 @@ eje = function(arrays,origen,redisClient) {
 									});
 								}
 							}
-
 							iterar(0,slai);
-
 						}else{
 							reject([false,"4"]);
 						}
 					});
-						
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

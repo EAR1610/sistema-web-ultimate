@@ -18,8 +18,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
-					
+				} else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "2" || decoded.t == "5" || decoded.t == "4"){
 					
 					function otravesmas(arraco,tempA1,tempA2,tempB1,tempB2,tempC1,tempC2){
 						
@@ -80,8 +79,6 @@ eje = function(arrays,origen,redisClient) {
 								});
 							}
 						});
-						
-						
 					}
 					
 					function volver_a_procesar(dieron,falta,dieronCuentos,nopagados,nopagadosCuentos,verifi,capital,estime,busqueda,cuanBus,busquedaVola,cuanVol,busquedaFic,cuanFic,tempA1,tempA2,tempB1,tempB2,tempC1,tempC2){
@@ -407,9 +404,7 @@ eje = function(arrays,origen,redisClient) {
 												dieron = parseInt(dieron) + parseInt(toTotalxv);
 												dieronCuentos++;
 											}
-											
 										}
-									
 										inds++;
 										consultar_de(inds,arrwa);
 									}else{
@@ -417,10 +412,8 @@ eje = function(arrays,origen,redisClient) {
 										consultar_de(inds,arrwa);
 									}
 								});
-								
 							}
 						}
-						
 						consultar_de(0,verifi);
 					}
 					
@@ -440,11 +433,8 @@ eje = function(arrays,origen,redisClient) {
 
 							function iterar(ind,arrs){
 								if(ind == arrs.length){
-									
 									volver_a_procesar(dieron,falta,dieronCuentos,nopagados,nopagadosCuentos,verifi,capital,estime,busqueda,cuanBus,busquedaVola,cuanVol,busquedaFic,cuanFic,tempA1,tempA2,tempB1,tempB2,tempC1,tempC2);
-									
 								}else{
-
 									var nues = arrs[ind].split("_");
 									var cedul = nues[1];
 									
@@ -509,10 +499,7 @@ eje = function(arrays,origen,redisClient) {
 															tempC1 = tempC1 + parseInt(infe[s].cp) - parseInt(infe[s].pe);
 															tempC2 = tempC2 + 1;
 														}
-													
 													}else{
-														
-														
 														/*var dif = getDaysDiff(infe[s].fe,ides);
 														if(dif>1){
 															if(infe[s].pe!==0){
@@ -532,7 +519,7 @@ eje = function(arrays,origen,redisClient) {
 														}*/
 														
 													}
-													
+
 													if(infe[s].pe!==0){
 														capital = capital + (parseInt(infe[s].cp) - infe[s].pe);
 													}else if(infe[s].pe==0 && !infe[s].ct){
@@ -571,28 +558,22 @@ eje = function(arrays,origen,redisClient) {
 												iterar(ind,arrs);
 											}
 										});
-										
 									});
 								}
 							}
-
 							iterar(0,repla);
 
 						}else{
 							reject([false,"4"]);
 						}
 					});
-						
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
-		
 	});
 };
 
