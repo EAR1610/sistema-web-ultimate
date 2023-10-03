@@ -25,7 +25,7 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.keys('cuotas_estaticas_'+decoded.d+'_*',function(err3,reply3){
-						if(reply3.length > 0){
+						if(reply3?.length > 0){
 							
 							
 							/*

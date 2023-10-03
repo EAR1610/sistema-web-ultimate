@@ -588,19 +588,24 @@
 
                         <div class="col-sm-12 col-md-12 col-xs-12" style="padding: 4%;margin-left: 8%;">
                             <blockquote style="background-color: #8abbe678;padding: 4%;margin-left: -9%;" class="row col-sm-12 col-md-12 col-xs-12">
-                                <div class="col-sm-6 col-md-4 col-xs-12">
+                                <div class="col-sm-6 col-md-3 col-xs-12">
                                     <form role="form">
                                         <div class="form-group"><label>Utilidad del porcentaje</label> <br> <label id="utilidad_prestada">0</label>%</div>
                                     </form>
                                 </div>
-                                <div class="col-sm-6 col-md-4 col-xs-12">
+                                <div class="col-sm-6 col-md-3 col-xs-12">
                                     <form role="form">
                                         <div class="form-group"><label>Utilidad en Quetzales</label> <br> Q<label id="utilidad_prestada_peso">0</label></div>
                                     </form>
                                 </div>
-                                <div class="col-sm-6 col-md-4 col-xs-12">
+                                <div class="col-sm-6 col-md-3 col-xs-12">
                                     <form role="form">
                                         <div class="form-group"><label>Valor de la cuota</label> <br> Q<label id="utilidad_cuota">0</label></div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6 col-md-3 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor de la última cuota</label> <br> Q<label id="utilidad_ultima_cuota">0</label></div>
                                     </form>
                                 </div>
                             </blockquote>
@@ -719,6 +724,16 @@
 
                             <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
+                                    <div class="form-group">
+                                        <label>Monto a pagar</label> 
+                                        <input id="cuotas_coun" type="number" min="0" step="0.01" placeholder="" class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+                            
+
+                            <!-- <div class="col-sm-6 col-md-2 col-xs-12">
+                                <form role="form">
                                     <div class="form-group"><label>Monto a pagar</label> <input
                                             id="cuotas_coun"
                                             type="number"
@@ -726,7 +741,7 @@
                                             placeholder=""
                                             class="form-control"></div>
                                 </form>
-                            </div>
+                            </div> -->
 
 
                             <div class="col-sm-6 col-md-2 col-xs-12" style="margin-top: 3%;" >
@@ -871,8 +886,6 @@
                                         <th>Prestamo</th>
                                         <th>Porcentaje</th>
                                         <th>Cuotas</th>
-                                        <th>Supervidor</th>
-                                        <th>Opciones</th>
                                     </tr>
                                     </thead>
                                     <tbody id="lista_enorme">
@@ -1246,10 +1259,14 @@
 				
 				block.lisas = [];
 				
-				for(var q=0; q< block.listao.length; q++){
+                for(var q=0; q< block.listao.length; q++){
 					block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p></div></div>';
 				}
-				
+
+                if(block.listao.length === 1){
+                    block.tarjetero = block.tarjetero + '<div></div>';
+                }
+
 				$("#listado_tarjeta").html(block.tarjetero);
 				$("#listado_tarjeta").css("display","block");
 				
@@ -1362,7 +1379,9 @@
                                 block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                                 block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
                                 $("#utilidad_prestada_peso").html(block.resul);
-                                $("#utilidad_cuota").html(block.reas);                                
+                                $("#utilidad_cuota").html(block.reas);
+                                block.ult_cuota = (block.evad + block.resul)
+                                $("#utilidad_ultima_cuota").html(block.reas);                                
                             }
                         }
 
@@ -1406,12 +1425,16 @@
         block.obj = {"r": "contratos_lista_all", "d": block.arrays};         
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 
-            var valor = JSON.parse(salida);            
+            var valor = JSON.parse(salida);
             if (!valor.e) { 
                 block.oso="";
                 block.dat0s =valor.d[1][0];
                 block.unox = JSON.parse(block.dat0s[0]);
-                block.dosx = JSON.parse(dat0s[1]);
+                if(block.dat0s[1].length>0) {
+                    block.dosx = JSON.parse(dat0s[1]);
+                } else {
+                    block.dosx = dat0s[1];
+                }
                 block.tresx = block.dat0s[2];
                 block.cuatrosx = JSON.parse(block.dat0s[3]);
                 
@@ -1442,7 +1465,7 @@
                 }
                 block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');                
-                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.superv  +'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
+                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td></tr>';
 
                 block.unico++;
 
@@ -2140,7 +2163,7 @@
                     var valor = JSON.parse(salida);
                     $("#text_cedula_cliente").prop("disabled",false);
                     if (!valor.e) {
-                        toastr.success('Creado con éxito teniendo en cuenta '+valor.d[1]+' contratos en esta empresa y '+valor.d[2]+' contratos en otra empresa ', 'System notification!');
+                        toastr.success('Creado con éxito el contrato', 'éxito!');
 
                         if(parseInt(block.descontar)>0){
                             window.sessionStorage.setItem("Money-vars-descontar-cuota",block.quedo_cuota);
@@ -2916,7 +2939,7 @@
 					}
                     
 					block.fes = block.cuotas[13][x].fe.split("-");
-					block.conve = parseInt(block.fes[1]) - 1;
+					block.conve = parseFloat(block.fes[1]) - 1;
 					block.yeart = block.fes[0];
 					block.moute= block.conve;
 					block.daysw = block.fes[2];
@@ -3214,7 +3237,6 @@
 	}
 
     function consultarContrato(){
-
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
@@ -3222,7 +3244,6 @@
         $("#crear_gastos").css("display","none");
         $("contratos_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
-
     }
 	
     function crear_contrato_link() {

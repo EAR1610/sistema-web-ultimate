@@ -21,11 +21,13 @@ eje = function(arrays,origen,redisClient) {
 				}else if(decoded.t=="1" || decoded.t=="2"){
 
 					if(arrays[2]!=="" && arrays[2]!=="0" && arrays[2]!==0){
-
 						/*
-						Busco contrato y traigo la informacion
+							Busco contrato y traigo la informacion
 						*/
 						redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {
+							console.log("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3]);
+							console.log("reply");
+							console.log(reply);
 							if(reply.length>0){
 								
 								var origena = reply[0],cedulax = origena.split("_") ;
@@ -35,8 +37,11 @@ eje = function(arrays,origen,redisClient) {
 								*/
 								
 								redisClient.get("cliente_"+cedulax[1], function (qersr, sreeply) {
+									console.log("cliente_"+cedulax[1]);
 									
 									redisClient.get(reply[0], function (ersr, reeply) {
+										console.log("reeply");
+										console.log(reeply);
 										var interno = JSON.parse(reeply);
 										
 										var lisa = interno[13],
@@ -45,7 +50,8 @@ eje = function(arrays,origen,redisClient) {
 											adelantos = 0,
 											complete = 0,
 											finiquite = 0,
-											tota =0,tolete = 0;
+											tota = 0,
+											tolete = 0;
 										
 										for(var w = 0; w <lisa.length; w++){
 
@@ -89,7 +95,7 @@ eje = function(arrays,origen,redisClient) {
 										}
 										
 										/*
-										descuento y sumo los valores que necesito calcular
+											descuento y sumo los valores que necesito calcular
 										*/
 										
 													
@@ -152,18 +158,24 @@ eje = function(arrays,origen,redisClient) {
 											});
 											
 										}else if(tolete<monto2){//si pago demas
+											console.log("Pago de más");
 											
 											interno[13] = lisa;
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
+												console.log("origena,JSON.stringify(interno)");
+												console.log(origena,JSON.stringify(interno));
 											
 												redisClient.rename(origena,"old_"+origena,function(errx,replyx) {
 													
 													var moment = require("moment");
 													var dia = moment().format('YYYY-MM-DD');
 													var bou = [interno,arrays[2]];
+													console.log('cancelado_'+arrays[1]+"_"+dia,JSON.stringify(bou));
 													redisClient.set('cancelado_'+arrays[1]+"_"+dia,JSON.stringify(bou),function(err3,reply3){
-														
+														console.log("registro_contrato_"+arrays[1])
 														redisClient.get("registro_contrato_"+arrays[1], function (errx, repslyx) {
+															console.log("repslyx");
+															console.log(repslyx);
 															var infes = JSON.parse(repslyx), nuva =[];
 															for(var j = 0; j < infes.length; j++){
 																if(infes[j].indexOf(origena)==-1){
@@ -184,42 +196,42 @@ eje = function(arrays,origen,redisClient) {
 											});
 										
 										}else if(finiquite >= lisa.length){
-											
+											console.log("finiquite >= lisa.length");
+											console.log(finiquite >= lisa.length);
 											var moment = require("moment"),fechaq = moment().format('YYYY-MM-DD');
 											lisa.push({"cp":"0","ct":false,"fe":fechaq,"pe":monto2});
-											
+											console.log("lisa")
+											console.log(lisa)
 											interno[13] = lisa;
+											console.log("interno[13]");
+											console.log(interno[13]);
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
+												console.log("origena,JSON.stringify(interno");
+												console.log(origena,JSON.stringify(interno));
+
 												resolve([true,interno,sreeply]);
 											});
-											
 										}else{//descuento normal
-										
+											console.log("descuento normal");
 											interno[13] = lisa;
+											console.log("interno[13]");
+											console.log(interno[13]);
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
 												resolve([true,interno,sreeply]);
 											});
-											
 										}
-										
 									});
-								
 								});
-								
 							}
 						});
-						
 					}
-
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

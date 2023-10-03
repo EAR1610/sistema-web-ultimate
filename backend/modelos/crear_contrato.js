@@ -29,7 +29,7 @@ eje = function(arrays,origen,redisClient) {
 						var ids = randomIntFromInterval(1000000,9999999);
 						
 						/*
-						agrego otros valores al array principal y verififico la configuracion que tengo a crear el contrato
+							agrego otros valores al array principal y verifico la configuracion que tengo a crear el contrato
 						*/
 						
 						arrays[0] = decoded.d;
@@ -63,8 +63,7 @@ eje = function(arrays,origen,redisClient) {
 										}
 										
 										/*
-										verifiquo si tiene otros contratos en otras empresas
-										
+										verifiquo si tiene otros contratos en otras empresas										
 										*/
 
 										if(extric=="3" && miEmpresa>0){
@@ -102,6 +101,13 @@ eje = function(arrays,origen,redisClient) {
 													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4],
 													acum=1;
+													console.log(cuotaD)
+													console.log(cuotaD2)
+													console.log(indi)
+													console.log(residuo)
+													console.log(prox)
+													console.log(tiempo)
+													console.log(acum)
 												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0});
 												for(var k = 1; k < tiempo; k++){
 
@@ -109,12 +115,16 @@ eje = function(arrays,origen,redisClient) {
 														var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
 														prox = prox2;
+														console.log("prox if");
+														console.log(prox);
 													} else if(k==residuo){
 														prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 														acum++;
 														var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
 														prox = prox2;
+														console.log("prox else if");
+														console.log(prox);
 													} else if(k>residuo){
 														if(acum==7){
 															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
@@ -124,6 +134,8 @@ eje = function(arrays,origen,redisClient) {
 														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
 														prox = prox2;
 														acum++;
+														console.log("prox");
+														console.log(prox);
 													}
 													 if(k==1){
 														 tiempo++;
