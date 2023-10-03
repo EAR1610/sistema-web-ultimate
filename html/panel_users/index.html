@@ -37,18 +37,9 @@
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 
     <script>
-    //     import { BluetoothPrinter } from "@nimblehq/bluetooth-printer";
-    //     async function printReceipt(file) {
-    //   // Obtenga el recibo PDF
-    //         const receipt = await fs.readFile(file);
-
-    //   // Imprima el recibo
-    //         await printer.print(receipt);
-    //     }
+    
     function generarPDFPago() {
         
-        //const printer = new BluetoothPrinter();
-
         
 
         var doc = new window.jspdf.jsPDF({
@@ -58,6 +49,12 @@
         });
 
         let fecha = new Date().toLocaleString();
+
+        if(ticketClienteImpresion == undefined){ 
+            toastr.warning("No hay datos para generar un ticket", "Atención");
+            return;
+        }
+
         let nombreCliente = ticketClienteImpresion.extraer[8] + ' ' +ticketClienteImpresion.extraer[9];
         let apellidoCliente = ticketClienteImpresion.extraer[10] + ' ' +ticketClienteImpresion.extraer[11];
         let NoCuota = ticketClienteImpresion.contador_cuotas;
@@ -119,31 +116,6 @@
         imprimir_texto(doc,'Q' + saldoAnterior.toString() ,45 ,60 ,12 ,'black' ,'left');
 
         
-        // doc.setFontSize(18);
-        // doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
-        // doc.setFont('Helvetica', 'bold')
-        // imprimir_texto(doc, 'TICKET DE PAGO', doc.internal.pageSize.getWidth() / 2, 10, 12, 'black', 'center');
-        // doc.setLineWidth(0.5);
-        // doc.setDrawColor(0, 0, 0);
-        // doc.setLineDash([3, 3], 0);
-        // doc.line(10, 12, 70, 12);
-
-        
-
-        // imprimir_texto(doc, 'Fecha: ' + fecha, 10, 20, 12, 'black', 'left');
-        // imprimir_texto(doc, 'Asesor: ' + nombreAsesor, 10, 25, 12, 'black', 'left');
-        // imprimir_texto(doc, apellidoAsesor, 10, 30, 12, 'black', 'left');
-        // imprimir_texto(doc, 'Cliente: '+ nombreCliente, 10, 35, 12, 'black', 'left');
-        // imprimir_texto(doc, apellidoCliente, 10, 40, 12, 'black', 'left');
-        // imprimir_texto(doc, 'No cuota: ' + NoCuota, 10, 45, 12, 'black', 'left');
-        // imprimir_texto(doc, 'Monto a pagar: Q' + montoAPagar, 10, 50, 12, 'black', 'left');
-        // imprimir_texto(doc, 'Saldo pendiente: Q' + saldoPendiente, 10, 55, 12, 'black', 'left');
-        // imprimir_texto(doc, 'Saldo anterior: Q' + saldoAnterior, 10, 60, 12, 'black', 'left');
-        
-        
-        // const file = 'ticket_'+fecha.toString()+'.pdf'
-        // doc.save(file);
-        // printReceipt(file);
 
         doc.autoPrint(); 
         doc.output('dataurlnewwindow');
@@ -291,7 +263,7 @@
                     <div class="col-sm-6 col-md-6 col-xs-6" id="cedula_divm">
                         <div class="form-group"><label>DPI</label> <input id="numero_idm" type="text"
                             placeholder="Inserte su numero de documento"
-                            class="form-control">
+                            class="form-control" onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)">
                         </div>
                     </div>
 
@@ -372,25 +344,28 @@
                             <option value="">Seleccione</option>
                         </select>
                     </div>
-
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
-                            <div class="form-group"><label>Telefono fijo</label> <input id="telefono_fijom"
-                                type="text"
-                                maxlength="8"
-                                placeholder=""
-                                class="form-control">
+                            <div class="form-group">
+                                <label>Teléfono fijo</label> 
+                                <input id="telefono_fijom"
+                                    type="text"
+                                    maxlength="8"
+                                    placeholder=""
+                                    class="form-control"
+                                    onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)">
                             </div>
                         </form>
                     </div>
-
+                  
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
-                            <div class="form-group"><label>Telefono celular</label> <input id="telefono_celm"
+                            <div class="form-group"><label>Teléfono celular</label> <input id="telefono_celm"
                                 type="text"
                                 placeholder=""
                                 maxlength="8"
-                                class="form-control">
+                                class="form-control"
+                                onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)">
                             </div>
                         </form>
                     </div>
@@ -525,7 +500,7 @@
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
                                 <label>DPI del cliente</label>
-                                <div class="input-group"><input placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" class="btn btn-primary"><i class="fa fa-search"></i>
+                                <div class="input-group"><input placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                             </div>
 
@@ -738,7 +713,7 @@
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
                                 <label>DPI del cliente</label>
-                                <div class="input-group"><input placeholder="Inserte cedula" id="text_cedula_cliente2" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente2" class="btn btn-primary"><i class="fa fa-search"></i>
+                                <div class="input-group"><input placeholder="Inserte cedula" id="text_cedula_cliente2" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente2" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                             </div>
 
@@ -803,7 +778,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-12" id="lista_ubicacniones_div" style="display:initial">
+                <div class="col-lg-12" id="lista_ubicacniones_div" style="display:none">
                     <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-title">
@@ -896,7 +871,6 @@
                                         <th>Prestamo</th>
                                         <th>Porcentaje</th>
                                         <th>Cuotas</th>
-                                        <th>Ayudante</th>
                                         <th>Supervidor</th>
                                         <th>Opciones</th>
                                     </tr>
@@ -1087,71 +1061,6 @@
 	listado_contratos(block.unico);
 	$("#lista_enorme").append("");
 
-    function listado_contratos(mun){
-        block.unico =  parseInt(mun);
-
-        if (window.localStorage.getItem("Money-vars-token") !== null) {
-            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-        } else {
-            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-        }
-
-        block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];
-        block.obj = {"r": "contratos_lista_all", "d": block.arrays};        
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-        if (!valor.e) {            
-            block.oso="";
-            block.dat0s =valor.d[1][0];
-            block.unox = JSON.parse(block.dat0s[0]);
-            block.dosx = block.dat0s[1];
-            block.tresx = block.dat0s[2];
-            block.cuatrosx = JSON.parse(block.dat0s[3]);
-
-            if(block.dosx.length>0){
-                block.exta2 = block.dosx[3];
-                block.exta = block.exta2.split("_");
-                block.superv = block.exta[3] + " " +block.exta[4];
-            }else{
-                block.superv = "No asignado";
-            }
-            if(block.tresx.length>0) {
-                block.exta2a = JSON.parse(block.tresx);
-                block.extaa = block.exta2a[3].split("_");
-                block.ayudan = block.extaa[3] + " " +block.extaa[4];
-            }else{
-                block.ayudan = "No asignado";
-            }
-
-            block.esf = $("#lista_asesores_general3")["0"].options.selectedIndex;
-            block.tesq = $("#lista_asesores_general3")["0"][block.esf].label.split("ID:");            
-            block.calsulo = block.unox[13];
-            block.sumas = 0;
-            for(var u= 0; u<block.calsulo.length; u++){
-                if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
-                    block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
-                }else if(block.calsulo[u].pe!==0){
-                    block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
-                }
-            }
-
-            block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-            block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');            
-            block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
-
-            block.unico++;
-            listado_contratos(block.unico);
-            $("#lista_enorme").append(block.oso);
-
-        }else if(valor.d[2]!==0 && valor.d[2]>block.unico){
-
-            block.unico++;
-            listado_contratos(block.unico);
-        }
-    });
-}
-
-
     // $("#lista_asesores_general3").change(function(){
     //     if($("#lista_asesores_general3").val()!==""){
     //         block.ase = $("#lista_asesores_general3").val();
@@ -1193,7 +1102,6 @@
 
     asesores_lista_ajustada();
 
-    //__________________________________
 
     function registrar_gastos(){
         $("#pendiente_form").css("display","none");
@@ -1389,7 +1297,7 @@
 				
                 for(var q=0; q<block.listao.length; q++){
                     block.markesa.push([block.listao[q].u,parseFloat(block.listao[q].a),parseFloat(block.listao[q].o)]);
-                    block.infoWindowContents.push(['<div class="info_content">Nombre: '+block.listao[q].u+' <br> Cedula: '+block.listao[q].c+'</div>']);
+                    block.infoWindowContents.push(['<div class="info_content">Nombre: '+block.listao[q].u+' <br> DPI: '+block.listao[q].c+'</div>']);
 					block.listaClie = block.listaClie + '<option value="'+block.listao[q].c+'_'+block.listao[q].u+'">'+block.listao[q].u+' C.C: '+block.listao[q].c+'</option>';
                 }
 				
@@ -1469,6 +1377,7 @@
     });
 
     function consultar_Contratos(){
+        $("#lista_enorme").empty();
         $("#pendiente_form").css("display","none");
         $("#crear_gastos").css("display","none");
         $("#cobrar_couta").css("display","none");
@@ -1498,13 +1407,14 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 
             var valor = JSON.parse(salida);            
-            if (!valor.e) {            
+            if (!valor.e) { 
                 block.oso="";
                 block.dat0s =valor.d[1][0];
                 block.unox = JSON.parse(block.dat0s[0]);
-                block.dosx = block.dat0s[1];
+                block.dosx = JSON.parse(dat0s[1]);
                 block.tresx = block.dat0s[2];
                 block.cuatrosx = JSON.parse(block.dat0s[3]);
+                
                 if (block.dosx.length>0) {
                     block.exta2 = block.dosx[3];
                     block.exta = block.exta2.split("_");
@@ -1518,7 +1428,9 @@
                     block.ayudan = block.extaa[3] + " " +block.extaa[4];
                 } else {
                     block.ayudan = "No asignado";
-                }                                
+                }
+
+
                 block.calsulo = block.unox[13];
                 block.sumas = 0;
                 for(var u= 0; u<block.calsulo.length; u++){
@@ -1530,8 +1442,10 @@
                 }
                 block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');                
-                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
+                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.superv  +'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
+
                 block.unico++;
+
                 listado_contratos(block.unico);
                 $("#lista_enorme").append(block.oso);
             } else if(valor.d[2]!==0 && valor.d[2]>block.unico){
@@ -2068,7 +1982,7 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {   
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
-				toastr.success('Procesado correctamente', 'System notification!');
+				toastr.success('Procesado correctamente', 'Éxito!');
 				block.cuotas = valor.d[1];
 				block.cliente = valor.d[2];
 				
@@ -2172,7 +2086,7 @@
 			block.loire = $("#cuotas_coun").val();
 			block.nega = parseInt(block.loire);
 			
-			if(block.loire.indexOf(".")==-1 && block.loire.indexOf(",")==-1 && block.loire.indexOf("+")==-1 && block.loire.indexOf("e")==-1 && block.loire.indexOf("E")==-1 && block.nega>0){
+			if(block.loire.indexOf(".")==-1 && block.loire.indexOf(",")==-1 && block.loire.indexOf("+")==-1 && block.loire.indexOf("e")==-1 && block.loire.indexOf("E")==-1 && block.nega>0) {
 			
 				block.montoCuota = $("#cuotas_coun").val();
 				block.montoCuota = block.montoCuota.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
@@ -2192,12 +2106,12 @@
 					procesarDescuento($("#cuotas_coun").val(),JSON.parse(window.localStorage.getItem("Money-vars-pagar")));
 				});
 				
-			}else{
-				toastr.warning('No esta permitido ni puntos ni comas(.,) ó es menor a cero (0)', 'System notification!');
+			} else {
+				toastr.warning('No esta permitido ni puntos ni comas(.,) ó es menor a cero (0)', 'Atención!');
 			}
 			
-        }else{
-            toastr.warning('Inserte valor de cuota y/o valor de abono para procesar', 'System notification!');
+        } else {
+            toastr.warning('Inserte valor de cuota y/o valor de abono para procesar', 'Atención!');
         }
     });
 

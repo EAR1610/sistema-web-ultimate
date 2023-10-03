@@ -5450,7 +5450,7 @@ a.close-canvas-menu:hover {
   margin-bottom: 10px;
 }
 .m-b {
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 .m-b-md {
   margin-bottom: 20px;

@@ -21,10 +21,10 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {				
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="3"){
+				}else if(decoded.t == "1" || decoded.t == "2" || decoded.t == "3" || decoded.t == "4"){
 					
 					/*
-					Extraigo y muestro la configuracion_
+						Extraigo y muestro la configuracion_
 					*/
 					
 					redisClient.get("configuracion_" + decoded.d, function (err, reply) {

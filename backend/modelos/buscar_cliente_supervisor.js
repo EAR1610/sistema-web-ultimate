@@ -9,56 +9,72 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-			recibo token
+			recibo token y cedula
 		*/
 		
-		if (arrays.length==1){
+		if (arrays.length==2){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0"){
+				} else if( decoded.t=="4" ){
 					
-					/*
-						extraigo lista de supervidors asignados a la empresa
-					*/
-					redisClient.keys('listado_'+decoded.d+'_supervisor_*',function(err3,reply3){
-						if(reply3.length > 0){
+					/*verifico que no este betado el cliente*/
+					
+					redisClient.get("betado_"+arrays[1],function(erkr,rkeply) {
+						if(rkeply==null){
 							
-							/*
-								guardo los datos en array mediante kanban
-							*/
+							/*emito la informacion del cliente*/
 							
-							var litado = [];
-							function iterar(ind,arrs){
-								if(ind == arrs.length){
-									resolve([true,litado]);
-								}else{
-									redisClient.get(arrs[ind],function(err,reply) {
+							redisClient.keys('cliente_'+arrays[1],function(err3,reply3){
+								if(reply3.length > 0){
+									var litado  = [];
+									redisClient.get(reply3[0],function(err,reply) {
 										if(reply!==null){
-											litado.push(reply);
-											ind++;
-											iterar(ind,arrs);
-										}else{
-											ind++;
-											iterar(ind,arrs);
+											litado.push(reply);                                          
+											resolve([true,litado]);
 										}
 									});
+								}else{
+									reject([false,"4"]);
 								}
-							}
-							iterar(0,reply3);
+							});
+							
 						}else{
-							reject([false,"4"]);
+							var fesd = JSON.parse(rkeply);
+							if (decoded.d==fesd[3]) {
+								reject([false,"6",rkeply]);
+							} else {
+								
+								/*emito la informacion del cliente*/
+								
+								redisClient.keys('cliente_*_'+arrays[1],function(err3,reply3){
+									if(reply3.length > 0){
+										var litado  = [];
+										redisClient.get(reply3[0],function(err,reply) {
+											if(reply!==null){
+												litado.push(reply);
+												reject([false,"8",rkeply,litado]);
+											}
+										});
+									}else{
+										reject([false,"4"]);
+									}
+								});
+							}
 						}
 					});
+					
 				}else{
 					reject([false,"2"]);
 				}
 			});
+			
 		}else{
 			reject([false,"3"]);
 		}
+		
 	});
 };
 

@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 			
 		/*
-		Recibo un array con los valores token,y idasesor
+			Recibo un array con los valores token,y idasesor
 		*/
 		if (arrays.length==2){
 		
@@ -17,14 +17,14 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t=="5"){
+				}else if(decoded.t == "1" || decoded.t == "2" || decoded.t == "0" || decoded.t=="5" || decoded.t == "4") {
 
 					var moment = require("moment");
 					var ides = moment().format('YYYY-MM-DD');
 					arrays[0] = ides;
 					
 					/*
-					verifico si existe sino envio codigo "4"
+						verifico si existe sino envio codigo "4"
 					*/
 					
 					redisClient.get("gasto_"+arrays[1]+"_"+ides,function(err,reply) {

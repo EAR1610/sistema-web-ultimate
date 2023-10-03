@@ -31,12 +31,14 @@
         function generarPDFCobros(){
             var doc = new window.jspdf.jsPDF();
             var img = new Image();
-
             var fecha = new Date();
             var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
             var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
-
             var tabla = document.getElementById('listado_cobros_por_fechas');
+            var selectElement = document.getElementById('id_asesor_cobros');
+            var datosAsesor = selectElement.options[selectElement.selectedIndex].text;
+            var nombreAsesorReportee = datosAsesor.match(/^(.*?)\sID:/)[1];
+
             var datos = [];
             var total = 0; 
             for (var i = 0; i < tabla.rows.length; i++) {
@@ -54,7 +56,7 @@
                 }
             }
             
-            doc.setFillColor(0, 0, 255);
+            doc.setFillColor(200, 200, 200);
             doc.rect(0, 35, 210, 10, 'F');
             doc.setFontSize(18);
             doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
@@ -64,9 +66,11 @@
             doc.setFontSize(10);
 
             doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+            doc.text("Nombre de asesor: " + nombreAsesorReportee, 80,30);
 
 
-            doc.setTextColor(200, 200, 200); 
+            
+            doc.setTextColor(0,0,0);
             doc.text('DPI', 10, 40);
             doc.text('Nombre Cliente', 40, 40);
             doc.text('Dirección', 110, 40);
@@ -146,14 +150,16 @@
         function generarPDFGastos() {
             
             var doc = new window.jspdf.jsPDF();
-
             var fecha = new Date();
             var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
             var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
-
             var tabla = document.getElementById('lista_gastos_exe');
+            var selectElement = document.getElementById('id_asesor_gastos_consulta');
+            var datosAsesor = selectElement.options[selectElement.selectedIndex].text;
+            var nombreAsesorReportee = datosAsesor.match(/^(.*?)\sID:/)[1];
             var datos = [];
             var total = 0; 
+
             for (var i = 0; i < tabla.rows.length; i++) {
                 var montoTexto = tabla.rows[i].cells[1].innerText;
                 var montoNumero = parseFloat(montoTexto.replace("Q", ""));
@@ -166,7 +172,7 @@
                 } 
             }
 
-            doc.setFillColor(0, 0, 255);
+            doc.setFillColor(200, 200, 200);
             doc.rect(0, 35, 210, 10, 'F');
             doc.setFontSize(18);
             doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
@@ -175,10 +181,10 @@
             doc.text("Reporte de gastos", 105, 20, null, null, "center");
             doc.setFontSize(12);
             
-            
             doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+            doc.text("Nombre de asesor: "+ nombreAsesorReportee, 80, 30);
            
-            doc.setTextColor(255, 255, 255); 
+            doc.setTextColor(0,0,0);
             doc.text('Motivo de gasto', 10, 40);
             doc.text('Monto', 160, 40);
 
@@ -242,7 +248,7 @@
     </script>
 
     <script>
-        debugger;
+        
         function generarPDFCierre(){
 
             var doc = new window.jspdf.jsPDF();
@@ -258,7 +264,8 @@
             var totalAsesor = document.getElementById('text_total_asesor').value;
             var totalDiferencia = document.getElementById('text_diferencia_cierre').textContent;
             var selectElement = document.getElementById('id_asesor_cierre');
-            var nombreAsesorReportee = selectElement.options[selectElement.selectedIndex].text;
+            var datosAsesor = selectElement.options[selectElement.selectedIndex].text;
+            var nombreAsesorReportee = datosAsesor.match(/^(.*?)\sID:/)[1];
 
             //Gastos
             var tabla = document.getElementById('lista_gastos_exeAsesor');
@@ -281,7 +288,6 @@
 
             doc.text("Fecha: "+ fechaFormateada + "  Hora: " + hora,10,30);
             doc.text("Nombre de asesor: " + nombreAsesorReportee,10,50);
-
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 55, 210,10, "F");
             doc.text("Basse diaria: " + baseDiaria,10,60);
@@ -292,9 +298,6 @@
             doc.text("Total asesor: " + totalAsesor,70,70);
             doc.text("Diferencia: " + totalDiferencia, 140, 70);
 
-
-            doc.text("Consulta de cobros de: " + nombreAsesorReporte, 10, 90);
-
             doc.setFillColor(200,200,200);
             doc.rect(0,95,210,10,"F");
             doc.text("DPI", 10,100);
@@ -304,7 +307,6 @@
             doc.text("Hora",190,100);
 
             //Cobros
-
             for (var i = 0; i < tabla1.rows.length; i++) {
                 var dpi = tabla1.rows[i].cells[0].innerText;
                 var nombre = tabla1.rows[i].cells[1].innerText;
@@ -426,7 +428,7 @@
 
             
             
-                doc.save('Reporte Cierre.pdf');
+                doc.save('Reporte Cierre de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
 
 
         }
@@ -444,11 +446,91 @@
                 generarPDFCierre();
             });
         });
-
-
-
     </script>
 
+    <script>
+
+        function reporteUtilidades(){
+            
+            // var doc = new window.jspdf.jsPDF();
+
+            // var fecha = new Date();
+            // var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            // var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+
+            // var texto = "Este es un texto estático";
+
+            // doc.text(texto, 10, 10);
+
+            // var imageUrl = 'https://previews.123rf.com/images/bahtiarmaulana/bahtiarmaulana2204/bahtiarmaulana220400040/185159316-rebanada-de-dibujos-animados-de-pizza-ilustraci%C3%B3n-de-dibujos-animados-vectoriales-im%C3%A1genes.jpg';
+
+            // fetch(imageUrl)
+            //     .then(response => response.blob())
+            //     .then(blob => {
+            //     const imageUrl = URL.createObjectURL(blob);
+            //     const img = new Image();
+            //     img.src = imageUrl;
+
+            //     img.onload = () => {
+            //         doc.addImage(img, 'JPEG', 15, 40, 180, 160);
+            //         doc.save('Reporte Utilidades de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf');
+            //         URL.revokeObjectURL(imageUrl);
+            //     };
+            //     });
+
+
+
+            
+            }
+
+
+      
+
+
+
+        // function reporteUtilidades(){
+        //     var doc = new window.jspdf.jsPDF();
+
+        //     var fecha = new Date();
+        //     var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+        //     var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+
+        //     var texto = "Este es un texto estático";
+
+        //     doc.text(texto, 10, 10);
+
+        //    // var imgData = 'data:image/jpeg;base64,...';
+
+        //     fetch('https://previews.123rf.com/images/bahtiarmaulana/bahtiarmaulana2204/bahtiarmaulana220400040/185159316-rebanada-de-dibujos-animados-de-pizza-ilustraci%C3%B3n-de-dibujos-animados-vectoriales-im%C3%A1genes.jpg') 
+        //     .then(response => response.blob())
+        //     .then(blob => {
+        //         var reader = new FileReader();
+        //         reader.onloadend = function() {
+        //             var base64data = reader.result;                
+        //             doc.addImage(base64data, 'JPEG', 15, 40, 180, 160);
+        //         }
+        //         reader.readAsDataURL(blob);
+        //     });
+
+
+
+        //     doc.addImage(imgData, 'JPEG', 15, 40, 180, 160);
+
+        //     doc.save('Reporte Utilidades de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
+        // }
+
+        function imprimir_texto(doc,texto, x, y, size, color, align){
+            doc.setFontSize(size);
+            doc.setTextColor(color);
+            doc.text(texto, x, y,{align: align})
+        }
+
+        document.addEventListener("DOMContentLoaded", function(){
+            document.getElementById("boton_Reporte_Utilidades").addEventListener('click',function(){
+                reporteUtilidades();
+            });
+        });
+    </script>
 
 
     
@@ -847,7 +929,7 @@
 
                     <div class="form-group col-sm-6 col-md-6 col-xs-12" id="cedula_divm">
                         <label>DPI</label>
-                        <div class="input-group"><input placeholder="Inserte su documento personal de identificación" id="numero_idm" type="text" maxlength="13" class="form-control">
+                        <div class="input-group"><input placeholder="Inserte su documento personal de identificación" id="numero_idm" type="text" maxlength="13" class="form-control" >
                         <span class="input-group-append"> <button type="button" id="consultar_registram" class="btn btn-primary"><i class="fa fa-search"></i></button> </span></div>
                     </div>
 
@@ -1056,6 +1138,7 @@
                         <li><a href="javascript:informe_completo_cobros();">Consultar cobros</a></li>
                         <li><a href="javascript:informe_completo_gastos();">Consultar gastos</a></li>
                         <li><a href="javascript:informe_completo_cierre();">Cierre</a></li>
+                        <li><a href="javascript:informe_completo_utilidades();">Utilidades</a></li>
                     </ul>
                     <!-- <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo_finanza();">Finanza</a></li>
@@ -1934,7 +2017,7 @@
 
                                     <div class="form-group col-xs-6">
                                         <label>DPI del cliente</label>
-                                        <div class="input-group"><input disabled placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" disabled class="btn btn-primary"><i class="fa fa-search"></i>
+                                        <div class="input-group"><input disabled placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" disabled class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                                     </div>
 
@@ -2420,6 +2503,59 @@
                     </div>
                 </div>
 
+                <div class="col-lg-12" id="utilidades_view">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Consulta de utilidades</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha Inicial</label> <input id="fecha__inicial_utilidades"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha final</label> <input id="fecha_final_utilidades"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
+                                <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
+                                        id="busqueda_utilidades"
+                                        type="button">Buscar
+                                </button>
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte_Utilidades"><i class="fa fa-file-pdf"></i></button>
+                                </form>
+
+                            </div>
+                            <div class="table-responsive" style="margin-top: 50px;">
+                                <table class="table table-striped" >
+                                    <!-- <thead>
+                                    <tr align="center">
+                                        <th>Motivo de gasto</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="lista_gastos_exe">
+                                    </tbody> -->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 
                 <div class="col-lg-12" id="migrar_cion_div">
@@ -2545,7 +2681,7 @@
 
                             <div class="form-group col-sm-6 col-md-6 col-xs-6" id="cedula_divmd">
                                 <label>DPI</label>
-                                <div class="input-group"><input placeholder="Inserte su numero de documento de identificación" id="numero_idmd" type="text" maxlength="13" class="form-control"> <span class="input-group-append">
+                                <div class="input-group"><input placeholder="Inserte su numero de documento de identificación" id="numero_idmd" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append">
                                     <button type="button" id="consultar_registramd" class="btn btn-primary"><i class="fa fa-search"></i></button> </span></div>
                             </div>
 
@@ -2828,6 +2964,7 @@
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 
 	}
@@ -5839,6 +5976,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 
 
@@ -6311,6 +6449,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
     $("#consulta_cobros").css("display", "none");
     $("#consulta_gastos").css("display", "none");
     $("#cierre_view").css("display", "none");
+    $("#utilidades_view").css("display", "none");
 
 
 
@@ -6340,6 +6479,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#suplanter").css("display", "none");
+        $("#utilidades_view").css("display", "none");
     }
 
     function informe_completo_finanza() {
@@ -6367,6 +6507,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
     }
@@ -6396,6 +6537,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6470,6 +6612,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6528,6 +6671,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6586,6 +6730,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -6607,15 +6752,20 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
                     if (block.item[4] == "2") {
                         block.cedula = block.item[5] + block.item[6];
+                       
                     } else {
                         block.cedula = block.item[6];
+                       
                     }
 					window.sessionStorage.setItem("Money-vars-temp-asesor-"+block.item[22],JSON.stringify(block.item));
 					block.tes = block.tes + '<option value="'+block.item[22]+'">' + block.item[7] + ' ' + block.item[9] + '</option>';
                     block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:suplantare_asesor(' + String.fromCharCode(39) + block.item[22] + String.fromCharCode(39) + ');"><i class="fa fa-edit fa-2x" style="color:#01afef"></i></a></td></tr>';
+                    
+                
                 }
                 $("#select_asesor").html(block.tes);
                 $("#listado_asesores").html(block.lista);
+                
             }
         });
     }
@@ -6774,7 +6924,6 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         console.log(diferencia);
         if (totalAsesor!="" && totalSistema!=""){
             $("#text_diferencia_cierre").text("Q"+diferencia);
-            //registrarCierre();
         }else{
             console.log("INGRESE EL TOTAL ASESOR")
         }
@@ -6802,7 +6951,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
             });
             
             block.arrays = [block.tokens[1],block.ase];
-            block.obj = {"r": "sumatoria_diario", "d": block.arrays}; //Obtiene el token y el ID del asesor
+            block.obj = {"r": "sumatoria_diario", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);            
                 if (!valor.e) {                
@@ -6835,7 +6984,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                 block.pasero = JSON.parse(valor.d[1]);
                 
                 for(var i= 0; i< block.pasero.length; i++){
-                    gastos += parseInt(block.pasero[i][2]);
+                    gastos += parseFloat(block.pasero[i][2]);
                 }
                 $("#text_gastosAsesor").text("Q"+gastos);
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
@@ -6847,45 +6996,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         return gastos;
     }  
 
-    // function cargarListas_asigandos_consultas(){
 
-    //     if (window.localStorage.getItem("Money-vars-token") !== null) {
-    //         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-    //     } else {
-    //         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-    //     }
-
-    //     block.arrays = [block.tokens[1]];
-    //     block.obj = {"r": "listar_asesores", "d": block.arrays};
-    //     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-    //     var valor = JSON.parse(salida);
-    //     if (!valor.e) {
-    //         block.todo = valor.d[1];
-    //         var selectAsesorConsulta = document.getElementById("id_asesor_consulta");
-    //         selectAsesorConsulta.innerHTML = ""; // Limpia el contenido actual del select
-
-    //         // Itera sobre los datos de los asesores y crea las opciones para el select
-    //         for (var t = 0; t < block.todo.length; t++) {
-    //             block.item = JSON.parse(block.todo[t]);
-    //             if (block.item[4] == "2") {
-    //                 block.cedula = block.item[5] + block.item[6];
-    //             } else {
-    //                 block.cedula = block.item[6];
-    //             }
-    //             block.nom = block.item[7] + ' ' + block.item[9] + ' - ' + block.cedula;
-    //             var option = document.createElement("option");
-    //             option.value = block.item[22] + '_asesor_' + block.item[23] + '_' + block.item[7] + '_' + block.item[9];
-    //             option.textContent = block.nom;
-    //         }
-    //     }
-    // });
-
-
-
-
-    // }
-
-  
     function asignar_supervisor_asesor() {
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
@@ -6911,6 +7022,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -6935,17 +7047,17 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     $("#tipo_cargo_select_ASIG option[value='']").attr("selected", true);
                     $("#tipo_cargo_dos option[value='']").attr("selected", true);
                     $("#tipo_cargo_uno option[value='']").attr("selected", true);
-                    toastr.success('Asignado correctamente', 'System notification!');
+                    toastr.success('Asignado correctamente', 'Éxito!');
                 } else {
                     if (valor.d[1] == "5") {
-                        toastr.warning('Ya esta asignado', 'System notification!');
+                        toastr.warning('Ya esta asignado', 'Atención!');
                     } else if (valor.d[1] == "6") {
                         block.vas = $("#tipo_cargo_select_ASIG").val();
                         block.perfil = "ayudante";
                         if (block.vas == "c") {
                             block.perfil = "supervisor";
                         }
-                        toastr.warning('Ya se le asigno perfil ' + block.perfil + ' a este asesor', 'System notification!');
+                        toastr.warning('Ya se le asigno perfil ' + block.perfil + ' a este asesor', 'Atención!');
                     }
                 }
             });
@@ -7097,6 +7209,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 		  $("#suplanter").css("display", "none");
 
@@ -7319,7 +7432,8 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     block.apellido2 = block.item[10];
                     block.direcion = block.item[12];
                     block.telefono = block.item[16];
-                    block.listadi = block.listadi + '<tr><td> ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + block.nomre + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.nomre + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                    block.listadi = block.listadi + '<tr><td> ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.nomre + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.nomre + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                    
                     $("#listado_liengenerela").append(block.listadi);
                     block.nexr = parseInt(block.num) + 1;
                     window.sessionStorage.setItem("numero_lista", block.nexr);
@@ -7440,6 +7554,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
 
 
 		window.sessionStorage.setItem("numero_lista","0");
@@ -7576,6 +7691,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
     }
 
     function informe_completo_cobros(){
@@ -7604,6 +7720,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#consulta_cobros").css("display", "initial");
+        $("#utilidades_view").css("display", "none");
         cargarListas_asigandos();
 
         window.sessionStorage.setItem("numero_lista","0");
@@ -7638,6 +7755,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#consulta_gastos").css("display", "initial");
+        $("#utilidades_view").css("display", "none");
         
         
 
@@ -7672,10 +7790,40 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "initial");
+        $("#utilidades_view").css("display", "none");
 
         cargarListas_asigandos();
        
 
+    }
+
+    function informe_completo_utilidades(){
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+        $("#flotante2").css("display","none");
+        $("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+        $("#migrar_cion_div").css("display", "none");
+        $("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "initial");
     }
 
 
@@ -7707,6 +7855,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
     }
 
 
@@ -7736,6 +7885,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
         
     }
 
@@ -7768,6 +7918,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
     }
 
 	var map;
@@ -7779,8 +7930,8 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
-
-        block.arrays = [block.tokens[1],block.tokens[4]];
+        
+        block.arrays = [block.tokens[1], block.tokens[4], block.tokens[5]];
         block.obj = {"r": "down_geo_admin", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);

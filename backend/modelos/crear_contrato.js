@@ -42,6 +42,7 @@ eje = function(arrays,origen,redisClient) {
 								var info = JSON.parse(reply);
 								var extric = info[11]; 
 
+								console.log("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_*");
 								redisClient.keys("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_*",function(ersr,replsy) {
 									if(replsy.length>0){
 										var miEmpresa = replsy.length;
@@ -53,6 +54,7 @@ eje = function(arrays,origen,redisClient) {
 									verifiquo si tiene otros contratos
 									
 									*/
+									console.log("registry_"+arrays[1]+"_contrato_*");
 									redisClient.keys("registry_"+arrays[1]+"_contrato_*",function(erxsr,replxsy) {
 										if(replsy.length>0){
 											var otrasEmpresa = replxsy.length - miEmpresa;
@@ -160,23 +162,27 @@ eje = function(arrays,origen,redisClient) {
 													arrays.push(fes);
 												}else{
 													arrays.push(fes);
-												}																								
+												}
+												console.log("registry_*");
 												redisClient.keys("registry_*",function(err,cant){
 													var consecutivo = cant.length + 1;													
 													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/																
-													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;													
+													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;	
+													console.log("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arrays));
 													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arrays),function(err,reply) {
-														
+														console.log("registro_contrato_"+arrays[2]);
 														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {
 															if(replyw!==null){
 																var esa = JSON.parse(replyw);
 																esa.push(oriegn);
+																console.log("registro_contrato_"+arrays[2]);
 																redisClient.set("registro_contrato_"+arrays[2],JSON.stringify(esa),function(erwrw,repelyw) {
 																	resolve([true, miEmpresa, otrasEmpresa]);
 																});
 															}else{
 																var esa = [];
 																esa.push(oriegn);
+																console.log("registro_contrato_"+arrays[2], JSON.stringify(esa))
 																redisClient.set("registro_contrato_"+arrays[2],JSON.stringify(esa),function(erwrw,repelyw) {
 																	resolve([true, miEmpresa, otrasEmpresa]);
 																});

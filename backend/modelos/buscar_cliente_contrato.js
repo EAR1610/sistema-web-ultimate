@@ -31,14 +31,11 @@ eje = function(arrays,origen,redisClient) {
 					redisClient.get("registro_contrato_"+arrays[1],function(err3,reply_contrato){
 						if(reply_contrato!==null){
 							for (contrato of JSON.parse(reply_contrato)){
-								console.log(contrato);
 								elementos = contrato.split("_");
 								ultimo = elementos[elementos.length -1];
 								if (ultimo == arrays[2]){
-									console.log("encontrado");
 									redisClient.get('cliente_'+elementos[1],function(err3,reply_cliente){
 										var litado  = [];
-										console.log(reply_cliente);
 											if(reply_cliente!==null){
 												litado.push(reply_cliente);
 												resolve([true,litado]);

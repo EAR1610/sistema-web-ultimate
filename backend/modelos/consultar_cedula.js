@@ -51,7 +51,6 @@ eje = function(arrays,origen,redisClient) {
 											var test = stdout.split("\n").join("");
 											var teh = test.split("_");
 
-											console.log("salto a buscarlo");
 											require('child_process').exec(`killall chrome`);
 											resolve([true, teh, comando]);
 

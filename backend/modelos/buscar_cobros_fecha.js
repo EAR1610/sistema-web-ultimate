@@ -11,25 +11,23 @@ eje = function(arrays,origen,redisClient) {
 		/*
 			recibe token y idasesor
 		*/
-		
 		if (arrays.length==3){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5" || decoded.t == "4") {
+				} else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "2" || decoded.t == "5" || decoded.t == "4") {
 					
 					// var moment = require("moment");
 					// var dia = moment().format('YYYY-MM-DD');
 					var comando = "monto_"+arrays[1]+"_*_"+arrays[2]+"_*_*"
-					console.log(comando);
-					
 					/*
 						toma los monto y los suma
 					*/
 					
 					redisClient.keys(comando,function(err3,reply3){
+
 						if(reply3!==null){
 							var lista = []
 							//var reply_montos = JSON.parse(reply3);
@@ -43,7 +41,6 @@ eje = function(arrays,origen,redisClient) {
 							function recurso(ind,arrs){
 								if (ind==arrs.length) {
 									const moment = require('moment');
-									console.log(lista);
 									// Convertir la hora a un objeto moment()
 									lista.forEach((item) => {
 										item.hora = moment(item.hora, 'hh:mm A');

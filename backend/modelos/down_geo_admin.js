@@ -9,18 +9,16 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibe token, y idasesor
+			recibe token, idasesor y token5
 		*/
-		console.log(arrays.length);
-		if (arrays.length==2){//token1 y token4
+
+		if (arrays.length ==3 ) {//token1, token4 token5
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
-				console.log("decoded.t is:")
-				console.log(decoded.t);
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="5"){
+				} else if(decoded.t == "1" || decoded.t == "5" || decoded.t == "4"){
 					
 					/*
 					lista contratos segun orden
@@ -28,25 +26,20 @@ eje = function(arrays,origen,redisClient) {
 					
 					//[block.tokens[1],block.tokens[5],Numcuota,cedula];
 					redisClient.keys("registry_*_contrato_"+arrays[1]+"_*",function(err,reply) {
-
 						if(reply.length>0){
-
 							var lista = [];
+
 							function recurso(ind,arrs){
 								if(ind==arrs.length){
 									resolve([true,lista]);
-								}else{
-
+								} else{
 									var inus = arrs[ind].split("_");
-									
-									console.log("cliente_"+inus[1]);
 									
 									/*
 										extrae cliente
 									*/
 									
 									redisClient.get("cliente_"+inus[1],function(errs,datse){
-									
 										if(datse!==null) {
 											var infes = JSON.parse(datse);
 

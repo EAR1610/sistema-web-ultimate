@@ -9,47 +9,50 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-			recibo token
+			recibe token, idasesor y fecha
 		*/
-		
-		if (arrays.length==1){
+		if (arrays.length==3){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0"){
+				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "2" || decoded.t == "5" || decoded.t == "4"){
 					
-					/*
-						extraigo lista de supervidors asignados a la empresa
+					var coando = "monto_"+arrays[1]+"_*_"+arrays[2]+"_*"
+					
+                    /*
+					    toma los monto y los suma
 					*/
-					redisClient.keys('listado_'+decoded.d+'_supervisor_*',function(err3,reply3){
+					
+					redisClient.keys(coando,function(err3,reply3){
+
 						if(reply3.length > 0){
-							
-							/*
-								guardo los datos en array mediante kanban
-							*/
-							
-							var litado = [];
-							function iterar(ind,arrs){
-								if(ind == arrs.length){
-									resolve([true,litado]);
-								}else{
-									redisClient.get(arrs[ind],function(err,reply) {
-										if(reply!==null){
-											litado.push(reply);
-											ind++;
-											iterar(ind,arrs);
+							var total=0;
+							for(var es = 0; es < reply3.length; es ++){
+								var explit  = reply3[es].split("_");
+								total = total + parseInt(explit[2]);
+								
+								if(es==reply3.length-1){
+									redisClient.get("base_"+arrays[1],function(ersr,replcy) {
+										if(replcy!==null){
+											var inf = JSON.parse(replcy);
+											resolve([true,total,inf[1],inf[0]]);
 										}else{
-											ind++;
-											iterar(ind,arrs);
+											resolve([true,total,"0","Sin base"]);
 										}
 									});
 								}
 							}
-							iterar(0,reply3);
-						}else{
-							reject([false,"4"]);
+						}else{ 
+							redisClient.get("base_"+arrays[1],function(ersr,replcy) {
+								if(replcy==null){
+									resolve([true,0,0,"Sin base"]);
+								}else{
+									var inf = JSON.parse(replcy);
+									resolve([true,0,inf[1],inf[0]]);
+								}
+							});
 						}
 					});
 				}else{

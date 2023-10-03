@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		Recibo un array con los valores token,idasesor,idempresa;
+			Recibo un array con los valores token,idasesor,idempresa;
 		*/
 		
 		if (arrays.length==3){
@@ -43,21 +43,17 @@ eje = function(arrays,origen,redisClient) {
 									if(ind==arrs.length){
 										
 										/*
-										revuelvo
+											revuelvo
 										*/
 										
 										resolve([true,lista]);
-										
-									}else{
-
+									} else {
 										var inus = arrs[ind].split("_");
-										console.log(arrs[ind]);
 										redisClient.get(arrs[ind],function(exrrs,daxtse){
-											
 											var infeos = JSON.parse(daxtse);
 											
 											/*
-											extraigo informacion de cliente
+												xtraigo informacion de cliente
 											*/
 											// console.log(infeos[13]);
 
@@ -77,7 +73,7 @@ eje = function(arrays,origen,redisClient) {
                                                             tele = infes[17];
                                                         
                                                         /*
-                                                        tomo la direccion y la reuno en un array
+                                                        	tomo la direccion y la reuno en un array
                                                         */
                                                         
                                                         redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
@@ -87,7 +83,6 @@ eje = function(arrays,origen,redisClient) {
                                                                 lista.push({"u":uno+" "+tres,"c":cedua,"a":latos[0],"o":latos[1],"d":direc,"e":tele,"id":inus[5],"m":infeos[3],"f":infeos[5]});
                                                                 ind++;
                                                                 recurso(ind, arrs);
-                                                            
                                                             }else{
                                                                 ind++;
                                                                 recurso(ind, arrs);

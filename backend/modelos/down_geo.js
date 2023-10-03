@@ -51,7 +51,6 @@ eje = function(arrays,origen,redisClient) {
 									}else{
 
 										var inus = arrs[ind].split("_");
-										console.log(arrs[ind]);
 										redisClient.get(arrs[ind],function(exrrs,daxtse){
 											
 											var infeos = JSON.parse(daxtse);
@@ -59,7 +58,6 @@ eje = function(arrays,origen,redisClient) {
 											/*
 											extraigo informacion de cliente
 											*/
-											console.log(infeos[13]);
 											redisClient.get("cliente_"+inus[1],function(errs,datse){
 											
 												if(datse!==null) {

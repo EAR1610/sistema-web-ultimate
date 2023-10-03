@@ -9,43 +9,32 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 			
 		/*
-		Recibo un array con los valores token,y idasesor
+			Recibo un array con los valores token,y idasesor
 		*/
 		
 		if (arrays.length==3){
-		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
 				}else if(decoded.t == "1" || decoded.t == "2" || decoded.t == "0" || decoded.t == "5" || decoded.t == "4"){
-
-					// var moment = require("moment");
-					// var ides = moment().format('YYYY-MM-DD');
-					// arrays[0] = ides;
-					
 					/*
-					verifico si existe sino envio codigo "4"
+						verifico si existe sino envio codigo "4"
 					*/
-					
 					redisClient.get("gasto_"+arrays[1]+"_"+arrays[2],function(err,reply) {
 						if(reply!==null){
 							resolve([true,reply]);
 						}else{
 							reject([false,"4"]);
 						}
-
 					});
-						
 				}else{
 					reject([false,"2"]);
 				}
 			});
-			
 		}else{
 			reject([false,"3"]);
 		}
-		
 	});
 };
 

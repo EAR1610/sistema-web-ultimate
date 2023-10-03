@@ -9,8 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		
-		recibo token y cedula
+			recibo token y cedula
 		*/
 		
 		if (arrays.length==2){
@@ -19,7 +18,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2"  || decoded.t=="5"){
+				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2"  || decoded.t=="5" || decoded.t=="4"){
 					
 					
 					/*verifico que no este betado el cliente*/

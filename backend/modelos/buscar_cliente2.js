@@ -21,7 +21,6 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
 					
-					console.log("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3]);
 					
 					/*
 					verifico si teiene contrato
@@ -29,21 +28,15 @@ eje = function(arrays,origen,redisClient) {
 					
 					redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {
 						
-						console.log(err,reply);
-						
 						if(reply.length>0){
 							
 							var origena = reply[0],cedulax = origena.split("_");
 							
-							console.log("cliente_"+cedulax[1]);
-							
 							/*
-							traigo datos del clientes
+								traigo datos del clientes
 							*/
 							
 							redisClient.get("cliente_"+cedulax[1], function (qersr, sreeply) {
-								
-								console.log(qersr, sreeply);
 								
 								redisClient.get(reply[0], function (ersr, reeply) {
 									var interno = JSON.parse(reeply);
