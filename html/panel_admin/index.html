@@ -419,6 +419,22 @@
 
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('buscarContratos').addEventListener('input', function() {
+                    let searchValue = this.value.toLowerCase();
+                    let rows = document.querySelectorAll('#lista_enorme tr');
+                    for (let row of rows) {
+                        let dpiCell = row.querySelector('td:nth-child(3)');
+                        if (dpiCell) {
+                            let dpiValue = dpiCell.textContent.toLowerCase();
+                            row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
+                        }
+                    }
+                });
+            });
+    </script>
+
     <style>
         @media (max-width: 576px) {
             .profile-info{
@@ -1639,6 +1655,8 @@
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
+                            &nbsp;
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" >
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 

@@ -531,6 +531,66 @@
             });
         });
     </script>
+    
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('searchDPI').addEventListener('input', function() {
+                    let searchValue = this.value.toLowerCase();
+                    let rows = document.querySelectorAll('#listado_asesores tr');
+                    for (let row of rows) {
+                        let dpiCell = row.querySelector('td:nth-child(3)');
+                        if (dpiCell) {
+                            let dpiValue = dpiCell.textContent.toLowerCase();
+                            row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
+                        }
+                    }
+                });
+            });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('buscarAsesores').addEventListener('input', function() {
+                let searchValue = this.value.toLowerCase();
+                let rows = document.querySelectorAll('#listado_supervisor tr');
+                for (let row of rows) {
+                    let dpiCell = row.querySelector('td:nth-child(3)');
+                    if (dpiCell) {
+                        let dpiValue = dpiCell.textContent.toLowerCase();
+                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
+                    }
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('buscarClientes').addEventListener('input', function() {
+                let searchValue = this.value.toLowerCase();
+                let rows = document.querySelectorAll('#listado_liengenerela tr');
+                for (let row of rows) {
+                    let dpiCell = row.querySelector('td:nth-child(2)');
+                    if (dpiCell) {
+                        let dpiValue = dpiCell.textContent.toLowerCase();
+                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
+                    }
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('buscarContratos').addEventListener('input', function() {
+                let searchValue = this.value.toLowerCase();
+                let rows = document.querySelectorAll('#lista_enorme tr');
+                for (let row of rows) {
+                    let dpiCell = row.querySelector('td:nth-child(3)');
+                    if (dpiCell) {
+                        let dpiValue = dpiCell.textContent.toLowerCase();
+                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
+                    }
+                }
+            });
+        });
+     
+    </script>
 
 
     
@@ -1568,6 +1628,8 @@
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Lista de asesores</h5>
+                            &nbsp;
+                            <input class="form-control col-md-4" type="text" id="searchDPI" placeholder="Buscar por DPI" >
                         </div>
                         <div class="ibox-content">
                             <div class="table-responsive">
@@ -1599,6 +1661,8 @@
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Lista de supervisores</h5>
+                            &nbsp;
+                           <input class="form-control col-md-4" type="text" id="buscarAsesores" placeholder="Buscar por DPI" >
                         </div>
                         <div class="ibox-content">
                             <div class="table-responsive">
@@ -1756,6 +1820,8 @@
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Lista de clientes</h5>
+                            &nbsp;
+                            <input class="form-control col-md-4" type="text" id="buscarClientes" placeholder="Buscar por DPI" >
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             <div class="table-responsive">
@@ -2386,6 +2452,8 @@
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
+                            &nbsp;
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" >
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             
@@ -3378,6 +3446,13 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         //localStorage.setItem('clientes',JSON.stringify([]));
         //localStorage.setItem('montos',JSON.stringify([]));
     }
+
+
+  
+
+
+
+
 
     block.filein = document.querySelector("#foto1m");
     block.filein.onchange = function (e) {

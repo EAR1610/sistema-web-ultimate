@@ -119,6 +119,10 @@
 
         doc.autoPrint(); 
         doc.output('dataurlnewwindow');
+
+        setTimeout(function(){
+            location.reload();
+        }, 9000);
     }
 
     function imprimir_texto(doc, texto, x, y, size, color, align) {
@@ -133,6 +137,24 @@
             generarPDFPago();                  
         });
     });
+
+    </script>
+        
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('buscarContratos').addEventListener('input', function() {
+                    let searchValue = this.value.toLowerCase();
+                    let rows = document.querySelectorAll('#lista_enorme tr');
+                    for (let row of rows) {
+                        let dpiCell = row.querySelector('td:nth-child(3)');
+                        if (dpiCell) {
+                            let dpiValue = dpiCell.textContent.toLowerCase();
+                            row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
+                        }
+                    }
+                });
+            });
 
     </script>
 
@@ -872,6 +894,8 @@
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
+                            &nbsp;
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" >
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">                                    
         
@@ -1343,27 +1367,24 @@
         });
     }
 
-    $("#selector_cuotas_selec").change(function(){
-
+    $("#selector_cuotas_selec").change(function(){                
         if ($("#monto_prestar_ya_admin").val()!=="" && $("#selector_cuotas_selec").val()!=="") {
-
             if(window.sessionStorage.getItem("Lista_cuota")!==null) {                
                 block.cuotas = JSON.parse(window.sessionStorage.getItem("Lista_cuota"));
                 block.limitos = JSON.parse(window.sessionStorage.getItem("Configuracion"));
                 block.min = parseInt(block.limitos[1]);
                 block.max = parseInt(block.limitos[2]);
 
-                if ($("#monto_prestar_ya_admin").val()!=="") {
-
-                    block.evad = $("#monto_prestar_ya_admin").val();
+                if ($("#monto_prestar_ya_admin").val()!=="") {                    
+                    block.evad = $("#monto_prestar_ya_admin").val(); //cantidad de prestamo
                     block.resa = block.evad.replace(".","");
                     block.resa2 = block.resa.replace(".","");
                     block.nuevomonto = parseInt(block.resa2);										
                     
-					if(block.nuevomonto> block.min && block.nuevomonto<block.max) {						
+					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max) {
 
                         for (var w = 0; w < block.cuotas.length; w++) {
-                            if (block.cuotas[w][2] == $("#selector_cuotas_selec").val()) {
+                            if (block.cuotas[w][2] == $("#selector_cuotas_selec").val()) { //cantidad de cuotas
                                 $("#utilidad_prestada").html(block.cuotas[w][3]);
                                 block.limpi = $("#monto_prestar_ya_admin").val();
                                 block.comp = block.limpi.replace(".", "");
@@ -1380,13 +1401,13 @@
                                 block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
                                 $("#utilidad_prestada_peso").html(block.resul);
                                 $("#utilidad_cuota").html(block.reas);
-                                block.ult_cuota = (block.evad + block.resul)
-                                $("#utilidad_ultima_cuota").html(block.reas);                                
+
+                                obtener_Ultima_Cuota(block.resul);
                             }
                         }
-
                     }else{
                         $("#crear_contrato").prop("disabled",true);
+                        toastr.warning("El prestamo no està en el rango permitido", "Atenciòn");
                     }
 
                 }
@@ -1394,6 +1415,33 @@
 
         }
     });
+
+    function obtener_Ultima_Cuota(utilidad){
+        var ganancia = utilidad;
+        var totalInteres = block.reas;
+        var total_interes_final = totalInteres.replace(/\./g, "");
+        
+        if(ganancia.includes(".")){
+            block.suma_total_prestamos = (parseInt(block.monq) + parseInt(ganancia.replace(/\./g, "")));
+        } else {
+            block.suma_total_prestamos = (parseInt(block.monq) + parseInt(ganancia));
+        }
+
+        if(totalInteres.includes(".")){
+            block.cantidad_normal = parseInt(totalInteres.replace(/\./g, "")) * block.dias;
+        } else {
+            block.cantidad_normal = parseInt(block.reas) * block.dias;        
+        }
+
+        
+        if(Number.isInteger(block.suma_total_prestamos / block.dias)){
+            block.ultima_cuota = totalInteres;
+        } else {
+            block.ultima_cuota = (block.suma_total_prestamos - block.cantidad_normal) + parseInt(total_interes_final);
+        }
+
+        $("#utilidad_ultima_cuota").html(block.ultima_cuota); 
+    }
 
     function consultar_Contratos(){
         $("#lista_enorme").empty();
@@ -1480,7 +1528,6 @@
     }
 
     function format(input) {
-
         var num = input.value.replace(/\./g,'');
         if(!isNaN(num)){
             num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
@@ -1499,7 +1546,7 @@
                     block.resa = block.evad.replace(".","");
                     block.resa2 = block.resa.replace(".","");
                     block.nuevomonto = parseInt(block.resa2);
-                    if(block.nuevomonto> block.min && block.nuevomonto<block.max){
+                    if(block.nuevomonto >= block.min && block.nuevomonto <=block.max){
 
                         for(var w =0; w < block.cuotas.length; w++){
                             if(block.cuotas[w][2]==$("#selector_cuotas_selec").val()){
@@ -1514,65 +1561,85 @@
                                 block.reas = (block.monq + block.resul) / block.dias;
                                 block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                                 block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/,'');
+                                block.resul = Math.ceil((block.resul * 1000) / 1000);
                                 block.reas = parseInt(block.reas);
                                 block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                                 block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/,'');
                                 $("#utilidad_prestada_peso").html(block.resul);
                                 $("#utilidad_cuota").html(block.reas);
+                                
+                                obtener_Ultima_Cuota(block.resul);
                             }
                         }
                     }else{
                         $("#crear_contrato").prop("disabled",true);
                     }
-
-
                 }
             }
-
         }else{
             input.value = input.value.replace(/[^\d\.]*/g,'');
         }
     }
 
+
     block.filein = document.querySelector("#foto1");
-    block.filein.onchange = function (e) {
+    block.filein.onchange = function (e) {        
         block.files = e.target.files;
         block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 259,
-            height: 259
-        }, function (blob, didItResize) {
 
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                    function(snapshot) {
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;                        
-                        switch (snapshot.state) {
-                            case firebase.storage.TaskState.PAUSED:                                
-                                break;
-                            case firebase.storage.TaskState.RUNNING:
-                                break;
-                        }
-                    }, function(error) {
-                        switch (error.code) {
-                            case 'storage/unauthorized':
-                                break;
-                            case 'storage/canceled':
-                                break;
-                            case 'storage/unknown':
-                                break;
-                        }
-                    }, function() {
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            $("#foto_m1").attr("src", downloadURL);
-                            window.sessionStorage.setItem("Money-vars-foto-id", downloadURL);
-                        });
-                    });
+        var imagenesFolder = new Folder("imagenes");
+        if (!imagenesFolder.exists) {
+            imagenesFolder.create();
+        }
+        
+        var file = imagenesFolder.createFile(block.file.name);
+        file.write(block.file);
 
-
-        });
+        $("#foto_m1").attr("src", file.url);
     };
+
+
+
+
+    // block.filein = document.querySelector("#foto1");
+    // block.filein.onchange = function (e) {
+    //     block.files = e.target.files;
+    //     block.file = block.files[0];
+    //     ImageTools.resize(block.file, {
+    //         width: 259,
+    //         height: 259
+    //     }, function (blob, didItResize) {
+
+    //         var storageRef = firebase.storage().ref();
+    //         var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    //                 function(snapshot) {
+    //                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;                        
+    //                     switch (snapshot.state) {
+    //                         case firebase.storage.TaskState.PAUSED:                                
+    //                             break;
+    //                         case firebase.storage.TaskState.RUNNING:
+    //                             break;
+    //                     }
+    //                 }, function(error) {
+    //                     switch (error.code) {
+    //                         case 'storage/unauthorized':
+    //                             break;
+    //                         case 'storage/canceled':
+    //                             break;
+    //                         case 'storage/unknown':
+    //                             break;
+    //                     }
+    //                 }, function() {
+    //                     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    //                         $("#foto_m1").attr("src", downloadURL);
+    //                         window.sessionStorage.setItem("Money-vars-foto-id", downloadURL);
+    //                     });
+    //                 });
+
+
+    //     });
+    // };
 
     block.filein = document.querySelector("#foto1m");
     block.filein.onchange = function (e) {
@@ -1866,12 +1933,12 @@
         block.gasto = $("#monto_gasto").val();
 
         if(block.motivo == '' || block.gasto == ''){
-            toastr.warning('Hay campos vacíos', 'System notification!');
+            toastr.warning('Hay campos vacíos', 'Atención!');
             return;
         }
 
         if(block.gasto <= 0) {
-            toastr.warning('El gasto no debe ser negativo', 'System notification!');
+            toastr.warning('El gasto no debe ser negativo', 'Atención!');
             return;
         }
         
@@ -1890,7 +1957,7 @@
                 $("#motivo_gasto").val("");
                 $("#monto_gasto").val("");
                 extraer_gastos();
-                toastr.success('Procesado correctamente', 'System notification!');
+                toastr.success('Procesado correctamente', 'Éxito!');
             }
         });
 
@@ -2157,13 +2224,18 @@
                     block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
                 }
 
-                block.arrays = [block.tokens[1],window.sessionStorage.getItem("Money-vars-registrado"),block.tokens[5],block.monto_prestar,block.dias,block.fecha_prestamo,block.descontar,block.porcentaje,block.quedo_cuota,block.tokens[4],block.frecuencia];
+                block.arrays = [block.tokens[1],window.sessionStorage.getItem("Money-vars-registrado"),block.tokens[5],block.monto_prestar,block.dias,block.fecha_prestamo,block.descontar,block.porcentaje,block.quedo_cuota,block.tokens[4],block.frecuencia, block.ultima_cuota];
                 block.obj = {"r": "crear_contrato", "d": block.arrays};                
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                     var valor = JSON.parse(salida);
                     $("#text_cedula_cliente").prop("disabled",false);
                     if (!valor.e) {
-                        toastr.success('Creado con éxito el contrato', 'éxito!');
+                        
+                        if(valor.d[1]=="4"){
+                            toastr.warning('Este cliente ya está registrado con otro asesor', 'System notification!');
+                        } else {
+                            toastr.success('Creado con éxito el contrato', 'éxito!');
+                        }
 
                         if(parseInt(block.descontar)>0){
                             window.sessionStorage.setItem("Money-vars-descontar-cuota",block.quedo_cuota);
@@ -2183,14 +2255,23 @@
                         }else{
                             $("#limpiar_contrato").click();
                         }
+
+                        
+                        setTimeout(function(){
+                            location.reload();
+                        }, 2000);
+    
 						
-                    }else{
+                    }
+                    else{
                         if(valor.d[1]=="4"){
                             toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'System notification!');
                         }else if(valor.d[1]=="8"){
 							toastr.warning('No es posible guardar', 'System notification!');
 						}else if(valor.d[1]=="5"){
                             toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con otra empresa y no cumple con las condiciones del jefe', 'System notification!');
+                        }else if(valor.d[1]=="6"){ 
+                            toastr.warning('Este cliente ya está registrado con otro asesor', 'System notification!');
                         }
                     }
                 });
@@ -2884,7 +2965,8 @@
         block.cedula = window.sessionStorage.getItem("Money-vars-registrado");
     });
 	
-	function fijar_monto(id,cedula){    
+	function fijar_monto(id,cedula){   
+        debugger; 
 		window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));
 		$("#cuotas_coun").css("display","block");
 		$("#cedula_elecion").css("display","none");
@@ -2921,14 +3003,14 @@
 						//abono
 						block.abono = block.cuotas[13][x].pe.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 						block.abono = block.abono.split('').reverse().join('').replace(/^[\.]/,'');
-						block.compl = "Abono \n $"+block.abono;
+						block.compl = "Abono \n Q"+block.abono;
 						block.coloe = "#343a40";
 					}else if(block.cuotas[13][x].ct == true){
                         block.acumo = block.acumo + parseInt(block.cuotas[13][x].cp);                        
 						//completa
 						block.completo = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                        
 						block.completo = block.completo.split('').reverse().join('').replace(/^[\.]/,'');
-						block.compl = "Pago cuota \n $"+block.completo;
+						block.compl = "Pago cuota \n Q"+block.completo;
 						block.coloe = "#28a745";
 					}else{
                         //falta                        
@@ -2937,6 +3019,8 @@
 						block.compl = "Espera por pago \n Q"+block.espera;
 						block.coloe = "#ffc107";
 					}
+                    console.log("block");
+                    console.log(block);
                     
 					block.fes = block.cuotas[13][x].fe.split("-");
 					block.conve = parseFloat(block.fes[1]) - 1;

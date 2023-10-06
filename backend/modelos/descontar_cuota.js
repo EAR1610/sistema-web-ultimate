@@ -40,8 +40,7 @@ eje = function(arrays,origen,redisClient) {
 									console.log("cliente_"+cedulax[1]);
 									
 									redisClient.get(reply[0], function (ersr, reeply) {
-										console.log("reeply");
-										console.log(reeply);
+										
 										var interno = JSON.parse(reeply);
 										
 										var lisa = interno[13],
@@ -158,24 +157,18 @@ eje = function(arrays,origen,redisClient) {
 											});
 											
 										}else if(tolete<monto2){//si pago demas
-											console.log("Pago de más");
 											
 											interno[13] = lisa;
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
-												console.log("origena,JSON.stringify(interno)");
-												console.log(origena,JSON.stringify(interno));
-											
+																							
 												redisClient.rename(origena,"old_"+origena,function(errx,replyx) {
 													
 													var moment = require("moment");
 													var dia = moment().format('YYYY-MM-DD');
 													var bou = [interno,arrays[2]];
-													console.log('cancelado_'+arrays[1]+"_"+dia,JSON.stringify(bou));
-													redisClient.set('cancelado_'+arrays[1]+"_"+dia,JSON.stringify(bou),function(err3,reply3){
-														console.log("registro_contrato_"+arrays[1])
-														redisClient.get("registro_contrato_"+arrays[1], function (errx, repslyx) {
-															console.log("repslyx");
-															console.log(repslyx);
+													
+													redisClient.set('cancelado_'+arrays[1]+"_"+dia,JSON.stringify(bou),function(err3,reply3){														
+														redisClient.get("registro_contrato_"+arrays[1], function (errx, repslyx) {															
 															var infes = JSON.parse(repslyx), nuva =[];
 															for(var j = 0; j < infes.length; j++){
 																if(infes[j].indexOf(origena)==-1){

@@ -10,10 +10,10 @@ eje = function(arrays,origen,redisClient) {
 
 
 		/*
-		recibo tokens, cedula ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL]
+			recibo tokens, cedula ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL]
 		*/
 
-		if (arrays.length==11){
+		if (arrays.length==12){
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
@@ -42,7 +42,6 @@ eje = function(arrays,origen,redisClient) {
 								var info = JSON.parse(reply);
 								var extric = info[11]; 
 
-								console.log("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_*");
 								redisClient.keys("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_*",function(ersr,replsy) {
 									if(replsy.length>0){
 										var miEmpresa = replsy.length;
@@ -51,10 +50,8 @@ eje = function(arrays,origen,redisClient) {
 									}
 									
 									/*
-									verifiquo si tiene otros contratos
-									
+										verifiquo si tiene otros contratos
 									*/
-									console.log("registry_"+arrays[1]+"_contrato_*");
 									redisClient.keys("registry_"+arrays[1]+"_contrato_*",function(erxsr,replxsy) {
 										if(replsy.length>0){
 											var otrasEmpresa = replxsy.length - miEmpresa;
@@ -80,14 +77,19 @@ eje = function(arrays,origen,redisClient) {
 											
 											var fes =[];											
 											if(arrays[10]=="2"){ //FRECUENCIA DE PAGO: SEMANAL												
-												var cuotaD = arrays[8].replace(".", ""),
+												var cuotaD = arrays[8].replace(".", ""),												
 												cuotaD2 = cuotaD.replace(".", ""),
 												tiempo = arrays[4],
 												indi = moment().isoWeekday(), // Obtener el día de la semana actual
-												prox = moment().isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual												
+												ultima_cuota = arrays[11].toString();
+												prox = moment().isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
+												console.log("Plan semanal");
+												console.log(arrays);
 												for (var k = 1; k < tiempo + 1; k++) {
+													if(k == 3){
+														fes.push({"cp": ultima_cuota, "ct": false, "fe": prox2, "pe": 0});													
+													}
 													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
-													fes.push({"cp": cuotaD2, "ct": false, "fe": prox2, "pe": 0});													
 													prox = prox2;
 												}
 												if (fes.length > parseInt(arrays[4])) {
@@ -98,48 +100,56 @@ eje = function(arrays,origen,redisClient) {
 													cuotaD2 = cuotaD.replace(".",""),
 													indi = moment().format('E'),
 													residuo = (7 - indi),
+													ultima_cuota = arrays[11].toString(),
 													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4],
 													acum=1;
-													console.log(cuotaD)
-													console.log(cuotaD2)
-													console.log(indi)
-													console.log(residuo)
-													console.log(prox)
-													console.log(tiempo)
-													console.log(acum)
+
 												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0});
 												for(var k = 1; k < tiempo; k++){
-
-													if(k<residuo){
-														var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
-														prox = prox2;
-														console.log("prox if");
-														console.log(prox);
-													} else if(k==residuo){
-														prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-														acum++;
-														var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
-														prox = prox2;
-														console.log("prox else if");
-														console.log(prox);
-													} else if(k>residuo){
-														if(acum==7){
+													if( k == (tiempo - 1) ) {
+														if(k<residuo){
+															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+															prox = prox2;
+														} else if(k==residuo){
 															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															acum=1;
+															acum++;
+															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+															prox = prox2;
+														} else if(k>residuo){
+															if(acum==7){
+																prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+																acum=1;
+															}
+															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+															prox = prox2;
+															acum++;
 														}
-														var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
-														prox = prox2;
-														acum++;
-														console.log("prox");
-														console.log(prox);
-													}
-													 if(k==1){
-														 tiempo++;
-													 }
+													} else {
+														if(k<residuo){
+															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+															prox = prox2;
+														} else if(k==residuo){
+															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															acum++;
+															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+															prox = prox2;
+														} else if(k>residuo){
+															if(acum==7){
+																prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+																acum=1;
+															}
+															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+															prox = prox2;
+															acum++;
+														}
+													}													
 												}											
 												if(fes.length > parseInt(arrays[4])){
 													fes.pop();
@@ -148,10 +158,16 @@ eje = function(arrays,origen,redisClient) {
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													prox = moment().format('YYYY-MM-DD'),
-													tiempo = arrays[4];																										
+													ultima_cuota = arrays[11].toString(),
+													tiempo = arrays[4];
+																															
 												for(var k = 1; k < tiempo+1; k++){
 													var prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');
-													fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+													if(k = tiempo - 1){
+														fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+													} else {
+														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+													}
 													prox = prox2;
 												}												
 											} else if(arrays[10]=="4"){	//PAGO MENSUAL									
@@ -175,26 +191,23 @@ eje = function(arrays,origen,redisClient) {
 												}else{
 													arrays.push(fes);
 												}
-												console.log("registry_*");
 												redisClient.keys("registry_*",function(err,cant){
 													var consecutivo = cant.length + 1;													
 													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/																
 													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;	
-													console.log("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arrays));
-													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arrays),function(err,reply) {
-														console.log("registro_contrato_"+arrays[2]);
+													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(11 + 1));													
+													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arraysDB),function(err,reply) {
+												
 														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {
 															if(replyw!==null){
 																var esa = JSON.parse(replyw);
 																esa.push(oriegn);
-																console.log("registro_contrato_"+arrays[2]);
 																redisClient.set("registro_contrato_"+arrays[2],JSON.stringify(esa),function(erwrw,repelyw) {
 																	resolve([true, miEmpresa, otrasEmpresa]);
 																});
 															}else{
 																var esa = [];
 																esa.push(oriegn);
-																console.log("registro_contrato_"+arrays[2], JSON.stringify(esa))
 																redisClient.set("registro_contrato_"+arrays[2],JSON.stringify(esa),function(erwrw,repelyw) {
 																	resolve([true, miEmpresa, otrasEmpresa]);
 																});

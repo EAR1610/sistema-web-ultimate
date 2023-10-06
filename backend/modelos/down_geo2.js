@@ -50,6 +50,8 @@ eje = function(arrays,origen,redisClient) {
 									} else {
 										var inus = arrs[ind].split("_");
 										redisClient.get(arrs[ind],function(exrrs,daxtse){
+											console.log("arrs[ind]")
+											console.log(arrs[ind])
 											var infeos = JSON.parse(daxtse);
 											
 											/*
@@ -58,6 +60,7 @@ eje = function(arrays,origen,redisClient) {
 											// console.log(infeos[13]);
 
                                             var fechaHoy = new Date().toISOString().split('T')[0];
+											console.log(infeos);
                                             var clientesHoy = infeos[13].filter(cliente => cliente.fe == fechaHoy && cliente.ct === false);
                                             
                                             if(clientesHoy.length){
