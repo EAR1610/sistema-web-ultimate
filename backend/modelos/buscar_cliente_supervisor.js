@@ -28,6 +28,7 @@ eje = function(arrays,origen,redisClient) {
 							/*emito la informacion del cliente*/
 							
 							redisClient.keys('cliente_'+arrays[1],function(err3,reply3){
+								console.log(reply3);
 								if(reply3.length > 0){
 									var litado  = [];
 									redisClient.get(reply3[0],function(err,reply) {

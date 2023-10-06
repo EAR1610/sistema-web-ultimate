@@ -23,7 +23,7 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
 						if(redpsly!==null) {
-							var infex = JSON.parse(redpsly);
+							var infex = JSON.parse(redpsly);							
 							if(infex[arrays[2]]!==null && infex[arrays[2]]!==undefined){
 								var ogens = infex[arrays[2]].split("_");
 								var esde = ogens[5];
@@ -41,23 +41,25 @@ eje = function(arrays,origen,redisClient) {
 										*/
 										
 										redisClient.get("cliente_"+cedula, function (serr, srepsy) {
-											if(srepsy!==null){
+											if(srepsy!==null){												
 												redisClient.keys("asig_supervisor_*"+fech2+"_"+ruta, function (sesrr, srepslsy) {
 													if (srepslsy.length > 0) {
 														/*
 															verifico que tengan supervidor o ayudante
-														*/
+														*/														
 														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
-															if (srepslsyx.length > 0) {
-																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {
-																	redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {
+															if (srepslsyx.length > 0) {																															
+																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {																	
+
+																	redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {																		
 																		litado.push([repdly3, srepslsy2xq, srepslsy2x,srepsy,esde]);
 																		resolve([true, litado]);
 																	});
 																});
 																
-															}else{
-																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) { //JEFE TERMINAN ACA
+															}else{																
+																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) { //JEFE TERMINAN ACA																	
+																	
 																	litado.push([repdly3, srepslsy2xq, [],srepsy,esde]);
 																	resolve([true, litado]);
 																});
