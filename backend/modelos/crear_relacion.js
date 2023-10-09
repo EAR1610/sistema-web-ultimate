@@ -8,6 +8,7 @@ eje = function(arrays,origen,redisClient) {
 		var valurl = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/;
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
+		/* Recibe token, tipoCargo, asesor y superviros*/
 		
 		if (arrays.length==4){
 		
@@ -24,22 +25,26 @@ eje = function(arrays,origen,redisClient) {
 					var uni = arrays[3].split("_");
 					var uni2 = arrays[2].split("_");
 
-					arrays[0]=hoy;
+					arrays[0]=hoy;					
 
-					redisClient.keys("asig_"+uni[1]+"_"+uni[2]+"_*",function (sali,slai) {
-						if(slai.length > 0){
-							reject([false,"5"]);
-						}else{
-							redisClient.keys("asig_" + uni[1] + "_*_" + uni[0] + "_" + hoy,function (salix,slais) {
-								if (slais.length > 0) {
-									reject([false,"6"]);
-								}else{
-									redisClient.set("asig_" + uni[1] + "_" + uni[2] + "_" + uni[0] + "_" + hoy+"_"+uni2[0], JSON.stringify(arrays), function (err, reply) {
-										resolve([true, true]);
-									});
-								}
-							});
-						}
+					redisClient.keys("asig_"+uni[1]+"_"+uni[2]+"_*",function (sali,slai) {						
+						// if(slai.length > 0){
+						// 	reject([false,"5"]);
+						// }else{
+						console.log("asig_ + uni[1] + _*_ + uni[0] + _ + hoy");
+						console.log("asig_" + uni[1] + "_*_" + uni[0] + "_" + hoy);
+
+						redisClient.keys("asig_" + uni[1] + "_*_" + uni[0] + "_" + hoy,function (salix,slais) {
+							console.log(slais)
+							if (slais.length > 0) {
+								reject([false,"6"]);
+							}else{
+								redisClient.set("asig_" + uni[1] + "_" + uni[2] + "_" + uni[0] + "_" + hoy+"_"+uni2[0], JSON.stringify(arrays), function (err, reply) {
+									resolve([true, true]);
+								});
+							}
+						});
+						// }
 					});
 					
 				}else{
