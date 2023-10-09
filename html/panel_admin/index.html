@@ -1505,11 +1505,7 @@
                                 <div id="picker-no-time"></div>
                                 <input type="hidden" id="result2" value="" />
                             </div>
-
-                            <!-- <div class="col-sm-6 col-md-4 col-xs-12">
-                                <label>DPI del cliente a buscar</label>
-                                <input type="text" id="historial_cliente_dpi" class="form-control" placeholder="Escriba el DPI del cliente a buscar">
-                            </div> -->
+                                                       
                             <div class="col-sm-6 col-md-4 col-xs-12">
                                 <label>DPI del cliente a buscar</label>
                                 <div class="input-group">
@@ -1869,21 +1865,16 @@
 
 
 <script>
-    // Define la función para generar el PDF de prueba
-    // Define la función para generar el PDF de prueba
     function generarPDFDePrueba() {
         var doc = new window.jspdf.jsPDF({
             unit: 'mm',
             format: [80,Infinity]
-        }); // Crea una instancia de jsPDF.
-
-        // Llama a la función imprimir_texto con datos de prueba
+        }); 
+        
         imprimir_texto(doc, 'Nombre: Juan Pérez', 10, 10, 12, 'black', 'left');
         imprimir_texto(doc, 'Email: juan@example.com', 10, 20, 12, 'black', 'left');
         imprimir_texto(doc, 'Teléfono: 123-456-7890', 10, 30, 12, 'black', 'left');
 
-        // Guarda o muestra el PDF, según tus necesidades.
-        // Por ejemplo, para guardarlo con el nombre "documento.pdf":
         doc.save('documento.pdf');
     }
 
@@ -1892,11 +1883,10 @@
         doc.setTextColor(color);
         doc.text(texto, x, y, {align: align});
     }
-
-    // Agrega un controlador de eventos al botón
+    
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('boton_pdff').addEventListener('click', function() {
-            generarPDFDePrueba(); // Llama a la función para generar el PDF al hacer clic en el botón
+        document.getElementById('boton_pdff')?.addEventListener('click', function() {
+            generarPDFDePrueba(); 
         });
     });
 
@@ -2932,12 +2922,21 @@
                 block.tesq = $("#lista_asesores_general3")["0"][block.esf].label.split("ID:");
 				block.calsulo = block.unox[13];
 				block.sumas = 0;
-				for(var u= 0; u<block.calsulo.length; u++){
-					if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
-						block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
-					}else if(block.calsulo[u].pe!==0){
-						block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
+
+				for(var u= 0; u<block.calsulo.length; u++){ 
+
+                    if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
+
+                        if(block.calsulo.length>1){
+                            block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
+                        } else {
+                            block.sumas = block.calsulo[u].cp.replace(/\./g, "");
+                        }
+
+					} else if(block.calsulo[u].pe !== 0 ){
+                        block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
 					}
+                    
 				}
 
                 block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');

@@ -897,7 +897,7 @@
                             &nbsp;
                             <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" >
                         </div>
-                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">                                    
+                        <div class="ibox-content row" style="margin-right: 0px; margin-left: 0px;">
         
                             <div class="table-responsive">
                                 <table class="table table-striped">
@@ -1460,7 +1460,7 @@
     listado_contratos(block.unico);
     $("#lista_enorme").append("");
     
-    function listado_contratos(mun){        
+    function listado_contratos(mun){              
         block.unico =  parseInt(mun);
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -1504,26 +1504,49 @@
 
                 block.calsulo = block.unox[13];
                 block.sumas = 0;
+                
+                var valorCp = "";
+                var valorPe = "";
+
+
                 for(var u= 0; u<block.calsulo.length; u++){
-                    if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
-                        block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
-                    }else if(block.calsulo[u].pe!==0){
-                        block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
+                    if(!block.calsulo[u].ct && block.calsulo[u].pe==0){ 
+                        valorCp = block.calsulo[u].cp;  
+                        console.log("valorCp");
+                        console.log(valorCp);
+                        
+                        if(valorCp.includes(".")){                            
+                            block.sumas = (parseInt(block.sumas) + parseInt(valorCp.replace(/\./g, "")));
+                        } else {
+                            block.sumas = block.sumas + parseInt(valorCp);
+                        }
+
+                    }else if(block.calsulo[u].pe!==0){                           
+                        valorPe = String(block.calsulo[u].pe);
+
+                        console.log("valorPe");
+                        console.log(valorPe);
+
+                        if(valorPe.includes(".")){                            
+                            block.sumas = (parseInt(block.sumas) + parseInt(valorPe.replace(/\./g, "")));
+                        } else { 
+                            block.sumas = block.sumas + parseInt(valorPe);
+                        }
+
                     }
                 }
-                block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');                
-                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td></tr>';
 
+                block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');                                
+                block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td></tr>';
                 block.unico++;
 
-                listado_contratos(block.unico);
+                listado_contratos(block.unico);                
                 $("#lista_enorme").append(block.oso);
             } else if(valor.d[2]!==0 && valor.d[2]>block.unico){
                 block.unico++;
                 listado_contratos(block.unico);
             }
-
         });
     }
 
@@ -2207,12 +2230,13 @@
 
     $("#crear_contrato").click(function () {
         if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!==""){
+            debugger;
             block.asesor = $("#selector_asesores_lista").val();
             block.monto_prestar = $("#monto_prestar_ya_admin").val();
             block.frecuencia = $("#selector_frecuencia").val();
             block.dias = $("#selector_cuotas_selec").val();            
             block.fecha_prestamo = $("#fechaActual").val();
-            block.descontar = $("#cuota_descontar_sistema").val();
+            block.descontar = parseInt($("#cuota_descontar_sistema").val());
             block.porcentaje = $("#utilidad_prestada").html();
             block.quedo_cuota = $("#utilidad_cuota").html();
             block.dias = block.dias - block.descontar;                        

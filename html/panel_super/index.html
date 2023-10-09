@@ -7105,6 +7105,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
     }
 
     $("#registro_relacion").click(function () {
+        debugger;
         if ($("#tipo_cargo_select_ASIG").val() !== "" && $("#tipo_cargo_dos").val() !== "" && $("#tipo_cargo_uno").val() !== "") {
 
             if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -7119,6 +7120,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
                 if (!valor.e) {
+                    
                     $("#tipo_cargo_select_ASIG option[value='']").attr("selected", true);
                     $("#tipo_cargo_dos option[value='']").attr("selected", true);
                     $("#tipo_cargo_uno option[value='']").attr("selected", true);

@@ -74,6 +74,9 @@ eje = function(arrays,origen,redisClient) {
 											/*
 												creo la cantidad de cuotas que require según el ciclo que tengan
 											*/
+											ultima_cuota = arrays[11].toString();
+
+											if(ultima_cuota === undefined || ultima_cuota === null) return;
 											
 											var fes =[];											
 											if(arrays[10]=="2"){ //FRECUENCIA DE PAGO: SEMANAL												
@@ -81,16 +84,15 @@ eje = function(arrays,origen,redisClient) {
 												cuotaD2 = cuotaD.replace(".", ""),
 												tiempo = arrays[4],
 												indi = moment().isoWeekday(), // Obtener el día de la semana actual
-												ultima_cuota = arrays[11].toString();
-												prox = moment().isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
-												console.log("Plan semanal");
-												console.log(arrays);
+												prox = moment().isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual													
 												for (var k = 1; k < tiempo + 1; k++) {
-													if(k == 3){
-														fes.push({"cp": ultima_cuota, "ct": false, "fe": prox2, "pe": 0});													
+													if(k == 4){
+														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+														fes.push({"cp": ultima_cuota, "ct": false, "fe": prox2, "pe": 0});
 													}
 													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 													prox = prox2;
+													fes.push({"cp": cuotaD2, "ct": false, "fe": prox, "pe": 0});
 												}
 												if (fes.length > parseInt(arrays[4])) {
 													fes.pop();
@@ -99,8 +101,7 @@ eje = function(arrays,origen,redisClient) {
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													indi = moment().format('E'),
-													residuo = (7 - indi),
-													ultima_cuota = arrays[11].toString();
+													residuo = (7 - indi),													
 													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4],
 													acum=1;
@@ -157,35 +158,21 @@ eje = function(arrays,origen,redisClient) {
 											}else if(arrays[10]=="3"){ //PAGO QUINCENAL
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
-													ultima_cuota = arrays[11].toString();
 													prox = moment().format('YYYY-MM-DD'),
-													tiempo = arrays[4];
-
-												console.log(cuotaD)
-												console.log(cuotaD2)
-												console.log(ultima_cuota)
-												console.log(prox)
-												console.log(tiempo)
+													tiempo = arrays[4];												
 																															
 												for(var k = 1; k < tiempo+1; k++){
-													var prox2 = moment(arrays[5]).add(15, 'days').format('YYYY-MM-DD');
-													console.log("prox2");
-													console.log(prox2);
+													var prox2 = moment(arrays[5]).add(15, 'days').format('YYYY-MM-DD');													
 													if(k == tiempo - 1){
-														fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
-														console.log("Ultima cuota");
+														fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});														
 													} else {
-														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
-														console.log("Primera cuota");
+														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});														
 													}
-													prox = prox2;
-													console.log("prox");
-													console.log(prox);
+													prox = prox2;													
 												}												
-											} else if(arrays[10]=="4"){	//PAGO MENSUAL									
+											} else if(arrays[10]=="4"){	//PAGO MENSUAL	
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
-													ultima_cuota = arrays[11].toString();
 													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4];
 												for(var k = 1; k < 2; k++){

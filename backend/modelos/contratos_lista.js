@@ -101,7 +101,7 @@ eje = function(arrays,origen,redisClient) {
 
 																			}else{
 																				redisClient.get("listado_"+resd+"_asesor_"+resd2,function(ses2srr,srepslsy2sx) {
-																					litado.push([reply, repsly, repslqy, [], [],srepslsy2sx]);
+																					litado.push([reply, repsly, repslqy, [], [], srepslsy2sx]);
 																					ind++;
 																					iterar(ind, arrs);
 																				});
