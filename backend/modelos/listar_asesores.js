@@ -33,7 +33,7 @@ eje = function(arrays,origen,redisClient) {
 							function iterar(ind,arrs){
 								if(ind == arrs.length){
 									resolve([true,litado]);
-								} else {
+								} else {									
 									redisClient.get(arrs[ind],function(err,reply) {
 										if (reply!==null) {
 											litado.push(reply);

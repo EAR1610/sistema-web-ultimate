@@ -10,6 +10,7 @@ eje = function(arrays,origen,redisClient) {
 
 
 		/*
+			0		1		2		3		4		5			6			7						8					9						10				11			12
 			recibo tokens, cedula ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL]
 		*/
 

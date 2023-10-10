@@ -1552,7 +1552,6 @@
                                 <label>Id asesor</label>
                                 <select class="form-control m-b" id="id_asesor_cobros">
                                 </select>
-
                             </div>
 
                             <div class="col-sm-6 col-md-4 col-xs-12">
@@ -2890,7 +2889,7 @@
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-        block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];
+        block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];        
         block.obj = {"r": "contratos_lista_all", "d": block.arrays};        
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -4661,9 +4660,10 @@
         block.listax3 = '<option value="">Seleccione asesor</option>';
         block.lista = '';
         block.arrays = [block.tokens[1]];
-        block.obj = {"r": "listar_asesores", "d": block.arrays};
+        block.obj = {"r": "listar_asesores_para_supervisores", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e) {
                 block.todo = valor.d[1];
                 block.aline =[];
@@ -4676,9 +4676,11 @@
                 $("#lista_asesores_general").html(block.listax2);
                 $("#lista_asesores_general2").html(block.listax3);
                 $("#lista_asesores_general3").html(block.listax3);
+                $("#id_asesor_gastos_consulta").html(block.listax2);
+                $("#id_asesor_cobros").html(block.listax2);
+                $("#id_asesor_cierre").html(block.listax2);
 
                 liquidar_sincro(block.aline);
-
             }
         });
     }
@@ -4828,7 +4830,6 @@
             }
         });
 
-
         block.listax = '<option value="">Seleccione</option>';
         block.listax2 = '<option value="">Seleccione</option>';
         block.arrays = [block.tokens[1]];
@@ -4850,10 +4851,7 @@
                 }
                 $("#tipo_cargo_dos").html(block.listax);
                 $("#id_asesor").html(block.listax2);
-                $("#id_asesor_consulta").html(block.listax2);
-                $("#id_asesor_gastos_consulta").html(block.listax2);
-                $("#id_asesor_cobros").html(block.listax2);
-                $("#id_asesor_cierre").html(block.listax2);
+                $("#id_asesor_consulta").html(block.listax2);                
             }
         });
     }
@@ -4872,7 +4870,6 @@
         block.obj = {"r": "extrae_gastos_supervisor", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            //console.log(valor);
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 
@@ -4917,7 +4914,6 @@
             block.obj = {"r": "sumatoria_diario_supervisor", "d": block.arrays}; //Obtiene el token y el ID del asesor
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
-                //console.log(valor);
                 if (!valor.e) {                
                     $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                     $("#text_baseAsesor").text("Q"+valor.d[2]);
@@ -5048,10 +5044,8 @@
             block.obj = {"r": "buscar_cliente_supervisor", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
-                //console.log(valor);
                 if (!valor.e) {
                     block.partes = JSON.parse(valor.d[1]);
-                    // "[9661515,"p.png","n.png","r.png",null,"1","C","2223744498987","ANTONIO","FRANCISCO","SANCHEZ","GOMEZ","Flores","Petén","Flores","Mi casa","56484545","56846464","","MI CASA","2023-10-02 09:52:13"]"
                     block.nomre = block.partes[8] +" "+block.partes[9] +" "+block.partes[10] + " "+block.partes[11];
                     
                     // Agregar una nueva fila a la tabla
@@ -5508,7 +5502,6 @@
         block.obj = {"r": "down_geo_admin", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            //console.log(valor);
             if (!valor.e) {
                 block.listao=valor.d[1];
 
@@ -5553,8 +5546,7 @@
                     this.setZoom(18);
                     google.maps.event.removeListener(boundsListener);
                 });
-
-
+                
             }else{
                 toastr.warning('No posee contratos para generar ruta', 'Atención!');
             }

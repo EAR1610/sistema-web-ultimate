@@ -4968,7 +4968,6 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
                 const button = document.getElementById('registro_base');
 				if(valor.d[2]!=="0" && valor.d[2]!==0){
-                    button.setAttribute('disabled', '');
 					valor.d[2] = valor.d[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 					valor.d[2] = valor.d[2].split('').reverse().join('').replace(/^[\.]/,'');
 				}else{
@@ -7104,8 +7103,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         cargarListas_asigandos();
     }
 
-    $("#registro_relacion").click(function () {
-        debugger;
+    $("#registro_relacion").click(function () {        
         if ($("#tipo_cargo_select_ASIG").val() !== "" && $("#tipo_cargo_dos").val() !== "" && $("#tipo_cargo_uno").val() !== "") {
 
             if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -7138,7 +7136,6 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     }
                 }
             });
-
         }
     });
 
