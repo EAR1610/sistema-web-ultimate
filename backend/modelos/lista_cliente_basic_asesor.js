@@ -22,7 +22,6 @@ eje = function(arrays,origen,redisClient) {
 					/*
 						emito lista de clientes basica segun su orden
 					*/
-					console.log("registro_client_"+decoded.d);
                     redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
                         if(sreply!==null) {
                             var ines = JSON.parse(sreply);
@@ -43,7 +42,7 @@ eje = function(arrays,origen,redisClient) {
 							});
                         }
                     });
-				}else{
+				}else {
 					reject([false,"2"]);
 				}
 			});

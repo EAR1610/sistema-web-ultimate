@@ -27,7 +27,6 @@ eje = function(arrays,origen,redisClient) {
 		
 					redisClient.get("registro_contrato_"+arrays[2],function(err,replyv) {
 						
-						//console.log(err,reply);
 						if(replyv!==null){
 												
 							var reply = JSON.parse(replyv);

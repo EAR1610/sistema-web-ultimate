@@ -9,10 +9,10 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibo token, idasesor, monto
+			recibo token, idasesor, monto
 		*/
 		
-		if (arrays.length==3){
+		if (arrays.length==4){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
@@ -20,28 +20,32 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t=="5"){
 
+					// redisClient.get("base_"+arrays[2],function(ersr,replcy) {
+					// 	if(replcy!==""){
+					// 		redisClient.rename("base_"+arrays[2],"dol_base_"+arrays[2]+"_"+ides,function(ersr,replcy) {});
+					// 	}
+						
+					// 	arrays[0] = ides;
+						
+					// 	redisClient.set("base_"+arrays[2],JSON.stringify(arrays),function(err,reply) {
+					// 		resolve([true,true]);
+					// 	});
+						
+					// });
+
 					var moment = require("moment");
-					var ides = moment().format('YYYY-MM-DD');
-					
+					var fecha = moment().format('YYYY-MM-DD');
+					var hora = moment().format('hh:mm A');
+					var arraybase = [hora, arrays[1],arrays[3],false]
+
 					/*
-					guardoo la nueva base y renombre lo viejo
+						guardoo la nueva base 
 					*/
-					
-					
-					redisClient.get("base_"+arrays[2],function(ersr,replcy) {
-						if(replcy!==""){
-							redisClient.rename("base_"+arrays[2],"dol_base_"+arrays[2]+"_"+ides,function(ersr,replcy) {});
-						}
-						
-						arrays[0] = ides;
-						
-						redisClient.set("base_"+arrays[2],JSON.stringify(arrays),function(err,reply) {
-							resolve([true,true]);
-						});
-						
+
+					redisClient.set("base_"+arrays[2]+"_"+fecha,JSON.stringify(arraybase),function(err,reply) {
+						resolve([true,true]);
 					});
-					
-					
+
 				}else{
 					reject([false,"2"]);
 				}

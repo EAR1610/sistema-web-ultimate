@@ -28,14 +28,7 @@ eje = function(arrays,origen,redisClient) {
 					arrays[0]=hoy;					
 
 					redisClient.keys("asig_"+uni[1]+"_"+uni[2]+"_*",function (sali,slai) {						
-						// if(slai.length > 0){
-						// 	reject([false,"5"]);
-						// }else{
-						console.log("asig_ + uni[1] + _*_ + uni[0] + _ + hoy");
-						console.log("asig_" + uni[1] + "_*_" + uni[0] + "_" + hoy);
-
 						redisClient.keys("asig_" + uni[1] + "_*_" + uni[0] + "_" + hoy,function (salix,slais) {
-							console.log(slais)
 							if (slais.length > 0) {
 								reject([false,"6"]);
 							}else{
@@ -44,7 +37,6 @@ eje = function(arrays,origen,redisClient) {
 								});
 							}
 						});
-						// }
 					});
 					
 				}else{

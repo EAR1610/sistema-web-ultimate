@@ -21,7 +21,6 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="5"){
 
-
 					if(arrays[0]!==null && arrays[1]!==null && arrays[2]!==null && arrays[3]!==null && arrays[4]!==null && arrays[5]!==null && arrays[6]!==null && arrays[7]!==null && arrays[8]!==null && arrays[9]!==null && arrays[10]!==null ){
 						
 						function randomIntFromInterval(min,max){
@@ -77,7 +76,7 @@ eje = function(arrays,origen,redisClient) {
 											*/
 											ultima_cuota = arrays[11].toString();
 
-											if(ultima_cuota === undefined || ultima_cuota === null) return;
+											if(ultima_cuota === undefined || ultima_cuota === null || ultima_cuota === "") return;
 											
 											var fes =[];											
 											if(arrays[10]=="2"){ //FRECUENCIA DE PAGO: SEMANAL												
@@ -89,11 +88,11 @@ eje = function(arrays,origen,redisClient) {
 												for (var k = 1; k < tiempo + 1; k++) {
 													if(k == 4){
 														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
-														fes.push({"cp": ultima_cuota, "ct": false, "fe": prox2, "pe": 0});
+														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													}
 													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 													prox = prox2;
-													fes.push({"cp": cuotaD2, "ct": false, "fe": prox, "pe": 0});
+													fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
 												}
 												if (fes.length > parseInt(arrays[4])) {
 													fes.pop();
@@ -107,18 +106,18 @@ eje = function(arrays,origen,redisClient) {
 													tiempo = arrays[4],
 													acum=1;
 
-												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0});
+												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":""});
 												for(var k = 1; k < tiempo; k++){
 													if( k == (tiempo - 1) ) {
 														if(k<residuo){
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k==residuo){
 															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 															acum++;
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k>residuo){
 															if(acum==7){
@@ -126,20 +125,20 @@ eje = function(arrays,origen,redisClient) {
 																acum=1;
 															}
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 															acum++;
 														}
 													} else {
 														if(k<residuo){
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k==residuo){
 															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 															acum++;
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k>residuo){
 															if(acum==7){
@@ -147,7 +146,7 @@ eje = function(arrays,origen,redisClient) {
 																acum=1;
 															}
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});
+															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 															acum++;
 														}
@@ -165,9 +164,9 @@ eje = function(arrays,origen,redisClient) {
 												for(var k = 1; k < tiempo+1; k++){
 													var prox2 = moment(arrays[5]).add(15, 'days').format('YYYY-MM-DD');													
 													if(k == tiempo - 1){
-														fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});														
+														fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													} else {
-														fes.push({"cp":cuotaD2,"ct":false,"fe":prox2,"pe":0});														
+														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													}
 													prox = prox2;													
 												}												
@@ -178,7 +177,7 @@ eje = function(arrays,origen,redisClient) {
 													tiempo = arrays[4];
 												for(var k = 1; k < 2; k++){
 													var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
-													fes.push({"cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0});
+													fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;
 												}												
 											}																						
@@ -196,8 +195,7 @@ eje = function(arrays,origen,redisClient) {
 													var consecutivo = cant.length + 1;													
 													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/																
 													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;	
-													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(11 + 1));
-													console.log()													
+													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(11 + 1));																									
 													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arraysDB),function(err,reply) {
 												
 														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {

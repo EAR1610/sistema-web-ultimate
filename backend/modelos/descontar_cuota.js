@@ -23,22 +23,15 @@ eje = function(arrays,origen,redisClient) {
 					if(arrays[2]!=="" && arrays[2]!=="0" && arrays[2]!==0){
 						/*
 							Busco contrato y traigo la informacion
-						*/
+						*/						
+
 						redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {
-							console.log("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3]);
-							console.log("reply");
-							console.log(reply);
 							if(reply.length>0){
-								
 								var origena = reply[0],cedulax = origena.split("_") ;
-								
 								/*
-								Busco el cliente de ese contrato
+									Busco el cliente de ese contrato
 								*/
-								
 								redisClient.get("cliente_"+cedulax[1], function (qersr, sreeply) {
-									console.log("cliente_"+cedulax[1]);
-									
 									redisClient.get(reply[0], function (ersr, reeply) {
 										
 										var interno = JSON.parse(reeply);
@@ -74,31 +67,30 @@ eje = function(arrays,origen,redisClient) {
 											}
 
 											var canti = parseInt(lisa[w].cp);
+											var moment = require("moment");
+											var dia = moment().format('YYYY-MM-DD');
 
 											if(!lisa[w].ct) {
 
 												if (monto > canti &&  lisa[w].pe == 0) {
 													lisa[w].ct = true;
 													monto = monto - parseInt(lisa[w].cp);
+													lisa[w].pago = dia;
 												} else if (monto == canti && lisa[w].pe == 0) {
 													lisa[w].ct = true;
 													monto = 0;
+													lisa[w].pago = dia;
 												} else if(lisa[w].pe == 0 && monto>0){
 													lisa[w].ct = false;
 													lisa[w].pe = monto;
 													monto = 0;
+													lisa[w].pago = dia;
 												}
-
 											}
-
 										}
-										
 										/*
 											descuento y sumo los valores que necesito calcular
-										*/
-										
-													
-										var moment = require("moment"),fechaqx2 = moment().format('YYYY-MM-DD');
+										*/										
 										var asesorw = arrays[1];
 										if(arrays[2]==lisa[lisa.length-1].cp){
 										
@@ -113,11 +105,11 @@ eje = function(arrays,origen,redisClient) {
 												}
 											});
 										}
-																				
-										
+
 										redisClient.set("liquido_"+arrays[4]+"_"+fechaq+"_"+arrays[2]+"_"+lisa[lisa.length-1].cp,"true", function (errex, rewprlyx) { 
 										});
-																							
+
+										var moment = require("moment"),fechaqx2 = moment().format('YYYY-MM-DD');													
 										var fechaq = moment().format('YYYY-MM-DD_hh_mm_A'),asesorw = arrays[1];
 										redisClient.set("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3]+"_"+cedulax[1],"true", function (errex, rewprlyx) {
 										});
@@ -129,8 +121,6 @@ eje = function(arrays,origen,redisClient) {
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
 												
 												redisClient.rename(origena,"old_"+origena,function(errx,replyx) {
-													
-													
 													var moment = require("moment");
 													var dia = moment().format('YYYY-MM-DD');
 													var bou = [interno,arrays[2]];
@@ -189,26 +179,14 @@ eje = function(arrays,origen,redisClient) {
 											});
 										
 										}else if(finiquite >= lisa.length){
-											console.log("finiquite >= lisa.length");
-											console.log(finiquite >= lisa.length);
 											var moment = require("moment"),fechaq = moment().format('YYYY-MM-DD');
 											lisa.push({"cp":"0","ct":false,"fe":fechaq,"pe":monto2});
-											console.log("lisa")
-											console.log(lisa)
 											interno[13] = lisa;
-											console.log("interno[13]");
-											console.log(interno[13]);
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
-												console.log("origena,JSON.stringify(interno");
-												console.log(origena,JSON.stringify(interno));
-
 												resolve([true,interno,sreeply]);
 											});
 										}else{//descuento normal
-											console.log("descuento normal");
 											interno[13] = lisa;
-											console.log("interno[13]");
-											console.log(interno[13]);
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
 												resolve([true,interno,sreeply]);
 											});

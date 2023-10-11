@@ -9,44 +9,40 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-			recibe token y idasesor
+		recibe token y idasesor
 		*/
+		
 		if (arrays.length==2){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "2" || decoded.t == "5" || decoded.t == "4"){
-					
+				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){					
 					var moment = require("moment");
 					var dia = moment().format('YYYY-MM-DD');
-					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"
+					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"					
 					/*
-					toma los monto y los suma
-					*/
-					
+						toma los monto y los suma
+					*/					
 					redisClient.keys(coando,function(err3,reply3){
-						if(reply3.length > 0){
+						if(reply3.length > 0){							
 							var total=0;
 							for(var es = 0; es < reply3.length; es ++){
 								var explit  = reply3[es].split("_");
-								total = total + parseInt(explit[2]);
-								
+								total = total + parseInt(explit[2]);								
 								if(es==reply3.length-1){
-									redisClient.get("base_"+arrays[1],function(ersr,replcy) {
+									redisClient.get("base_"+arrays[1]+"_"+dia,function(ersr,replcy) {
 										if(replcy!==null){
 											var inf = JSON.parse(replcy);
-											resolve([true,total,inf[1],inf[0]]);
+											resolve([true,total,inf[1],dia]);
 										}else{
 											resolve([true,total,"0","Sin base"]);
 										}
 									});
-								}
-								
-							}
-							
-						}else{ 
+								}								
+							}							
+						} else {
 							redisClient.get("base_"+arrays[1],function(ersr,replcy) {
 								if(replcy==null){
 									resolve([true,0,0,"Sin base"]);
@@ -56,17 +52,59 @@ eje = function(arrays,origen,redisClient) {
 								}
 							});
 						}
-					});
-					
-				}else{
+					});					
+				} else {
 					reject([false,"2"]);
 				}
 			});
 			
-		}else{
-			reject([false,"3"]);
+		} else if (arrays.length==3){
+			var jwt = require('jsonwebtoken');
+			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
+				if (err) {
+					reject([false,"1"]);
+				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
+					var dia = arrays[2];
+					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"					
+					/*
+						toma los monto y los suma
+					*/					
+					redisClient.keys(coando,function(err3,reply3){
+						if(reply3.length > 0){							
+							var total=0;
+							for(var es = 0; es < reply3.length; es ++){
+								var explit  = reply3[es].split("_");
+								total = total + parseInt(explit[2]);								
+								if(es==reply3.length-1){
+									redisClient.get("base_"+arrays[1]+"_"+dia,function(ersr,replcy) {
+										if(replcy!==null){
+											var inf = JSON.parse(replcy);
+											resolve([true,total,inf[1],dia]);
+										} else {
+											resolve([true,total,"0","Sin base"]);
+										}
+									});
+								}								
+							}							
+						}else{
+							redisClient.get("base_"+arrays[1],function(ersr,replcy) {
+								if(replcy==null){
+									resolve([true,0,0,"Sin base"]);
+								}else{
+									var inf = JSON.parse(replcy);
+									resolve([true,0,inf[1],inf[0]]);
+								}
+							});
+						}
+					});					
+				}else{
+					reject([false,"2"]);
+				}
+			});
 		}
-		
+		else{
+			reject([false,"3"]);
+		}		
 	});
 };
 
