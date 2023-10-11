@@ -59,7 +59,6 @@
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 35, 210, 10, 'F');
             doc.setFontSize(18);
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
             doc.setFont('Helvetica', 'bold')
             doc.text(NombreEmpresa, 105, 10, null, null, "center");
             doc.text("Reporte de cobros", 105, 20, null, null, "center");
@@ -119,15 +118,13 @@
             }
 
         
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
             doc.setTextColor(0, 0, 0);
             doc.setFont('Helvetica', 'bold'); 
             doc.text('Total monto', 10, y);
             doc.text("Q" + total.toString(), 160, y);
             doc.setFont('Helvetica'); 
 
-            doc.save('Reporte de gastos por cobros ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
-            
+            doc.save('Reporte de gastos por cobros ' + fechaFormateada + ' Hora:' + hora + '.pdf');             
         }
 
         function imprimir_texto(doc, texto, x, y, size, color, align) {
@@ -175,7 +172,6 @@
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 35, 210, 10, 'F');
             doc.setFontSize(18);
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
             doc.setFont('Helvetica', 'bold')
             doc.text(NombreEmpresa, 105, 10, null, null, "center");
             doc.text("Reporte de gastos", 105, 20, null, null, "center");
@@ -214,23 +210,19 @@
                 }
                 y += 10; 
             }
-
             
             if (y > maxPageHeight) {
                 doc.addPage();
                 y = 20;
             }
-
             
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
-
             doc.setTextColor(0, 0, 0);
             doc.setFont('Helvetica', 'bold'); 
             doc.text('Total', 10, y);
             doc.text("Q" + total.toString(), 160, y);
             doc.setFont('Helvetica');        
 
-            doc.save('Reporte de gastos por fechas ' + fechaFormateada + ' Hora:' + hora + '.pdf');        
+            doc.save('Reporte de gastos por fechas ' + fechaFormateada + ' Hora:' + hora + '.pdf');
         }
 
     
@@ -279,7 +271,6 @@
             var total2 = 0; 
 
             doc.setFontSize(18);
-            doc.addFont("Helvetica-Bold","Helvetica", "bold")
             doc.setFont("Helvetica","bold")
             doc.text(NombreEmpresa,105,10,null,null,"center");
             doc.text("Reporte de Cierre",105,20,null,null,"center")
@@ -290,12 +281,12 @@
             doc.text("Nombre de asesor: " + nombreAsesorReportee,10,50);
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 55, 210,10, "F");
-            doc.text("Basse diaria: " + baseDiaria,10,60);
+            doc.text("Base diaria: " + baseDiaria,10,60);
             doc.text("Total recaudado: "+ totalRecaudado, 70, 60);
             doc.text("Total gastos: " + totalGastos, 140,60);
 
             doc.text("Total sistema: " + totalSistema,10,70);
-            doc.text("Total asesor: " + totalAsesor,70,70);
+            doc.text("Total asesor: Q" + totalAsesor,70,70);
             doc.text("Diferencia: " + totalDiferencia, 140, 70);
 
             doc.setFillColor(200,200,200);
@@ -361,79 +352,73 @@
                     }
                  y1 += 10; 
                 
+            }
+
+            if(y1 > maxPageHeight){
+                doc.addPage();
+                y1 = 20
+            }
+
+            doc.setTextColor(0,0,0)
+            doc.setFont("Helvetica","bold");
+            doc.text("Total:                                                                                                                            Q"+ total2.toString(),10,y1);
+
+            //Gastos
+            var datos = [];
+            var total = 0;
+
+            for(var i = 0; i < filas.length; i++){
+                var celdas = filas[i].getElementsByTagName("td");
+                if(celdas.length === 2){
+                    var motivo = celdas[0].textContent;
+                    var monto = parseFloat(celdas[1].textContent.replace("Q",""));
+                    datos.push({motivo: motivo, monto: monto});
+                    total += monto;
                 }
+            }
 
-                if(y1 > maxPageHeight){
-                    doc.addPage();
-                    y1 = 20
-                }
+            var y = y1 + 20;
 
-                doc.setTextColor(0,0,0)
-                doc.setFont("Helvetica","bold");
-                doc.text("Total:                                                                                                                            Q"+ total2.toString(),10,y1);
+            doc.setFillColor(200,200,200);
+            doc.rect(0,y -10, 210,10, "F");
+            doc.setTextColor(0,0,0);
+            doc.text("Motivo de gasto",10, y -4);
+            doc.text("Monto",170, y -4);
+            y += 10;
 
-                //Gastos
-                var datos = [];
-                var total = 0;
-
-                for(var i = 0; i < filas.length; i++){
-                    var celdas = filas[i].getElementsByTagName("td");
-                    if(celdas.length === 2){
-                        var motivo = celdas[0].textContent;
-                        var monto = parseFloat(celdas[1].textContent.replace("Q",""));
-                        datos.push({motivo: motivo, monto: monto});
-                        total += monto;
-                    }
-                }
-
-                var y = y1 + 20;
-
-                doc.setFillColor(200,200,200);
-                doc.rect(0,y -10, 210,10, "F");
-                doc.setTextColor(0,0,0);
-                doc.text("Motivo de gasto",10, y -4);
-                doc.text("Monto",170, y -4);
-                y += 10;
-
-                for(var i = 0; i < datos.length; i ++){
-                    if(y > maxPageHeight){
-                        doc.addPage();
-                        y = 20;
-                        doc.setTextColor(0,0,0);
-                        doc.text("Motivo de gasto",10, y);
-                        doc.text("Monto",170,y);
-                        y += 10;
-                    }
-                    doc.setTextColor(0, 0, 0);
-                    doc.setFont("bold");
-                    doc.setFontSize(10);
-                    doc.text(datos[i].motivo.toString(), 10, y);
-                    doc.text("Q" + datos[i].monto.toString(), 170, y);
-                    doc.setFont("normal");
-                    doc.setFontSize(12);
-                    if (i < datos.length - 1) {
-                        doc.line(10, y + 5, 200, y + 5);
-                    }
-                    y += 10;
-                }
-
+            for(var i = 0; i < datos.length; i ++){
                 if(y > maxPageHeight){
                     doc.addPage();
                     y = 20;
+                    doc.setTextColor(0,0,0);
+                    doc.text("Motivo de gasto",10, y);
+                    doc.text("Monto",170,y);
+                    y += 10;
                 }
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("bold");
+                doc.setFontSize(10);
+                doc.text(datos[i].motivo.toString(), 10, y);
+                doc.text("Q" + datos[i].monto.toString(), 170, y);
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    doc.line(10, y + 5, 200, y + 5);
+                }
+                y += 10;
+            }
 
-                doc.setTextColor(0,0,0)
-                doc.setFont("Helvetica", "bold");
-                doc.text("Total:                                                                                                                              Q"+ total.toString(),10,y);
+            if(y > maxPageHeight){
+                doc.addPage();
+                y = 20;
+            }
 
-            
-            
-                doc.save('Reporte Cierre de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
-
-
+            doc.setTextColor(0,0,0)
+            doc.setFont("Helvetica", "bold");
+            doc.text("Total:                                                                                                                              Q"+ total.toString(),10,y);
+                         
+            doc.save('Reporte Cierre de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
         }
-
-
 
         function imprimir_texto(doc, texto, x, y, size, color, align) {
             doc.setFontSize(size);
@@ -442,7 +427,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('boton_pdf_cierre').addEventListener('click', function() {
+            document.getElementById('boton_Reporte_Cierre').addEventListener('click', function() {
                 generarPDFCierre();
             });
         });
@@ -1128,12 +1113,6 @@
                             <button class="btn btn-primary btn-sm" style="margin-left: 14px;" id="registro_finalm" type="button">Registrar en sistema</button>
                         </form>
                     </div>
-
-                    <div class="col-xs-12 " style="margin-top: 1px">
-                        <form role="form">
-                            <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1183,7 +1162,7 @@
 
                     <a href="#"><i class="fa fa-copy"></i> <span class="nav-label">Contrato</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="javascript:crear_contrato();">Registrar</a></li>
+                        <!-- <li><a href="javascript:crear_contrato();">Registrar</a></li> -->
                         <li><a href="javascript:vers_contratos();">Consultar</a></li>
                        <!-- <li><a href="javascript:migrar_cion();">Migrar</a></li>-->
                     </ul>
@@ -1928,10 +1907,10 @@
                                 <form role="form">
                                     <label>Prestamos permitidos</label>
                                     <select class="form-control m-b" id="mora_clientes_prestamo">
-                                        <option value="">Seleccione</option>
-                                        <option value="1">Permitir crear prestamo a pesar que tiene otros prestamos otras empresas</option>
-                                        <option value="2">Permitir al cliente tener mas de 1 creditos son asesores distintos</option>
-                                        <option value="3">No aprobar mas de 1 creditos a los clientes con asesores distintos</option>
+                                        <!-- <option value="">Seleccione</option> -->
+                                        <!-- <option value="1">Permitir crear prestamo a pesar que tiene otros prestamos otras empresas</option> -->
+                                        <!-- <option value="2">Permitir al cliente tener mas de 1 creditos son asesores distintos</option> -->
+                                        <option value="3">No aprobar mas de 1 crédito a los clientes con asesores distintos</option>
                                     </select>
                                 </form>
 
@@ -2309,17 +2288,17 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-6 col-md-2 col-xs-6">
+                            <!-- <div class="col-sm-6 col-md-2 col-xs-6">
                                 <form role="form" style="margin-top: 24px;display:grid;">
                                     <button type="button" class="btn btn-success" id="comporta">Comportamiento</button>
                                 </form>
-                            </div>
+                            </div> -->
 
-                            <div class="col-sm-6 col-md-1 col-xs-6" style="display:none">
+                            <!-- <div class="col-sm-6 col-md-1 col-xs-6" style="display:none">
                                 <form role="form" style="margin-top: 24px;display:grid;">
                                     <button type="button" class="btn btn-danger" id="boton_Reporte"><i class="fa fa-file-pdf"></i></button>
                                 </form>
-                            </div>
+                            </div> -->
 
                             <div class="table-responsive">
                                 <table class="table table-striped sortable" >
@@ -2329,10 +2308,8 @@
                                         <th>Cliente</th>
                                         <th>Alias</th>
                                         <th>Valor cuota</th>
-                                        <th>Dia</th>
-                                        <th>Hoy</th>
                                         <th>Saldo favor</th>
-                                        <th>Recaudo</th>
+                                        <!-- <th>Recaudo</th> -->
                                         <th>Prestamo</th>
                                         <th>Total deuda</th>
                                     </tr>
@@ -2523,7 +2500,7 @@
                                         <th>Cuotas</th>
                                         <!-- <th>Ayudante</th>
                                         <th>Supervidor</th> -->
-                                        <th>Opciones</th>
+                                        <!-- <th>Opciones</th> -->
                                     </tr>
                                     </thead>
                                     <tbody id="lista_enorme">
@@ -2539,21 +2516,34 @@
                 <div class="col-lg-12" id="cierre_view">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Consulta de cierre</h5>
+                            <h5>Cierre Diario</h5>
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
-                            <div class="col-md-6 col-xs-12" >
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <select class="form-control m-b" id="id_asesor_cierre" style="margin-right: 20px;">
-                                    </select>
-                                    <button type="button" class="btn btn-danger px-5" id="boton_pdf_cierre"><i class="fa fa-file-pdf"></i></button>
-                                </div>                            
-                                <!-- <select class="form-control m-b" id="id_asesor_cierre">
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>Asesor</label>
+                                <select class="form-control m-b" id="id_asesor_cierre">
                                 </select>
-                                <div style="margin-top: 24px; display: flex; align-items: center;">
-                                    <button type="button" class="btn btn-danger" id="boton_pdf_cierre"><i class="fa fa-file-pdf"></i></button>
-                                </div> -->
+                            </div>
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_cierre"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
+                                <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
+                                        id="busqueda_cierre"
+                                        type="button">Buscar
+                                </button>
+                                <form role="form" style="margin-top: 24px;display:grid; margin-bottom: 10px;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte_Cierre"><i class="fa fa-file-pdf"></i></button>
+                                </form>
+
                             </div>
 
                             <div class="table-responsive">
@@ -2650,22 +2640,10 @@
                                         id="busqueda_utilidades"
                                         type="button">Buscar
                                 </button>
+
                                 <form role="form" style="margin-top: 24px;display:grid;">
                                     <button type="button" class="btn btn-danger" id="boton_Reporte_Utilidades"><i class="fa fa-file-pdf"></i></button>
                                 </form>
-
-                            </div>
-                            <div class="table-responsive" style="margin-top: 50px;">
-                                <table class="table table-striped" >
-                                    <!-- <thead>
-                                    <tr align="center">
-                                        <th>Motivo de gasto</th>
-                                        <th>Monto</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody align="center" id="lista_gastos_exe">
-                                    </tbody> -->
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -2931,13 +2909,6 @@
                                     </button>
                                 </form>
                             </div>
-
-                            <div class="col-xs-12 " style="margin-top: 3%;">
-                                <form role="form">
-                                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
-                                </form>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -3081,8 +3052,6 @@
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
-
-
 	}
 
     $("#selector_cuotas_selec").change(function(){
@@ -3130,6 +3099,59 @@
             $("#utilidad_prestada_peso").html("0");
             $("#utilidad_prestada").html("0");
             $("#utilidad_cuota").html("0");
+        }
+    });
+
+    function buscar_cierre(asesor, fecha){
+        // fecha para usarla en registrar cierre
+        debugger;
+        block.fecha_cierre=fecha;
+        block.ase = asesor;
+        $("#lista_enorme").html("");
+        listado_contratos("0");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1],block.ase,fecha];
+        console.log(block.arrays);
+        block.obj = {"r": "sumatoria_diario_supervisor", "d": block.arrays}; //Obtiene el token y el ID del asesor
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            console.log(valor);
+            if (!valor.e) {                   
+                $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
+                $("#text_baseAsesor").text("Q"+valor.d[2]);
+                const base = parseFloat($("#text_baseAsesor").text().slice(1));
+                const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
+                const totalSistema = base + recaudado;
+                $("#text_total_sistema").text("Q"+totalSistema);
+                totalGastos();
+            }
+        });
+        extraer_gastosAsesor();
+        extraer_cobros_cierre(asesor, "#listado_cobros_cierre", false);
+    }
+
+    $("#busqueda_utilidades").click(function(){
+        console.log($("#fecha__inicial_utilidades").val() === "")
+        console.log($("#fecha_final_utilidades").val() === "")
+
+        if($("#fecha__inicial_utilidades").val() === "" || $("#fecha_final_utilidades").val() === ""){
+            toastr.warning("Por favor, verifique las fechas", "Atención");
+        } else {
+            toastr.success("Se ha cargado las utilidades", "Atención");
+        }
+    });
+
+    $("#busqueda_cierre").click(function(){
+        const asesor = $('#id_asesor_cierre').val();
+        const fecha_cierre = $('#fecha_cierre').val();
+        if (asesor!=="" && fecha_cierre!==""){
+            buscar_cierre(asesor,fecha_cierre);
         }
     });
 
@@ -3476,9 +3498,9 @@
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
     
-        var fecha = new Date().toISOString().split('T')[0];
+        // var fecha = new Date().toISOString().split('T')[0];
         block.estraa = $("#id_asesor_cierre").val();
-        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.arrays = [block.tokens[1], block.estraa, $("#fecha_cierre").val()];
         block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -3497,7 +3519,7 @@
         });        
     }
 
-function extraer_cobros(id_asesor, id_tabla, hoy) {
+function extraer_cobros(id_asesor, id_tabla, hoy) {    
     if (window.localStorage.getItem("Money-vars-token") !== null) {
         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
     } else {
@@ -3523,8 +3545,32 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
             $(id_tabla).html(block.inefd);
         }
     });
+}   
 
-}    
+function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
+    if (window.localStorage.getItem("Money-vars-token") !== null) {
+        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    } else {
+        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    }
+    var fecha = hoy ? moment().format('YYYY-MM-DD') : $("#fecha_cierre").val();
+    
+    block.estraa = id_asesor;
+    block.arrays = [block.tokens[1], block.estraa, fecha];
+    block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
+    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        var valor = JSON.parse(salida);
+        var cobro;
+        block.inefd='';
+        if(valor.d[1].length>0){
+            for(var j=0; j<valor.d[1].length;j++){
+                cobro = valor.d[1][j];
+                block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
+            }
+            $(id_tabla).html(block.inefd);
+        }
+    });
+}
     function listar_contratos(){
         var clientes_listado = JSON.parse(localStorage.getItem('clientes'));
         block.inefd='';
@@ -4003,7 +4049,9 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 				block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
 			}
 
-			block.arrays = [block.tokens[1],$("#base_monto").val(),block.ecto[0]];
+			const id_usuario = block.tokens[5] = "-" ? "sa" : block.tokens[5];
+			block.arrays = [block.tokens[1],$("#base_monto").val(),block.ecto[0],id_usuario];
+
 			block.obj = {"r": "save_base_asesor", "d": block.arrays};
 			backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 				var valor = JSON.parse(salida);
@@ -4481,7 +4529,10 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
                     //block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td><td>'+block.tresx[24]+'_'+block.unox[0]+'</td> <td>'+block.tresx[6]+'</td> <td>'+block.tresx[7]+' '+block.tresx[9]+'</td><td>'+block.asesor+'</td><td>$'+block.unox[3]+'</td> <td>'+block.unox[7]+'</td> <td>$'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li><li><a class="dropdown-item"  href="javascript:eliminar_edit_ya('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-pencil"></i> &nbsp Editar</a></li><li><a class="dropdown-item" href="javascript:refinanciar_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+')"><i class="fa fa-retweet"></i> &nbsp Refinanciar</a></li> <li class="dropdown-divider"></li><li><a class="dropdown-item"  href="javascript:impresion_lis('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-print"></i> &nbsp Imprimir</a></li> <li class="dropdown-divider"></li> </ul></div></td></tr>';
 
-					block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td><td>'+block.tresx[24]+'_'+block.unox[0]+'</td> <td>'+block.tresx[6]+'</td> <td>'+block.tresx[7]+' '+block.tresx[9]+'</td><td>'+block.asesor+'</td><td>Q'+block.unox[3]+'</td> <td>'+block.unox[7]+'</td> <td>Q'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li><li><a class="dropdown-item"  href="javascript:eliminar_edit_ya('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-pencil"></i> &nbsp Editar</a></li></ul></div></td></tr>';
+                    /*      Eliminar un contrato    */
+                    // <td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li><li><a class="dropdown-item"  href="javascript:eliminar_edit_ya('+String.fromCharCode(39)+'contrato_'+block.unox[1]+'_'+block.unox[2]+'_'+block.unox[5]+'_'+block.unox[0]+String.fromCharCode(39)+');"><i class="fa fa-pencil"></i> &nbsp Editar</a></li></ul></div></td>
+
+					block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td><td>'+block.tresx[24]+'_'+block.unox[0]+'</td> <td>'+block.tresx[6]+'</td> <td>'+block.tresx[7]+' '+block.tresx[9]+'</td><td>'+block.asesor+'</td><td>Q'+block.unox[3]+'</td> <td>'+block.unox[7]+'</td> <td>Q'+block.unox[8]+'</td><td>'+block.ayudan+'</td><td>'+block.superv+'</td></tr>';
 
                 }
                 $("#lista_enorme").html(block.oso);
@@ -4542,9 +4593,12 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 					}
 				}
 
+                /*  *  PARA ELIMINAR UN CONTRATO POR PARTE DEL JEFE  */
+                // <td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td>
+
 				block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
-				block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td></tr>';
+				block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td></tr>';
 
                 block.unico++;
                 listado_contratos(block.unico);
@@ -4915,7 +4969,11 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 						block.sale2 = block.sale2.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                         block.totaldu = block.sale2.split('').reverse().join('').replace(/^[\.]/,'');
 
-						block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td></td><td></td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.clienes[7]+'_'+block.ince+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
+                        /* PARA DESCONTAR UNA CUOTA */
+
+                        // <td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.clienes[7]+'_'+block.ince+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td>
+
+						block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
 					}
 					$("#listado_operacion_asesore").html(block.unids);
                 }
@@ -7087,8 +7145,6 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                 $("#id_asesor_gastos_consulta").html(block.listax2);
                 $("#id_asesor_cobros").html(block.listax2);
                 $("#id_asesor_cierre").html(block.listax2);
-                
-                
             }
         });
     }
@@ -7104,45 +7160,45 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         }
     });
 
-    $("#id_asesor_cierre").change(function(){        
-        if($("#id_asesor_cierre").val()!==""){
-            block.ase = $("#id_asesor_cierre").val();
-            $("#lista_enorme").html("");
-            listado_contratos("0");
+    // $("#id_asesor_cierre").change(function(){        
+    //     if($("#id_asesor_cierre").val()!==""){
+    //         block.ase = $("#id_asesor_cierre").val();
+    //         $("#lista_enorme").html("");
+    //         listado_contratos("0");
 
-            if (window.localStorage.getItem("Money-vars-token") !== null) {
-                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-            } else {
-                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-            }
+    //         if (window.localStorage.getItem("Money-vars-token") !== null) {
+    //             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+    //         } else {
+    //             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+    //         }
 
-            block.arrays = [block.tokens[1]];  
-            block.obj = {"r": "down_configuracion", "d": block.arrays};
-            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-                var valor = JSON.parse(salida);
-                if (!valor.e && valor.d[1] !== null) {
-                    window.sessionStorage.setItem("Configuracion",valor.d[1]);
-                }
-            });
+    //         block.arrays = [block.tokens[1]];  
+    //         block.obj = {"r": "down_configuracion", "d": block.arrays};
+    //         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+    //             var valor = JSON.parse(salida);
+    //             if (!valor.e && valor.d[1] !== null) {
+    //                 window.sessionStorage.setItem("Configuracion",valor.d[1]);
+    //             }
+    //         });
             
-            block.arrays = [block.tokens[1],block.ase];
-            block.obj = {"r": "sumatoria_diario", "d": block.arrays};
-            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-                var valor = JSON.parse(salida);            
-                if (!valor.e) {                
-                    $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
-                    $("#text_baseAsesor").text("Q"+valor.d[2]);
-                    const base = parseFloat($("#text_baseAsesor").text().slice(1));
-                    const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-                    const totalSistema = base + recaudado;
-                    $("#text_total_sistema").text("Q"+totalSistema);
-                    totalGastos();
-                }
-            });
-        }
-        extraer_gastosAsesor();
-        extraer_cobros("#id_asesor_cierre","#listado_cobros_cierre",true);
-    });
+    //         block.arrays = [block.tokens[1],block.ase];
+    //         block.obj = {"r": "sumatoria_diario", "d": block.arrays};
+    //         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+    //             var valor = JSON.parse(salida);            
+    //             if (!valor.e) {                
+    //                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
+    //                 $("#text_baseAsesor").text("Q"+valor.d[2]);
+    //                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
+    //                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
+    //                 const totalSistema = base + recaudado;
+    //                 $("#text_total_sistema").text("Q"+totalSistema);
+    //                 totalGastos();
+    //             }
+    //         });
+    //     }
+    //     extraer_gastosAsesor();
+    //     extraer_cobros("#id_asesor_cierre","#listado_cobros_cierre",true);
+    // });
 
     function totalGastos(){
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -7741,7 +7797,9 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
     $("#configurar_directa").click(function () {
         block.refinanciacioinCoun = $("#count_refinansacion").val();
+
         if(block.refinanciacioinCoun==""){ block.refinanciacioinCoun = 3;}
+
         block.nombremp = $("#nom_empresa").val();
         block.direcccion = $("#dire_empresa").val();
         block.nit_empresa = $("#nit_empresa").val();
@@ -8008,9 +8066,6 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "initial");
     }
-
-
-
 
     function vers_contratos(){
         $("#crear_contrato_form").css("display", "none");

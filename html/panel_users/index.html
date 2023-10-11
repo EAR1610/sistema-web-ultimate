@@ -39,8 +39,6 @@
     <script>
     
     function generarPDFPago() {
-        
-        
 
         var doc = new window.jspdf.jsPDF({
             unit: 'mm',
@@ -66,7 +64,6 @@
         let nombreAsesor = infoSeparada.slice(0, 2).join(" ");
         let apellidoAsesor = infoSeparada.slice(2).join(" ");
 
-
         doc.setFontSize(18);
         doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
         doc.setFont('Helvetica', 'bold')
@@ -76,7 +73,6 @@
         doc.setDrawColor(0, 0, 0);
         doc.setLineDash([3, 3], 0);
         doc.line(10, 15, doc.internal.pageSize.getWidth() - 10, 15); 
-
 
         doc.setFont('Helvetica', 'bold');
         imprimir_texto(doc, 'Fecha: ', 10, 20, 12, 'black', 'left');
@@ -115,14 +111,12 @@
         doc.setFont('Helvetica', 'normal');
         imprimir_texto(doc,'Q' + saldoAnterior.toString() ,45 ,60 ,12 ,'black' ,'left');
 
-        
-
         doc.autoPrint(); 
         doc.output('dataurlnewwindow');
 
         setTimeout(function(){
             location.reload();
-        }, 9000);
+        }, 5000);
     }
 
     function imprimir_texto(doc, texto, x, y, size, color, align) {
@@ -130,7 +124,6 @@
         doc.setTextColor(color);
         doc.text(texto, x, y, {align: align});
     }   
-
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('boton_pdff').addEventListener('click', function() {
@@ -560,10 +553,11 @@
                             <div class="col-sm-6 col-md-3 col-xs-12">
                                 <form role="form">
                                     <div class="form-group"><label>Total de prestamo</label> <input onkeyup="format(this)" onchange="format(this)"
-                                            id="monto_prestar_ya_admin"
-                                            type="text"
-                                            placeholder="" maxlength="10"
-                                            class="form-control"></div>
+                                        id="monto_prestar_ya_admin"
+                                        type="text"
+                                        placeholder="" maxlength="10"
+                                        class="form-control">
+                                    </div>
                                 </form>
                             </div>
 
@@ -601,10 +595,10 @@
                             <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
                                     <div class="form-group"><label>Cuotas a descontar</label> <input
-                                            id="cuota_descontar_sistema"
-                                            type="number"  value="0"
-                                            placeholder="" maxlength="3"
-                                            class="form-control"></div>
+                                        id="cuota_descontar_sistema"
+                                        type="number"  value="0"
+                                        placeholder="" maxlength="3"
+                                        class="form-control"></div>
                                 </form>
                             </div>
 
@@ -2008,8 +2002,8 @@
     $("contratos_view").css("display", "none");
 
     function buscar_mapa(){
-        $("contratos_view").css("display", "none");
         $("#googleMap").css("display","initial");
+        $("#contratos_view").css("display", "none");          
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#cobrar_couta").css("display", "none");
@@ -2075,7 +2069,7 @@
 
     down_configuracion();
 
-    function procesarDescuento(Numcuota,cedula){
+    function procesarDescuento(Numcuota,cedula) {
         
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -2086,7 +2080,7 @@
 		block.tempFecha = window.sessionStorage.getItem("Money-vars-fecha");
         
         block.arrays = [block.tokens[1],block.tokens[5],Numcuota,cedula[0],cedula[1]];
-        block.obj = {"r": "descontar_cuota", "d": block.arrays};
+        block.obj = { "r": "descontar_cuota", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {   
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
@@ -2225,7 +2219,6 @@
 
     $("#crear_contrato").click(function () {
         if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!==""){
-            debugger;
             block.asesor = $("#selector_asesores_lista").val();
             block.monto_prestar = $("#monto_prestar_ya_admin").val();
             block.frecuencia = $("#selector_frecuencia").val();
@@ -2248,18 +2241,17 @@
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                     var valor = JSON.parse(salida);
                     $("#text_cedula_cliente").prop("disabled",false);
-                    if (!valor.e) {
-                        
+                    if (!valor.e) {                        
                         if(valor.d[1]=="4"){
                             toastr.warning('Este cliente ya está registrado con otro asesor', 'Atención!');
                         } else {
-                            toastr.success('Creado con éxito el contrato', 'éxito!');
+                            toastr.success('Creado con Atención el contrato', 'Atención!');
                         }
-
-                        if(parseInt(block.descontar)>0){
+                        if( parseInt( block.descontar ) > 0 ){
                             window.sessionStorage.setItem("Money-vars-descontar-cuota",block.quedo_cuota);
                             block.teaa = window.sessionStorage.getItem("Money-vars-registrado");
                             $("#text_cedula_cliente2").val(block.teaa);
+
                             setTimeout(function(){
                                 block.numes = $("#cuota_descontar_sistema").val();
                                 block.ress = block.quedo_cuota.replace(".","");
@@ -2271,18 +2263,15 @@
                                 $("#limpiar_contrato").click();
                                 descontar_cuotax();
                             },1000);
+
                         }else{
                             $("#limpiar_contrato").click();
                         }
 
-                        
                         setTimeout(function(){
                             location.reload();
                         }, 2000);
-    
-						
-                    }
-                    else{
+                    } else {
                         if(valor.d[1]=="4"){
                             toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'System notification!');
                         }else if(valor.d[1]=="8"){
@@ -2294,11 +2283,9 @@
                         }
                     }
                 });
-
             }else{
                 toastr.warning('No puede colocar prestamo de '+block.dias+' cuotas y va a descontar '+block.descontar+' cuotas ', 'System notification!');
             }
-
         }else{
             toastr.warning('No esta registrado el cliente', 'System notification!');
         }
@@ -2985,7 +2972,6 @@
     });
 	
 	function fijar_monto(id,cedula){   
-        debugger; 
 		window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));
 		$("#cuotas_coun").css("display","block");
 		$("#cedula_elecion").css("display","none");
@@ -3017,21 +3003,21 @@
                         block.contador_cuotas++;                        
 					}
                     
-					if(block.cuotas[13][x].pe!==0){                        
+					if(block.cuotas[13][x].pe!==0) {                        
                         block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);                        
 						//abono
 						block.abono = block.cuotas[13][x].pe.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 						block.abono = block.abono.split('').reverse().join('').replace(/^[\.]/,'');
 						block.compl = "Abono \n Q"+block.abono;
 						block.coloe = "#343a40";
-					}else if(block.cuotas[13][x].ct == true){
+					} else if(block.cuotas[13][x].ct == true) {
                         block.acumo = block.acumo + parseInt(block.cuotas[13][x].cp);                        
 						//completa
 						block.completo = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                        
 						block.completo = block.completo.split('').reverse().join('').replace(/^[\.]/,'');
 						block.compl = "Pago cuota \n Q"+block.completo;
 						block.coloe = "#28a745";
-					}else{
+					} else {
                         //falta                        
 						block.espera = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                        
 						block.espera = block.espera.split('').reverse().join('').replace(/^[\.]/,'');                        
@@ -3070,13 +3056,13 @@
 				$("#valor_prestame").text(block.cuotas[8]);      // cuota a pagar      
 				$("#pago_prestame").text(block.valoes-block.acumo); // saldo pendiente
 				$("#entregado_prestame").text(block.cuotas[3]); //Saldo entregado
-				$("#descuento_prestame").text("0"); //
+				$("#descuento_prestame").text("0"); 
 				$("#text_nombre_cliente2").val(block.extraer[8]+" "+block.extraer[9]+" "+block.extraer[10]+" "+block.extraer[11]); //Nombre1, Nombre2, Apellido1, Apellido2
 				
 				recargarCalendar(block.todosCal);
 				
-			}else{
-				toastr.warning('No exite cuotas con este usuario', 'System notification!');
+			} else {
+				toastr.warning('No exite cuotas con este usuario', 'Atención!');
 				$("#queda_debiendo").text("0");
 				$("#pago_prestame").text("0");
 				$("#deuda_prestame").text("0");
@@ -3087,7 +3073,7 @@
 				$("#dias_prestame").text("0");
 				$("#refinanciar_div").css("display","none");
 				$('#calendar').fullCalendar("destroy");
-			}			
+			}
 		});		
 	}
 
@@ -3320,6 +3306,7 @@
     });
 
     function descontar_cuotax() {
+        location.reload();
         down_configuracion();
         window.sessionStorage.setItem("Money-perfil","descontar");
         $("#googleMap").css("display","none");
@@ -3597,7 +3584,7 @@
 					if(!valor.e){
 						$("#limpiar_agrega").click();
 						ubicaciones_operaciones();
-						toastr.success('Procesado con éxito','System notification!');
+						toastr.success('Procesado con Atención','System notification!');
 					}
 				});
 				
@@ -3649,7 +3636,7 @@
 
 						$("#limpiar_agrega").click();
 						ubicaciones_operaciones();
-						toastr.success('Procesado con éxito','System notification!');
+						toastr.success('Procesado con Atención','System notification!');
 					}
 				});
 				
