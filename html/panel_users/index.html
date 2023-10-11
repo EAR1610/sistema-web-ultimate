@@ -1512,8 +1512,6 @@
                 for(var u= 0; u<block.calsulo.length; u++){
                     if(!block.calsulo[u].ct && block.calsulo[u].pe==0){ 
                         valorCp = block.calsulo[u].cp;  
-                        console.log("valorCp");
-                        console.log(valorCp);
                         
                         if(valorCp.includes(".")){                            
                             block.sumas = (parseInt(block.sumas) + parseInt(valorCp.replace(/\./g, "")));
@@ -1523,9 +1521,6 @@
 
                     }else if(block.calsulo[u].pe!==0){                           
                         valorPe = String(block.calsulo[u].pe);
-
-                        console.log("valorPe");
-                        console.log(valorPe);
 
                         if(valorPe.includes(".")){                            
                             block.sumas = (parseInt(block.sumas) + parseInt(valorPe.replace(/\./g, "")));
@@ -1980,7 +1975,7 @@
                 $("#motivo_gasto").val("");
                 $("#monto_gasto").val("");
                 extraer_gastos();
-                toastr.success('Procesado correctamente', 'Éxito!');
+                toastr.success('Procesado correctamente', 'Atención!');
             }
         });
 
@@ -2095,7 +2090,7 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {   
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
-				toastr.success('Procesado correctamente', 'Éxito!');
+				toastr.success('Procesado correctamente', 'Atención!');
 				block.cuotas = valor.d[1];
 				block.cliente = valor.d[2];
 				
@@ -3043,8 +3038,6 @@
 						block.compl = "Espera por pago \n Q"+block.espera;
 						block.coloe = "#ffc107";
 					}
-                    console.log("block");
-                    console.log(block);
                     
 					block.fes = block.cuotas[13][x].fe.split("-");
 					block.conve = parseFloat(block.fes[1]) - 1;

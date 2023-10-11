@@ -21,12 +21,12 @@ eje = function(arrays,origen,redisClient) {
 				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "4" || decoded.t=="5"){
 					
 					/*
-						segun el token me extraigo los asesores que pertenecen a esta empresa
+						Según el token me extraigo los asesores que pertenecen a esta empresa
 					*/					
 					redisClient.keys('listado_'+decoded.d+'_asesor_*',function(err3,reply3){
 						if(reply3.length > 0){
 							
-							/*recursividad para guardar los datos*/
+							/*Recursividad para guardar los datos*/
 							
 							var litado = [];
                             var datosSupervisor = [];
@@ -36,8 +36,6 @@ eje = function(arrays,origen,redisClient) {
 								var lista = reply3[i].split('_');								
 								contratos.push(lista[3]);
 							}
-							console.log("decoded")
-							console.log(decoded)
 
                             redisClient.keys('asig_supervisor_'+decoded.d+'_'+decoded.n+'_*', function(err4, replySup){
                                 if(replySup.length > 0) {
@@ -56,14 +54,11 @@ eje = function(arrays,origen,redisClient) {
 									
 									if(contratos.includes(elemento)){
 										redisClient.get(reply3[contratos.indexOf(elemento)],function(err,reply) {
-											if (reply!==null) {	
-												console.log("Agrengando")													
+											if (reply!==null) {																								
 												litado.push(reply);														
 											}
 
 											if( i === (datosSupervisor.length - 1)) {
-												console.log("Se ha terminado")
-												console.log(litado)
 												resolve([true,litado]);
 											}
 										});												

@@ -196,7 +196,8 @@ eje = function(arrays,origen,redisClient) {
 													var consecutivo = cant.length + 1;													
 													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/																
 													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;	
-													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(11 + 1));													
+													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(11 + 1));
+													console.log()													
 													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arraysDB),function(err,reply) {
 												
 														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {

@@ -1216,7 +1216,10 @@
                 <li>
                     <a id="couta_search" href="javascript:buscar_mapa();"><i class="fa fa-map-marker"></i> <span class="nav-label">Mapa de clientes</span></a>
                 </li>
-
+                <li>
+                    <a id="couta_search" href="javascript:historial_clientes();"><i class="fa fa-users" aria-hidden="true"></i> <span
+                    class="nav-label">Historial de clientes</span></a>
+                </li>
             </ul>
 
         </div>
@@ -1645,6 +1648,7 @@
                                         <th>Dirección</th>
                                         <th>Celular</th>
                                         <th>Telefono</th>
+                                        <th>Vehiculo asignado</th>
                                         <th>Editar o suplantar</th>
                                     </tr>
                                     </thead>
@@ -2317,8 +2321,6 @@
                                 </form>
                             </div>
 
-
-
                             <div class="table-responsive">
                                 <table class="table table-striped sortable" >
                                     <thead>
@@ -2343,6 +2345,49 @@
                     </div>
                 </div>
 
+
+                <div class="col-lg-12" id="HistorialClientes">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Historial de clientes</h5>
+                        </div>
+
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-5 col-xs-12" style="display:none;">
+                                <label>Fecha de pago</label>
+                                <div id="picker-no-time"></div>
+                                <input type="hidden" id="result2" value="" />
+                            </div>
+                                                       
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>DPI del cliente a buscar</label>
+                                <div class="input-group">
+                                    <input placeholder="Inserte DPI del cliente" id="text_cedula_cliente_historial" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                    <span class="input-group-append">
+                                        <button type="button" id="buscar_cedula_cliente_historia" class="btn btn-primary">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+ 
+                            <div class="table-responsive">
+                                <table class="table table-striped sortable" style="margin-top: 15px;">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Cliente</th>
+                                        <th>Cantidad de prestamos otorgados</th>
+                                        <th>Comportamiento</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="listado_historial_cliente">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="col-lg-12" id="consulta_cobros">
                     <div class="ibox ">
@@ -2360,10 +2405,12 @@
 
                             <div class="col-sm-6 col-md-4 col-xs-12">
                                 <form role="form">
-                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_busqueda_cobros"
-                                                                                                      type="date"
-                                                                                                      placeholder="Inserte fecha de asignación"
-                                                                                                      class="form-control">
+                                    <div class="form-group"><label>Fecha de asignación</label>
+                                        <input id="fecha_busqueda_cobros"
+                                            type="date"
+                                            placeholder="Inserte fecha de asignación"
+                                            class="form-control"
+                                        >
                                     </div>
                                 </form>
                             </div>
@@ -3024,6 +3071,7 @@
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
         $("#flotante2").css("display","none");
         $("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -3082,6 +3130,35 @@
             $("#utilidad_prestada_peso").html("0");
             $("#utilidad_prestada").html("0");
             $("#utilidad_cuota").html("0");
+        }
+    });
+
+    $("#buscar_cedula_cliente_historia").click(function () {
+        $('#listado_historial_cliente').empty();
+        if ($("#text_cedula_cliente_historial").val() !== "") {
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+
+            block.arrays = [block.tokens[1],$("#text_cedula_cliente_historial").val()];
+
+            block.obj = {"r": "buscar_cliente_supervisor", "d": block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);                
+                if (!valor.e) {
+                    block.partes = JSON.parse(valor.d[1]);
+                    block.nomre = block.partes[8] +" "+block.partes[9] +" "+block.partes[10] + " "+block.partes[11];
+                    
+                    // Agregar una nueva fila a la tabla
+                    $('#listado_historial_cliente').append('<tr><td>'+block.nomre+'</td><td>'+valor.d[2]+'</td><td></td></tr>');
+                } else {
+                    toastr.warning('Cliente no encontrado', 'Atención!');
+                }
+            });
+        } else {
+            toastr.warning('Falta DPI del cliente', 'Atención!');
         }
     });
 
@@ -3205,7 +3282,7 @@
                         $("#su_nombre_id2").val("");
                         $("#su_apellido_id1").val("");
                         $("#su_apellido_id2").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atención!');
 
                     } else {
 
@@ -3218,7 +3295,7 @@
 
                         if(block.antece=="Si"){
 							swal({
-								title: "System notification!",
+								title: "Atención!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -3271,9 +3348,9 @@
                 }else{
 
 					if(valor.d[1]=="r"){
-                        toastr.warning('Esta persona esta registrada en otra empresa', 'System notification!');
+                        toastr.warning('Esta persona esta registrada en otra empresa', 'Atención!');
                         swal({
-                            title: "System notification!",
+                            title: "Atención!",
                             text: "Desea asociarlo a la empresa?",
                             type: "warning",
                             showCancelButton: true,
@@ -3303,7 +3380,7 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 					}
                 }
             });
@@ -3316,7 +3393,7 @@
 		},10000);
 
 		} else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atención!');
         }
 
 	});
@@ -3332,6 +3409,30 @@
     $("#id_asesor_gastos_consulta").change(function(){
         //$("#id_asesor_gastos_consulta").val();
     });
+
+    function historial_clientes(){
+        $("#HistorialClientes").css("display","initial");
+        $("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#liquidacion_page2").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
+    }
 
     //Funcion para extraer datos con fecha pasandole la fecha al array
     function extraer_gastos() {
@@ -3404,9 +3505,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
     }
     var fecha = hoy ? moment().format('YYYY-MM-DD') : $("#fecha_busqueda_cobros").val();
     
-    console.log(fecha);
     block.estraa = $(id_asesor).val();
-    console.log(block.estraa);
 	block.estraaq = block.estraa.split("_");
 	block.estra = block.estraaq[0];
 	block.cedulasesor = block.estraaq[1];
@@ -3883,7 +3982,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 			backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 				var valor = JSON.parse(salida);
 				if (!valor.e) {
-					toastr.success('Betado correctamente', 'System notification!');
+					toastr.success('Betado correctamente', 'Atención!');
 					$("#seccione_beta").modal("hide");
 				}
 			});
@@ -3911,12 +4010,12 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 				if (!valor.e) {
 					$("#base_monto").val("");
 					$("#modal_base").modal("hide");
-					toastr.success('Actualizado con exito', 'System notification!');
+					toastr.success('Actualizado con exito', 'Atención!');
 				}
 			});
 
 		}else{
-			toastr.warning('Necesita seleccionar asesor o colocar monto correcto', 'System notification!');
+			toastr.warning('Necesita seleccionar asesor o colocar monto correcto', 'Atención!');
 		}
 	});
 
@@ -3941,7 +4040,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                     var valor = JSON.parse(salida);
                     if (!valor.e) {
-						toastr.success('Migrado con exito', 'System notification!');
+						toastr.success('Migrado con exito', 'Atención!');
 						$("#selector_frecuenciaM").val("");
 						$("#cuantas_cuota_migrar").val("");
 						$("#cuantas_incompleta_cuota_migrar").val("");
@@ -3949,14 +4048,14 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 						$("#cedula_migrar").val("");
 					}else{
 						if(valor.d[1]=="4"){
-							toastr.warning('El cliente no existe, debe crearlo', 'System notification!');
+							toastr.warning('El cliente no existe, debe crearlo', 'Atención!');
 						}
 					}
 				});
 
 
 		}else{
-			toastr.warning('Faltan datos', 'System notification!');
+			toastr.warning('Faltan datos', 'Atención!');
 		}
 	});
 
@@ -3990,36 +4089,36 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     if (!valor.e) {
 						if(!valor.d[0]){
 							if(valor.d[1]=="4"){
-								toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'System notification!');
+								toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'Atención!');
 							}else if(valor.d[1]=="5"){
-								toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con otra empresa y no cumple con las condiciones del jefe', 'System notification!');
+								toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con otra empresa y no cumple con las condiciones del jefe', 'Atención!');
 							}else if(valor.d[1]=="8"){
-								toastr.warning('No es posible guardar', 'System notification!');
+								toastr.warning('No es posible guardar', 'Atención!');
 							}
 						}else{
 							$("#text_cedula_cliente").prop("disabled",false);
-							toastr.success('Creado con éxito teniendo en cuenta '+valor.d[1]+' contratos en la esta empresa y '+valor.d[2]+' contratos en otra empresa ', 'System notification!');
+							toastr.success('Creado con éxito teniendo en cuenta '+valor.d[1]+' contratos en la esta empresa y '+valor.d[2]+' contratos en otra empresa ', 'Atención!');
 							$("#limpiar_contrato").click();
 
 							asesores_lista_ajustada();
 						}
                     }else{
                         if(valor.d[1]=="4"){
-                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'System notification!');
+                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'Atención!');
                         }else if(valor.d[1]=="8"){
-							toastr.warning('No es posible guardar', 'System notification!');
+							toastr.warning('No es posible guardar', 'Atención!');
 						}else if(valor.d[1]=="5"){
-                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con otra empresa y no cumple con las condiciones del jefe', 'System notification!');
+                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con otra empresa y no cumple con las condiciones del jefe', 'Atención!');
                         }
                     }
                 });
 
             }else{
-                toastr.warning('No puede colocar prestamo de '+block.dias+' cuotas y va a descontar '+block.descontar+' cuotas ', 'System notification!');
+                toastr.warning('No puede colocar prestamo de '+block.dias+' cuotas y va a descontar '+block.descontar+' cuotas ', 'Atención!');
             }
 
         }else{
-            toastr.warning('No esta registrado el cliente', 'System notification!');
+            toastr.warning('No esta registrado el cliente', 'Atención!');
         }
     });
 
@@ -4225,7 +4324,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 			});
 
 		}else{
-			toastr.warning('Seleccione asesor', 'System notification!');
+			toastr.warning('Seleccione asesor', 'Atención!');
 		}
 
 	});
@@ -4274,7 +4373,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-				toastr.success('Eliminado correctamente', 'System notification!');
+				toastr.success('Eliminado correctamente', 'Atención!');
 				listar_cuotas();
 			}
 		});
@@ -4314,7 +4413,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     $("#dias_coutas").val("");
                     $("#monto_num_interes").val("");
                     listar_cuotas();
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
 
@@ -4473,7 +4572,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-				toastr.success('Eliminado con exito', 'System notification!');
+				toastr.success('Eliminado con exito', 'Atención!');
 				$("#lista_enorme").html("");
 				listado_contratos("0");
 			}
@@ -4620,7 +4719,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                         $("#nombre_id2").val("");
                         $("#apellido_id1").val("");
                         $("#apellido_id2").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atención!');
 
                     } else {
 
@@ -4633,7 +4732,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
                         if(block.antece=="Si"){
 							swal({
-								title: "System notification!",
+								title: "Atención!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -4684,10 +4783,10 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     }
                 }else{
                     if(valor.d[1]=="r"){
-                        toastr.warning('Esta persona esta registrada en otra empresa', 'System notification!');
+                        toastr.warning('Esta persona esta registrada en otra empresa', 'Atención!');
 
                         swal({
-                            title: "System notification!",
+                            title: "Atención!",
                             text: "Desea asociarlo a la empresa?",
                             type: "warning",
                             showCancelButton: true,
@@ -4717,7 +4816,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 					}
                 }
             });
@@ -4730,7 +4829,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 			},10000);
 
 		} else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atención!');
         }
 
     });
@@ -4823,7 +4922,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
             }else{
 
-                toastr.warning('Espere se esta sincronizando la información del asesor', 'System notification!');
+                toastr.warning('Espere se esta sincronizando la información del asesor', 'Atención!');
 
                 block.unids ="";
                 block.arrays = [block.tokens[1],block.fecha,block.ides,block.cedula];
@@ -4906,7 +5005,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
                 if (!valor.e) {
-                    toastr.success('Se guardo el orden', 'System notification!');
+                    toastr.success('Se guardo el orden', 'Atención!');
                 }
             });
 
@@ -5024,7 +5123,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 				backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 					var valor = JSON.parse(salida);
 					if (!valor.e) {
-						toastr.success('Procesado con éxito', 'System notification!');
+						toastr.success('Procesado con éxito', 'Atención!');
 						sumatoria();
 						block.subi = $("#musc_"+cedula+"_"+idconsecutivo)["0"].innerHTML;
 						block.subimon = parseInt($("#musc_"+cedula+"_"+idconsecutivo).text());
@@ -5108,7 +5207,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
 	$("#seguro_admin").click(function(){
 
-		toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'System notification!');
+		toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'Atención!');
 		 $("#nombre_id1m").prop("disabled", false);
 		 $("#nombre_id2m").prop("disabled", false);
 		 $("#apellido_id1m").prop("disabled", false);
@@ -5154,9 +5253,9 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                         $("#nombre_id2m").val("");
                         $("#apellido_id1m").val("");
                         $("#apellido_id2m").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atención!');
 
-						toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'System notification!');
+						toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'Atención!');
 						 $("#nombre_id1m").prop("disabled", false);
 						 $("#nombre_id2m").prop("disabled", false);
 						 $("#apellido_id1m").prop("disabled", false);
@@ -5177,7 +5276,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
                         if(block.antece=="Si"){
                             swal({
-								title: "System notification!",
+								title: "Atención!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -5237,7 +5336,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 					}
 				}
             });
@@ -5251,7 +5350,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 			},10000);
 
         } else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atención!');
         }
 
     });
@@ -5291,9 +5390,9 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                         $("#nombre_id2md").val("");
                         $("#apellido_id1md").val("");
                         $("#apellido_id2md").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atención!');
 
-						 toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'System notification!');
+						 toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'Atención!');
 						 $("#nombre_id1md").prop("disabled", false);
 						 $("#nombre_id2md").prop("disabled", false);
 						 $("#apellido_id1md").prop("disabled", false);
@@ -5314,7 +5413,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 
                         if(block.antece=="Si"){
                             swal({
-								title: "System notification!",
+								title: "Atención!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -5374,7 +5473,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 					}
 				}
             });
@@ -5388,7 +5487,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 			},10000);
 
         } else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atención!');
         }
 
     });
@@ -5864,7 +5963,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado en esta empresa(Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 
 					}else if(valor.d[1]=="8"){
 
@@ -5876,7 +5975,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado en otra empresa(Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atención!');
 
 						block.partes = JSON.parse(valor.d[3][0]);
 						block.nomre = block.partes[8] +" "+block.partes[9] +" "+block.partes[10] +" "+block.partes[11];
@@ -5898,7 +5997,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
             });
 
         } else {
-            toastr.warning('Falta cedula del cliente', 'System notification!');
+            toastr.warning('Falta cedula del cliente', 'Atención!');
         }
     });
 
@@ -5951,31 +6050,31 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         }
 
         if (block.perfil == null) {
-            toastr.warning('Falta adjuntar foto frontal del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
         } else if (block.normal == null) {
-            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
         } else if (block.reverso == null) {
-            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
         } else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'System notification!');
+            toastr.warning('Falta telefono celular del cliente', 'Atención!');
         } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'System notification!');
+            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
         } else if (block.contras == "") {
-            toastr.warning('Falta contraseña del perfil', 'System notification!');
+            toastr.warning('Falta contraseña del perfil', 'Atención!');
         } else {
 
             if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -6015,7 +6114,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     $("#foto_m2").attr("src", "../img/foto_cedula_front.png");
                     $("#foto_m3").attr("src", "../img/foto_cedula_back.png");
                     $("#cedula_div").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
 
@@ -6042,6 +6141,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
         $("#flotante2").css("display","none");
         $("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -6172,23 +6272,23 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         }
 
 		if(block.blo==1){
-			toastr.warning('Falta datos', 'System notification!');
+			toastr.warning('Falta datos', 'Atención!');
 		} else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'System notification!');
+            toastr.warning('Falta telefono celular del cliente', 'Atención!');
         }else{
 
             if (block.alias == "") {
@@ -6248,7 +6348,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     $("#foto_m3m").attr("src", "../img/foto_cedula_back.png");
                     $("#cedula_divm").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
                     $("#popop_new_cliente").modal("hide");
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
         }
@@ -6307,37 +6407,37 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
             block.fronatls="default_invoice.png";
         }
         if (block.perfil == null) {
-			toastr.warning('Falta adjuntar foto frontal del usuario', 'System notification!');
+			toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
 			block.blo = 1;
         }
 		if (block.normal == null) {
-			toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'System notification!');
+			toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
 			block.blo = 1;
 		}
 		if (block.reverso == null) {
-			toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'System notification!');
+			toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
 			block.blo = 1;
         }
 		if(block.blo==1){
-			toastr.warning('Falta datos', 'System notification!');
+			toastr.warning('Falta datos', 'Atención!');
 		}else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'System notification!');
+            toastr.warning('Falta telefono celular del cliente', 'Atención!');
         } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'System notification!');
+            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
         }else{
             if (block.alias == "") {
                 block.alias = "No asignado";
@@ -6377,7 +6477,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     $("#foto_m2md").attr("src", "../img/foto_cedula_back.png");
                     $("#foto_m3md").attr("src", "../img/foto_resivo.png");
                     $("#cedula_divmd").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
         }
@@ -6429,31 +6529,31 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         }
 
         if (block.perfil == null) {
-            toastr.warning('Falta adjuntar foto frontal del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
         } else if (block.normal == null) {
-            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
         } else if (block.reverso == null) {
-            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'System notification!');
+            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
         } else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'System notification!');
+            toastr.warning('Falta telefono celular del cliente', 'Atención!');
         } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'System notification!');
+            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
         } else if (block.contras == "") {
-            toastr.warning('Falta contraseña del perfil', 'System notification!');
+            toastr.warning('Falta contraseña del perfil', 'Atención!');
         } else {
 
             if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -6496,7 +6596,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     $("#su_foto_m2").attr("src", "../img/foto_cedula_front.png");
                     $("#su_foto_m3").attr("src", "../img/foto_cedula_back.png");
                     $("#su_cedula_div").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
-                    toastr.success('Editado correctamente', 'System notification!');
+                    toastr.success('Editado correctamente', 'Atención!');
                 }
             });
 
@@ -6545,6 +6645,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
         $("#flotante2").css("display","none");
         $("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -6574,6 +6675,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -6604,6 +6706,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -6679,6 +6782,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -6701,7 +6805,6 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         block.obj = {"r": "listar_supervisores", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log(valor);
             if (!valor.e) {
                 block.todo = valor.d[1];
                 for (var t = 0; t < block.todo.length; t++) {
@@ -6738,6 +6841,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -6796,6 +6900,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -6855,11 +6960,11 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         }
 
         if(arrws.length>0){
-            toastr.warning('Espere mientras sincroniza liquidación de asesores', 'Exito!');
+            toastr.warning('Espere mientras sincroniza liquidación de asesores', 'Atención!');
 
             function liqui(ind,arrws){
                 if(ind==arrws.length){
-                    toastr.success('Ha sincronizado todo los datos para liquidar', 'Éxito!');
+                    toastr.success('Ha sincronizado todo los datos para liquidar', 'Atención!');
                 }else{
                     block.unids ="";
                     block.arrays = [block.tokens[1],"nada",arrws[ind][0],arrws[ind][1]];
@@ -6975,7 +7080,6 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     block.listax = block.listax + '<option value="' + block.item[22] + '_asesor_' + block.item[23] + '_' + block.item[7] + '_' + block.item[9] + '">' + block.nom + '</option>';
                     block.listax2 = block.listax2 + '<option value="' + block.item[22] + '">' + block.item[7] + ' ' + block.item[9] + ' ID:' + block.item[22] + '</option>';
                     nombreAsesorReporte= block.item[7] + ' ' + block.item[9] + ' ID:' + block.item[22];
-                    console.log(nombreAsesorReporte);
                 }
                 $("#tipo_cargo_dos").html(block.listax);
                 $("#id_asesor").html(block.listax2);
@@ -6993,13 +7097,10 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         const totalAsesor = parseFloat($('#text_total_asesor').val());
         const totalSistema = parseFloat($('#text_total_sistema').text().slice(1));
         const diferencia = totalAsesor - totalSistema;
-        console.log(totalAsesor);
-        console.log($('#text_total_sistema').text());
-        console.log(diferencia);
         if (totalAsesor!="" && totalSistema!=""){
             $("#text_diferencia_cierre").text("Q"+diferencia);
         }else{
-            console.log("INGRESE EL TOTAL ASESOR")
+            
         }
     });
 
@@ -7089,6 +7190,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7122,7 +7224,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                     $("#tipo_cargo_select_ASIG option[value='']").attr("selected", true);
                     $("#tipo_cargo_dos option[value='']").attr("selected", true);
                     $("#tipo_cargo_uno option[value='']").attr("selected", true);
-                    toastr.success('Asignado correctamente', 'Éxito!');
+                    toastr.success('Asignado correctamente', 'Atención!');
                 } else {
                     if (valor.d[1] == "5") {
                         toastr.warning('Ya esta asignado', 'Atención!');
@@ -7276,6 +7378,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7620,6 +7723,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#cliente_lista_admi").css("display", "initial");
         $("#listado_liengenerela").html("");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7664,7 +7768,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-                toastr.success('Se ha configurado correctamente', 'System notification!');
+                toastr.success('Se ha configurado correctamente', 'Atención!');
             }
         });
 
@@ -7708,7 +7812,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                 $("#nom_empresa").val(block.lista[13]);
                 NombreEmpresa = block.lista[13];
             }else{
-				toastr.warning('Configure el perfil de su empresa', 'System notification!');
+				toastr.warning('Configure el perfil de su empresa', 'Atención!');
 				asig_configuracion();
 			}
         });
@@ -7757,6 +7861,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "block");
@@ -7786,6 +7891,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7821,6 +7927,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7856,6 +7963,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7889,6 +7997,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
         $("#flotante2").css("display","none");
         $("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7921,6 +8030,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#contratos_view").css("display", "initial");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -7951,6 +8061,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
         $("#create_clientes_listo").css("display", "initial");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
 		$("#flotante2").css("display","none");
 		$("#flotante3").css("display","none");
         $("#recaduos_ink").css("display", "none");
@@ -8047,7 +8158,7 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
                 }
 
             }else{
-                toastr.warning('No posee contratos para generar ruta', 'System notification!');
+                toastr.warning('No posee contratos para generar ruta', 'Atención!');
             }
         });
 

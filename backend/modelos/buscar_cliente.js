@@ -12,22 +12,18 @@ eje = function(arrays,origen,redisClient) {
 			recibo token y cedula
 		*/
 		
-		if (arrays.length==2){
-		
+		if (arrays.length==2){		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2"  || decoded.t=="5" || decoded.t=="4"){
-					
-					
+				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2"  || decoded.t=="5" || decoded.t=="4"){
+										
 					/*verifico que no este betado el cliente*/
 					
 					redisClient.get("betado_"+arrays[1],function(erkr,rkeply) {
 						if(rkeply==null){
-							
 							/*emito la informacion del cliente*/
-							
 							redisClient.keys('cliente_'+arrays[1],function(err3,reply3){
 								if(reply3.length > 0){
 									var litado  = [];
@@ -40,16 +36,13 @@ eje = function(arrays,origen,redisClient) {
 								}else{
 									reject([false,"4"]);
 								}
-							});
-							
+							});							
 						}else{
 							var fesd = JSON.parse(rkeply);
 							if(decoded.d==fesd[3]){
 								reject([false,"6",rkeply]);
-							}else{
-								
-								/*emito la informacion del cliente*/
-								
+							}else{								
+								/*emito la informacion del cliente*/								
 								redisClient.keys('cliente_*_'+arrays[1],function(err3,reply3){
 									if(reply3.length > 0){
 										var litado  = [];
@@ -70,12 +63,10 @@ eje = function(arrays,origen,redisClient) {
 				}else{
 					reject([false,"2"]);
 				}
-			});
-			
+			});			
 		}else{
 			reject([false,"3"]);
-		}
-		
+		}		
 	});
 };
 
