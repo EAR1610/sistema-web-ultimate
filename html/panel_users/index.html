@@ -2056,12 +2056,17 @@
         block.arrays = [block.tokens[1],block.tokens[5]];
         block.obj = {"r": "sumatoria_diario", "d": block.arrays}; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);            
+            var valor = JSON.parse(salida);
+            console.log(valor)
             if (!valor.e) {           
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');     
+                valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');
                 $("#text_recolectado").text("Q"+valor.d[1]);
-                $("#text_base").text("Q"+valor.d[2]);
+                if(valor.d[3] == "Sin base"){
+                    $("#text_base").text("Sin base");
+                } else {
+                    $("#text_base").text("Q"+valor.d[2]);
+                }
                 totalGastos();
             }
         });

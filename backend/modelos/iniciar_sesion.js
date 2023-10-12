@@ -10,7 +10,7 @@ eje = function(arrays,origen,redisClient) {
 		
 		
 		/*
-		recibe correo y clave
+			recibe correo y clave
 		*/
 		
 		if (arrays.length==2){
@@ -22,6 +22,9 @@ eje = function(arrays,origen,redisClient) {
 				*/
 				
 				redisClient.keys('usuario_'+arrays[0]+"_*",function(er2,repl2){
+
+					if(repl2 === undefined) return;
+					
 					if(repl2.length !== 0 ){
 						redisClient.get(repl2[0],function(ser2,repls2){
 							var info = JSON.parse(repls2);
