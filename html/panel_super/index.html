@@ -6982,6 +6982,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
         block.obj = {"r": "listar_asesores", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e) {
                 block.todo = valor.d[1];
                 for (var t = 0; t < block.todo.length; t++) {
@@ -6996,13 +6997,10 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
                     }
 					window.sessionStorage.setItem("Money-vars-temp-asesor-"+block.item[22],JSON.stringify(block.item));
 					block.tes = block.tes + '<option value="'+block.item[22]+'">' + block.item[7] + ' ' + block.item[9] + '</option>';
-                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:suplantare_asesor(' + String.fromCharCode(39) + block.item[22] + String.fromCharCode(39) + ');"><i class="fa fa-edit fa-2x" style="color:#01afef"></i></a></td></tr>';
-                    
-                
+                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:suplantare_asesor(' + String.fromCharCode(39) + block.item[22] + String.fromCharCode(39) + ');"><i class="fa fa-edit fa-2x" style="color:#01afef"></i></a></td></tr>';                
                 }
                 $("#select_asesor").html(block.tes);
-                $("#listado_asesores").html(block.lista);
-                
+                $("#listado_asesores").html(block.lista);                
             }
         });
     }
@@ -7643,6 +7641,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
     // }
 
     function consulta_x(){
+        
+        toastr.success("Se está consultando los clientes en el sistema", "Atención");
+
         block.num = window.sessionStorage.getItem("numero_lista");        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -7651,70 +7652,74 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
         }
         block.listadi ="";
         block.arrays = [block.tokens[1],block.num];
-        block.obj = {"r": "lista_cliente_basic", "d": block.arrays};//falta       
+        block.obj = {"r": "lista_cliente_basic", "d": block.arrays};
+        debugger;     
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor)
             if (!valor.e) {
                 if(valor.d[1]!==null) {
-                    block.item = JSON.parse(valor.d[1]);                    
-                    window.localStorage.setItem("Money-vars-cliente-"+block.item[7],valor.d[1]);
-					block.cedula = block.item[6];
-                    block.nomre = block.item[7];
-                    block.nomre2 = block.item[8];
-                    block.apellido = block.item[9];
-                    block.apellido2 = block.item[10];
-                    block.direcion = block.item[12];
-                    block.telefono = block.item[16];
-                    block.listadi = block.listadi + '<tr><td> ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.nomre + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.nomre + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
-                    
+                    for(let indice = 0; indice < valor.d[1].length; indice++){
+                        block.item = valor.d[1][indice];
+                        window.localStorage.setItem("Money-vars-cliente-"+ block.item[0], JSON.stringify(valor.d[1][indice]));
+                        block.cedula = block.item[0];
+                        block.nomre = block.item[1];
+                        block.nomre2 = block.item[2];
+                        block.apellido = block.item[3];
+                        block.apellido2 = block.item[4];
+                        block.direcion = block.item[5];
+                        block.telefono = block.item[6];
+                        block.listadi = block.listadi + '<tr><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                    }
+                                        
                     $("#listado_liengenerela").append(block.listadi);
                     block.nexr = parseInt(block.num) + 1;
                     window.sessionStorage.setItem("numero_lista", block.nexr);
-                    consulta_x();
+                    // consulta_x();
                 }
             }else if(valor.d[1]=="4" && parseInt(block.num)<parseInt(valor.d[2]) ){
 				block.nexr = parseInt(block.num) + 1;
 				window.sessionStorage.setItem("numero_lista", block.nexr);
-				consulta_x();
+				// consulta_x();
             } else {
                 return 
             }
         });
     }
 
-    function editar_cliente(cedula){
-        block.unicos = JSON.parse(window.localStorage.getItem("Money-vars-cliente-"+cedula));
+    function editar_cliente( cedula ){
+        block.unicos = JSON.parse( window.localStorage.getItem("Money-vars-cliente-"+cedula));
 
 		crear_infor();
 
-		window.sessionStorage.setItem("Money-vars-foto-id-reversomd",block.unicos[1]);
-		window.sessionStorage.setItem("Money-vars-foto-id-normalmd",block.unicos[2]);
-		window.sessionStorage.setItem("Money-vars-foto-idmd",block.unicos[3]);
-		window.sessionStorage.setItem("Money-vars-foto-frontald",block.unicos[4]);
+		window.sessionStorage.setItem("Money-vars-foto-id-reversomd",block.unicos[9]);
+		window.sessionStorage.setItem("Money-vars-foto-id-normalmd",block.unicos[10]);
+		window.sessionStorage.setItem("Money-vars-foto-idmd",block.unicos[11]);
+		window.sessionStorage.setItem("Money-vars-foto-frontald",block.unicos[12]);
 
-		$("#telefono_fijomd").val(block.unicos[16]);
-		$("#telefono_celmd").val(block.unicos[17]);
-		$("#correo_electronicomd").val(block.unicos[18]);
+		$("#telefono_fijomd").val(block.unicos[18]);
+		$("#telefono_celmd").val(block.unicos[19]);
+		$("#correo_electronicomd").val(block.unicos[20]);
 		block.ele = "2";
-		if(block.unicos[6]=="C"){
+		if(block.unicos[14]=="C"){
 			block.ele = "1";
 		}
 		$("#pais_selecionadomd option[value='"+block.ele+"']").attr("selected", true);
 
-		$("#alias_textd").val(block.unicos[19]);
-		$("#numero_idmd").val(block.unicos[7]);
-		$("#nombre_id1md").val(block.unicos[8]);
-		$("#nombre_id2md").val(block.unicos[9]);
-		$("#apellido_id1md").val(block.unicos[10]);
-		$("#apellido_id2md").val(block.unicos[11]);
-		$("#direccion_ubicamd").val(block.unicos[12]);
+		$("#alias_textd").val(block.unicos[21]);
+		$("#numero_idmd").val(block.unicos[0]);
+		$("#nombre_id1md").val(block.unicos[1]);
+		$("#nombre_id2md").val(block.unicos[2]);
+		$("#apellido_id1md").val(block.unicos[3]);
+		$("#apellido_id2md").val(block.unicos[4]);
+		$("#direccion_ubicamd").val(block.unicos[5]);
 		$("#numero_idmd").prop("disabled", true);
-		$("#foto_m1md").attr("src", block.unicos[1]);
-		$("#foto_m4md").attr("src", block.unicos[2]);
-		$("#foto_m2md").attr("src", block.unicos[3]);
-		$("#foto_m3md").attr("src", block.unicos[4]);
+		$("#foto_m1md").attr("src", block.unicos[9]);
+		$("#foto_m4md").attr("src", block.unicos[10]);
+		$("#foto_m2md").attr("src", block.unicos[11]);
+		$("#foto_m3md").attr("src", block.unicos[12]);
 
-		$("#tipo_departamentomd option[value='"+block.unicos[13]+"']").attr("selected", true);
+		$("#tipo_departamentomd option[value='"+block.unicos[15]+"']").attr("selected", true);
 
 		block.depart = $("#tipo_departamentomd").val();
         $("#tipo_ciudadesmd").html('<option value=""></option>');
@@ -7725,10 +7730,14 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-        block.arrays = [block.tokens[1], block.unicos[13]];
+        block.arrays = [block.tokens[1], block.unicos[15]];
+        debugger;
         block.obj = {"r": "extraer_ciudades", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log("ciudades")
+            console.log(valor);
+            debugger;
             if (!valor.e) {
                 block.lista = valor.d[1];
                 block.nuevo = "";
@@ -7736,14 +7745,14 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
                 $("#tipo_ciudadesmd").html($("#tipo_ciudadesmd").html() + block.nuevo);
-				$("#tipo_ciudadesmd option[value='"+block.unicos[14]+"']").attr("selected", true);
+				$("#tipo_ciudadesmd option[value='"+block.unicos[16]+"']").attr("selected", true);
             }
         });
 
 
         $("#tipo_barriomd").html('<option value=""></option>');
 
-        block.arrays = [block.tokens[1], block.unicos[13], block.unicos[14]];
+        block.arrays = [block.tokens[1], block.unicos[15], block.unicos[16]];
         block.obj = {"r": "extraer_barrios", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -7754,7 +7763,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
                 $("#tipo_barriomd").html($("#tipo_barriomd").html() + block.nuevo);
-                $("#tipo_barriomd option[value='"+block.unicos[15]+"']").attr("selected", true);
+                $("#tipo_barriomd option[value='"+block.unicos[17]+"']").attr("selected", true);
             }
         });
 

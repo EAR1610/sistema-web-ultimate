@@ -23,18 +23,73 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
                     redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
-                        if(sreply!==null) {
-                            var ines = JSON.parse(sreply);
-                            redisClient.get(ines[arrays[1]], function (ewwr, sreplwy) {
-								if(sreplwy!==null){
-									resolve([true, sreplwy,0]);
-								}else{
-									redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
-										var ines = JSON.parse(sreply);
-										reject([false,"4",ines]);
-									});
+						const clientesTotales = JSON.parse(sreply);
+                        if(clientesTotales!==null) {
+
+							var listado = [];
+
+							function iterar(ind, arrs){
+								if(ind == arrs.length){
+									resolve([true, listado, 0]);
+									console.log("listado");
+									console.log(listado);
+								} else {									
+									redisClient.get(arrs[ind], function(errCliente, replyCliente){
+										// console.log("replyCliente");
+										// console.log(JSON.parse(replyCliente));
+										if(replyCliente !== null) {
+											console.log("JSON.parse(replyCliente)");
+											console.log(JSON.parse(replyCliente));
+
+											let [ id, imagen1, imagen2, imagen3, imagen4, tipoUno, clase, dpi, nombre, nombre2,apellido, apellido2, direccion, departamento, municipio, barrio, celular1, celular2, correo, alias, fecha ] = JSON.parse(replyCliente);
+											let datosCliente = [];
+
+											datosCliente.push(dpi)
+											datosCliente.push(nombre)
+											datosCliente.push(nombre2)
+											datosCliente.push(apellido)
+											datosCliente.push(apellido2)
+											datosCliente.push(direccion)
+											datosCliente.push(celular1)
+											datosCliente.push(celular2)
+											datosCliente.push(id)
+											datosCliente.push(imagen1)
+											datosCliente.push(imagen2)
+											datosCliente.push(imagen3)
+											datosCliente.push(imagen4)
+											datosCliente.push(tipoUno)
+											datosCliente.push(clase)
+											datosCliente.push(departamento)
+											datosCliente.push(municipio)
+											datosCliente.push(barrio)
+											datosCliente.push(celular1)
+											datosCliente.push(celular2)
+											datosCliente.push(correo)
+											datosCliente.push(alias)
+											datosCliente.push(fecha)
+
+											listado.push(datosCliente);
+											ind++;
+											iterar(ind, arrs);
+										} else {
+											ind++;	
+											iterar(ind, arrs);
+										}
+									})
 								}
-                            });
+							}
+							iterar(0, clientesTotales);
+                            // var ines = JSON.parse(sreply);
+                            // redisClient.get(ines[arrays[1]], function (ewwr, sreplwy) {
+							// 	if(sreplwy!==null){
+							// 		resolve([true, sreplwy,0]);
+							// 	}else{
+							// 		redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
+							// 			var ines = JSON.parse(sreply);
+							// 			reject([false,"4",ines]);
+							// 		});
+							// 	}
+                            // });
                         }else{
 							redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
 								var ines = JSON.parse(sreply);

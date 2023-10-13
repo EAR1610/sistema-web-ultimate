@@ -13,8 +13,6 @@ eje = function(arrays,origen,redisClient) {
 		*/
 		
 		if (arrays.length==2){
-		
-		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
@@ -29,7 +27,7 @@ eje = function(arrays,origen,redisClient) {
 							}
 							
 							/*
-							los uno y los unifico para mostrarlos 
+								los uno y los unifico para mostrarlos 
 							*/
 							
 							var lista = [];
