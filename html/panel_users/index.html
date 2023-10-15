@@ -56,7 +56,7 @@
         let nombreCliente = ticketClienteImpresion.extraer[8] + ' ' +ticketClienteImpresion.extraer[9];
         let apellidoCliente = ticketClienteImpresion.extraer[10] + ' ' +ticketClienteImpresion.extraer[11];
         let NoCuota = ticketClienteImpresion.contador_cuotas;
-        let montoAPagar = parseInt(ticketClienteImpresion.cuotas[8]);
+        let montoAPagar = parseInt(ticketClienteImpresion.cuotas[8].replace(/\./g, ''));
         let saldoPendiente = ticketClienteImpresion.valoes - ticketClienteImpresion.acumo;
         let saldoAnterior = montoAPagar + saldoPendiente;
         let infoSesion = JSON.parse(sessionStorage.getItem('Money-vars-token'));
@@ -2074,7 +2074,7 @@
 
     down_configuracion();
 
-    function procesarDescuento(Numcuota,cedula) {
+    function procesarDescuento( Numcuota, cedula ) {
         
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -2084,9 +2084,10 @@
 		
 		block.tempFecha = window.sessionStorage.getItem("Money-vars-fecha");
         
-        block.arrays = [block.tokens[1],block.tokens[5],Numcuota,cedula[0],cedula[1]];
+        block.arrays = [block.tokens[1],block.tokens[5], Numcuota, cedula[0], cedula[1]];
         block.obj = { "r": "descontar_cuota", "d": block.arrays };
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {   
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {  
+            debugger; 
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
 				toastr.success('Procesado correctamente', 'Atención!');
@@ -2193,7 +2194,7 @@
 			block.loire = $("#cuotas_coun").val();
 			block.nega = parseInt(block.loire);
 			
-			if(block.loire.indexOf(".")==-1 && block.loire.indexOf(",")==-1 && block.loire.indexOf("+")==-1 && block.loire.indexOf("e")==-1 && block.loire.indexOf("E")==-1 && block.nega>0) {
+			if( block.loire.indexOf(".") == -1 && block.loire.indexOf(",") == -1 && block.loire.indexOf("+") == -1 && block.loire.indexOf("e") == -1 && block.loire.indexOf("E") == -1 && block.nega > 0 ) {
 			
 				block.montoCuota = $("#cuotas_coun").val();
 				block.montoCuota = block.montoCuota.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
@@ -2210,7 +2211,7 @@
 					confirmButtonText: "Si, seguro!",
 					closeOnConfirm: true
 				}, function () {
-					procesarDescuento($("#cuotas_coun").val(),JSON.parse(window.localStorage.getItem("Money-vars-pagar")));
+					procesarDescuento($("#cuotas_coun").val(), JSON.parse(window.localStorage.getItem("Money-vars-pagar")));
 				});
 				
 			} else {
@@ -3028,8 +3029,7 @@
 						block.espera = block.espera.split('').reverse().join('').replace(/^[\.]/,'');                        
 						block.compl = "Espera por pago \n Q"+block.espera;
 						block.coloe = "#ffc107";
-					}
-                    
+					}                    
 					block.fes = block.cuotas[13][x].fe.split("-");
 					block.conve = parseFloat(block.fes[1]) - 1;
 					block.yeart = block.fes[0];

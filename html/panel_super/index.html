@@ -3129,10 +3129,10 @@
                     $("#registrar_cierre").prop("disabled", true);
                     $("#text_total_asesor").val(valor.d[5]);
                     $("#text_total_asesor").prop("disabled", true);
+                    $("#text_diferencia_cierre").text(valor.d[1] - valor.d[2]);
                 }else{
-                    $("#text_diferencia_cierre").text("Q");
+                    $("#text_diferencia_cierre").text(valor.d[1] - valor.d[2]);
                     $("#registrar_cierre").prop("disabled", false);
-                    $("#text_total_asesor").val(0);
                     $("#text_total_asesor").val(0);
                     $("#text_total_asesor").prop("disabled", false);
                 }
@@ -3171,10 +3171,11 @@
         const totalAsesor = $('#text_total_asesor').val();
         const base = parseFloat($("#text_baseAsesor").text().slice(1)); 
         const asesor = $('#id_asesor_cierre').val();
-        if (totalAsesor!="" && totalAsesor!=0 && base != 0 && asesor!=""){
+
+        if ( totalAsesor != "" && totalAsesor != 0 && base != 0 && asesor != ""){
             registrarCierre(totalAsesor,base,asesor);
         }else{
-            toastr.warning('El total del asesor y tener una base diaria es necesario.', 'System notification!');
+            toastr.warning('El total del asesor y tener una base diaria es necesario.', 'Atención!');
         }
     });
 
@@ -3187,8 +3188,7 @@
         }
     });
 
-    $("#busqueda_cierre").click(function(){
-        debugger;
+    $("#busqueda_cierre").click(function(){        
         const asesor = $('#id_asesor_cierre').val();
         const fecha_cierre = $('#fecha_cierre').val();
         
@@ -3196,7 +3196,7 @@
             console.log(asesor, fecha_cierre);
             buscar_cierre(asesor, fecha_cierre);
         }
-        
+
     });
 
     $("#buscar_cedula_cliente_historia").click(function () {
@@ -7240,28 +7240,32 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     //     extraer_cobros("#id_asesor_cierre","#listado_cobros_cierre",true);
     // });
 
-    function totalGastos(){
+    function totalGastos(){        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
         let gastos = 0;
-        block.arrays = [block.tokens[1],$("#id_asesor_cierre").val()];
+        block.arrays = [ block.tokens[1],$("#id_asesor_cierre").val().split('_')[0], $("#fecha_cierre").val() ];
         block.obj = {"r": "extrae_gastos", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log("valor");
+            console.log(valor);
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 
                 for(var i= 0; i< block.pasero.length; i++){
                     gastos += parseFloat(block.pasero[i][2]);
                 }
-                $("#text_gastosAsesor").text("Q"+gastos);
+                $("#text_gastosAsesor").text("Q "+ gastos);
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
                 const totalSistema = base + recaudado-gastos;
-                $("#text_total_sistema").text("Q"+totalSistema);
+                $("#text_total_sistema").text("Q "+ totalSistema);
+            } else {
+                $("#text_gastosAsesor").text("Q "+ 0);
             }
         });
         return gastos;
