@@ -46,34 +46,21 @@ eje = function(arrays,origen,redisClient) {
 							redisClient.keys("base_"+arrays[1]+"_*", function(errBase, replyBasesRegistradas){
 
 								if(replyBasesRegistradas.length == 0) {
-									console.log("NO HAY DATOS; SIN BASE");
 									resolve([true,0,0,"Sin base"]);									
 								} else {
 									recurso(0, replyBasesRegistradas)
 								}
-
 								var lista = [];
-
-								console.log("replyBasesRegistradas")
-								console.log(replyBasesRegistradas.length)
-								console.log(replyBasesRegistradas)
-
 								function recurso(ind, arrs){
 									if(ind == arrs.length){
-										console.log(lista);
-										console.log("[true, 0, lista[0][1], lista[0][0]]")
-										console.log([true, 0, lista[0][1], lista[0][0]])
-										resolve([true, 0, lista[0][1], lista[0][0]]);
+										if (lista.length >0){
+											resolve([true, 0, lista[0][1], lista[0][0]]);
+										}else{
+											resolve([true,0,0,"Sin base"]);		
+										}
 									} else {
-										console.log("replyBasesRegistradas");
-										console.log(replyBasesRegistradas);
-										console.log("replyBasesRegistradas.length > 0")
-
 										redisClient.get(arrs[ind], function(errorBase, replyBaseRegistrada){
 											let base = JSON.parse(replyBaseRegistrada);
-											console.log("base");
-											console.log(base);
-
 											if(base[3] == false){ //Tiene apertura abierta
 												lista.push(base);
 												recurso(replyBasesRegistradas.length, arrs);
@@ -84,7 +71,6 @@ eje = function(arrays,origen,redisClient) {
 										})
 									}					
 								} 
-
 							})
 							// redisClient.get("base_"+arrays[1],function(ersr,replcy) {
 							// 	if(replcy==null){

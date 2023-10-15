@@ -11,7 +11,7 @@
     <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="../css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="../css/animate.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
+    <link href="../assets/css/styleS.css" rel="stylesheet">
     <link href="../css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
     <link href="../css/datetimepicker.css" rel="stylesheet">
@@ -901,7 +901,7 @@
                 <li class="nav-header">
                     <div class="dropdown profile-element">
                         <img alt="image" src="../img/profile_small.png"
-                             style="margin-top: -24px;width: 137px;height: 40px;"/>
+                             style="margin-top: -24px; width: 120px; height: 75px; margin-left: 8%"/>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html">
                             <span class="block m-t-xs font-bold" style="margin-left: 21%;">Supervisor</span>
                         </a>
@@ -953,7 +953,7 @@
                     </a>
                     <form role="search" class="navbar-form-custom">
                         <div class="form-group pull-right">
-                            <p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px;margin-top: 0px;border-radius: 67px 36% 3% -9%; height: 34px; background: #448ed300; position: absolute; bottom: 9px;"/>
+                            <p style="text-align: center; "><img alt="image" src="../img/logos.png" style="width: 183px; margin-top: 0px; border-radius: 67px 36% 3% -9%; height: 50px; background: #448ed300; position: absolute; bottom: 9px;"/>
                         </div>
                     </form>
                 </div>
@@ -4674,7 +4674,8 @@
                 $("#id_asesor_gastos_consulta").html(block.listax2);
                 $("#id_asesor_cobros").html(block.listax2);
                 $("#id_asesor_cierre").html(block.listax2);
-
+                console.log("block.listax2")
+                console.log(block.listax2)
                 liquidar_sincro(block.aline);
             }
         });
@@ -4752,7 +4753,7 @@
         });
     }
 
-    function extraer_cobrosCierre(id_asesor, id_tabla, hoy) {
+    function extraer_cobrosCierre(id_tabla) {
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -4760,11 +4761,11 @@
         }
         var fecha =  $("#fecha_busqueda_cobros_supervisor").val();
         
-        block.estraa = $(id_asesor).val();
+        block.estraa = $("#id_asesor_cierre").val();
         block.estraaq = block.estraa.split("_");
         block.estra = block.estraaq[0];
         block.cedulasesor = block.estraaq[1];
-        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.arrays = [block.tokens[1], block.estra, fecha];
         block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -4883,10 +4884,10 @@
 
     $("#btn_buscar_cierre_supervisor").click(function(){        
         $("#lista_gastos_exeAsesor").empty();
-
+        debugger;
         if($("#id_asesor_cierre").val()!=="" || $("#fecha_busqueda_cobros_supervisor").val() !== ""){
-            block.ase = $("#id_asesor_cierre").val();
-            console.log(block.ase);
+            block.ase = $("#id_asesor_cierre").val().split("_");
+            block.ase = block.ase[0];
             block.fechaABuscar = $("#fecha_busqueda_cobros_supervisor").val();
             $("#lista_enorme").html("");
             listado_contratos("0");
@@ -4913,6 +4914,16 @@
                 if (!valor.e) {                
                     $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                     $("#text_baseAsesor").text("Q"+valor.d[2]);
+                    if( valor.d[2] == 0 || valor.d[4] ){
+                        $("#registrar_cierre").prop("disabled", true);
+                        $("#text_total_asesor").val(valor.d[5]);
+                        $("#text_total_asesor").prop("disabled", true);
+                    } else {
+                        $("#text_diferencia_cierre").text("Q");
+                        $("#registrar_cierre").prop("disabled", false);
+                        $("#text_total_asesor").val(0);
+                        $("#text_total_asesor").prop("disabled", false);
+                    }
                     const base = parseFloat($("#text_baseAsesor").text().slice(1));
                     const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
                     const totalSistema = base + recaudado;
@@ -4921,7 +4932,9 @@
                 }
             });
             extraer_gastosAsesor();
-            extraer_cobrosCierre("#id_asesor_cierre","#listado_cobros_cierre",true);
+            console.log("block.ase")
+            console.log(block.ase)
+            extraer_cobrosCierre("#listado_cobros_cierre");
         } else {
             toastr.warning("Hay campos vacíos", "Atención");
         }

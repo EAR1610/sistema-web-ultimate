@@ -34,10 +34,19 @@ eje = function(arrays,origen,redisClient) {
 								total = total + parseInt(explit[2]);
 								
 								if(es==reply3.length-1){
-									redisClient.get("base_"+arrays[1],function(ersr,replcy) {
+									console.log("base_"+arrays[1]+arrays[2]);
+									redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
 										if(replcy!==null){
 											var inf = JSON.parse(replcy);
-											resolve([true,total,inf[1],inf[0]]);
+											if (inf[3]){
+												console.log("cierre_"+arrays[1]+"_"+arrays[2]);
+												redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
+													const response2 = JSON.parse(response);
+													resolve([true,total,inf[1],arrays[2],inf[3],response2[2]]);
+												});
+											} else{
+												resolve([true,total,inf[1],arrays[2],inf[3],0]);
+											}
 										}else{
 											resolve([true,total,"0","Sin base"]);
 										}
@@ -45,12 +54,21 @@ eje = function(arrays,origen,redisClient) {
 								}
 							}
 						}else{ 
-							redisClient.get("base_"+arrays[1],function(ersr,replcy) {
-								if(replcy==null){
-									resolve([true,0,0,"Sin base"]);
-								}else{
+							console.log("base_"+arrays[1]+"_"+arrays[2]);
+							redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
+								if(replcy!==null){
 									var inf = JSON.parse(replcy);
-									resolve([true,0,inf[1],inf[0]]);
+									if (inf[3]){
+										console.log("cierre_"+arrays[1]+"_"+arrays[2]);
+										redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
+											const response2 = JSON.parse(response);
+											resolve([true,0,inf[1],arrays[2],inf[3],response2[2]]);
+										});
+									} else{
+										resolve([true,0,inf[1],arrays[2],inf[3],0]);
+									}
+								}else{									
+									resolve([true,0,"0",arrays[2],false,0]);
 								}
 							});
 						}

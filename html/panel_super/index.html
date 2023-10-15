@@ -12,7 +12,7 @@
     <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="../assets/css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="../assets/css/animate.css" rel="stylesheet">
-    <link href="../assets/css/style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
     <link href="../assets/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="../assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
     <link href="../assets/css/datetimepicker.css" rel="stylesheet">
@@ -1124,7 +1124,7 @@
                 <li class="nav-header">
                     <div class="dropdown profile-element">
                         <img alt="image" src="../img/profile_small.png"
-                             style="margin-top: -24px;width: 137px;height: 40px;"/>
+                             style="margin-top: -24px; width: 120px;height: 75px; margin-left: 8%"/>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html">
                             <span class="block m-t-xs font-bold" style="margin-left: 6%;">Super administrador</span>
                         </a>
@@ -2561,7 +2561,7 @@
                                 <div class="ibox">
                                     <div style="display: flex; justify-content:space-evenly; flex-wrap: wrap;">
                                         <div>Total Sistema: <label id="text_total_sistema"></label></div>
-                                        <div>Total entregado por asesor: Q.<input type="number" id="text_total_asesor"></div>
+                                        <div>Total entregado por asesor: Q.<input style="appearance: none;" type="number" id="text_total_asesor"></div>
                                         <div>Diferencia: <label id="text_diferencia_cierre"></label></div>
                                         <button class="btn btn-primary btn-md" id="registrar_cierre"
                                                 type="button">Registrar cierre
@@ -3103,8 +3103,8 @@
     });
 
     function buscar_cierre(asesor, fecha){
+        
         // fecha para usarla en registrar cierre
-        debugger;
         block.fecha_cierre=fecha;
         block.ase = asesor;
         $("#lista_enorme").html("");
@@ -3125,6 +3125,17 @@
             if (!valor.e) {                   
                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                 $("#text_baseAsesor").text("Q"+valor.d[2]);
+                if (valor.d[2]==0 || valor.d[4]){
+                    $("#registrar_cierre").prop("disabled", true);
+                    $("#text_total_asesor").val(valor.d[5]);
+                    $("#text_total_asesor").prop("disabled", true);
+                }else{
+                    $("#text_diferencia_cierre").text("Q");
+                    $("#registrar_cierre").prop("disabled", false);
+                    $("#text_total_asesor").val(0);
+                    $("#text_total_asesor").val(0);
+                    $("#text_total_asesor").prop("disabled", false);
+                }
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
                 const totalSistema = base + recaudado;
@@ -3133,12 +3144,41 @@
             }
         });
         extraer_gastosAsesor();
-        extraer_cobros_cierre(asesor, "#listado_cobros_cierre", false);
+        extraer_cobros_cierre(asesor, "#listado_cobros_cierre");
     }
 
+    function registrarCierre(totalAsesor,base,asesor){
+        block.asesor =  $('#id_asesor_cierre').val();
+        const fecha_cierre = block.fecha_cierre;
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        const id_usuario = block.tokens[5] = "-" ? "sa" : block.tokens[5];
+        block.arrays = [block.tokens[1],fecha_cierre,totalAsesor,asesor,id_usuario];
+        console.log(block.arrays)
+        block.obj = {"r": "registrar_cierre", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (valor.d[1]) {
+                toastr.success('Registrado con exito', 'System notification!');
+            }
+        });
+    }
+
+    $("#registrar_cierre").click(function(){
+        const totalAsesor = $('#text_total_asesor').val();
+        const base = parseFloat($("#text_baseAsesor").text().slice(1)); 
+        const asesor = $('#id_asesor_cierre').val();
+        if (totalAsesor!="" && totalAsesor!=0 && base != 0 && asesor!=""){
+            registrarCierre(totalAsesor,base,asesor);
+        }else{
+            toastr.warning('El total del asesor y tener una base diaria es necesario.', 'System notification!');
+        }
+    });
+
     $("#busqueda_utilidades").click(function(){
-        console.log($("#fecha__inicial_utilidades").val() === "")
-        console.log($("#fecha_final_utilidades").val() === "")
 
         if($("#fecha__inicial_utilidades").val() === "" || $("#fecha_final_utilidades").val() === ""){
             toastr.warning("Por favor, verifique las fechas", "Atención");
@@ -3148,11 +3188,15 @@
     });
 
     $("#busqueda_cierre").click(function(){
+        debugger;
         const asesor = $('#id_asesor_cierre').val();
         const fecha_cierre = $('#fecha_cierre').val();
+        
         if (asesor!=="" && fecha_cierre!==""){
-            buscar_cierre(asesor,fecha_cierre);
+            console.log(asesor, fecha_cierre);
+            buscar_cierre(asesor, fecha_cierre);
         }
+        
     });
 
     $("#buscar_cedula_cliente_historia").click(function () {
@@ -3490,14 +3534,12 @@
     }   
 
     function extraer_gastosAsesor() {
-        
         $("#lista_gastos_exeAsesor").empty();
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
-    
         // var fecha = new Date().toISOString().split('T')[0];
         block.estraa = $("#id_asesor_cierre").val();
         block.arrays = [block.tokens[1], block.estraa, $("#fecha_cierre").val()];
@@ -3547,13 +3589,13 @@ function extraer_cobros(id_asesor, id_tabla, hoy) {
     });
 }   
 
-function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
+function extraer_cobros_cierre(id_asesor, id_tabla) {
     if (window.localStorage.getItem("Money-vars-token") !== null) {
         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
     } else {
         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
     }
-    var fecha = hoy ? moment().format('YYYY-MM-DD') : $("#fecha_cierre").val();
+    var fecha =  $("#fecha_cierre").val();
     
     block.estraa = id_asesor;
     block.arrays = [block.tokens[1], block.estraa, fecha];
@@ -5123,12 +5165,13 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
             if (!valor.e) {                
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
-                const button = document.getElementById('registro_base');
+                
 				if(valor.d[2]!=="0" && valor.d[2]!==0){
 					valor.d[2] = valor.d[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 					valor.d[2] = valor.d[2].split('').reverse().join('').replace(/^[\.]/,'');
+                    $("#registro_base").prop("disabled", true);
 				}else{
-                    button.removeAttribute('disabled');
+                    $("#registro_base").prop("disabled", false);
 					valor.d[2] = 0;
 					valor.d[3] = "";
 				}
@@ -6982,7 +7025,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
         block.obj = {"r": "listar_asesores", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log(valor);
             if (!valor.e) {
                 block.todo = valor.d[1];
                 for (var t = 0; t < block.todo.length; t++) {
@@ -7147,17 +7189,17 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
         });
     }
 
-    $("#text_total_asesor").change(function(){
+    $("#text_total_asesor").keyup(function(){
         const totalAsesor = parseFloat($('#text_total_asesor').val());
         const totalSistema = parseFloat($('#text_total_sistema').text().slice(1));
         const diferencia = totalAsesor - totalSistema;
-        if (totalAsesor!="" && totalSistema!=""){
+        if (totalAsesor!="" && totalAsesor!=0 && totalSistema!=""){
             $("#text_diferencia_cierre").text("Q"+diferencia);
         }else{
-            
+            $("#text_diferencia_cierre").text("Q");
         }
     });
-
+    
     // $("#id_asesor_cierre").change(function(){        
     //     if($("#id_asesor_cierre").val()!==""){
     //         block.ase = $("#id_asesor_cierre").val();
@@ -7653,10 +7695,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
         block.listadi ="";
         block.arrays = [block.tokens[1],block.num];
         block.obj = {"r": "lista_cliente_basic", "d": block.arrays};
-        debugger;     
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log(valor)
             if (!valor.e) {
                 if(valor.d[1]!==null) {
                     for(let indice = 0; indice < valor.d[1].length; indice++){
@@ -7731,13 +7771,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
         }
 
         block.arrays = [block.tokens[1], block.unicos[15]];
-        debugger;
         block.obj = {"r": "extraer_ciudades", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log("ciudades")
-            console.log(valor);
-            debugger;
             if (!valor.e) {
                 block.lista = valor.d[1];
                 block.nuevo = "";
@@ -8168,6 +8204,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla, hoy) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
+        $("#HistorialClientes").css("display", "none");        
     }
 
 	var map;
