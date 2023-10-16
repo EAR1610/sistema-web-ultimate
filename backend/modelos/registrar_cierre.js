@@ -20,8 +20,8 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t=="5"){
 					
-					var moment = require("moment");
-					var fecha_hora = moment().format('YYYY-MM-DD_hh:mm A');
+					var moment = require("moment-timezone");
+					var fecha_hora = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh:mm A');
 					var arraybase = [fecha_hora, arrays[1],arrays[2],arrays[3]];
 					console.log(arraybase);
 					redisClient.set("cierre_"+arrays[3]+"_"+arrays[1],JSON.stringify(arraybase),function(err,reply) {

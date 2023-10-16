@@ -20,8 +20,8 @@ eje = function(arrays,origen,redisClient) {
 
 					//["eyVHyXo","c","2652592_asesor_2019-05-08 11:52:10_JUAN_MENCO","7495148_supervisor_2019-05-09 16:34:08_CARMITA_FONSECA"]
 
-					var moment = require("moment");
-					var hoy = moment().format('DD_MM_YYYY');
+					var moment = require("moment-timezone");
+					var hoy = moment().tz("America/Guatemala").format('DD_MM_YYYY');
 					var uni = arrays[3].split("_");
 					var uni2 = arrays[2].split("_");
 

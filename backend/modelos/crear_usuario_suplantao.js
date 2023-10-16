@@ -30,8 +30,8 @@ eje = function(arrays,origen,redisClient) {
 					}else if(arrays[18]=="d"){
 						var tipo = "administrador",numes = 5;
 					}
-					var moment = require("moment");
-					var hoy = moment().format('YYYY-MM-DD HH:mm:ss');
+					var moment = require("moment-timezone");
+					var hoy = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss');
 
 					var new_user = [];
 					new_user.push(arrays[17]);

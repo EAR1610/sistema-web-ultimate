@@ -22,8 +22,8 @@ eje = function(arrays,origen,redisClient) {
 					
 					function otravesmas(arraco,tempA1,tempA2,tempB1,tempB2,tempC1,tempC2){
 						
-						var moment = require("moment");
-						var dia = moment().format('YYYY-MM-DD');
+						var moment = require("moment-timezone");
+						var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 						
 						redisClient.keys('cancelado_'+asesorX+"_"+dia,function(err3,reply3){
 							if(reply3.length > 0){
@@ -39,7 +39,7 @@ eje = function(arrays,origen,redisClient) {
 									if(ind == arrs.length){
 										arraco.push(litado,tempA1,tempA2,tempB1,tempB2,tempC1,tempC2);
 										
-										var moment = require("moment"),fechaq = moment().format('YYYY-MM-DD');
+										var moment = require("moment-timezone"),fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 										redisClient.get("tolete_"+asesorX+"_"+fechaq, function (errex, rewprelyx) {
 											if(rewprelyx!==null){
 												var infqo = JSON.parse(rewprelyx);
@@ -67,7 +67,7 @@ eje = function(arrays,origen,redisClient) {
 								iterar(0,reply3);
 							}else{
 								arraco.push("[]",tempA1,tempA2,tempB1,tempB2,tempC1,tempC2);
-								var moment = require("moment"),fechaq = moment().format('YYYY-MM-DD');
+								var moment = require("moment-timezone"),fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 								redisClient.get("tolete_"+asesorX+"_"+fechaq, function (errex, rewprelyx) {
 									if(rewprelyx!==null){
 										var infqo = JSON.parse(rewprelyx);
@@ -84,8 +84,8 @@ eje = function(arrays,origen,redisClient) {
 					function volver_a_procesar(dieron,falta,dieronCuentos,nopagados,nopagadosCuentos,verifi,capital,estime,busqueda,cuanBus,busquedaVola,cuanVol,busquedaFic,cuanFic,tempA1,tempA2,tempB1,tempB2,tempC1,tempC2){
 						
 						var realcantidad = 0,realmonto=0,realbono = 0, realmotocuanto=0;
-						var moment = require("moment");
-						var dia = moment().format('YYYY-MM-DD');
+						var moment = require("moment-timezone");
+						var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 						
 						function consultar_de(inds,arrwa){
 							if(inds==arrwa.length){

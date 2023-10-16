@@ -18,8 +18,8 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" ){
 
-					var moment = require("moment");
-					var ides = moment().format('YYYY-MM-DD');
+					var moment = require("moment-timezone");
+					var ides = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 					arrays[0] = ides;
 					arrays[3] = decoded.d;
 					

@@ -69,7 +69,7 @@ eje = function(arrays,origen,redisClient) {
 											resolve([false,"5",otrasEmpresa]);
 										}else{
 		
-											var moment = require("moment");
+											var moment = require("moment-timezone");
 											
 											/*
 												creo la cantidad de cuotas que require según el ciclo que tengan
@@ -83,14 +83,14 @@ eje = function(arrays,origen,redisClient) {
 												var cuotaD = arrays[8].replace(".", ""),												
 												cuotaD2 = cuotaD.replace(".", ""),
 												tiempo = arrays[4],
-												indi = moment().isoWeekday(), // Obtener el día de la semana actual
-												prox = moment().isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual													
+												indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
+												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual													
 												for (var k = 1; k < tiempo + 1; k++) {
 													if(k == 4){
-														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+														var prox2 = moment(prox).tz("America/Guatemala").add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													}
-													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+													var prox2 = moment(prox).tz("America/Guatemala").add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 													prox = prox2;
 													fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
 												}
@@ -102,7 +102,7 @@ eje = function(arrays,origen,redisClient) {
 													cuotaD2 = cuotaD.replace(".",""),
 													indi = moment().format('E'),
 													residuo = (7 - indi),													
-													prox = moment().format('YYYY-MM-DD'),
+													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4],
 													acum=1;
 
@@ -110,42 +110,42 @@ eje = function(arrays,origen,redisClient) {
 												for(var k = 1; k < tiempo; k++){
 													if( k == (tiempo - 1) ) {
 														if(k<residuo){
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k==residuo){
-															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															acum++;
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k>residuo){
 															if(acum==7){
-																prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+																prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 																acum=1;
 															}
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 															acum++;
 														}
 													} else {
 														if(k<residuo){
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k==residuo){
-															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															acum++;
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k>residuo){
 															if(acum==7){
-																prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+																prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 																acum=1;
 															}
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 															acum++;
@@ -158,11 +158,11 @@ eje = function(arrays,origen,redisClient) {
 											}else if(arrays[10]=="3"){ //PAGO QUINCENAL
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
-													prox = moment().format('YYYY-MM-DD'),
+													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4];												
 																															
 												for(var k = 1; k < tiempo+1; k++){
-													var prox2 = moment(arrays[5]).add(15, 'days').format('YYYY-MM-DD');													
+													var prox2 = moment(arrays[5]).tz("America/Guatemala").add(15, 'days').format('YYYY-MM-DD');													
 													if(k == tiempo - 1){
 														fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													} else {
@@ -173,10 +173,10 @@ eje = function(arrays,origen,redisClient) {
 											} else if(arrays[10]=="4"){	//PAGO MENSUAL	
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
-													prox = moment().format('YYYY-MM-DD'),
+													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4];
 												for(var k = 1; k < 2; k++){
-													var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
+													var prox2 = moment(prox).tz("America/Guatemala").add(30, 'days').format('YYYY-MM-DD');
 													fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;
 												}												

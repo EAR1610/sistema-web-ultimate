@@ -434,75 +434,107 @@
     </script>
 
     <script>
-
         function reporteUtilidades(){
-            
-            // var doc = new window.jspdf.jsPDF();
 
-            // var fecha = new Date();
-            // var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
-            // var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
-
-            // var texto = "Este es un texto estático";
-
-            // doc.text(texto, 10, 10);
-
-            // var imageUrl = 'https://previews.123rf.com/images/bahtiarmaulana/bahtiarmaulana2204/bahtiarmaulana220400040/185159316-rebanada-de-dibujos-animados-de-pizza-ilustraci%C3%B3n-de-dibujos-animados-vectoriales-im%C3%A1genes.jpg';
-
-            // fetch(imageUrl)
-            //     .then(response => response.blob())
-            //     .then(blob => {
-            //     const imageUrl = URL.createObjectURL(blob);
-            //     const img = new Image();
-            //     img.src = imageUrl;
-
-            //     img.onload = () => {
-            //         doc.addImage(img, 'JPEG', 15, 40, 180, 160);
-            //         doc.save('Reporte Utilidades de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf');
-            //         URL.revokeObjectURL(imageUrl);
-            //     };
-            //     });
-
-
+            var doc = new window.jspdf.jsPDF();
 
             
+            var fecha = new Date();
+            var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+            var tabla = document.getElementById('lista_utilidades');
+
+            var datos = [];
+            var total = 0;
+
+            for (var i = 0; i < tabla.rows.length; i++) {
+                var montoTexto = tabla.rows[i].cells[1].innerText;
+                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                if (!isNaN(montoNumero)) {
+                    datos.push({
+                        nombre: tabla.rows[i].cells[0].innerText,
+                        monto: montoNumero
+                    });
+
+                    total += montoNumero; 
+                } 
             }
+
+            doc.setFillColor(200, 200, 200);
+            doc.rect(0, 35, 210, 10, 'F');
+            doc.setFontSize(18);
+            doc.setFont('Helvetica', 'bold')
+            doc.text("Reporte de utilidades", 105, 10, null, null, "center");
+            doc.setFontSize(12);
+
+            doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+            
+            doc.setTextColor(0,0,0);
+            doc.text('NOMBRE', 10, 40);
+            doc.text('DPI', 10, 60);
+            doc.text("MONTO", 10, 80);
+            doc.text("FECHA", 10, 100);
+
+            var y = 50;
+            var maxPageHeight = doc.internal.pageSize.height - 20;
+
+            for(var i = 0; i < datos.length; i++){
+                if (y > maxPageHeight) {
+                    doc.addPage();
+                    y = 20; 
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('NOMBRE', 10, y);
+                    doc.text('DPI', 10, y);
+                    doc.text("MONTO", 10, y);
+                    doc.text("FECHA", 10, y);
+                    y += 10; 
+                }
+                doc.setTextColor(0, 0, 0); 
+                doc.setFont("bold");
+                doc.setFontSize(10);
+
+                doc.text(datos[i].nombre.toString(), 10, y);
+                doc.text(datos[i].dpi.toString(), 10, y + 20);
+                doc.text("Q" + datos[i].monto.toString(), 10, y + 40);
+                doc.text(datos[i].fecha.toString(), 10, y + 60);
+
+                // doc.text(datos[i].nombre, 10, y);
+                // doc.text(datos[i].dpi, 10, y + 20);
+                // doc.text("Q" + datos[i].monto, 10, y + 40);
+                // doc.text(datos[i].fecha, 10, y + 60);
+
+
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    if (y + 15 > maxPageHeight) { 
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.line(10, y + 5, 200, y + 5); 
+                }
+                y += 10; 
+            }
+
+            if (y > maxPageHeight) {
+                doc.addPage();
+                y = 20;
+            }
+
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Helvetica', 'bold');
+            doc.text('Total ', 10, y);
+            doc.text("Q" + total.toString(), 160, y);
+            doc.setFont('Helvetica');
+
+            doc.save('Reporte de utilidades de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf');
+
+
+
+        }
 
 
       
-
-
-
-        // function reporteUtilidades(){
-        //     var doc = new window.jspdf.jsPDF();
-
-        //     var fecha = new Date();
-        //     var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
-        //     var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
-
-        //     var texto = "Este es un texto estático";
-
-        //     doc.text(texto, 10, 10);
-
-        //    // var imgData = 'data:image/jpeg;base64,...';
-
-        //     fetch('https://previews.123rf.com/images/bahtiarmaulana/bahtiarmaulana2204/bahtiarmaulana220400040/185159316-rebanada-de-dibujos-animados-de-pizza-ilustraci%C3%B3n-de-dibujos-animados-vectoriales-im%C3%A1genes.jpg') 
-        //     .then(response => response.blob())
-        //     .then(blob => {
-        //         var reader = new FileReader();
-        //         reader.onloadend = function() {
-        //             var base64data = reader.result;                
-        //             doc.addImage(base64data, 'JPEG', 15, 40, 180, 160);
-        //         }
-        //         reader.readAsDataURL(blob);
-        //     });
-
-
-
-        //     doc.addImage(imgData, 'JPEG', 15, 40, 180, 160);
-
-        //     doc.save('Reporte Utilidades de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
-        // }
 
         function imprimir_texto(doc,texto, x, y, size, color, align){
             doc.setFontSize(size);
@@ -2647,6 +2679,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="table-responsive">                        
+                        <table class="table table-striped">
+                            <thead>
+                                <tr align="center">
+                                    <th>Nombre</th>
+                                    <th>DPI</th>
+                                    <th>Monto</th>
+                                    <th>Fecha</th>
+                                </tr>
+                                </thead>
+                                <tbody align="center" id="lista_utilidades">
+                                </tbody>
+                        </table>
+                    </div>
                 </div>
 
 
@@ -3180,11 +3226,31 @@
     });
 
     $("#busqueda_utilidades").click(function(){
-
+        $("#lista_utilidades").empty();
         if($("#fecha__inicial_utilidades").val() === "" || $("#fecha_final_utilidades").val() === ""){
             toastr.warning("Por favor, verifique las fechas", "Atención");
         } else {
-            toastr.success("Se ha cargado las utilidades", "Atención");
+            toastr.success("Se están consultando las utilidades", "Atención");
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+            block.arrays = [ block.tokens[1], block.tokens[4], $("#fecha__inicial_utilidades").val(), $("#fecha_final_utilidades").val() ];
+            block.obj = { "r":"obtener_utilidades","d":block.arrays };
+            backend.conexionEnvio(JSON.stringify(block.obj), function( salida ){
+                var valor = JSON.parse(salida);
+                if( !valor.e ){
+                    block.lista = valor.d[1];
+                    for (var e = 0; e < block.lista.length; e++) {
+                        block.iten = block.lista[e];        
+                        block.monto = block.iten[6] 
+                        block.oso = block.oso + '<tr><td>'+block.iten[1]+" "+block.iten[2]+" "+block.iten[3]+" "+block.iten[4]+'</td> <td>'+block.iten[0]+'</td> <td>'+parseInt(block.monto)+'</td> <td>'+block.iten[5]+'</td></tr>';
+                    }
+                    $("#lista_utilidades").html(block.oso);
+                    block.oso = "";
+                }
+            })
         }
     });
 

@@ -36,10 +36,12 @@ eje = function(arrays,origen,redisClient) {
 									*/
 									
 									var jues = JSON.parse(dae);
-									var moment = require("moment");
+									var moment = require("moment-timezone");
 									var ultimo = jues[13][jues[13].length-1];
 									var fecha = ultimo.fe;
-									var dia = moment(fecha).add(1, 'days').format("YYYY-MM-DD");
+									//var dia = moment.tz(fecha,"America/Guatemala").add(1, 'days').format("YYYY-MM-DD");
+									var dia = moment.tz(fecha, "America/Guatemala").add(1, 'days').format("YYYY-MM-DD");
+
 									jues[13].push({"cp":arrays[4],"ct":false,"fe":dia,"pe":0});
 									
 									redisClient.set(orin,JSON.stringify(jues),function(erre,dae){

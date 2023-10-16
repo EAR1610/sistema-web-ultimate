@@ -23,8 +23,8 @@ eje = function(arrays,origen,redisClient) {
 					var nuevos_contr = [];
 					
 					function cancelado(nombreEmpresa,nit,nombreAsesor,cedula_Aseso,correo_Aseso,jefe_Aseso,nuevos,nuevos_contr){
-						var moment = require("moment");
-						var dia = moment().format('YYYY-MM-DD');
+						var moment = require("moment-timezone");
+						var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 												
 						redisClient.get("gasto_"+arrays[1]+"_"+dia,function(erur,repuly) {						
 							if(repuly!==null){
@@ -54,8 +54,8 @@ eje = function(arrays,origen,redisClient) {
 											correo_Aseso = jesa[17],
 											jefe_Aseso = jesa[23];
 											
-											var moment = require("moment");
-											var dia = moment().format('YYYY-MM-DD');
+											var moment = require("moment-timezone");
+											var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 											
 											redisClient.keys("contrato_*_"+arrays[1]+"_*_"+arrays[2], function (erwsr, rwesply) {
 												if(rwesply.length>0){

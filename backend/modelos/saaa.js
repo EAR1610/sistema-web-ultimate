@@ -20,8 +20,8 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else{		
 
-					var moment = require("moment");
-					var hoy = moment().format('YYYY-MM-DD HH:mm:ss');
+					var moment = require("moment-timezone");
+					var hoy = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss');
 					
 					if(arrays[18]!==decoded.i){
 					

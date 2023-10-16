@@ -33,9 +33,9 @@ eje = function(arrays,origen,redisClient) {
 						
 					// });
 
-					var moment = require("moment");
-					var fecha = moment().format('YYYY-MM-DD');
-					var hora = moment().format('hh:mm A');
+					var moment = require("moment-timezone");
+					var fecha = moment().tz("America/Guatemala").format('YYYY-MM-DD');
+					var hora = moment().tz("America/Guatemala").format('hh:mm A');
 					var arraybase = [hora, arrays[1],arrays[3],false]
 
 					/*

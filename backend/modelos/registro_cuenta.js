@@ -17,8 +17,8 @@ eje = function(arrays,origen,redisClient) {
 			
 			if(correo.test(arrays[0]) && largoc.test(arrays[1]) ){
 				
-				var moment = require("moment");
-				var hoy = moment().format('YYYY-MM-DD HH:mm:ss');
+				var moment = require("moment-timezone");
+				var hoy = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss');
 				
 				function randomIntFromInterval(min,max){
 					return Math.floor(Math.random()*(max-min+1)+min);

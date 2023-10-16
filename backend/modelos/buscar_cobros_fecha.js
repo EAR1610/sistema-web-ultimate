@@ -40,10 +40,10 @@ eje = function(arrays,origen,redisClient) {
 
 							function recurso(ind,arrs){
 								if (ind==arrs.length) {
-									const moment = require('moment');
+									const moment = require('moment-timezone');
 									// Convertir la hora a un objeto moment()
 									lista.forEach((item) => {
-										item.hora = moment(item.hora, 'hh:mm A');
+										item.hora = moment.tz(item.hora, 'hh:mm A', 'America/Guatemala');
 									});
 									
 									// Ordenar el JSON por la hora

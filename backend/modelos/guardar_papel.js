@@ -20,9 +20,9 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t=="5"){
 
-					var moment = require("moment");
-					var ides = moment().format('YYYY-MM-DD hh:mm:ss');
-					var idesx = moment().format('YYYY-MM-DD');
+					var moment = require("moment-timezone");
+					var ides = moment().tz("America/Guatemala").format('YYYY-MM-DD hh:mm:ss');
+					var idesx = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 					arrays[0] = ides;
 					
 					/*

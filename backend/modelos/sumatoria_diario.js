@@ -19,8 +19,8 @@ eje = function(arrays,origen,redisClient) {
 				if (err) {
 					reject([false,"1"]);
 				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
-					var moment = require("moment");
-					var dia = moment().format('YYYY-MM-DD');
+					var moment = require("moment-timezone");
+					var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"					
 					/*
 						toma los monto y los suma

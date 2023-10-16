@@ -67,8 +67,8 @@ eje = function(arrays,origen,redisClient) {
 											}
 
 											var canti = parseInt(lisa[w].cp);
-											var moment = require("moment");
-											var dia = moment().format('YYYY-MM-DD');
+											var moment = require("moment-timezone");
+											var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 
 											if(!lisa[w].ct) {
 
@@ -109,8 +109,8 @@ eje = function(arrays,origen,redisClient) {
 										redisClient.set("liquido_"+arrays[4]+"_"+fechaq+"_"+arrays[2]+"_"+lisa[lisa.length-1].cp,"true", function (errex, rewprlyx) { 
 										});
 
-										var moment = require("moment"),fechaqx2 = moment().format('YYYY-MM-DD');													
-										var fechaq = moment().format('YYYY-MM-DD_hh_mm_A'),asesorw = arrays[1];
+										var moment = require("moment-timezone"),fechaqx2 = moment().tz("America/Guatemala").format('YYYY-MM-DD');													
+										var fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh_mm_A'),asesorw = arrays[1];
 										redisClient.set("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3]+"_"+cedulax[1],"true", function (errex, rewprlyx) {
 										});
 
@@ -119,10 +119,9 @@ eje = function(arrays,origen,redisClient) {
 											
 											interno[13] = lisa;
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
-												
 												redisClient.rename(origena,"old_"+origena,function(errx,replyx) {
-													var moment = require("moment");
-													var dia = moment().format('YYYY-MM-DD');
+													var moment = require("moment-timezone");
+													var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 													var bou = [interno,arrays[2]];
 													redisClient.set('cancelado_'+arrays[1]+"_"+dia,JSON.stringify(bou),function(err3,reply3){
 														
@@ -138,12 +137,9 @@ eje = function(arrays,origen,redisClient) {
 																	});
 																}
 															}
-														});
-													
-													});
-													
-												});
-												
+														});													
+													});													
+												});												
 											});
 											
 										}else if(tolete<monto2){//si pago demas
@@ -153,8 +149,8 @@ eje = function(arrays,origen,redisClient) {
 																							
 												redisClient.rename(origena,"old_"+origena,function(errx,replyx) {
 													
-													var moment = require("moment");
-													var dia = moment().format('YYYY-MM-DD');
+													var moment = require("moment-timezone");
+													var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 													var bou = [interno,arrays[2]];
 													
 													redisClient.set('cancelado_'+arrays[1]+"_"+dia,JSON.stringify(bou),function(err3,reply3){														
@@ -179,7 +175,7 @@ eje = function(arrays,origen,redisClient) {
 											});
 										
 										}else if(finiquite >= lisa.length){
-											var moment = require("moment"),fechaq = moment().format('YYYY-MM-DD');
+											var moment = require("moment-timezone"),fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 											lisa.push({"cp":"0","ct":false,"fe":fechaq,"pe":monto2});
 											interno[13] = lisa;
 											redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {

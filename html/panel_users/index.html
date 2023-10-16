@@ -2224,6 +2224,7 @@
     });
 
     $("#crear_contrato").click(function () {
+        debugger;
         if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!==""){
             block.asesor = $("#selector_asesores_lista").val();
             block.monto_prestar = $("#monto_prestar_ya_admin").val();

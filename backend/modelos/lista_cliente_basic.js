@@ -31,15 +31,9 @@ eje = function(arrays,origen,redisClient) {
 							function iterar(ind, arrs){
 								if(ind == arrs.length){
 									resolve([true, listado, 0]);
-									console.log("listado");
-									console.log(listado);
 								} else {									
 									redisClient.get(arrs[ind], function(errCliente, replyCliente){
-										// console.log("replyCliente");
-										// console.log(JSON.parse(replyCliente));
 										if(replyCliente !== null) {
-											console.log("JSON.parse(replyCliente)");
-											console.log(JSON.parse(replyCliente));
 
 											let [ id, imagen1, imagen2, imagen3, imagen4, tipoUno, clase, dpi, nombre, nombre2,apellido, apellido2, direccion, departamento, municipio, barrio, celular1, celular2, correo, alias, fecha ] = JSON.parse(replyCliente);
 											let datosCliente = [];

@@ -20,7 +20,7 @@ eje = function(arrays,origen,redisClient) {
 					reject([false,"1"]);
 				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="5"){
 
-					var moment = require("moment");
+					var moment = require("moment-timezone");
 					
 					/*listo los contratos*/
 					
@@ -95,11 +95,11 @@ eje = function(arrays,origen,redisClient) {
 
 													}
 													
-													var moment = require("moment");
-													var fechaq = moment().format('YYYY-MM-DD');
+													var moment = require("moment-timezone");
+													var fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 													redisClient.set("liquido_"+arrays[1]+"_"+fechaq+"_"+arrays[2]+"_"+lisa[lisa.length-1].cantidad_cuota_paga,"true", function (errex, rewprlyx) { console.log("monto firme"+arrays[2]); });
 
-													var moment = require("moment"),fechaq = moment().format('YYYY-MM-DD_hh_mm_ss'),asesorw = arrays[4];
+													var moment = require("moment-timezone"),fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh_mm_ss'),asesorw = arrays[4];
 													redisClient.set("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq,"true", function (errex, rewprlyx) { console.log("sumado "+arrays[2]); });
 
 													if (finiquite == lisa.length && adelantos > 0) {
@@ -117,9 +117,9 @@ eje = function(arrays,origen,redisClient) {
 																			info[0] = 0;
 																		}
 
-																		var moment = require("moment");
+																		var moment = require("moment-timezone");
 																		info[1].push({
-																			"fecha": moment().format('YYYY-MM-DD'),
+																			"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 																			"monto": monto
 																		});
 
@@ -173,9 +173,9 @@ eje = function(arrays,origen,redisClient) {
 															} else {
 																if (tota == monto) {
 																	//no tengo una extencion de cuota pero pago de insofacto
-																	var moment = require("moment");
+																	var moment = require("moment-timezone");
 																	var info = [0, [{
-																		"fecha": moment().format('YYYY-MM-DD'),
+																		"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 																		"monto": monto
 																	}]];
 
@@ -207,9 +207,9 @@ eje = function(arrays,origen,redisClient) {
 																	//no tengo una extencion de cuota pero abono un monto de cuota
 																	if (monto > 0) {
 																		var resto = tota - monto;
-																		var moment = require("moment");
+																		var moment = require("moment-timezone");
 																		var info = [resto, [{
-																			"fecha": moment().format('YYYY-MM-DD'),
+																			"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 																			"monto": monto
 																		}]];
 
@@ -242,9 +242,9 @@ eje = function(arrays,origen,redisClient) {
 																} else if (tota < monto) {
 																	//no tengo una extencion de cuota pero puedo pagar todoq y lo hare
 																	if (monto > 0) {
-																		var moment = require("moment");
+																		var moment = require("moment-timezone");
 																		var info = [0, [{
-																			"fecha": moment().format('YYYY-MM-DD'),
+																			"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 																			"monto": tota
 																		}]];
 
@@ -342,11 +342,11 @@ eje = function(arrays,origen,redisClient) {
 
 										}
 										
-										var moment = require("moment");
-										var fechaq = moment().format('YYYY-MM-DD');
+										var moment = require("moment-timezone");
+										var fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 										redisClient.set("liquido_"+arrays[1]+"_"+fechaq+"_"+arrays[2]+"_"+lisa[lisa.length-1].cantidad_cuota_paga,"true", function (errex, rewprlyx) { console.log("monto firme"+arrays[2]); });
 
-										var fechaq = moment().format('YYYY-MM-DD_hh_mm_ss'),asesorw = arrays[4];
+										var fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh_mm_ss'),asesorw = arrays[4];
 										redisClient.set("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq,"true", function (errex, rewprlyx) { console.log("sumado "+arrays[2]); });
 
 
@@ -365,9 +365,9 @@ eje = function(arrays,origen,redisClient) {
 																info[0] = 0;
 															}
 
-															var moment = require("moment");
+															var moment = require("moment-timezone");
 															info[1].push({
-																"fecha": moment().format('YYYY-MM-DD'),
+																"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 																"monto": monto
 															});
 
@@ -422,9 +422,9 @@ eje = function(arrays,origen,redisClient) {
 												} else {
 													if (tota == monto) {
 														//no tengo una extencion de cuota pero pago de insofacto
-														var moment = require("moment");
+														var moment = require("moment-timezone");
 														var info = [0, [{
-															"fecha": moment().format('YYYY-MM-DD'),
+															"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 															"monto": monto
 														}]];
 
@@ -455,9 +455,9 @@ eje = function(arrays,origen,redisClient) {
 														//no tengo una extencion de cuota pero abono un monto de cuota
 														if (monto > 0) {
 															var resto = tota - monto;
-															var moment = require("moment");
+															var moment = require("moment-timezone");
 															var info = [resto, [{
-																"fecha": moment().format('YYYY-MM-DD'),
+																"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 																"monto": monto
 															}]];
 
@@ -490,9 +490,9 @@ eje = function(arrays,origen,redisClient) {
 													} else if (tota < monto) {
 														//no tengo una extencion de cuota pero puedo pagar todoq y lo hare
 														if (monto > 0) {
-															var moment = require("moment");
+															var moment = require("moment-timezone");
 															var info = [0, [{
-																"fecha": moment().format('YYYY-MM-DD'),
+																"fecha": moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 																"monto": tota
 															}]];
 
