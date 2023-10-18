@@ -34,12 +34,10 @@ eje = function(arrays,origen,redisClient) {
 								total = total + parseInt(explit[2]);
 								
 								if(es==reply3.length-1){
-									console.log("base_"+arrays[1]+arrays[2]);
 									redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
 										if(replcy!==null){
 											var inf = JSON.parse(replcy);
 											if (inf[3]){
-												console.log("cierre_"+arrays[1]+"_"+arrays[2]);
 												redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
 													const response2 = JSON.parse(response);
 													resolve([true,total,inf[1],arrays[2],inf[3],response2[2]]);
@@ -54,12 +52,10 @@ eje = function(arrays,origen,redisClient) {
 								}
 							}
 						}else{ 
-							console.log("base_"+arrays[1]+"_"+arrays[2]);
 							redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
 								if(replcy!==null){
 									var inf = JSON.parse(replcy);
 									if (inf[3]){
-										console.log("cierre_"+arrays[1]+"_"+arrays[2]);
 										redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
 											const response2 = JSON.parse(response);
 											resolve([true,0,inf[1],arrays[2],inf[3],response2[2]]);

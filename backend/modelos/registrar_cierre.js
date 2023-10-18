@@ -23,7 +23,6 @@ eje = function(arrays,origen,redisClient) {
 					var moment = require("moment-timezone");
 					var fecha_hora = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh:mm A');
 					var arraybase = [fecha_hora, arrays[1],arrays[2],arrays[3]];
-					console.log(arraybase);
 					redisClient.set("cierre_"+arrays[3]+"_"+arrays[1],JSON.stringify(arraybase),function(err,reply) {
 						if (reply!=null){
 							redisClient.get("base_"+arrays[3]+"_"+arrays[1],function(ersr,replcy) {

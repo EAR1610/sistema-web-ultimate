@@ -451,14 +451,6 @@
                     <a id="couta_sear" href="javascript:registrar_gastos();"><i class="fa fa-money"></i> <span
                             class="nav-label">Gastos</span></a>
                 </li>
-				<!-- <li>
-                    <a id="couta_sear2" href="javascript:pendiente_link();"><i class="fa fa-refresh"></i> <span
-                            class="nav-label">Pendiente</span></a>
-                </li> -->
-				<!-- <li>
-                    <a id="couta_sear2" href="javascript:papel();"><i class="fa fa-cogs"></i> <span
-                            class="nav-label">Papeleria</span></a>
-                </li> -->
                 <li>
                     <a id="couta_search" href="javascript:buscar_mapa();"><i class="fa fa-map-marker"></i> <span
                             class="nav-label">Mapa de clientes</span></a>
@@ -1034,24 +1026,16 @@
 <script>
 
     var firebaseConfig = {
+        
+        apiKey: "AIzaSyDm6brlpGU1WfSoh_jCtAChk5c5feszYxo",
+        authDomain: "nororiente-f57b1.firebaseapp.com",
+        databaseURL: "https://nororiente-f57b1-default-rtdb.firebaseio.com",
+        projectId: "nororiente-f57b1",
+        storageBucket: "nororiente-f57b1.appspot.com",
+        messagingSenderId: "551056198200",
+        appId: "1:551056198200:web:c131ade0d078e2956bb4cd",
+        measurementId: "G-QPMR8Z13BH"
 
-        apiKey: "AIzaSyCKm7s6lyrf6qojY04kNYDt6DkM4P4vzoE",
-        authDomain: "prestamos-6c36a.firebaseapp.com",
-        databaseURL: "https://prestamos-6c36a-default-rtdb.firebaseio.com/",
-        projectId: "prestamos-6c36a",
-        storageBucket: "prestamos-6c36a.appspot.com",
-        messagingSenderId: "815768429932",
-        appId: "1:815768429932:web:6d50bac5c91e2150f97f49",
-        measurementId: "G-7DY4VZWSC5"
-
-
-		// apiKey: "AIzaSyB1i8Vx6jWV5szRQujd5fNW6TfFLiru-Tc",
-		// authDomain: "demostrativo-web.firebaseapp.com",
-		// databaseURL: "https://demostrativo-web.firebaseio.com",
-		// projectId: "demostrativo-web",
-		// storageBucket: "demostrativo-web.appspot.com",
-		// messagingSenderId: "1038105645545",
-		// appId: "1:1038105645545:web:9affa6ce337fb51a"
 	};
 	
     firebase.initializeApp(firebaseConfig);
@@ -1092,14 +1076,6 @@
     block.unico = "0";
 	listado_contratos(block.unico);
 	$("#lista_enorme").append("");
-
-    // $("#lista_asesores_general3").change(function(){
-    //     if($("#lista_asesores_general3").val()!==""){
-    //         block.ase = $("#lista_asesores_general3").val();
-    //         $("#lista_enorme").html("");
-    //         listado_contratos("0");
-    //     }
-    // });
 
     function asesores_lista_ajustada() {
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -1597,11 +1573,8 @@
 
     block.filein = document.querySelector("#foto1");
     block.filein.onchange = function (e) { 
-        console.log("foto1");
         block.files = e.target.files;
         block.file = block.files[0];
-        console.log(block.file);
-
         var imagenesFolder = new Folder("imagenes");
         if (!imagenesFolder.exists) {
             imagenesFolder.create();
@@ -1613,86 +1586,8 @@
         $("#foto_m1").attr("src", file.url);
     };
 
-
-
-
-    // block.filein = document.querySelector("#foto1");
-    // block.filein.onchange = function (e) {
-    //     block.files = e.target.files;
-    //     block.file = block.files[0];
-    //     ImageTools.resize(block.file, {
-    //         width: 259,
-    //         height: 259
-    //     }, function (blob, didItResize) {
-
-    //         var storageRef = firebase.storage().ref();
-    //         var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-    //                 function(snapshot) {
-    //                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;                        
-    //                     switch (snapshot.state) {
-    //                         case firebase.storage.TaskState.PAUSED:                                
-    //                             break;
-    //                         case firebase.storage.TaskState.RUNNING:
-    //                             break;
-    //                     }
-    //                 }, function(error) {
-    //                     switch (error.code) {
-    //                         case 'storage/unauthorized':
-    //                             break;
-    //                         case 'storage/canceled':
-    //                             break;
-    //                         case 'storage/unknown':
-    //                             break;
-    //                     }
-    //                 }, function() {
-    //                     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-    //                         $("#foto_m1").attr("src", downloadURL);
-    //                         window.sessionStorage.setItem("Money-vars-foto-id", downloadURL);
-    //                     });
-    //                 });
-
-
-    //     });
-    // };
-
     block.filein1m = document.querySelector("#foto1m");
     block.filein1m.onchange = function (e) {
-        console.log("añadiendo foto1m")
-        // block.files = e.target.files;
-        // block.file = block.files[0];
-        // console.log(block.file)
-        // ImageTools.resize(block.file, {
-        //     width: 259,
-        //     height: 259
-        // }, function (blob, didItResize) {
-
-        //     var storageRef = firebase.storage().ref();
-        //     var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, function(snapshot) {
-        //         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //         switch (snapshot.state) {
-        //             case firebase.storage.TaskState.PAUSED:
-        //                 break;
-        //             case firebase.storage.TaskState.RUNNING:
-        //                 break;
-        //         }
-        //     }, function(error) {
-        //         switch (error.code) {
-        //             case 'storage/unauthorized':
-        //                 break;
-        //             case 'storage/canceled':
-        //                 break;
-        //             case 'storage/unknown':
-        //                 break;
-        //         }
-        //     }, function() {
-        //         uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        //             $("#foto_m1m").attr("src",downloadURL);
-        //             window.sessionStorage.setItem("Money-vars-foto-idm",downloadURL);
-        //         });
-        //     });
-        // });
         block.files = e.target.files;
         block.file = block.files[0];
         ImageTools.resize(block.file, {
@@ -1733,42 +1628,6 @@
 
     block.filein4m = document.querySelector("#foto4m");    
     block.filein4m.onchange = function (e) {
-        console.log("añadiendo foto4m")
-        // block.files = e.target.files;
-        // block.file = block.files[0];
-        // console.log(block.file)
-        // ImageTools.resize(block.file, {
-        //     width: 259,
-        //     height: 259
-        // }, function (blob, didItResize) {
-
-        //     var storageRef = firebase.storage().ref();
-        //     var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        //         function(snapshot) {
-        //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //             switch (snapshot.state) {
-        //                 case firebase.storage.TaskState.PAUSED:
-        //                     break;
-        //                 case firebase.storage.TaskState.RUNNING:
-        //                     break;
-        //             }
-        //         }, function(error) {
-        //             switch (error.code) {
-        //                 case 'storage/unauthorized':
-        //                     break;
-        //                 case 'storage/canceled':
-        //                     break;
-        //                 case 'storage/unknown':
-        //                     break;
-        //             }
-        //         }, function() {
-        //             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        //                 $("#foto_m4m").attr("src", downloadURL);
-        //                 window.sessionStorage.setItem("Money-vars-foto-frotal", downloadURL);
-        //             });
-        //         });
-        // });
         block.files = e.target.files;
         block.file = block.files[0];
         ImageTools.resize(block.file, {
@@ -1807,10 +1666,8 @@
 
     block.filein2 = document.querySelector("#foto2");
     block.filein2.onchange = function (e) {
-        console.log("añadiendo foto2")
         block.files = e.target.files;
         block.file = block.files[0];
-        console.log(block.file)
         ImageTools.resize(block.file, {
             width: 300,
             height: 500
@@ -1848,43 +1705,6 @@
 
     block.filein2m = document.querySelector("#foto2m");
     block.filein2m.onchange = function (e) {
-        console.log("añadiendo foto2m")
-        // block.files = e.target.files;
-        // block.file = block.files[0];
-        // console.log(block.file)
-        // ImageTools.resize(block.file, {
-        //     width: 300,
-        //     height: 500
-        // }, function (blob, didItResize) {
-
-        //     var storageRef = firebase.storage().ref();
-        //     var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        //             function(snapshot) {
-        //                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //                 switch (snapshot.state) {
-        //                     case firebase.storage.TaskState.PAUSED:
-        //                         break;
-        //                     case firebase.storage.TaskState.RUNNING:
-        //                         break;
-        //                 }
-        //             }, function(error) {
-        //                 switch (error.code) {
-        //                     case 'storage/unauthorized':
-        //                         break;
-        //                     case 'storage/canceled':
-        //                         break;
-        //                     case 'storage/unknown':
-        //                         break;
-        //                 }
-        //             }, function() {
-        //                 uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        //                     $("#foto_m2m").attr("src",downloadURL);
-        //                     window.sessionStorage.setItem("Money-vars-foto-id-normalm",downloadURL);
-        //                 });
-        //             });
-
-        // });
         block.files = e.target.files;
         block.file = block.files[0];
         ImageTools.resize(block.file, {
@@ -1924,10 +1744,8 @@
 
     block.filein3 = document.querySelector("#foto3");
     block.filein3.onchange = function (e) {
-        console.log("añadiendo foto3")
         block.files = e.target.files;
         block.file = block.files[0];
-        console.log(block.file)
         ImageTools.resize(block.file, {
             width: 300,
             height: 500
@@ -1965,42 +1783,6 @@
 
     block.filein3m = document.querySelector("#foto3m");
     block.filein3m.onchange = function (e) {
-        console.log("añadiendo foto3m")
-        // block.files = e.target.files;
-        // block.file = block.files[0];
-        // console.log(block.file)
-        // ImageTools.resize(block.file, {
-        //     width: 300,
-        //     height: 500
-        // }, function (blob, didItResize) {
-
-        //     var storageRef = firebase.storage().ref();
-        //     var uploadTask = storageRef.child('images/' + block.name).put(file);
-        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        // function(snapshot) {
-        //     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //     switch (snapshot.state) {
-        //         case firebase.storage.TaskState.PAUSED:
-        //             break;
-        //         case firebase.storage.TaskState.RUNNING:
-        //             break;
-        //     }
-        // }, function(error) {
-        //     switch (error.code) {
-        //         case 'storage/unauthorized':
-        //             break;
-        //         case 'storage/canceled':
-        //             break;
-        //         case 'storage/unknown':
-        //             break;
-        //     }
-        // }, function() {
-        //     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        //         $("#foto_m3m").attr("src", downloadURL);
-        //         window.sessionStorage.setItem("Money-vars-foto-id-reversom",downloadURL);
-        //     });
-        // });
-        // });
         block.files = e.target.files;
         block.file = block.files[0];
         ImageTools.resize(block.file, {
@@ -2208,7 +1990,6 @@
         block.obj = {"r": "sumatoria_diario", "d": block.arrays}; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log(valor)
             if (!valor.e) {           
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');
@@ -2238,7 +2019,6 @@
         block.arrays = [block.tokens[1],block.tokens[5], Numcuota, cedula[0], cedula[1]];
         block.obj = { "r": "descontar_cuota", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {  
-            debugger; 
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
 				toastr.success('Procesado correctamente', 'Atención!');
@@ -2375,7 +2155,6 @@
     });
 
     $("#crear_contrato").click(function () {
-        debugger;
         if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!==""){
             block.asesor = $("#selector_asesores_lista").val();
             block.monto_prestar = $("#monto_prestar_ya_admin").val();
@@ -3036,18 +2815,6 @@
         });
     }
 
-    // $("#tipo_ciudades").change(function () {
-    //     if ($("#tipo_ciudades").val() !== "") {
-    //         extraer_barrios();
-    //     }
-    // });
-
-    // $("#tipo_departamento").change(function () {
-    //     if ($("#tipo_departamento").val() !== "") {
-    //         extraer_ciudades();
-    //     }
-    // });
-
     $("#tipo_ciudadesm").change(function () {
         if ($("#tipo_ciudadesm").val() !== "") {
             extraer_barriosm();
@@ -3258,7 +3025,6 @@
     });
 
     $("#registro_finalm").click(function () {
-        debugger;
         block.pais = $("#pais_selecionadom").val();
         block.reverso = window.sessionStorage.getItem("Money-vars-foto-id-reversom");
         block.normal = window.sessionStorage.getItem("Money-vars-foto-id-normalm");

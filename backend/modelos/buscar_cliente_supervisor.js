@@ -45,7 +45,7 @@ eje = function(arrays,origen,redisClient) {
 															}
 															indiceFinal++;
 															if( indiceFinal == replyCantidadContratos.length) {
-																comportamiento = parseInt(comportamiento/contrato[13].length);																
+																comportamiento = parseInt( comportamiento / contrato[13].length );																
 																resolve( [ true, litado, replyCantidadContratos.length, comportamiento ] );
 															}
 														})

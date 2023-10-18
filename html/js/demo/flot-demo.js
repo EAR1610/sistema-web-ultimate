@@ -289,7 +289,6 @@ $(function() {
                 xDateFormat: "%y-%0m-%0d",
 
                 onHover: function(flotItem, $tooltipEl) {
-                    // console.log(flotItem, $tooltipEl);
                 }
             }
 

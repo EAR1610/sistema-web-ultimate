@@ -3037,21 +3037,16 @@
 <script>
     var firebaseConfig = {
         
-        apiKey: "AIzaSyCKm7s6lyrf6qojY04kNYDt6DkM4P4vzoE",
-        authDomain: "prestamos-6c36a.firebaseapp.com",
-        databaseURL: "https://prestamos-6c36a-default-rtdb.firebaseio.com/",
-        projectId: "prestamos-6c36a",
-        storageBucket: "prestamos-6c36a.appspot.com",
-        messagingSenderId: "815768429932",
-        appId: "1:815768429932:web:6d50bac5c91e2150f97f49",
-        measurementId: "G-7DY4VZWSC5"
-		// apiKey: "AIzaSyB1i8Vx6jWV5szRQujd5fNW6TfFLiru-Tc",
-		// authDomain: "demostrativo-web.firebaseapp.com",
-		// databaseURL: "https://demostrativo-web.firebaseio.com",
-		// projectId: "demostrativo-web",
-		// storageBucket: "demostrativo-web.appspot.com",
-		// messagingSenderId: "1038105645545",
-		// appId: "1:1038105645545:web:9affa6ce337fb51a"
+        apiKey: "AIzaSyDm6brlpGU1WfSoh_jCtAChk5c5feszYxo",
+        authDomain: "nororiente-f57b1.firebaseapp.com",
+        databaseURL: "https://nororiente-f57b1-default-rtdb.firebaseio.com",
+        projectId: "nororiente-f57b1",
+        storageBucket: "nororiente-f57b1.appspot.com",
+        messagingSenderId: "551056198200",
+        appId: "1:551056198200:web:c131ade0d078e2956bb4cd",
+        measurementId: "G-QPMR8Z13BH"
+
+        
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -3179,6 +3174,7 @@
     function buscar_cierre(asesor, fecha){
         
         // fecha para usarla en registrar cierre
+        $("#listado_cobros_cierre").empty();
         block.fecha_cierre=fecha;
         block.ase = asesor;
         $("#lista_enorme").html("");
@@ -3191,11 +3187,9 @@
         }
 
         block.arrays = [block.tokens[1],block.ase,fecha];
-        console.log(block.arrays);
         block.obj = {"r": "sumatoria_diario_supervisor", "d": block.arrays}; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);            
-            console.log(valor);
             if (!valor.e) {                   
                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                 $("#text_baseAsesor").text("Q"+valor.d[2]);
@@ -3231,7 +3225,6 @@
         }
         const id_usuario = block.tokens[5] = "-" ? "sa" : block.tokens[5];
         block.arrays = [block.tokens[1],fecha_cierre,totalAsesor,asesor,id_usuario];
-        console.log(block.arrays)
         block.obj = {"r": "registrar_cierre", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -3286,8 +3279,7 @@
         const asesor = $('#id_asesor_cierre').val();
         const fecha_cierre = $('#fecha_cierre').val();
         
-        if (asesor!=="" && fecha_cierre!==""){
-            console.log(asesor, fecha_cierre);
+        if ( asesor!=="" && fecha_cierre!=="" ){
             buscar_cierre(asesor, fecha_cierre);
         }
 
@@ -3297,28 +3289,28 @@
         $('#listado_historial_cliente').empty();
         if ($("#text_cedula_cliente_historial").val() !== "") {
             if (window.localStorage.getItem("Money-vars-token") !== null) {
-                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+                block.tokens = JSON.parse( window.localStorage.getItem( "Money-vars-token" ) );
             } else {
-                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token") );
             }
 
-            block.arrays = [block.tokens[1],$("#text_cedula_cliente_historial").val()];
+            block.arrays = [ block.tokens[1],$("#text_cedula_cliente_historial").val() ];
 
-            block.obj = {"r": "buscar_cliente_supervisor", "d": block.arrays};
-            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-                var valor = JSON.parse(salida);                
+            block.obj = { "r": "buscar_cliente_supervisor", "d": block.arrays };
+            backend.conexionEnvio(JSON.stringify(block.obj), function ( salida ) {
+                var valor = JSON.parse(salida);
                 if (!valor.e) {
                     block.partes = JSON.parse(valor.d[1]);
                     block.nomre = block.partes[8] +" "+block.partes[9] +" "+block.partes[10] + " "+block.partes[11];
-                    
+                    block.comportamiento = valor.d[3] <= 0 ? "El cliente paga puntual" : "El cliente paga atrasado";
                     // Agregar una nueva fila a la tabla
-                    $('#listado_historial_cliente').append('<tr><td>'+block.nomre+'</td><td>'+valor.d[2]+'</td><td></td></tr>');
+                    $('#listado_historial_cliente').append('<tr><td>'+block.nomre+'</td><td>'+valor.d[2]+'</td><td>'+block.comportamiento+'</td></tr>');
                 } else {
-                    toastr.warning('Cliente no encontrado', 'Atención!');
+                    toastr.warning( valor.d[1], 'Atención!' );
                 }
             });
         } else {
-            toastr.warning('Falta DPI del cliente', 'Atención!');
+            toastr.warning( 'Falta DPI del cliente', 'Atención!' );
         }
     });
 
@@ -5288,10 +5280,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         extraes();
     });
 
-    //$('input').on('keydown',function(e){
-    //    $('input')[$('input').index(this)+1].focus();
-    //});
-
     function descontar(e){
         block.tecla = (document.all) ? e.keyCode : e.which;        
         if (block.tecla==13) {            
@@ -7215,6 +7203,13 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     }
 
     function cargarListas_asigandos() {
+        $("#tipo_cargo_dos").empty();
+        $("#id_asesor").empty();
+        $("#id_asesor_consulta").empty();
+        $("#id_asesor_gastos_consulta").empty();
+        $("#id_asesor_cobros").empty();
+        $("#id_asesor_cierre").empty();
+
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -7345,8 +7340,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.obj = {"r": "extrae_gastos", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log("valor");
-            console.log(valor);
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 
@@ -7813,12 +7806,10 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     $("#listado_liengenerela").append(block.listadi);
                     block.nexr = parseInt(block.num) + 1;
                     window.sessionStorage.setItem("numero_lista", block.nexr);
-                    // consulta_x();
                 }
             }else if(valor.d[1]=="4" && parseInt(block.num)<parseInt(valor.d[2]) ){
 				block.nexr = parseInt(block.num) + 1;
 				window.sessionStorage.setItem("numero_lista", block.nexr);
-				// consulta_x();
             } else {
                 return 
             }
@@ -8138,11 +8129,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#consulta_gastos").css("display", "initial");
         $("#utilidades_view").css("display", "none");
-        
-        
 
         cargarListas_asigandos();
-
     }
 
     function informe_completo_cierre(){
@@ -8176,8 +8164,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#utilidades_view").css("display", "none");
 
         cargarListas_asigandos();
-       
-
     }
 
     function informe_completo_utilidades(){
