@@ -12,30 +12,57 @@ eje = function(arrays,origen,redisClient) {
 		*/		
 		if (arrays.length==2){		
 			var jwt = require('jsonwebtoken');
-			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
-				if (err) {
+			const moment = require("moment");
+			jwt.verify(arrays[0], 'clWve-G*-9)1', function( err, decoded ) {
+				if ( err ) {
 					reject([false,"1"]);
 				} else if( decoded.t=="4" || decoded.t=="1" ){					
 					/*verifico que no este betado el cliente*/
-					redisClient.get("betado_"+arrays[1],function(erkr,rkeply) {
-						if(rkeply==null){
-							/*emito la informacion del cliente*/							
-							redisClient.keys('cliente_'+arrays[1],function(err3,reply3){								
-								if(reply3.length > 0){
+					redisClient.get("betado_"+arrays[1],function( erkr,rkeply ) {
+						if( rkeply == null ) {
+							/*emito la informacion del cliente*/
+							redisClient.keys( 'cliente_'+arrays[1],function( err3,reply3 ){								
+								if( reply3.length > 0 ){
 									var litado  = [];									
-									redisClient.get(reply3[0],function(err,reply) {
-										if(reply!==null){
-											litado.push(reply);
-											redisClient.keys('old_registry_'+arrays[1]+'_contrato_*_*_*', function(err4, replyCantidadContratos){
-												resolve([true,litado, replyCantidadContratos.length]);
+									redisClient.get( reply3[0], function(err,reply ) {
+										if( reply !== null ){
+											litado.push( reply );
+											let indiceFinal = 0;
+											let comportamiento = 0;
+											redisClient.keys('old_registry_'+arrays[1]+'_contrato_*_*_*', function( err4, replyCantidadContratos ){
+												if( replyCantidadContratos !== null && replyCantidadContratos.length > 0 ){
+													for ( let index = 0; index < replyCantidadContratos.length; index++ ) {	
+														redisClient.get(replyCantidadContratos[index], function(error, replyContrato) {
+															let contrato;
+															if( replyContrato !== null ){
+																contrato = JSON.parse( replyContrato );
+																for (let i = 0; i < contrato[13].length; i++) {
+																	const fechaAsignada = moment(contrato[13][i].fe)
+																	const fechaPago = moment(contrato[13][i].pago)
+																	const diferenciaDias = fechaPago.diff(fechaAsignada, "days");
+																	comportamiento += diferenciaDias;
+																}
+															}
+															indiceFinal++;
+															if( indiceFinal == replyCantidadContratos.length) {
+																comportamiento = parseInt(comportamiento/contrato[13].length);																
+																resolve( [ true, litado, replyCantidadContratos.length, comportamiento ] );
+															}
+														})
+													}
+												} else {
+													reject([ false, "El cliente no tiene contratos finalizados"] );
+												}
 											})
+										} else {
+											reject([ false, "El cliente no tiene contratos finalizados"] );
 										}
 									});
 								}else{
 									reject([false,"4"]);
 								}
 							});							
-						}else{
+						} else {
 							var fesd = JSON.parse(rkeply);
 							if (decoded.d==fesd[3]) {
 								reject([false,"6",rkeply]);

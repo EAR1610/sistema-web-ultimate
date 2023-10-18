@@ -31,7 +31,7 @@ eje = function(arrays,origen,redisClient) {
                                             let porcentajeFinal = parseInt(porcentaje) / 100;
                                             let utilidadContrato = parseInt(cantidad.replace(".", "")) * porcentajeFinal;
 
-                                            if(replyContrato !== null){
+                                            if( replyContrato !== null ){
                                                 if( fecha >= arrays[2] && fecha <= arrays[3] ) {
                                                     redisClient.get("cliente_"+dpiContrato, function(error, replyCliente){
                                                         if( replyCliente !== null){
@@ -61,7 +61,7 @@ eje = function(arrays,origen,redisClient) {
                                     })
                                 }
                             } iterar(0, replyContratosFinalizados);
-                        }
+                        } 
                     })
                 }
             })

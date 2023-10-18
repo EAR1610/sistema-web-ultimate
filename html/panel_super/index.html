@@ -448,17 +448,25 @@
             var total = 0;
 
             for (var i = 0; i < tabla.rows.length; i++) {
-                var montoTexto = tabla.rows[i].cells[1].innerText;
+                var nombre = tabla.rows[i].cells[0].innerText;
+                var dpiTexto = tabla.rows[i].cells[1].innerText;
+                var montoTexto = tabla.rows[i].cells[2].innerText; // Cambiando el índice a 2
                 var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                // var montoTexto = tabla.rows[i].cells[1].innerText;
+                // var montoNumero = parseFloat(montoTexto.replace("Q", ""));
                 if (!isNaN(montoNumero)) {
                     datos.push({
                         nombre: tabla.rows[i].cells[0].innerText,
-                        monto: montoNumero
+                        dpi: tabla.rows[i].cells[1].innerText,
+                        monto: montoNumero,
+                        fecha: tabla.rows[i].cells[3].innerText
                     });
 
-                    total += montoNumero; 
-                } 
+                    total += montoNumero;
+                }
             }
+
+            
 
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 35, 210, 10, 'F');
@@ -471,50 +479,47 @@
             
             doc.setTextColor(0,0,0);
             doc.text('NOMBRE', 10, 40);
-            doc.text('DPI', 10, 60);
-            doc.text("MONTO", 10, 80);
-            doc.text("FECHA", 10, 100);
+            doc.text('DPI', 100, 40);
+            doc.text('MONTO', 138, 40);
+            doc.text('FECHA', 170, 40);
+
+           
 
             var y = 50;
             var maxPageHeight = doc.internal.pageSize.height - 20;
 
-            for(var i = 0; i < datos.length; i++){
+            for (var i = 0; i < datos.length; i++) {
                 if (y > maxPageHeight) {
-                    doc.addPage();
-                    y = 20; 
-                    doc.setTextColor(255, 255, 255);
-                    doc.text('NOMBRE', 10, y);
-                    doc.text('DPI', 10, y);
-                    doc.text("MONTO", 10, y);
-                    doc.text("FECHA", 10, y);
-                    y += 10; 
-                }
-                doc.setTextColor(0, 0, 0); 
-                doc.setFont("bold");
-                doc.setFontSize(10);
-
-                doc.text(datos[i].nombre.toString(), 10, y);
-                doc.text(datos[i].dpi.toString(), 10, y + 20);
-                doc.text("Q" + datos[i].monto.toString(), 10, y + 40);
-                doc.text(datos[i].fecha.toString(), 10, y + 60);
-
-                // doc.text(datos[i].nombre, 10, y);
-                // doc.text(datos[i].dpi, 10, y + 20);
-                // doc.text("Q" + datos[i].monto, 10, y + 40);
-                // doc.text(datos[i].fecha, 10, y + 60);
-
-
-                doc.setFont("normal");
-                doc.setFontSize(12);
-                if (i < datos.length - 1) {
-                    if (y + 15 > maxPageHeight) { 
-                        doc.addPage();
-                        y = 20;
-                    }
-                    doc.line(10, y + 5, 200, y + 5); 
-                }
-                y += 10; 
+                doc.addPage();
+                y = 20;
+                doc.setTextColor(255, 255, 255);
+                doc.text('NOMBRE', 10, y);
+                doc.text('DPI', 10, y);
+                doc.text("MONTO", 10, y);
+                doc.text("FECHA", 10, y);
+                y += 10;
             }
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("bold");
+            doc.setFontSize(10);
+
+            doc.text(datos[i].nombre, 10, y);
+            doc.text(datos[i].dpi, 90, y );
+            doc.text("Q" + datos[i].monto, 140, y );
+            doc.text(datos[i].fecha, 170, y );
+
+            doc.setFont("normal");
+            doc.setFontSize(12);
+            if (i < datos.length - 1) {
+                if (y + 15 > maxPageHeight) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.line(10, y + 5, 200, y + 5);
+            }
+            y += 10;
+        }
+
 
             if (y > maxPageHeight) {
                 doc.addPage();
@@ -548,6 +553,7 @@
             });
         });
     </script>
+
     
     <script>
 
@@ -606,6 +612,22 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function(){
+            document.getElementById('buscarUtilidadesDPI').addEventListener('input', function(){
+                let searchValue = this.value.toLowerCase();
+                let rows = document.querySelectorAll('#lista_utilidades tr');
+                for(let row of rows){
+                    let dpiCell = row.querySelector('td:nth-child(2)');
+                    if(dpiCell){
+                        let dpiValue = dpiCell.textContent.toLowerCase();
+                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
+                    }
+                }
+            });
+        });
+
+        
      
     </script>
 
@@ -1479,7 +1501,7 @@
 
                             <div class="form-group col-sm-6 col-md-6 col-xs-6" id="cedula_div">
                                 <label>DPI</label>
-                                <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_id" type="text" maxlength="13" class="form-control"> <span class="input-group-append"> <button type="button" id="consultar_registra" class="btn btn-primary"><i class="fa fa-search"></i></button></span></div>
+                                <div class="input-group"><input placeholder="Inserte su numero de documento" id="numero_id" type="text" maxlength="13" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append"> <button type="button" id="consultar_registra" class="btn btn-primary"><i class="fa fa-search"></i></button></span></div>
                             </div>
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
@@ -1581,6 +1603,7 @@
                                             maxlength="8"
                                             placeholder=""
                                             class="form-control"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                         >
                                     </div>
                                 </form>
@@ -1594,6 +1617,7 @@
                                             maxlength="8"
                                             placeholder=""
                                             class="form-control"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                         >
                                     </div>
                                 </form>
@@ -1643,7 +1667,7 @@
                         <div class="ibox-title">
                             <h5>Lista de asesores</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="searchDPI" placeholder="Buscar por DPI" >
+                            <input class="form-control col-md-4" type="text" id="searchDPI" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div class="ibox-content">
                             <div class="table-responsive">
@@ -1677,7 +1701,7 @@
                         <div class="ibox-title">
                             <h5>Lista de supervisores</h5>
                             &nbsp;
-                           <input class="form-control col-md-4" type="text" id="buscarAsesores" placeholder="Buscar por DPI" >
+                           <input class="form-control col-md-4" type="text" id="buscarAsesores" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div class="ibox-content">
                             <div class="table-responsive">
@@ -1836,7 +1860,7 @@
                         <div class="ibox-title">
                             <h5>Lista de clientes</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarClientes" placeholder="Buscar por DPI" >
+                            <input class="form-control col-md-4" type="text" id="buscarClientes" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             <div class="table-responsive">
@@ -2098,7 +2122,7 @@
 
                                     <div class="form-group col-xs-6">
                                         <label>DPI del cliente</label>
-                                        <div class="input-group"><input disabled placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" disabled class="btn btn-primary"><i class="fa fa-search"></i>
+                                        <div class="input-group"><input disabled placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" disabled class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                                     </div>
 
@@ -2372,7 +2396,7 @@
                             <div class="col-sm-6 col-md-4 col-xs-12">
                                 <label>DPI del cliente a buscar</label>
                                 <div class="input-group">
-                                    <input placeholder="Inserte DPI del cliente" id="text_cedula_cliente_historial" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                    <input placeholder="Inserte DPI del cliente" id="text_cedula_cliente_historial" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                     <span class="input-group-append">
                                         <button type="button" id="buscar_cedula_cliente_historia" class="btn btn-primary">
                                             <i class="fa fa-search"></i> Buscar
@@ -2509,7 +2533,7 @@
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" >
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             
@@ -2644,6 +2668,8 @@
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Consulta de utilidades</h5>
+                            &nbsp;
+                           <input class="form-control col-md-4" type="text" id="buscarUtilidadesDPI" placeholder="Buscar por DPI" >
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
@@ -2820,7 +2846,7 @@
 
                             <div class="form-group col-sm-6 col-md-6 col-xs-6" id="cedula_divmd">
                                 <label>DPI</label>
-                                <div class="input-group"><input placeholder="Inserte su numero de documento de identificación" id="numero_idmd" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append">
+                                <div class="input-group"><input placeholder="Inserte su numero de documento de identificación" id="numero_idmd" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append">
                                     <button type="button" id="consultar_registramd" class="btn btn-primary"><i class="fa fa-search"></i></button> </span></div>
                             </div>
 
@@ -2921,6 +2947,7 @@
                                             placeholder=""
                                             value=""
                                             class="form-control"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                         >
                                     </div>
                                 </form>
@@ -2935,6 +2962,7 @@
                                             value=""
                                             placeholder=""
                                             class="form-control"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                         >
                                     </div>
                                 </form>

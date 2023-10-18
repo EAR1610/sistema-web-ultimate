@@ -113,6 +113,7 @@
 
         doc.autoPrint(); 
         doc.output('dataurlnewwindow');
+        //doc.save('Boleta de pago de ' + fechaFormateada + ' Hora:' + hora +' de '+nombreCliente+'.pdf');    
 
         setTimeout(function(){
             location.reload();
@@ -278,7 +279,7 @@
                     <div class="col-sm-6 col-md-6 col-xs-6" id="cedula_divm">
                         <div class="form-group"><label>DPI</label> <input id="numero_idm" type="text"
                             placeholder="Inserte su numero de documento"
-                            class="form-control" onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)">
+                            class="form-control" onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
 
@@ -368,7 +369,7 @@
                                     maxlength="8"
                                     placeholder=""
                                     class="form-control"
-                                    onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)">
+                                    onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)"  oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
                         </form>
                     </div>
@@ -380,7 +381,7 @@
                                 placeholder=""
                                 maxlength="8"
                                 class="form-control"
-                                onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)">
+                                onkeypress="return (this.value.length < 13) && (event.charCode >= 48 && event.charCode <= 57)" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
                         </form>
                     </div>
@@ -515,7 +516,7 @@
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
                                 <label>DPI del cliente</label>
-                                <div class="input-group"><input placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" class="btn btn-primary"><i class="fa fa-search"></i>
+                                <div class="input-group"><input placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                             </div>
 
@@ -734,7 +735,7 @@
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
                                 <label>DPI del cliente</label>
-                                <div class="input-group"><input placeholder="Inserte cedula" id="text_cedula_cliente2" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente2" class="btn btn-primary"><i class="fa fa-search"></i>
+                                <div class="input-group"><input placeholder="Inserte cedula" id="text_cedula_cliente2" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append"> <button type="button" id="buscar_cedula_cliente2" class="btn btn-primary"><i class="fa fa-search"></i>
                                         </button> </span></div>
                             </div>
 
@@ -1165,11 +1166,11 @@
 				if (!valor.e) {
 					$("#myModal_aplio").modal("hide");
 					$("#iptu_aplio").val("");
-					toastr.success('Ampliado con exito', 'System notification!');
+					toastr.success('Ampliado con exito', 'Atencion!');
 				}
 			});
 		}else{
-			toastr.warning('No cumple con ser solo numero, sin signo ni punto ni comas', 'System notification!');
+			toastr.warning('No cumple con ser solo numero, sin signo ni punto ni comas', 'Atencion!');
 		}
 	});
 	
@@ -1356,7 +1357,7 @@
                 }
 
             }else{
-                toastr.warning('No posee contratos para generar ruta', 'System notification!');
+                toastr.warning('No posee contratos para generar ruta', 'Atencion!');
             }
         });
     }
@@ -1595,9 +1596,11 @@
 
 
     block.filein = document.querySelector("#foto1");
-    block.filein.onchange = function (e) {        
+    block.filein.onchange = function (e) { 
+        console.log("foto1");
         block.files = e.target.files;
         block.file = block.files[0];
+        console.log(block.file);
 
         var imagenesFolder = new Folder("imagenes");
         if (!imagenesFolder.exists) {
@@ -1653,8 +1656,43 @@
     //     });
     // };
 
-    block.filein = document.querySelector("#foto1m");
-    block.filein.onchange = function (e) {
+    block.filein1m = document.querySelector("#foto1m");
+    block.filein1m.onchange = function (e) {
+        console.log("añadiendo foto1m")
+        // block.files = e.target.files;
+        // block.file = block.files[0];
+        // console.log(block.file)
+        // ImageTools.resize(block.file, {
+        //     width: 259,
+        //     height: 259
+        // }, function (blob, didItResize) {
+
+        //     var storageRef = firebase.storage().ref();
+        //     var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, function(snapshot) {
+        //         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //         switch (snapshot.state) {
+        //             case firebase.storage.TaskState.PAUSED:
+        //                 break;
+        //             case firebase.storage.TaskState.RUNNING:
+        //                 break;
+        //         }
+        //     }, function(error) {
+        //         switch (error.code) {
+        //             case 'storage/unauthorized':
+        //                 break;
+        //             case 'storage/canceled':
+        //                 break;
+        //             case 'storage/unknown':
+        //                 break;
+        //         }
+        //     }, function() {
+        //         uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        //             $("#foto_m1m").attr("src",downloadURL);
+        //             window.sessionStorage.setItem("Money-vars-foto-idm",downloadURL);
+        //         });
+        //     });
+        // });
         block.files = e.target.files;
         block.file = block.files[0];
         ImageTools.resize(block.file, {
@@ -1663,46 +1701,7 @@
         }, function (blob, didItResize) {
 
             var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, function(snapshot) {
-                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED:
-                        break;
-                    case firebase.storage.TaskState.RUNNING:
-                        break;
-                }
-            }, function(error) {
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        break;
-                    case 'storage/canceled':
-                        break;
-                    case 'storage/unknown':
-                        break;
-                }
-            }, function() {
-                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                    $("#foto_m1m").attr("src",downloadURL);
-                    window.sessionStorage.setItem("Money-vars-foto-idm",downloadURL);
-                });
-            });
-
-
-        });
-    };
-
-    block.filein = document.querySelector("#foto4m");
-    block.filein.onchange = function (e) {
-        block.files = e.target.files;
-        block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 259,
-            height: 259
-        }, function (blob, didItResize) {
-
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -1723,19 +1722,95 @@
                         }
                     }, function() {
                         uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            $("#foto_m4m").attr("src", downloadURL);
-                            window.sessionStorage.setItem("Money-vars-foto-frotal", downloadURL);
+                            $("#foto_m1m").attr("src", downloadURL);
+							block.blo = 2;
+                            window.sessionStorage.setItem("Money-vars-foto-idm", downloadURL);
                         });
                     });
 
+        });
+    };
 
+    block.filein4m = document.querySelector("#foto4m");    
+    block.filein4m.onchange = function (e) {
+        console.log("añadiendo foto4m")
+        // block.files = e.target.files;
+        // block.file = block.files[0];
+        // console.log(block.file)
+        // ImageTools.resize(block.file, {
+        //     width: 259,
+        //     height: 259
+        // }, function (blob, didItResize) {
+
+        //     var storageRef = firebase.storage().ref();
+        //     var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+        //         function(snapshot) {
+        //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //             switch (snapshot.state) {
+        //                 case firebase.storage.TaskState.PAUSED:
+        //                     break;
+        //                 case firebase.storage.TaskState.RUNNING:
+        //                     break;
+        //             }
+        //         }, function(error) {
+        //             switch (error.code) {
+        //                 case 'storage/unauthorized':
+        //                     break;
+        //                 case 'storage/canceled':
+        //                     break;
+        //                 case 'storage/unknown':
+        //                     break;
+        //             }
+        //         }, function() {
+        //             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        //                 $("#foto_m4m").attr("src", downloadURL);
+        //                 window.sessionStorage.setItem("Money-vars-foto-frotal", downloadURL);
+        //             });
+        //         });
+        // });
+        block.files = e.target.files;
+        block.file = block.files[0];
+        ImageTools.resize(block.file, {
+            width: 259,
+            height: 259
+        }, function (blob, didItResize) {
+
+            var storageRef = firebase.storage().ref();
+            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
+            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,function(snapshot) {
+				var progress = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100;
+				switch (snapshot.state) {
+					case firebase.storage.TaskState.PAUSED:
+						break;
+					case firebase.storage.TaskState.RUNNING:
+						break;
+				}
+			}, function(error) {
+				switch (error.code) {
+					case 'storage/unauthorized':
+						break;
+					case 'storage/canceled':
+						break;
+					case 'storage/unknown':
+						break;
+				}
+			}, function() {
+				uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+					$("#foto_m4m").attr("src", downloadURL);
+					block.blo = 2;
+					window.sessionStorage.setItem("Money-vars-foto-frontal", downloadURL);
+				});
+			});
         });
     };
 
     block.filein2 = document.querySelector("#foto2");
     block.filein2.onchange = function (e) {
+        console.log("añadiendo foto2")
         block.files = e.target.files;
         block.file = block.files[0];
+        console.log(block.file)
         ImageTools.resize(block.file, {
             width: 300,
             height: 500
@@ -1768,11 +1843,48 @@
                         });
                     });
 
-        });
+        });        
     };
 
-    block.filein2 = document.querySelector("#foto2m");
-    block.filein2.onchange = function (e) {
+    block.filein2m = document.querySelector("#foto2m");
+    block.filein2m.onchange = function (e) {
+        console.log("añadiendo foto2m")
+        // block.files = e.target.files;
+        // block.file = block.files[0];
+        // console.log(block.file)
+        // ImageTools.resize(block.file, {
+        //     width: 300,
+        //     height: 500
+        // }, function (blob, didItResize) {
+
+        //     var storageRef = firebase.storage().ref();
+        //     var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+        //             function(snapshot) {
+        //                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //                 switch (snapshot.state) {
+        //                     case firebase.storage.TaskState.PAUSED:
+        //                         break;
+        //                     case firebase.storage.TaskState.RUNNING:
+        //                         break;
+        //                 }
+        //             }, function(error) {
+        //                 switch (error.code) {
+        //                     case 'storage/unauthorized':
+        //                         break;
+        //                     case 'storage/canceled':
+        //                         break;
+        //                     case 'storage/unknown':
+        //                         break;
+        //                 }
+        //             }, function() {
+        //                 uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        //                     $("#foto_m2m").attr("src",downloadURL);
+        //                     window.sessionStorage.setItem("Money-vars-foto-id-normalm",downloadURL);
+        //                 });
+        //             });
+
+        // });
         block.files = e.target.files;
         block.file = block.files[0];
         ImageTools.resize(block.file, {
@@ -1781,7 +1893,7 @@
         }, function (blob, didItResize) {
 
             var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function(snapshot) {
                         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -1802,18 +1914,20 @@
                         }
                     }, function() {
                         uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            $("#foto_m2m").attr("src",downloadURL);
-                            window.sessionStorage.setItem("Money-vars-foto-id-normalm",downloadURL);
+                            $("#foto_m2m").attr("src", downloadURL);
+							block.blo = 2;
+                            window.sessionStorage.setItem("Money-vars-foto-id-normalm", downloadURL);
                         });
                     });
-
         });
     };
 
     block.filein3 = document.querySelector("#foto3");
     block.filein3.onchange = function (e) {
+        console.log("añadiendo foto3")
         block.files = e.target.files;
         block.file = block.files[0];
+        console.log(block.file)
         ImageTools.resize(block.file, {
             width: 300,
             height: 500
@@ -1849,8 +1963,44 @@
         });
     };
 
-    block.filein3 = document.querySelector("#foto3m");
-    block.filein3.onchange = function (e) {
+    block.filein3m = document.querySelector("#foto3m");
+    block.filein3m.onchange = function (e) {
+        console.log("añadiendo foto3m")
+        // block.files = e.target.files;
+        // block.file = block.files[0];
+        // console.log(block.file)
+        // ImageTools.resize(block.file, {
+        //     width: 300,
+        //     height: 500
+        // }, function (blob, didItResize) {
+
+        //     var storageRef = firebase.storage().ref();
+        //     var uploadTask = storageRef.child('images/' + block.name).put(file);
+        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+        // function(snapshot) {
+        //     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //     switch (snapshot.state) {
+        //         case firebase.storage.TaskState.PAUSED:
+        //             break;
+        //         case firebase.storage.TaskState.RUNNING:
+        //             break;
+        //     }
+        // }, function(error) {
+        //     switch (error.code) {
+        //         case 'storage/unauthorized':
+        //             break;
+        //         case 'storage/canceled':
+        //             break;
+        //         case 'storage/unknown':
+        //             break;
+        //     }
+        // }, function() {
+        //     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        //         $("#foto_m3m").attr("src", downloadURL);
+        //         window.sessionStorage.setItem("Money-vars-foto-id-reversom",downloadURL);
+        //     });
+        // });
+        // });
         block.files = e.target.files;
         block.file = block.files[0];
         ImageTools.resize(block.file, {
@@ -1859,31 +2009,32 @@
         }, function (blob, didItResize) {
 
             var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + block.name).put(file);
+            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        function(snapshot) {
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            switch (snapshot.state) {
-                case firebase.storage.TaskState.PAUSED:
-                    break;
-                case firebase.storage.TaskState.RUNNING:
-                    break;
-            }
-        }, function(error) {
-            switch (error.code) {
-                case 'storage/unauthorized':
-                    break;
-                case 'storage/canceled':
-                    break;
-                case 'storage/unknown':
-                    break;
-            }
-        }, function() {
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                $("#foto_m3m").attr("src", downloadURL);
-                window.sessionStorage.setItem("Money-vars-foto-id-reversom",downloadURL);
-            });
-        });
+                    function(snapshot) {
+                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED:
+                                break;
+                            case firebase.storage.TaskState.RUNNING:
+                                break;
+                        }
+                    }, function(error) {
+                        switch (error.code) {
+                            case 'storage/unauthorized':
+                                break;
+                            case 'storage/canceled':
+                                break;
+                            case 'storage/unknown':
+                                break;
+                        }
+                    }, function() {
+                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                            $("#foto_m3m").attr("src", downloadURL);
+							block.blo = 2;
+                            window.sessionStorage.setItem("Money-vars-foto-id-reversom", downloadURL);
+                        });
+                    });
         });
     };
 
@@ -2243,8 +2394,8 @@
                     block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
                 }
 
-                block.arrays = [block.tokens[1],window.sessionStorage.getItem("Money-vars-registrado"),block.tokens[5],block.monto_prestar,block.dias,block.fecha_prestamo,block.descontar,block.porcentaje,block.quedo_cuota,block.tokens[4],block.frecuencia, block.ultima_cuota];
-                block.obj = {"r": "crear_contrato", "d": block.arrays};                
+                block.arrays = [block.tokens[1], window.sessionStorage.getItem("Money-vars-registrado"), block.tokens[5], block.monto_prestar, block.dias, block.fecha_prestamo, block.descontar, block.porcentaje,block.quedo_cuota,block.tokens[4], block.frecuencia, block.ultima_cuota];
+                block.obj = { "r": "crear_contrato", "d": block.arrays };
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                     var valor = JSON.parse(salida);
                     $("#text_cedula_cliente").prop("disabled",false);
@@ -2280,21 +2431,21 @@
                         }, 2000);
                     } else {
                         if(valor.d[1]=="4"){
-                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'System notification!');
+                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'Atencion!');
                         }else if(valor.d[1]=="8"){
-							toastr.warning('No es posible guardar', 'System notification!');
+							toastr.warning('No es posible guardar', 'Atencion!');
 						}else if(valor.d[1]=="5"){
-                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con otra empresa y no cumple con las condiciones del jefe', 'System notification!');
+                            toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con otra empresa y no cumple con las condiciones del jefe', 'Atencion!');
                         }else if(valor.d[1]=="6"){ 
-                            toastr.warning('Este cliente ya está registrado con otro asesor', 'System notification!');
+                            toastr.warning('Este cliente ya está registrado con otro asesor', 'Atencion!');
                         }
                     }
                 });
             }else{
-                toastr.warning('No puede colocar prestamo de '+block.dias+' cuotas y va a descontar '+block.descontar+' cuotas ', 'System notification!');
+                toastr.warning('No puede colocar prestamo de '+block.dias+' cuotas y va a descontar '+block.descontar+' cuotas ', 'Atencion!');
             }
         }else{
-            toastr.warning('No esta registrado el cliente', 'System notification!');
+            toastr.warning('No esta registrado el cliente', 'Atencion!');
         }
     });
 
@@ -2322,7 +2473,7 @@
         $("#foto3m").click();
     });
 
-    $("#foto_m4m").click(function () {
+    $("#foto_m4m").click(function () {        
         $("#foto4m").click();
     });
 	
@@ -2338,7 +2489,7 @@
 		backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
-				toastr.success('Agregado correctamente', 'System notification!');
+				toastr.success('Agregado correctamente', 'Atencion!');
 				pendiente_link();
 			}
 		});		
@@ -2361,7 +2512,7 @@
 				var valor = JSON.parse(salida);
 				if (!valor.e) {
 					$("#monto_pendiente").val("");
-					toastr.success('Agregado correctamente', 'System notification!');
+					toastr.success('Agregado correctamente', 'Atencion!');
 					pendiente_link();
 				}
 			});
@@ -2455,7 +2606,7 @@
                         $("#nombre_id2").val("");
                         $("#apellido_id1").val("");
                         $("#apellido_id2").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atencion!');
 
                     } else {
 
@@ -2469,7 +2620,7 @@
 
                         if(block.antece=="Si"){
                             swal({
-								title: "System notification!",
+								title: "Atencion!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -2527,7 +2678,7 @@
 						} else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atencion!');
 					}
 				}
             });            
@@ -2540,7 +2691,7 @@
                 $("#tipo_letra").prop("disabled", true);
             },10000);
         } else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atencion!');
         }
 
     });
@@ -2585,10 +2736,10 @@
                         $("#nombre_id2m").val("");
                         $("#apellido_id1m").val("");
                         $("#apellido_id2m").val("");
-                        toastr.error('El documento a consultar no existe', 'System notification!');
+                        toastr.error('El documento a consultar no existe', 'Atencion!');
 						
 						if(block.tokens[2] == "ofrb8364@hotmail.com" || block.tokens[2] == "moneydemo1@mail.com"){
-							toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'System notification!');
+							toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'Atencion!');
 							 $("#nombre_id1m").prop("disabled", false);
 							 $("#nombre_id2m").prop("disabled", false);
 							 $("#apellido_id1m").prop("disabled", false);
@@ -2610,7 +2761,7 @@
                             }
 
                             swal({
-								title: "System notification!",
+								title: "Atencion!",
 								text: "Posee antecedente, "+block.porque,
 								type: "warning"
 							});
@@ -2669,7 +2820,7 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado (Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atencion!');
 					}
 				}
             });
@@ -2684,7 +2835,7 @@
             },10000);
 
         } else {
-            toastr.warning('Falta número de identificación', 'System notification!');
+            toastr.warning('Falta número de identificación', 'Atencion!');
         }
 
     });
@@ -2947,7 +3098,7 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado en esta empresa(Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');
+						toastr.warning(block.des, 'Atencion!');
 					}else if(valor.d[1]=="8"){
 						 block.frito = JSON.parse(valor.d[2]);
 						if(block.frito[1]=="1"){
@@ -2957,7 +3108,7 @@
 						}else if(block.frito[1]=="3"){
 							block.des = "El cliente inventado en otra empresa(Ficticia)";
 						}
-						toastr.warning(block.des, 'System notification!');                        
+						toastr.warning(block.des, 'Atencion!');                        
 						block.partes = JSON.parse(valor.d[3][0]);
 						block.nomre = block.partes[7] +" "+block.partes[8] +" "+block.partes[9] +" "+block.partes[10];
 						 $("#text_nombre_cliente").val(block.nomre);
@@ -2970,7 +3121,7 @@
             });
 
         } else {
-            toastr.warning('Falta DPI del cliente', 'System notification!');
+            toastr.warning('Falta DPI del cliente', 'Atencion!');
         }
     });
 
@@ -3097,21 +3248,22 @@
                     }
                 }
             } else {
-                toastr.warning("No se ha encontrado ninguna coincidencia", "System notification");
+                toastr.warning("No se ha encontrado ninguna coincidencia", "Atencion");
             }			
 			$("#cedula_elecion").css("display","block");
 			$("#cedula_elecion").html(block.barra);						
         } else {
-            toastr.warning('Falta DPI del cliente', 'System notification!');
+            toastr.warning('Falta DPI del cliente', 'Atencion!');
         }
     });
 
     $("#registro_finalm").click(function () {
+        debugger;
         block.pais = $("#pais_selecionadom").val();
         block.reverso = window.sessionStorage.getItem("Money-vars-foto-id-reversom");
         block.normal = window.sessionStorage.getItem("Money-vars-foto-id-normalm");
         block.perfil = window.sessionStorage.getItem("Money-vars-foto-idm");
-        block.frontal = window.sessionStorage.getItem("Money-vars-foto-frotal");
+        block.frontal = window.sessionStorage.getItem("Money-vars-foto-frontal");
         if ($("#pais_selecionadom").val() == "1") {
             block.tipo = "C";
         } else {
@@ -3133,19 +3285,16 @@
 
         if ($("#telefono_fijom").val() == "") {
             block.telefofijo = "0";
-        }
-		
+        }		
         if ($("#telefono_celm").val() == "") {
             block.telefomovil = "0";
-        }
-		
+        }		
 		if (window.localStorage.getItem("Money-vars-token") !== null) {
 			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
 		} else {
 			block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-		}
-		
-                if (block.perfil == null) {
+		}		
+        if (block.perfil == null) {
 			block.perfil = "p.png";
 		}
 		if (block.normal == null) {
@@ -3154,26 +3303,26 @@
 		if (block.reverso == null) {
 			block.reverso = "r.png";
         }
-		if(block.fronatls==null){
-            block.fronatls="f.png";
-        }
-		
+		if( block.frontal == null ){
+            block.frontal="f.png";
+            block.blo = 2;
+        }		
 		if(block.blo==1){
-			toastr.warning('Falta datos', 'System notification!');
+			toastr.warning('Falta datos', 'Atención!');
 		}else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'System notification!');
+            toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'System notification!');
+            toastr.warning('Falta insertar primer nombre', 'Atención!');
         } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'System notification!');
+            toastr.warning('Falta insertar primer apellido', 'Atención!');
         } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'System notification!');
+            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
         } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'System notification!');
+            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
         } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'System notification!');
+            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
         } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'System notification!');
+            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         }else{
 
             if(block.alias==""){
@@ -3186,7 +3335,7 @@
                 block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
             }
 
-            block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.frontal,block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo,block.alias];
+            block.arrays = [ block.tokens[1], block.perfil, block.normal, block.reverso, block.frontal, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo,block.alias ];
 
             block.obj = {"r": "crear_cliente_asesor", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
@@ -3222,9 +3371,10 @@
                     $("#foto_m1m").attr("src", "../img/default.jpg");
                     $("#foto_m2m").attr("src", "../img/foto_cedula_front.png");
                     $("#foto_m3m").attr("src", "../img/foto_cedula_back.png");
+                    $("#foto_m4m").attr("src", "../img/foto_resivo.png"); //IMAGEN AÑADIDA
                     $("#cedula_divm").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
                     $("#popop_new_cliente").modal("hide");
-                    toastr.success('Registrado correctamente', 'System notification!');
+                    toastr.success('Registrado correctamente', 'Atención!');
                 }
             });
         }
@@ -3412,7 +3562,7 @@
 		}
 	
 		if(block.tokens[2] == "ofrb8364@hotmail.com" || block.tokens[2] == "moneydemo1@mail.com"){
-			toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'System notification!');
+			toastr.success('Esta habilitado para crear el usuario y editarlo a futuro', 'Atencion!');
 			 $("#nombre_id1m").prop("disabled", false);
 			 $("#nombre_id2m").prop("disabled", false);
 			 $("#apellido_id1m").prop("disabled", false);
@@ -3421,7 +3571,7 @@
 			 $("#tipo_letram").prop("disabled", true);
 			 $("#correo_electronicom").val("Actualizar_datos_cliente@mail.com");
 		}else{
-			toastr.error('No esta permitido', 'System notification!');
+			toastr.error('No esta permitido', 'Atencion!');
 		}
 	});
 	
@@ -3590,12 +3740,12 @@
 					if(!valor.e){
 						$("#limpiar_agrega").click();
 						ubicaciones_operaciones();
-						toastr.success('Procesado con Atención','System notification!');
+						toastr.success('Procesado con Atención','Atencion!');
 					}
 				});
 				
 			}else{
-				toastr.warning('Seleccione "Departamento" > "Ciudad" > "Barrio" para poder eliminar ','System notification!');
+				toastr.warning('Seleccione "Departamento" > "Ciudad" > "Barrio" para poder eliminar ','Atencion!');
 			}
 		});
 		
@@ -3642,12 +3792,12 @@
 
 						$("#limpiar_agrega").click();
 						ubicaciones_operaciones();
-						toastr.success('Procesado con Atención','System notification!');
+						toastr.success('Procesado con Atención','Atencion!');
 					}
 				});
 				
 			}else{
-				toastr.warning('Faltan datos para registrar o coordenadas erradas','System notification!');
+				toastr.warning('Faltan datos para registrar o coordenadas erradas','Atencion!');
 			}
 		});
 
@@ -3759,7 +3909,7 @@
 		backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 			var valor = JSON.parse(salida);
 			if (!valor.e) {
-				toastr.success('Agregado con exito', 'System notification!');
+				toastr.success('Agregado con exito', 'Atencion!');
 			}
 			
 			$("#monto_inser").val("");
