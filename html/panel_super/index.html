@@ -490,36 +490,35 @@
 
             for (var i = 0; i < datos.length; i++) {
                 if (y > maxPageHeight) {
-                doc.addPage();
-                y = 20;
-                doc.setTextColor(255, 255, 255);
-                doc.text('NOMBRE', 10, y);
-                doc.text('DPI', 10, y);
-                doc.text("MONTO", 10, y);
-                doc.text("FECHA", 10, y);
-                y += 10;
-            }
-            doc.setTextColor(0, 0, 0);
-            doc.setFont("bold");
-            doc.setFontSize(10);
-
-            doc.text(datos[i].nombre, 10, y);
-            doc.text(datos[i].dpi, 90, y );
-            doc.text("Q" + datos[i].monto, 140, y );
-            doc.text(datos[i].fecha, 170, y );
-
-            doc.setFont("normal");
-            doc.setFontSize(12);
-            if (i < datos.length - 1) {
-                if (y + 15 > maxPageHeight) {
                     doc.addPage();
                     y = 20;
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('NOMBRE', 10, y);
+                    doc.text('DPI', 10, y);
+                    doc.text("MONTO", 10, y);
+                    doc.text("FECHA", 10, y);
+                    y += 10;
                 }
-                doc.line(10, y + 5, 200, y + 5);
-            }
-            y += 10;
-        }
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("bold");
+                doc.setFontSize(10);
 
+                doc.text(datos[i].nombre, 10, y);
+                doc.text(datos[i].dpi, 90, y );
+                doc.text("Q" + datos[i].monto, 140, y );
+                doc.text(datos[i].fecha, 170, y );
+
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    if (y + 15 > maxPageHeight) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.line(10, y + 5, 200, y + 5);
+                }
+                y += 10;
+            }
 
             if (y > maxPageHeight) {
                 doc.addPage();
@@ -533,13 +532,7 @@
             doc.setFont('Helvetica');
 
             doc.save('Reporte de utilidades de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf');
-
-
-
         }
-
-
-      
 
         function imprimir_texto(doc,texto, x, y, size, color, align){
             doc.setFontSize(size);
@@ -626,8 +619,6 @@
                 }
             });
         });
-
-        
      
     </script>
 
@@ -1224,6 +1215,10 @@
                 </li>
 
                 <li>
+                    <a href="javascript:ubicaciones_operaciones();"><i class="fa fa-map-marker"></i> <span class="nav-label">Ubicaciones</span></a>
+                </li>
+
+                <li>
 
                     <a href="#"><i class="fa fa-hand-holding-usd"></i> <span class="nav-label">Administración</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
@@ -1285,8 +1280,6 @@
 
 
             <div class="row">
-
-
                 <div class="col-lg-12" id="suplanter" style="display:none;">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -1466,6 +1459,82 @@
                     </div>
                 </div>
 
+                <div class="row" id="lista_ubicacniones_div">
+                    <div class="col-lg-12">
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h5>Registro de ubicaciones</h5>
+                                    <button class="btn btn-primary btn-sm pull-right" id="limpiar_agrega" type="button" style="margin-top: -7px;">Limpiar</button>
+                            </div>
+                            <div class="ibox-content row" style="margin-left:0px;margin-right:0px;">
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_departamento" >
+                                    <label>Departamento</label>
+                                    <select class="form-control m-b" id="tipo_departamento">
+                                        <option value="0"></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_departamento" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar departamento</label> <input id="add_departamento_text" type="text" placeholder="Inserte nombre de departamento" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_ciudades" >
+                                    <label>Ciudad</label>
+                                    <select class="form-control m-b" id="tipo_ciudades">
+                                        <option value="0"></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_ciudades" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar ciudad</label> <input id="add_ciudad_text" type="text" placeholder="Inserte nombre de ciudad" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_barrio" >
+                                    <label>Barrio</label>
+                                    <select class="form-control m-b" id="tipo_barrio">
+                                        <option value=""></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar barrio</label> <input id="add_barrio_text" type="text" placeholder="Inserte nombre del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+                                    <button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
+                                </div>
+                                <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+                                    <button class="btn btn-danger btn-block" id="eliminar_direccion" type="button" >Eliminar</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-lg-12" id="crear">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -1576,21 +1645,21 @@
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
                                 <label>Departamento</label>
-                                <select class="form-control m-b" id="tipo_departamento">
+                                <select class="form-control m-b" id="tipo_departamentoAS">
                                     <option value="">Seleccione</option>
                                 </select>
                             </div>
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
                                 <label>Ciudad</label>
-                                <select class="form-control m-b" id="tipo_ciudades">
+                                <select class="form-control m-b" id="tipo_ciudadesAS">
                                     <option value="">Seleccione</option>
                                 </select>
                             </div>
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
                                 <label>Barrio</label>
-                                <select class="form-control m-b" id="tipo_barrio">
+                                <select class="form-control m-b" id="tipo_barrioAS">
                                     <option value="">Seleccione</option>
                                 </select>
                             </div>
@@ -3083,6 +3152,59 @@
         location.href = "../index.html";
     }
 
+    $("#crear_direccion").click(function(){
+			
+			if($("#view_departamento").css("display")!=="none"){
+				block.depa = $("#tipo_departamento").val();
+			}else{
+				block.depa = $("#add_departamento_text").val();
+			}
+						
+			if($("#view_ciudades").css("display")!=="none"){
+				block.ciud = $("#tipo_ciudades").val();
+			}else{
+				block.ciud = $("#add_ciudad_text").val();
+			}
+						
+			if($("#view_barrio").css("display")!=="none"){
+				block.barr = $("#tipo_barrio").val();
+			}else{
+				block.barr = $("#add_barrio_text").val();
+			}
+			
+			block.lat = $("#add_barrio_lat_text").val();
+			
+			block.lon = $("#add_barrio_lon_text").val();
+			
+			if(block.lon.substr(0,1)!=="." && block.lat.substr(0,1)!=="." && block.depa!=="" && block.ciud!=="" && block.barr!=="" && block.lat!=="" && block.lon!=="" && block.lat.indexOf(".")>-1 && block.lon.indexOf(".")>-1 && block.lon.indexOf("-")>-1 && block.lat.indexOf("e")==-1 && block.lon.indexOf("e")==-1 && block.lat.indexOf(",")==-1 && block.lon.indexOf(",")==-1){
+				
+				
+				if(window.localStorage.getItem("Money-vars-token")!==null){
+					block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+				}else{
+					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+				}
+				
+				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon];
+				block.obj = { "r":"crea_direccion","d":block.arrays };
+				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+					var valor = JSON.parse(salida);
+					if(!valor.e){
+						$("#add_barrio_lon_text").val("");
+						$("#add_barrio_lat_text").val("");
+						$("#add_barrio_text").val("");
+
+						$("#limpiar_agrega").click();
+						ubicaciones_operaciones();
+						toastr.success('Procesado con éxito','Atención!');
+					}
+				});
+				
+			}else{
+				toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
+			}
+		});
+
     if (window.sessionStorage.getItem("Money-vars-token") == null) {
         salida_sistema();
     }
@@ -3091,6 +3213,174 @@
         $('#picker').dateTimePicker();
         $('#picker-no-time').dateTimePicker({ showTime: false, dateFormat: 'DD/MM/YYYY'});
     })
+
+    $("#limpiar_agrega").click(function(){
+        $("#view_departamento").css("display","initial");
+        $("#view_ciudades").css("display","initial");
+        $("#view_barrio").css("display","initial");
+        $("#add_barrio").css("display","none");
+        $("#add_barrio_text").val("");
+        $("#add_departamento").css("display","none");
+        $("#add_departamento_text").val("");
+        $("#add_ciudades").css("display","none");
+        $("#add_ciudad_text").val("");
+        $("#tipo_barrio option[value=0]").attr("selected",true);
+        $("#tipo_ciudades option[value=0]").attr("selected",true);
+        $("#tipo_departamento option[value=0]").attr("selected",true);
+    });
+
+    $("#tipo_departamento").change(function(){
+        if($("#tipo_departamento").val()=="add"){
+            $("#view_departamento").css("display","none");
+            $("#add_departamento").css("display","initial");
+            $("#view_ciudades").css("display","none");
+            $("#add_ciudades").css("display","initial");
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        }else{
+            extraer_ciudades();
+        }
+    });
+
+    /* PARA REGISTRO DE ASESORES Y SUPERVISORES */
+    $("#tipo_departamentoAS").change(function(){
+        if($("#tipo_departamentoAS").val()=="add"){
+            $("#view_departamento").css("display","none");
+            $("#add_departamento").css("display","initial");
+            $("#view_ciudades").css("display","none");
+            $("#add_ciudades").css("display","initial");
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        }else{
+            extraer_ciudadesAS();
+        }
+    });
+
+    $("#tipo_ciudades").change(function(){
+        if($("#tipo_ciudades").val()=="add"){
+            $("#view_ciudades").css("display","none");
+            $("#add_ciudades").css("display","initial");
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        }else{
+            extraer_barrios();
+        }
+    });
+
+    /* PARA REGISTRO DE ASESORES Y SUPERVISORES*/
+    $("#tipo_ciudadesAS").change(function(){
+        if($("#tipo_ciudadesAS").val()=="add"){
+            $("#view_ciudades").css("display","none");
+            $("#add_ciudades").css("display","initial");
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        }else{
+            extraer_barriosAS();
+        }
+    });
+
+    $("#tipo_barrio").change(function(){
+        if($("#tipo_barrio").val()=="add"){
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        } else {
+            block.departe = $("#tipo_departamento").val();
+            block.cuidad = $("#tipo_ciudades").val();
+            block.barrios = $("#tipo_barrio").val();
+
+            if(window.localStorage.getItem("Money-vars-token")!==null){
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            }else{
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+
+            block.arrays = [block.tokens[1],block.departe,block.cuidad,block.barrios];
+            block.obj = {"r":"ver_direccion_root","d":block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+                var valor = JSON.parse(salida);
+                if(!valor.e){
+                    $("#add_barrio_lat_text").val(valor.d[1]);
+                    $("#add_barrio_lon_text").val(valor.d[2]);
+                }
+            });
+        }
+    });
+
+    /* PARA REGISTRO DE ASESORES Y SUPERVISORES*/
+    $("#tipo_barrioAS").change(function(){
+        if($("#tipo_barrioAS").val()=="add"){
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        } else {
+            block.departe = $("#tipo_departamentoAS").val();
+            block.cuidad = $("#tipo_ciudadesAS").val();
+            block.barrios = $("#tipo_barrioAS").val();
+
+            if(window.localStorage.getItem("Money-vars-token")!==null){
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            }else{
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+
+            block.arrays = [block.tokens[1],block.departe,block.cuidad,block.barrios];
+            block.obj = {"r":"ver_direccion_root","d":block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+                var valor = JSON.parse(salida);
+                if(!valor.e){
+                    $("#add_barrio_lat_text").val(valor.d[1]);
+                    $("#add_barrio_lon_text").val(valor.d[2]);
+                }
+            });
+        }
+    });
+
+
+    function ubicaciones_operaciones(){
+        $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+        $("#lista_ubicacniones_div").css("display","initial");
+        $("#lista_empresa_div").css("display","none");
+        $("#HistorialClientes").css("display","none");
+        $("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#liquidacion_page2").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        
+        if(window.localStorage.getItem("Money-vars-token")!==null){
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        }else{
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        
+        block.arrays = [block.tokens[1]];
+        block.obj = {"r":"extraer_departamentos","d":block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+            var valor = JSON.parse(salida);
+            if(!valor.e){
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for(var e=0; e<block.lista.length; e++){
+                    block.nuevo = block.nuevo + '<option value="'+block.lista[e]+'">'+block.lista[e]+'</option>';
+                }
+                $("#tipo_departamento").html($("#tipo_departamento").html()+block.nuevo);
+            }
+        });
+    }
 
 
     function migrar_cion(){
@@ -3229,7 +3519,7 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (valor.d[1]) {
-                toastr.success('Registrado con exito', 'System notification!');
+                toastr.success('Registrado con exito', 'Atención!');
             }
         });
     }
@@ -3584,6 +3874,7 @@
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
     }
 
     //Funcion para extraer datos con fecha pasandole la fecha al array
@@ -5807,7 +6098,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
     function extraer_ciudades() {
         block.depart = $("#tipo_departamento").val();
-        $("#tipo_ciudades").html('<option value=""></option>');
+        // $("#tipo_ciudades").html('<option value=""></option>');
+        $("#tipo_ciudades").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -5819,6 +6111,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.obj = {"r": "extraer_ciudades", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e) {
                 block.lista = valor.d[1];
                 block.nuevo = "";
@@ -5826,6 +6119,33 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
                 $("#tipo_ciudades").html($("#tipo_ciudades").html() + block.nuevo);
+            }
+        });
+    }
+
+    function extraer_ciudadesAS() {
+        block.depart = $("#tipo_departamentoAS").val();
+        // $("#tipo_ciudades").html('<option value=""></option>');
+        $("#tipo_ciudadesAS").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1], block.depart];
+        block.obj = {"r": "extraer_ciudades", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            console.log(valor);
+            if (!valor.e) {
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for (var e = 0; e < block.lista.length; e++) {
+                    block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
+                }
+                $("#tipo_ciudadesAS").html($("#tipo_ciudadesAS").html() + block.nuevo);
             }
         });
     }
@@ -5935,6 +6255,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     block.obj = {"r": "extraer_departamentos", "d": block.arrays};
     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
         var valor = JSON.parse(salida);
+        console.log(valor)
         if (!valor.e) {
             block.lista = valor.d[1];
             block.nuevo = "";
@@ -5945,13 +6266,15 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             $("#su_tipo_departamento").html($("#su_tipo_departamento").html() + block.nuevo);
             $("#tipo_departamentom").html($("#tipo_departamentom").html() + block.nuevo);
             $("#tipo_departamentomd").html($("#tipo_departamentomd").html() + block.nuevo);
+            $("#tipo_departamentoAS").html($("#tipo_departamentoAS").html() + block.nuevo);
         }
     });
 
     function extraer_barrios() {
         block.depart = $("#tipo_departamento").val();
         block.cuidad = $("#tipo_ciudades").val();
-        $("#tipo_barrio").html('<option value=""></option>');
+        // $("#tipo_barrio").html('<option value=""></option>');
+        $("#tipo_barrio").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -5963,6 +6286,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.obj = {"r": "extraer_barrios", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor)
             if (!valor.e) {
                 block.lista = valor.d[1];
                 block.nuevo = "";
@@ -5970,6 +6294,34 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
                 $("#tipo_barrio").html($("#tipo_barrio").html() + block.nuevo);
+            }
+        });
+    }
+
+    function extraer_barriosAS() {
+        block.depart = $("#tipo_departamentoAS").val();
+        block.cuidad = $("#tipo_ciudadesAS").val();
+        // $("#tipo_barrio").html('<option value=""></option>');
+        $("#tipo_barrioAS").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1], block.depart, block.cuidad];
+        block.obj = {"r": "extraer_barrios", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            console.log(valor)
+            if (!valor.e) {
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for (var e = 0; e < block.lista.length; e++) {
+                    block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
+                }
+                $("#tipo_barrioAS").html($("#tipo_barrio").html() + block.nuevo);
             }
         });
     }
@@ -6016,6 +6368,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.obj = {"r": "extraer_barrios", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor)
             if (!valor.e) {
                 block.lista = valor.d[1];
                 block.nuevo = "";
@@ -6054,11 +6407,11 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         });
     }
 
-    $("#tipo_ciudades").change(function () {
-        if ($("#tipo_ciudades").val() !== "") {
-            extraer_barrios();
-        }
-    });
+    // $("#tipo_ciudadesA").change(function () {
+    //     if ($("#tipo_ciudades").val() !== "") {
+    //         extraer_barrios();
+    //     }
+    // });
 
 	$("#su_tipo_ciudades").change(function () {
         if ($("#su_tipo_ciudades").val() !== "") {
@@ -6066,11 +6419,11 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }
     });
 
-    $("#tipo_departamento").change(function () {
-        if ($("#tipo_departamento").val() !== "") {
-            extraer_ciudades();
-        }
-    });
+    // $("#tipo_departamentoA").change(function () {
+    //     if ($("#tipo_departamento").val() !== "") {
+    //         extraer_ciudades();
+    //     }
+    // });
 
 	$("#su_tipo_departamento").change(function () {
         if ($("#su_tipo_departamento").val() !== "") {
@@ -6186,6 +6539,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
 
     $("#registro_final").click(function () {
+        debugger;
         block.pais = $("#pais_selecionado").val();
         block.reverso = window.sessionStorage.getItem("Money-vars-foto-id-reverso");
         block.normal = window.sessionStorage.getItem("Money-vars-foto-id-normal");
@@ -6202,9 +6556,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.ape1 = $("#apellido_id1").val();
         block.ape2 = $("#apellido_id2").val();
         block.direction = $("#direccion_ubica").val();
-        block.departamento = $("#tipo_departamento").val();
-        block.ciudad = $("#tipo_ciudades").val();
-        block.barrio = $("#tipo_barrio").val();
+        block.departamento = $("#tipo_departamentoAS").val();
+        block.ciudad = $("#tipo_ciudadesAS").val();
+        block.barrio = $("#tipo_barrioAS").val();
         block.telefofijo = $("#telefono_fijo").val();
         block.telefomovil = $("#telefono_cel").val();
         block.correo = $("#correo_electronico").val();
@@ -6280,9 +6634,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     $("#correo_electronico").val("");
                     $("#tipo_cargo option[value=a]").attr("selected", true);
                     $("#pais_selecionado option[value='1']").attr("selected", true);
-                    $("#tipo_departamento option[value='']").attr("selected", true);
-                    $("#tipo_ciudades option[value='']").attr("selected", true);
-                    $("#tipo_barrio option[value='']").attr("selected", true);
+                    $("#tipo_departamentoAS option[value='']").attr("selected", true);
+                    $("#tipo_ciudadesAS option[value='']").attr("selected", true);
+                    $("#tipo_barrioAS option[value='']").attr("selected", true);
                     $("#moto_detalle").css("display", "none");
                     $("#numero_id").val("");
                     $("#nombre_id1").val("");
@@ -6838,6 +7192,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#suplanter").css("display", "none");
         $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
     }
 
     function informe_completo_finanza() {
@@ -6948,6 +7303,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     });
 
     function asesores_supervisores() {
+        debugger;
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#crear").css("display", "none");
@@ -6974,8 +7330,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
-
-		  $("#suplanter").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
+        $("#suplanter").css("display", "none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -6987,21 +7343,24 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [block.tokens[1]];
         block.obj = {"r": "listar_supervisores", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
+            var valor = JSON.parse(salida);  
+            console.log(valor);
             if (!valor.e) {
                 block.todo = valor.d[1];
                 for (var t = 0; t < block.todo.length; t++) {
                     block.item = JSON.parse(block.todo[t]);
-
+                    console.log(block.item);
                     if (block.item[4] == "2") {
                         block.cedula = block.item[5] + block.item[6];
                     } else {
                         block.cedula = block.item[6];
                     }
 
-                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(' + String.fromCharCode(39) + block.item[1] + String.fromCharCode(39) + ',' + String.fromCharCode(39) + block.item[2] + String.fromCharCode(39) + ',' + String.fromCharCode(39) + block.item[3] + String.fromCharCode(39) + ');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
+                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[1] + '\',\'' + block.item[2] + '\',\'' + block.item[3] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
+                    console.log('\'' + block.item[1] + '\',\'' + block.item[2] + '\',\'' + block.item[3] + '\'');
+                    debugger;
                 }
-                $("#listado_supervisor").html(block.lista);
+                $("#listado_supervisor").html(block.lista);                
             }
         });
     }
@@ -7093,6 +7452,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
 
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -7196,9 +7556,13 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     asesores_lista_ajustada();
 
     function ver_imagen(uno, dos, tres) {
-        $("#idfoto").attr("src", uno);
-        $("#caratula").attr("src", dos);
-        $("#reverso").attr("src", tres);
+        
+        console.log(uno)
+        console.log(dos)
+        console.log(tres)
+        $("#idfoto").attr("src", uno.replace(/"/g, ''));
+        $("#caratula").attr("src", dos.replace(/"/g, ''));
+        $("#reverso").attr("src", tres.replace(/"/g, ''));
         $("#identidad_fotos").modal("show");
     }
 
@@ -7386,8 +7750,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
-
-		  $("#suplanter").css("display", "none");
+        $("#suplanter").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
 
         cargarListas_asigandos();
     }
@@ -7574,8 +7938,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
-
-		  $("#suplanter").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
+        $("#suplanter").css("display", "none");
 
         block.dis = new Date();
         block.dia = block.dis.getDay();
@@ -7923,7 +8287,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
-
+        $("#lista_ubicacniones_div").css("display", "none");
 
 		window.sessionStorage.setItem("numero_lista","0");
         consulta_x();
@@ -8063,6 +8427,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
     }
 
     function informe_completo_cobros(){
@@ -8093,12 +8458,11 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#consulta_cobros").css("display", "initial");
         $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         cargarListas_asigandos();
 
         window.sessionStorage.setItem("numero_lista","0");
         //consulta_cobrosFecha();
-
-
     }
 
     function informe_completo_gastos(){
@@ -8129,12 +8493,11 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#consulta_gastos").css("display", "initial");
         $("#utilidades_view").css("display", "none");
-
+        $("#lista_ubicacniones_div").css("display", "none");
         cargarListas_asigandos();
     }
 
     function informe_completo_cierre(){
-
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -8162,11 +8525,12 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "initial");
         $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
 
         cargarListas_asigandos();
     }
 
-    function informe_completo_utilidades(){
+    function informe_completo_utilidades() {
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -8194,6 +8558,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "initial");
+        $("#lista_ubicacniones_div").css("display", "none");
     }
 
     function vers_contratos(){
@@ -8224,6 +8589,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
     }
 
 
@@ -8255,7 +8621,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
-        
+        $("#lista_ubicacniones_div").css("display", "none");
     }
 
     var actuesli = moment().format('DD/MM/YYYY');
@@ -8288,7 +8654,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
-        $("#HistorialClientes").css("display", "none");        
+        $("#HistorialClientes").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");        
     }
 
 	var map;

@@ -18,7 +18,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="0" || decoded.t == "2"){
+				}else if(decoded.t == "0" || decoded.t == "2" || decoded.t == "1"){
 					if(largoc.test(arrays[1]) && largoc.test(arrays[2]) && largoc.test(arrays[3]) && numero.test(arrays[4]) && numero.test(arrays[5]) ){
 						
 						String.prototype.capitalize = function() {

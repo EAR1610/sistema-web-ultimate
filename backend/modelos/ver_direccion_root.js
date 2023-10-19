@@ -17,9 +17,11 @@ eje = function(arrays,origen,redisClient) {
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
+				console.log("decoded")
+				console.log(decoded)
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="0"){
+				}else if(decoded.t=="0" || decoded.t == "1"){
 					if(largoc.test(arrays[1]) && largoc.test(arrays[2]) && largoc.test(arrays[3]) ){
 						
 						String.prototype.capitalize = function() {

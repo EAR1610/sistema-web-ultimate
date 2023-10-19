@@ -325,12 +325,12 @@
 					if(!valor.e){
 						$("#limpiar_agrega").click();
 						ubicaciones_operaciones();
-						toastr.success('Procesado con éxito','System notification!');
+						toastr.success('Procesado con éxito','Atención!');
 					}
 				});
 				
 			}else{
-				toastr.warning('Seleccione "Departamento" > "Ciudad" > "Barrio" para poder eliminar ','System notification!');
+				toastr.warning('Seleccione "Departamento" > "Ciudad" > "Barrio" para poder eliminar ','Atención!');
 			}
 		});
 		
@@ -378,18 +378,18 @@
 
 						$("#limpiar_agrega").click();
 						ubicaciones_operaciones();
-						toastr.success('Procesado con éxito','System notification!');
+						toastr.success('Procesado con éxito','Atención!');
 					}
 				});
 				
 			}else{
-				toastr.warning('Faltan datos para registrar o coordenadas erradas','System notification!');
+				toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
 			}
 		});
 		
 		function interruptor_empresa(id){
 			swal({
-				title: "System notification!?",
+				title: "Atención!?",
 				text: "Desea habilitar/deshabilitar la empresa!",
 				type: "warning",
 				showCancelButton: true,
@@ -410,7 +410,7 @@
 					var valor = JSON.parse(salida);
 					if(!valor.e){
 						$("#listado_empresas").html("");
-						toastr.success('Procesado con éxito','System notification!');
+						toastr.success('Procesado con éxito','Atención!');
 						consultar_empresas();
 					}
 				});
@@ -420,7 +420,7 @@
 		
 		function eliminar_empresa(id){
 			swal({
-				title: "System notification!?",
+				title: "Atención!?",
 				text: "Desea eliminar la cuenta de la empresa!",
 				type: "warning",
 				showCancelButton: true,
@@ -441,7 +441,7 @@
 					var valor = JSON.parse(salida);
 					if(!valor.e){
 						$("#listado_empresas").html("");
-						toastr.success('Procesado con éxito','System notification!');
+						toastr.success('Procesado con éxito','Atención!');
 						consultar_empresas();
 					}
 				});

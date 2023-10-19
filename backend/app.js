@@ -11,8 +11,8 @@ Solo una variable me indica si estoy en produccion o desarrollo
 //8ICmRsaUHMS5caKp55cVvE09QKEtMQYU@redis-18996.c1.us-west-2-2.ec2.cloud.redislabs.com:18996
 if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
-	var redisClient = redis.createClient({host : 'redis-12290.c281.us-east-1-2.ec2.cloud.redislabs.com', port : 12290});
-	redisClient.auth('CzVcCYGcIPW59svaNEeG4i8xVoJjW1tH',function(err,reply) {
+	var redisClient = redis.createClient({host : 'redis-16713.c17.us-east-1-4.ec2.cloud.redislabs.com', port : 16713});
+	redisClient.auth('U7Mf1OJpEfVlQxSNAJdhDx5yyKBjpvFC',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
