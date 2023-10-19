@@ -7357,8 +7357,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     }
 
                     block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[1] + '\',\'' + block.item[2] + '\',\'' + block.item[3] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
-                    console.log('\'' + block.item[1] + '\',\'' + block.item[2] + '\',\'' + block.item[3] + '\'');
-                    debugger;
                 }
                 $("#listado_supervisor").html(block.lista);                
             }
