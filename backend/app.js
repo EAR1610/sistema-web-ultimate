@@ -2,17 +2,19 @@ var redis = require('redis');
 var dev = false;
 
 /*
-Este codigo es el core del sistema
+	Este codigo es el core del sistema
 */
 
 /*
-Solo una variable me indica si estoy en produccion o desarrollo
+	Solo una variable me indica si estoy en produccion o desarrollo
 */
 //8ICmRsaUHMS5caKp55cVvE09QKEtMQYU@redis-18996.c1.us-west-2-2.ec2.cloud.redislabs.com:18996
+
 if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
-	var redisClient = redis.createClient({host : 'redis-16713.c17.us-east-1-4.ec2.cloud.redislabs.com', port : 16713});
-	redisClient.auth('U7Mf1OJpEfVlQxSNAJdhDx5yyKBjpvFC',function(err,reply) {
+	//GEOVANI: redis-16713.c17.us-east-1-4.ec2.cloud.redislabs.com | U7Mf1OJpEfVlQxSNAJdhDx5yyKBjpvFC
+	var redisClient = redis.createClient({ host : 'redis-18572.c9.us-east-1-2.ec2.cloud.redislabs.com', port : 18572 });
+	redisClient.auth('qyszfDN15m746VUt29AX1wV4A5mbr0aS',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
@@ -46,8 +48,8 @@ redisClient.on('error',function() {
 simpre asiganre la clave de acceso del root
 */
 
-var arrays = ["admin@money.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
-redisClient.set("usuario_admin@money.com_1000000",JSON.stringify(arrays),function(err2,reply2){
+var arrays = ["admin@credimas.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
+redisClient.set("usuario_admin@credimas.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });
 
@@ -81,12 +83,10 @@ wsServer.on('request', function(request) {
 	connection.on('message', function(message) {
 		if(message.type === 'utf8') {
 			
-			try{
-				
+			try{				
 				/*
-				Recibo un array lo parseo y lo redirigo a la funcion que se necesite
+					Recibo un array lo parseo y lo redirigo a la funcion que se necesite
 				*/
-
 				var text = JSON.parse(message.utf8Data.toString());
 				var ejecucion = require('./modelos/'+text.r+'');
 				ejecucion(text.d,text.r,redisClient).then(function(info) {

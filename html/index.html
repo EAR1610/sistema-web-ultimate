@@ -170,11 +170,13 @@
 		}
 		
 		function iniciar_sesion(){
+			debugger;
 			if($("#correo_usuario").val()!=="" && $("#pass_usuario").val()!==""){
 				block.arrays = [$("#correo_usuario").val(),$("#pass_usuario").val()];
 				block.obj = {"r":"iniciar_sesion","d":block.arrays};
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
-					var valor = JSON.parse(salida);					
+					var valor = JSON.parse(salida);	
+					console.log(valor)
 					if(!valor.e){
 						var hoy = moment().format('YYYY-MM-DD');
 						window.sessionStorage.setItem("Money-vars-token",JSON.stringify(valor.d));
