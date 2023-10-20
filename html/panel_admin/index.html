@@ -4402,7 +4402,7 @@
         block.estraaq = block.estraa.split("_");
         block.estra = block.estraaq[0];
         block.cedulasesor = block.estraaq[1];
-        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.arrays = [block.tokens[1], block.estra, fecha];
         block.obj = {"r": "buscar_gastos_fecha", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
         var valor = JSON.parse(salida);
@@ -4422,7 +4422,7 @@
         });
     }
 
-    function extraer_cobros(id_asesor, id_tabla, hoy) {
+    function extraer_cobros(id_asesor, id_tabla, hoy) {        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -4434,7 +4434,7 @@
         block.estraaq = block.estraa.split("_");
         block.estra = block.estraaq[0];
         block.cedulasesor = block.estraaq[1];
-        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.arrays = [block.tokens[1], block.estra, fecha];
         block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);

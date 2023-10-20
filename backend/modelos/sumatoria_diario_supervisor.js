@@ -11,7 +11,7 @@ eje = function(arrays,origen,redisClient) {
 		/*
 			recibe token, idasesor y fecha
 		*/
-		if (arrays.length==3){
+		if ( arrays.length == 3 ){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
@@ -37,10 +37,14 @@ eje = function(arrays,origen,redisClient) {
 									redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
 										if(replcy!==null){
 											var inf = JSON.parse(replcy);
+											console.log("inf")
+											console.log(inf)
 											if (inf[3]){
 												redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
 													const response2 = JSON.parse(response);
-													resolve([true,total,inf[1],arrays[2],inf[3],response2[2]]);
+													console.log("response2")
+													console.log(response2)
+													resolve([true, total, inf[1], arrays[2], inf[3], response2[2], response2[4]]);
 												});
 											} else{
 												resolve([true,total,inf[1],arrays[2],inf[3],0]);
