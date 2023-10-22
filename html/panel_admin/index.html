@@ -69,7 +69,7 @@
             doc.text("Nombre de asesor: " + nombreAsesorReportee,10,50);
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 55, 210,10, "F");
-            doc.text("Basse diaria: " + baseDiaria,10,60);
+            doc.text("Base diaria: " + baseDiaria,10,60);
             doc.text("Total recaudado: "+ totalRecaudado, 70, 60);
             doc.text("Total gastos: " + totalGastos, 140,60);
 
@@ -1154,14 +1154,14 @@
                     </div>
                 </div>
 
-				<div class="col-lg-12" id="liquidacion_page2" style="display:none;">
+				<!-- <div class="col-lg-12" id="liquidacion_page2" style="display:none;">
 					<div class="ibox-title">
 						Total recaudo: <label id="text_recolectado"></label>
                         <button class="btn btn-primary pull-right" id="registro_base"
 								type="button">Registro de base
 						</button>
 					</div>
-				</div>
+				</div> -->
 				
                 <div class="col-lg-12" id="liquidacion_page">
                     <div class="ibox ">
@@ -1205,10 +1205,7 @@
                                         <th>Cliente</th>
                                         <th>Alias</th>
                                         <th>Valor cuota</th>
-                                        <th>Dia</th>
-                                        <th>Hoy</th>
                                         <th>Saldo favor</th>
-                                        <th>Recaudo</th>
                                         <th>Prestamo</th>
                                         <th>Total deuda</th>
                                     </tr>
@@ -3008,7 +3005,7 @@
                         block.sale2 = block.sale2.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                         block.totaldu = block.sale2.split('').reverse().join('').replace(/^[\.]/,'');
 
-                        block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td></td><td></td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td><input type="text" class="form-control" style="width: 50%;"  id="descontarte_'+block.clienes[7]+'_'+block.ince+'" onkeypress="descontar(event);" onkeyup="descontarws(event);"></td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
+                        block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
                     }
                     $("#listado_operacion_asesore").html(block.unids);
                 }
@@ -4561,7 +4558,6 @@
 
     function totalGastos(){
         $("#text_gastosAsesor").empty();
-        $("#listado_cobros_cierre").empty();
         block.fechaABuscar = $("#fecha_busqueda_cobros_supervisor").val();
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -4569,10 +4565,11 @@
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
         let gastos = 0;
-        block.arrays = [block.tokens[1],$("#id_asesor_cierre").val(), block.fechaABuscar];
+        block.arrays = [ block.tokens[1], $("#id_asesor_cierre").val().split('_')[0], block.fechaABuscar ];
         block.obj = {"r": "extrae_gastos_supervisor", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor)
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 
@@ -4584,13 +4581,15 @@
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
                 const totalSistema = base + recaudado-gastos;
                 $("#text_total_sistema").text("Q"+totalSistema);
+            } else {
+                $("#text_diferencia_cierre").text("0");
             }
         });
         return gastos;
     }
 
     $("#btn_buscar_cierre_supervisor").click(function(){        
-        $("#lista_gastos_exeAsesor").empty();        
+        $("#lista_gastos_exeAsesor").empty();                     
         if($("#id_asesor_cierre").val()!=="" || $("#fecha_busqueda_cobros_supervisor").val() !== ""){
             block.ase = $("#id_asesor_cierre").val().split("_");
             block.ase = block.ase[0];
@@ -4613,8 +4612,8 @@
                 }
             });
             
-            block.arrays = [block.tokens[1],block.ase, block.fechaABuscar];
-            block.obj = {"r": "sumatoria_diario_supervisor", "d": block.arrays}; //Obtiene el token y el ID del asesor
+            block.arrays = [ block.tokens[1],block.ase, block.fechaABuscar ];
+            block.obj = { "r": "sumatoria_diario_supervisor", "d": block.arrays }; //Obtiene el token y el ID del asesor
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
                 if (!valor.e) {                
@@ -4624,9 +4623,9 @@
                         $("#registrar_cierre").prop("disabled", true);
                         $("#text_total_asesor").val(valor.d[5]);
                         $("#text_total_asesor").prop("disabled", true);
-                        $("#text_diferencia_cierre").text(valor.d[1] - valor.d[2]);
+                        $("#text_diferencia_cierre").text( valor.d[6] == '' ? 0 : parseInt(valor.d[6]) );
                     } else {
-                        $("#text_diferencia_cierre").text("Q " + valor.d[1] - valor.d[2]);
+                        $("#text_diferencia_cierre").text( valor.d[1] - valor.d[2] );
                         $("#registrar_cierre").prop("disabled", false);
                         $("#text_total_asesor").val(0);
                         $("#text_total_asesor").prop("disabled", false);
@@ -4748,7 +4747,9 @@
     });
 
     $("#buscar_cedula_cliente_historia").click(function () {
+
         $('#listado_historial_cliente').empty();
+
         if ($("#text_cedula_cliente_historial").val() !== "") {
             if (window.localStorage.getItem("Money-vars-token") !== null) {
                 block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -4756,15 +4757,14 @@
                 block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
             }
 
-            block.arrays = [block.tokens[1],$("#text_cedula_cliente_historial").val()];
-
-            block.obj = {"r": "buscar_cliente_supervisor", "d": block.arrays};
+            block.arrays = [ block.tokens[1], $("#text_cedula_cliente_historial").val() ];
+            block.obj = { "r": "buscar_cliente_supervisor", "d": block.arrays };
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);                
                 if ( !valor.e ) {
                     block.partes = JSON.parse(valor.d[1]);
                     block.nomre = block.partes[8] +" "+block.partes[9] +" "+block.partes[10] + " "+block.partes[11];
-                    block.comportamiento = valor.d[3] < 0 ? 'Buen cliente' : 'Mal cliente';
+                    block.comportamiento = valor.d[3] < 0 ? 'El cliente paga puntual' : 'El cliente paga atrasado';
                     // Agregar una nueva fila a la tabla
                     $('#listado_historial_cliente').append('<tr><td>'+block.nomre+'</td><td>'+valor.d[2]+'</td><td>'+block.comportamiento+'</td></tr>');
                 } else {

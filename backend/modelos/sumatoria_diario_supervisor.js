@@ -68,7 +68,7 @@ eje = function(arrays,origen,redisClient) {
 										resolve([true,0,inf[1],arrays[2],inf[3],0]);
 									}
 								}else{									
-									resolve([true,0,"0",arrays[2],false,0]);
+									resolve([true,0,"0",arrays[2],false,0, 0]);
 								}
 							});
 						}

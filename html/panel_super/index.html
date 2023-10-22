@@ -1787,7 +1787,7 @@
                                         <th>Celular</th>
                                         <th>Telefono</th>
                                         <th>Moto</th>
-                                        <th>Imagen</th>
+                                        <!-- <th>Imagen</th> -->
                                     </tr>
                                     </thead>
                                     <tbody align="center" id="listado_supervisor">
@@ -3206,6 +3206,9 @@
 						$("#limpiar_agrega").click();
 						ubicaciones_operaciones();
 						toastr.success('Procesado con éxito','Atención!');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
 					}
 				});
 				
@@ -3490,7 +3493,7 @@
         block.obj = {"r": "sumatoria_diario_supervisor", "d": block.arrays}; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida); 
-            console.log(valor);
+            console.log(valor)
             if (!valor.e) { 
                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                 $("#text_baseAsesor").text("Q"+valor.d[2]);
@@ -3503,15 +3506,17 @@
                     $("#registrar_cierre").prop("disabled", true);
                     $("#text_total_asesor").val(valor.d[5]);
                     $("#text_total_asesor").prop("disabled", true);
-                    $("#text_diferencia_cierre").text(valor.d[6] == '' ? 0 : parseInt(valor.d[6]) );
+                    $("#text_diferencia_cierre").text( valor.d[6] == '' ? 0 : parseInt(valor.d[6]) );
                 }else {
-                    $("#text_diferencia_cierre").text(valor.d[1] - valor.d[2]);
+                    $("#text_diferencia_cierre").text( valor.d[1] - parseInt( valor.d[2] ) );
                     $("#registrar_cierre").prop("disabled", false);
                     $("#text_total_asesor").val(0);
                     $("#text_total_asesor").prop("disabled", false);
                 }
 
                 totalGastos();
+            } else {
+                $("#text_diferencia_cierre").text("0");
             }
         });
         extraer_gastosAsesor();
@@ -3894,6 +3899,10 @@
         $("#consulta_gastos").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
+        $("#utilidades_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+    
+
     }
 
     //Funcion para extraer datos con fecha pasandole la fecha al array
@@ -7370,8 +7379,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     } else {
                         block.cedula = block.item[6];
                     }
-
-                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[1] + '\',\'' + block.item[2] + '\',\'' + block.item[3] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
+                    // block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[6] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
+                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td></tr>';
+            
                 }
                 $("#listado_supervisor").html(block.lista);                
             }
@@ -7568,15 +7578,30 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
     asesores_lista_ajustada();
 
-    function ver_imagen(uno, dos, tres) {
+    function ver_imagen(jsonString) {
+        try {
+            console.log(jsonString)
+        const jsonArray = JSON.parse(jsonString);
+
+        console.log(jsonArray);
+        } catch (error) {
+        console.log("Error al analizar el JSON:", error);
+        }
         
-        console.log(uno)
-        console.log(dos)
-        console.log(tres)
-        $("#idfoto").attr("src", uno.replace(/"/g, ''));
-        $("#caratula").attr("src", dos.replace(/"/g, ''));
-        $("#reverso").attr("src", tres.replace(/"/g, ''));
-        $("#identidad_fotos").modal("show");
+        // console.log(uno)
+        // console.log(dos)
+        // console.log(tres)
+        // $("#idfoto").attr("src", uno.replace(/"/g, ''));
+        // $("#caratula").attr("src", dos.replace(/"/g, ''));
+        // $("#reverso").attr("src", tres.replace(/"/g, ''));
+
+
+        // const json = JSON.parse(images);
+        // console.log(json);
+        // $("#idfoto").attr("src", json[1]);
+        // $("#caratula").attr("src", json[2]);
+        // $("#reverso").attr("src", json[3]);
+        // $("#identidad_fotos").modal("show");
     }
 
     function cargarListas_asigandos() {
@@ -8300,7 +8325,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
-
+      
 		window.sessionStorage.setItem("numero_lista","0");
         consulta_x();
     }
@@ -8634,6 +8659,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
+
     }
 
     var actuesli = moment().format('DD/MM/YYYY');
