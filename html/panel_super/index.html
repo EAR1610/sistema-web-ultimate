@@ -1787,7 +1787,7 @@
                                         <th>Celular</th>
                                         <th>Telefono</th>
                                         <th>Moto</th>
-                                        <!-- <th>Imagen</th> -->
+                                        <th>Imagen</th>
                                     </tr>
                                     </thead>
                                     <tbody align="center" id="listado_supervisor">
@@ -7379,8 +7379,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     } else {
                         block.cedula = block.item[6];
                     }
-                    // block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[6] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
-                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td></tr>';
+                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[22] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
+                    // block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td></tr>';
             
                 }
                 $("#listado_supervisor").html(block.lista);                
@@ -7578,15 +7578,31 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
     asesores_lista_ajustada();
 
-    function ver_imagen(jsonString) {
-        try {
-            console.log(jsonString)
-        const jsonArray = JSON.parse(jsonString);
+    function ver_imagen(cedula) {
+        console.log(cedula);
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
 
-        console.log(jsonArray);
-        } catch (error) {
-        console.log("Error al analizar el JSON:", error);
-        }
+            block.arrays = [block.tokens[1],cedula];
+
+            block.obj = {"r": "buscar_supervisor", "d": block.arrays};
+            console.log(block.obj);
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                console.log(valor);
+                if (!valor.e) {  
+                    console.log(valor.d[2]);
+                    $("#idfoto").attr("src", valor.d[1][1]);
+                    $("#caratula").attr("src", valor.d[1][2]);
+                    $("#reverso").attr("src", valor.d[1][3]);
+                    $("#identidad_fotos").modal("show");
+                } else {
+                    
+                }
+            });
         
         // console.log(uno)
         // console.log(dos)

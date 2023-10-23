@@ -84,10 +84,16 @@ eje = function(arrays,origen,redisClient) {
 												cuotaD2 = cuotaD.replace(".", ""),
 												tiempo = arrays[4],
 												indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
-												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual													
+												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
+												console.log("indi")
+												console.log(indi)
+												console.log("prox")
+												console.log(prox)
 												for (var k = 1; k < tiempo + 1; k++) {
 													if(k == 4){
 														var prox2 = moment(prox).tz("America/Guatemala").add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+														console.log("prox2 semanal")
+														console.log(prox2)
 														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													}
 													var prox2 = moment(prox).tz("America/Guatemala").add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
@@ -105,26 +111,38 @@ eje = function(arrays,origen,redisClient) {
 													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4],
 													acum=1;
+												console.log("prox")
+												console.log(prox)
 
 												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":""});
 												for(var k = 1; k < tiempo; k++){
 													if( k == (tiempo - 1) ) {
 														if(k<residuo){
 															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
+															console.log("prox2");
+															console.log(prox2);
 															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k==residuo){
 															prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															acum++;
+															console.log("prox");
+															console.log(prox);
 															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
+															console.log("prox2");
+															console.log(prox2);
 															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k>residuo){
 															if(acum==7){
 																prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
+																console.log("prox");
+																console.log(prox);
 																acum=1;
 															}
 															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
+															console.log("prox2");
+															console.log(prox2);
 															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 															acum++;
@@ -132,20 +150,30 @@ eje = function(arrays,origen,redisClient) {
 													} else {
 														if(k<residuo){
 															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
+															console.log("prox2");
+															console.log(prox2);
 															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k==residuo){
 															prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 															acum++;
+															console.log("prox");
+															console.log(prox);
 															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
+															console.log("prox2");
+															console.log(prox2);
 															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k>residuo){
 															if(acum==7){
 																prox = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
 																acum=1;
+																console.log("prox");
+																console.log(prox);
 															}
 															var prox2 = moment(prox).tz("America/Guatemala").add(1, 'days').format('YYYY-MM-DD');
+															console.log("prox2");
+															console.log(prox2);
 															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 															acum++;
@@ -159,10 +187,14 @@ eje = function(arrays,origen,redisClient) {
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
-													tiempo = arrays[4];												
+													tiempo = arrays[4];	
+												console.log("prox")
+												console.log(prox)
 																															
 												for(var k = 1; k < tiempo+1; k++){
-													var prox2 = moment(arrays[5]).tz("America/Guatemala").add(15, 'days').format('YYYY-MM-DD');													
+													var prox2 = moment(arrays[5]).tz("America/Guatemala").add(15, 'days').format('YYYY-MM-DD');	
+													console.log("prox2");
+													console.log(prox2);												
 													if(k == tiempo - 1){
 														fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													} else {
@@ -175,8 +207,12 @@ eje = function(arrays,origen,redisClient) {
 													cuotaD2 = cuotaD.replace(".",""),
 													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4];
+												console.log("prox");
+												console.log(prox);
 												for(var k = 1; k < 2; k++){
 													var prox2 = moment(prox).tz("America/Guatemala").add(30, 'days').format('YYYY-MM-DD');
+													console.log("prox2");
+													console.log(prox2);
 													fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;
 												}												
