@@ -91,12 +91,12 @@ eje = function(arrays,origen,redisClient) {
 												console.log(prox)
 												for (var k = 1; k < tiempo + 1; k++) {
 													if(k == 4){
-														var prox2 = moment(prox).tz("America/Guatemala").add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 														console.log("prox2 semanal")
 														console.log(prox2)
 														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													}
-													var prox2 = moment(prox).tz("America/Guatemala").add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 													prox = prox2;
 													fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
 												}
@@ -192,7 +192,8 @@ eje = function(arrays,origen,redisClient) {
 												console.log(prox)
 																															
 												for(var k = 1; k < tiempo+1; k++){
-													var prox2 = moment(arrays[5]).tz("America/Guatemala").add(15, 'days').format('YYYY-MM-DD');	
+													// arrays[5]
+													var prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');	
 													console.log("prox2");
 													console.log(prox2);												
 													if(k == tiempo - 1){
@@ -205,12 +206,12 @@ eje = function(arrays,origen,redisClient) {
 											} else if(arrays[10]=="4"){	//PAGO MENSUAL	
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
-													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
+													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4];
 												console.log("prox");
 												console.log(prox);
 												for(var k = 1; k < 2; k++){
-													var prox2 = moment(prox).tz("America/Guatemala").add(30, 'days').format('YYYY-MM-DD');
+													var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
 													console.log("prox2");
 													console.log(prox2);
 													fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
