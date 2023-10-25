@@ -34,9 +34,16 @@ eje = function(arrays,origen,redisClient) {
 								if(es==reply3.length-1){
 									redisClient.get("base_"+arrays[1]+"_"+dia,function(ersr,replcy) {
 										if(replcy!==null){
+											console.log("replcy");
+											console.log(replcy);
 											var inf = JSON.parse(replcy);
-											resolve([true,total,inf[1],dia]);
+											if(inf[3]){
+												resolve([true,total,"0","Sin base"]);
+											} else {
+												resolve([true,total,inf[1],dia]);
+											}
 										}else{
+											console.log("Sin base");
 											resolve([true,total,"0","Sin base"]);
 										}
 									});
@@ -44,7 +51,6 @@ eje = function(arrays,origen,redisClient) {
 							}							
 						} else {
 							redisClient.keys("base_"+arrays[1]+"_*", function(errBase, replyBasesRegistradas){
-
 								if(replyBasesRegistradas.length == 0) {
 									resolve([true,0,0,"Sin base"]);									
 								} else {
@@ -53,7 +59,7 @@ eje = function(arrays,origen,redisClient) {
 								var lista = [];
 								function recurso(ind, arrs){
 									if(ind == arrs.length){
-										if (lista.length >0){
+										if (lista.length > 0){
 											resolve([true, 0, lista[0][1], lista[0][0]]);
 										}else{
 											resolve([true,0,0,"Sin base"]);		
@@ -63,11 +69,10 @@ eje = function(arrays,origen,redisClient) {
 											let base = JSON.parse(replyBaseRegistrada);
 											if(base[3] == false){ //Tiene apertura abierta
 												lista.push(base);
-												recurso(replyBasesRegistradas.length, arrs);
+												recurso(replyBasesRegistradas.length, replyBasesRegistradas);
 											}
-
 											ind++;
-											recurso(ind,arrs);
+											recurso(ind,replyBasesRegistradas);
 										})
 									}					
 								} 

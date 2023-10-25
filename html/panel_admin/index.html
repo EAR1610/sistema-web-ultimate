@@ -58,7 +58,6 @@
             var total2 = 0; 
 
             doc.setFontSize(18);
-            doc.addFont("Helvetica-Bold","Helvetica", "bold")
             doc.setFont("Helvetica","bold")
             doc.text(NombreEmpresa,105,10,null,null,"center");
             doc.text("Reporte de Cierre",105,20,null,null,"center")
@@ -249,7 +248,6 @@
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 35, 210, 10, 'F');
             doc.setFontSize(18);
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
             doc.setFont('Helvetica', 'bold')
             doc.text(NombreEmpresa, 105, 10, null, null, "center");
             doc.text("Reporte de cobros", 105, 20, null, null, "center");
@@ -306,8 +304,6 @@
                 y = 20;
             }
 
-        
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
             doc.setTextColor(0, 0, 0);
             doc.setFont('Helvetica', 'bold'); 
             doc.text('Total monto', 10, y);
@@ -353,7 +349,6 @@
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 35, 210, 10, 'F');
             doc.setFontSize(18);
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
             doc.setFont('Helvetica', 'bold');
             doc.text(NombreEmpresa, 105, 10, null, null, "center");
             doc.text("Reporte de gastos", 105, 20, null, null, "center");
@@ -398,9 +393,6 @@
                 doc.addPage();
                 y = 20;
             }
-
-            
-            doc.addFont('Helvetica-Bold', 'Helvetica', 'bold');
 
             doc.setTextColor(0, 0, 0);
             doc.setFont('Helvetica', 'bold'); 
@@ -3744,20 +3736,20 @@
         });
     }
     
-    $("#text_total_asesor").keypress(function(e){
-        if(e.which == 13){
-            if($('#id_asesor_cierre').val() != "" && $('#text_total_asesor').val() != "") {
-                const totalAsesor = parseFloat($('#text_total_asesor').val());
-                const totalSistema = parseFloat($('#text_total_sistema').text().slice(1));
-                const diferencia = totalAsesor - totalSistema;
-                if (totalAsesor!="" && totalSistema!=""){
-                    $("#text_diferencia_cierre").text("Q"+diferencia);
-                    //registrarCierre();
-                }
-            } else {
-                toastr.warning("Debe de especificar el asesor y el total asignado", "Atención");
-                $('#text_diferencia_cierre').text("");
-            }
+    $("#text_total_asesor").keyup(function(e){
+        if($('#id_asesor_cierre').val() != "" && $('#text_total_asesor').val() != "") {
+            const totalAsesor = parseFloat($('#text_total_asesor').val());
+            const totalSistema = parseFloat($('#text_total_sistema').text().slice(1));
+            const diferencia = totalAsesor - totalSistema;
+            if ( totalAsesor !== "" && totalAsesor !== 0 && totalSistema !=="" && isNaN(totalAsesor) === false ) {
+                $("#text_diferencia_cierre").text("Q" + diferencia );
+                //registrarCierre();
+            }else {
+                $("#text_diferencia_cierre").text("Q");
+            } 
+        } else {
+            toastr.warning("Debe de especificar el asesor y el total asignado", "Atención");
+            $('#text_diferencia_cierre').text("");
         }
     });
 
@@ -4569,7 +4561,6 @@
         block.obj = {"r": "extrae_gastos_supervisor", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log(valor)
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 
@@ -4619,22 +4610,25 @@
                 if (!valor.e) {                
                     $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                     $("#text_baseAsesor").text("Q"+valor.d[2]);
+                    const base = parseFloat($("#text_baseAsesor").text().slice(1));
+                    const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
+                    const totalSistema = base + recaudado;
+                    $("#text_total_sistema").text("Q"+totalSistema);
+
                     if( valor.d[2] == 0 || valor.d[4] ){
                         $("#registrar_cierre").prop("disabled", true);
                         $("#text_total_asesor").val(valor.d[5]);
                         $("#text_total_asesor").prop("disabled", true);
                         $("#text_diferencia_cierre").text( valor.d[6] == '' ? 0 : parseInt(valor.d[6]) );
                     } else {
-                        $("#text_diferencia_cierre").text( valor.d[1] - valor.d[2] );
+                        $("#text_diferencia_cierre").text("Debe calcular diferencia");
                         $("#registrar_cierre").prop("disabled", false);
                         $("#text_total_asesor").val(0);
                         $("#text_total_asesor").prop("disabled", false);
                     }
-                    const base = parseFloat($("#text_baseAsesor").text().slice(1));
-                    const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-                    const totalSistema = base + recaudado;
-                    $("#text_total_sistema").text("Q"+totalSistema);
                     totalGastos();
+                } else {
+                    $("#text_diferencia_cierre").text("0");
                 }
             });
             extraer_gastosAsesor();
@@ -4643,6 +4637,44 @@
             toastr.warning("Hay campos vacíos", "Atención");
         }
     })
+
+    $("#registrar_cierre").click(function(){
+        const totalAsesor = $('#text_total_asesor').val();
+        const base = parseFloat($("#text_baseAsesor").text().slice(1)); 
+        const asesor = $('#id_asesor_cierre').val();
+        if ( parseInt(totalAsesor) < 0 ) {
+            toastr.warning('El total del asesor debe de ser un valor positivo.', 'Atención!');
+        } else if ( totalAsesor != "" && totalAsesor != 0 && base != 0 && asesor != ""  ){
+            registrarCierre(totalAsesor,base,asesor);
+        } else {
+            toastr.warning('El total del asesor y tener una base diaria es necesario.', 'Atención!');
+        }
+
+    });
+
+    function registrarCierre(totalAsesor,base,asesor){
+        block.asesor =  $('#id_asesor_cierre').val();
+        block.diferencia = $("#text_diferencia_cierre").text().slice(1);
+        const fecha_cierre = $("#fecha_busqueda_cobros_supervisor").val();
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        const id_usuario = block.tokens[5] = "-" ? "sa" : block.tokens[5];
+        block.arrays = [block.tokens[1], fecha_cierre, totalAsesor, asesor.split('_')[0], id_usuario, block.diferencia];
+        block.obj = {"r": "registrar_cierre", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (valor.d[1]) {
+                toastr.success('Registrado con exito', 'Atención!');
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            }
+        });
+    }
 
     function extraer_gastosAsesor() {        
         $("#lista_gastos_exeAsesor").empty();

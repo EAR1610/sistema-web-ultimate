@@ -18,7 +18,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t=="5"){
+				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t =="4" || decoded.t=="5"){
 					
 					var moment = require("moment-timezone");
 					var fecha_hora = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh:mm A');

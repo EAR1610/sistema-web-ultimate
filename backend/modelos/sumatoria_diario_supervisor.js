@@ -37,13 +37,9 @@ eje = function(arrays,origen,redisClient) {
 									redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
 										if(replcy!==null){
 											var inf = JSON.parse(replcy);
-											console.log("inf")
-											console.log(inf)
 											if (inf[3]){
 												redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
 													const response2 = JSON.parse(response);
-													console.log("response2")
-													console.log(response2)
 													resolve([true, total, inf[1], arrays[2], inf[3], response2[2], response2[4]]);
 												});
 											} else{

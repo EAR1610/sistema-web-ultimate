@@ -55,8 +55,8 @@ eje = function(arrays,origen,redisClient) {
 												xtraigo informacion de cliente
 											*/
                                             var fechaHoy = new Date().toISOString().split('T')[0];
+                                            // var fechaHoy = "2023-10-26";
                                             var clientesHoy = infeos[13].filter(cliente => cliente.fe == fechaHoy && cliente.ct === false);
-                                            
                                             if(clientesHoy.length){
                                                 redisClient.get("cliente_"+inus[1],function(errs,datse){
                                                 

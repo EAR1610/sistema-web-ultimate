@@ -175,12 +175,10 @@
 				block.obj = {"r":"iniciar_sesion","d":block.arrays};
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
 					var valor = JSON.parse(salida);	
-					console.log(valor)
 					if(!valor.e){
 						var hoy = moment().format('YYYY-MM-DD');
 						window.sessionStorage.setItem("Money-vars-token",JSON.stringify(valor.d));
 						window.localStorage.setItem("Money-vars-token-dura-"+hoy,JSON.stringify(valor.d));
-						console.log(valor.d[3]);
 						if(valor.d[3]=="0"){
 							location.href = "./panel_root"; //SUPER ADMIN
 						}else if(valor.d[3]=="1"){

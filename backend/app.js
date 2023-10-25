@@ -33,7 +33,7 @@ if(!dev){
 }
 
 /*
-Conexion buena o no mediantes estos eventos en redis
+	Conexion buena o no mediantes estos eventos en redis
 */
 
 redisClient.on('ready',function() {
@@ -45,7 +45,7 @@ redisClient.on('error',function() {
 });
 
 /*
-simpre asiganre la clave de acceso del root
+	Siempre asiganre la clave de acceso del root
 */
 
 var arrays = ["admin@credimas.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
@@ -101,10 +101,8 @@ wsServer.on('request', function(request) {
 			
 		}
 	});
-
 	connection.on('close', function(connection) {
 		console.log("Bien: salida de usuario: "+request.origin);
-	});
-  
+	});  
 });
 
