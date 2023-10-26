@@ -14,8 +14,9 @@ if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
 	//GEOVANI: redis-16713.c17.us-east-1-4.ec2.cloud.redislabs.com | U7Mf1OJpEfVlQxSNAJdhDx5yyKBjpvFC
 	//AXEL: redis-18572.c9.us-east-1-2.ec2.cloud.redislabs.com | qyszfDN15m746VUt29AX1wV4A5mbr0aS 
-	var redisClient = redis.createClient({ host : 'redis-16566.c93.us-east-1-3.ec2.cloud.redislabs.com', port : 16566 });
-	redisClient.auth('PU2IjRUHNswzeFRGQ99dohjNZvOkzqrB',function(err,reply) {
+	//CreditosElAmigo: redis-16566.c93.us-east-1-3.ec2.cloud.redislabs.com | PU2IjRUHNswzeFRGQ99dohjNZvOkzqrB
+	var redisClient = redis.createClient({ host : 'redis-18572.c9.us-east-1-2.ec2.cloud.redislabs.com', port : 18572 });
+	redisClient.auth('qyszfDN15m746VUt29AX1wV4A5mbr0aS',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
@@ -64,11 +65,11 @@ var server = http.createServer(function(request, response) {
 });
 
 /*
-Conexion escucho ws en el puerto 3000
+	Conexion escucho ws en el puerto 3000
 */
 
-server.listen(3000, function() {
-	console.log("Online:active:3000");
+server.listen(3200, function() {
+	console.log("Online:active:3200");
 });
 
 wsServer = new WebSocketServer({
