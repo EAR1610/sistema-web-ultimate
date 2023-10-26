@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Money SS Superadministrador</title>
-    <link rel="shortcut icon" href="../assets/img/money_credit.ico"/>
+    <link rel="shortcut icon" href="../assets/img/profile_small.png"/>
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -175,7 +175,7 @@
             doc.setFont('Helvetica', 'bold')
             doc.text(NombreEmpresa, 105, 10, null, null, "center");
             doc.text("Reporte de gastos", 105, 20, null, null, "center");
-            doc.setFontSize(12);
+            doc.setFontSize(10);
             
             doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
             doc.text("Nombre de asesor: "+ nombreAsesorReportee, 80, 30);
@@ -292,8 +292,8 @@
             doc.setFillColor(200,200,200);
             doc.rect(0,95,210,10,"F");
             doc.text("DPI", 10,100);
-            doc.text("Nombre Cliente",50,100);
-            doc.text("Dirección",130,100);
+            doc.text("Nombre Cliente",35,100);
+            doc.text("Dirección",100,100);
             doc.text("Monto",170,100);
             doc.text("Hora",190,100);
 
@@ -336,8 +336,8 @@
                 doc.setFont("bold");
                 doc.setFontSize(10)
                 doc.text(datos2[i].dpi.toString(), 10, y1);
-                doc.text(datos2[i].nombre.toString(), 50, y1);
-                doc.text(datos2[i].direccion.toString(), 130, y1);
+                doc.text(datos2[i].nombre.toString(), 35, y1);
+                doc.text(datos2[i].direccion.toString(), 100, y1);
                 doc.text("Q"+datos2[i].monto.toString(), 170, y1);
                 doc.text(datos2[i].hora.toString(), 190, y1);
                 doc.setFont("normal");
@@ -351,9 +351,8 @@
                      doc.line(10, y1 + 5, 200, y1 + 5);
                     }
                  y1 += 10; 
-                
             }
-
+            
             if(y1 > maxPageHeight){
                 doc.addPage();
                 y1 = 20
@@ -1097,7 +1096,7 @@
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12">
-                        <label>Ciudad</label>
+                        <label>Municipio</label>
                         <select class="form-control m-b" id="tipo_ciudadesm">
                             <option value="">Seleccione</option>
                         </select>
@@ -1459,7 +1458,7 @@
                     </div>
                 </div>
 
-                <div class="row" id="lista_ubicacniones_div">
+                <div class="col-lg-12" id="lista_ubicacniones_div">
                     <div class="col-lg-12">
                         <div class="ibox">
                             <div class="ibox-title">
@@ -1484,7 +1483,7 @@
                                 
                                 
                                 <div class="col-sm-6 col-md-4 col-xs-12" id="view_ciudades" >
-                                    <label>Ciudad</label>
+                                    <label>Municipio</label>
                                     <select class="form-control m-b" id="tipo_ciudades">
                                         <option value="0"></option>
                                         <option value="add">Agregar nuevo</option>
@@ -1512,7 +1511,7 @@
                                     </form>
                                 </div>
                                 
-                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                <!-- <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
                                     <form role="form">
                                         <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
                                     </form>
@@ -1522,14 +1521,13 @@
                                     <form role="form">
                                         <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
                                     </form>
-                                </div>
-                                <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+                                </div> -->
+                                <div class="col-sm-12 col-md-2" style="text-align: center;margin-top: 3%;">
                                     <button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
                                 </div>
-                                <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+                                <!-- <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
                                     <button class="btn btn-danger btn-block" id="eliminar_direccion" type="button" >Eliminar</button>
-                                </div>
-                                
+                                </div>                                 -->
                             </div>
                         </div>
                     </div>
@@ -2994,7 +2992,7 @@
                             </div>
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
-                                <label>Ciudad</label>
+                                <label>Municipio</label>
                                 <select class="form-control m-b" id="tipo_ciudadesmd">
                                     <option value="">Seleccione</option>
                                 </select>
@@ -3005,6 +3003,18 @@
                                 <select class="form-control m-b" id="tipo_barriomd">
                                     <option value="">Seleccione</option>
                                 </select>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                <form role="form">
+                                    <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                                </form>
+                            </div>
+                            
+                            <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                <form role="form">
+                                    <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                                </form>
                             </div>
 
                             <div class="col-sm-6 col-md-3 col-xs-12">
@@ -3181,23 +3191,22 @@
 				block.barr = $("#add_barrio_text").val();
 			}
 			
-			block.lat = $("#add_barrio_lat_text").val();
+			// block.lat = $("#add_barrio_lat_text").val();
 			
-			block.lon = $("#add_barrio_lon_text").val();
+			// block.lon = $("#add_barrio_lon_text").val();
 			
-			if(block.lon.substr(0,1)!=="." && block.lat.substr(0,1)!=="." && block.depa!=="" && block.ciud!=="" && block.barr!=="" && block.lat!=="" && block.lon!=="" && block.lat.indexOf(".")>-1 && block.lon.indexOf(".")>-1 && block.lon.indexOf("-")>-1 && block.lat.indexOf("e")==-1 && block.lon.indexOf("e")==-1 && block.lat.indexOf(",")==-1 && block.lon.indexOf(",")==-1){
-				
-				
+			if( block.depa!=="" && block.ciud!=="" && block.barr!=="" ) {
+								
 				if(window.localStorage.getItem("Money-vars-token")!==null){
 					block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
 				}else{
 					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
 				}
 				
-				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon];
+				block.arrays = [ block.tokens[1], block.depa, block.ciud, block.barr ];
 				block.obj = { "r":"crea_direccion","d":block.arrays };
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
-					var valor = JSON.parse(salida);
+					var valor = JSON.parse(salida);                    
 					if(!valor.e){
 						$("#add_barrio_lon_text").val("");
 						$("#add_barrio_lat_text").val("");
@@ -3212,8 +3221,6 @@
 					}
 				});
 				
-			}else{
-				toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
 			}
 		});
 
@@ -5574,8 +5581,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [block.tokens[1],block.asesoreId];
         block.obj = {"r": "sumatoria_diario", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if (!valor.e) {                
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
@@ -6943,6 +6949,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             block.fronatls="default_invoice.png";
 			block.blo = 2;
         }
+
+        
         block.alias = $("#alias_textd").val();
         block.numero = $("#numero_idmd").val();
         block.nom1 = $("#nombre_id1md").val();
@@ -6957,101 +6965,117 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.telefomovil = $("#telefono_celmd").val();
         block.correo = $("#correo_electronicomd").val();
         block.asesorSuperAsis = "d";
+        block.lat = $("#add_barrio_lat_text").val();
+        block.lon = $("#add_barrio_lon_text").val();
+        
+        if(block.lon.substr(0,1) !== "." && block.lat.substr(0,1) !== "." && block.lat !== "" && block.lon !== "" && block.lat.indexOf(".") >-1 && block.lon.indexOf(".") >- 1 && block.lon.indexOf("-") >- 1 && block.lat.indexOf("e") == -1 && block.lon.indexOf("e") == -1 && block.lat.indexOf(",") == -1 && block.lon.indexOf(",") == -1) {
 
-        if ($("#telefono_fijomd").val() == "") {
-            block.telefofijo = "0";
-        }        
-        if (block.perfil == null) {
-			block.perfil = "default_profile_photo.jpg";
-		}
-		if (block.normal == null) {
-			block.normal = "front_card_by_default.png";
-		}
-		if (block.reverso == null) {
-			block.reverso = "back_card_by_default.png";
-        }
-		if(block.fronatls==null){
-            block.fronatls="default_invoice.png";
-        }
-        if (block.perfil == null) {
-			toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
-			block.blo = 1;
-        }
-		if (block.normal == null) {
-			toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
-			block.blo = 1;
-		}
-		if (block.reverso == null) {
-			toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
-			block.blo = 1;
-        }
-		if(block.blo==1){
-			toastr.warning('Falta datos', 'Atención!');
-		}else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'Atención!');
-        } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'Atención!');
-        } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'Atención!');
-        } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
-        } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
-        } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
-        } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
-        } else if (block.telefomovil == "") {
-            toastr.warning('Falta telefono celular del cliente', 'Atención!');
-        } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
-        }else{
-            if (block.alias == "") {
-                block.alias = "No asignado";
+            if ($("#telefono_fijomd").val() == "") {
+                block.telefofijo = "0";
+            }        
+            if (block.perfil == null) {
+                block.perfil = "default_profile_photo.jpg";
             }
-            block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias];
-
-            block.obj = {"r": "crear_cliente_admin", "d": block.arrays};
-            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-                var valor = JSON.parse(salida);
-                if (!valor.e) {
-                    block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
-                    window.sessionStorage.setItem("Money-vars-registrado", block.numero);
-                    window.sessionStorage.removeItem("Money-vars-foto-id-reversomd");
-                    window.sessionStorage.removeItem("Money-vars-foto-id-normalmd");
-                    $("#foto_user_clien").attr("src", window.sessionStorage.getItem("Money-vars-foto-idmd"));
-                    window.sessionStorage.removeItem("Money-vars-foto-idmd");
-                    window.sessionStorage.removeItem("Money-vars-foto-frontald");
-                    $("#telefono_fijomd").val("");
-                    $("#telefono_celmd").val("");
-                    $("#correo_electronicomd").val("");
-                    $("#tipo_cargomd option[value=a]").attr("selected", true);
-                    $("#pais_selecionadomd option[value='1']").attr("selected", true);
-                    $("#tipo_departamentomd option[value='']").attr("selected", true);
-                    $("#tipo_ciudadesmd option[value='']").attr("selected", true);
-                    $("#tipo_barriomd option[value='']").attr("selected", true);
-                    $("#numero_idmd").val("");
-                    $("#alias_textd").val("");
-                    $("#nombre_id1md").val("");
-                    $("#nombre_id2md").val("");
-                    $("#apellido_id1md").val("");
-                    $("#apellido_id2md").val("");
-                    $("#direccion_ubicamd").val("");
-                    $("#numero_idmd").prop("disabled", false);
-                    $("#letra_venezuelamd").css("display", "none");
-                    $("#foto_m1md").attr("src", "../img/foto_cedula_front.png");
-                    $("#foto_m4md").attr("src", "../img/default.jpg");
-                    $("#foto_m2md").attr("src", "../img/foto_cedula_back.png");
-                    $("#foto_m3md").attr("src", "../img/foto_resivo.png");
-                    $("#cedula_divmd").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
-                    toastr.success('Registrado correctamente', 'Atención!');
-                    setTimeout(() => {
-                        location.reload();                        
-                    }, 1500);
+            if (block.normal == null) {
+                block.normal = "front_card_by_default.png";
+            }
+            if (block.reverso == null) {
+                block.reverso = "back_card_by_default.png";
+            }
+            if(block.fronatls==null){
+                block.fronatls="default_invoice.png";
+            }
+            if (block.perfil == null) {
+                toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
+                block.blo = 1;
+            }
+            if (block.normal == null) {
+                toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
+                block.blo = 1;
+            }
+            if (block.reverso == null) {
+                toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
+                block.blo = 1;
+            }
+            if(block.blo==1){
+                toastr.warning('Falta datos', 'Atención!');
+            }else if (block.numero == "") {
+                toastr.warning('Falta insertar numero de cedula', 'Atención!');
+            } else if (block.nom1 == "") {
+                toastr.warning('Falta insertar primer nombre', 'Atención!');
+            } else if (block.ape1 == "") {
+                toastr.warning('Falta insertar primer apellido', 'Atención!');
+            } else if (block.direction == "") {
+                toastr.warning('Falta insertar dirección del usuario', 'Atención!');
+            } else if (block.departamento == "") {
+                toastr.warning('Falta insertar departamento del usuario', 'Atención!');
+            } else if (block.cuidad == "") {
+                toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
+            } else if (block.barrio == "") {
+                toastr.warning('Falta insertar barrio del usuario', 'Atención!');
+            } else if (block.telefomovil == "") {
+                toastr.warning('Falta telefono celular del cliente', 'Atención!');
+            } else if (block.asesorSuperAsis == "") {
+                toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
+            }else{
+                if (block.alias == "") {
+                    block.alias = "No asignado";
                 }
-            });
+                block.arrays = [ block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias, block.lat, block.lon ];
+    
+                block.obj = {"r": "crear_cliente_admin", "d": block.arrays};
+                backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                    var valor = JSON.parse(salida);
+                    console.log(valor);
+                    if (!valor.e) {
+                        block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
+                        window.sessionStorage.setItem("Money-vars-registrado", block.numero);
+                        window.sessionStorage.removeItem("Money-vars-foto-id-reversomd");
+                        window.sessionStorage.removeItem("Money-vars-foto-id-normalmd");
+                        $("#foto_user_clien").attr("src", window.sessionStorage.getItem("Money-vars-foto-idmd"));
+                        window.sessionStorage.removeItem("Money-vars-foto-idmd");
+                        window.sessionStorage.removeItem("Money-vars-foto-frontald");                        
+                        limpiarCliente();
+                        toastr.success('Registrado correctamente', 'Atención!');
+                        
+                        setTimeout(() => {
+                            location.reload();                        
+                        }, 1500);
+                    }
+                });
+            }
+        } else{
+            toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
         }
+
     });
+
+    function limpiarCliente(){
+        $("#telefono_fijomd").val("");
+        $("#telefono_celmd").val("");
+        $("#correo_electronicomd").val("");
+        $("#tipo_cargomd option[value=a]").attr("selected", true);
+        $("#pais_selecionadomd option[value='1']").attr("selected", true);
+        $("#tipo_departamentomd option[value='']").attr("selected", true);
+        $("#tipo_ciudadesmd option[value='']").attr("selected", true);
+        $("#tipo_barriomd option[value='']").attr("selected", true);
+        $("#numero_idmd").val("");
+        $("#alias_textd").val("");
+        $("#nombre_id1md").val("");
+        $("#nombre_id2md").val("");
+        $("#apellido_id1md").val("");
+        $("#apellido_id2md").val("");
+        $("#direccion_ubicamd").val("");
+        $("#add_barrio_lat_text").val("");
+        $("#add_barrio_lon_text").val("");
+        $("#numero_idmd").prop("disabled", false);
+        $("#letra_venezuelamd").css("display", "none");
+        $("#foto_m1md").attr("src", "../img/foto_cedula_front.png");
+        $("#foto_m4md").attr("src", "../img/default.jpg");
+        $("#foto_m2md").attr("src", "../img/foto_cedula_back.png");
+        $("#foto_m3md").attr("src", "../img/foto_resivo.png");
+        $("#cedula_divmd").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
+    }
 
 	$("#su_registro_final").click(function () {
         block.pais = $("#su_pais_selecionado").val();
@@ -7139,28 +7163,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     window.sessionStorage.removeItem("Money-vars-foto-id-reverso");
                     window.sessionStorage.removeItem("Money-vars-foto-id-normal");
                     window.sessionStorage.removeItem("Money-vars-foto-id");
-                    $("#su_telefono_fijo").val("");
-                    $("#su_telefono_cel").val("");
-                    $("#su_contra_sena").val("");
-                    $("#su_correo_electronico").val("");
-                    $("#su_tipo_cargo option[value=a]").attr("selected", true);
-                    $("#su_pais_selecionado option[value='1']").attr("selected", true);
-                    $("#su_tipo_departamento option[value='']").attr("selected", true);
-                    $("#su_tipo_ciudades option[value='']").attr("selected", true);
-                    $("#su_tipo_barrio option[value='']").attr("selected", true);
-                    $("#su_moto_detalle").css("display", "none");
-                    $("#su_numero_id").val("");
-                    $("#su_nombre_id1").val("");
-                    $("#su_nombre_id2").val("");
-                    $("#su_apellido_id1").val("");
-                    $("#su_apellido_id2").val("");
-                    $("#su_direccion_ubica").val("");
-                    $("#su_moto_detalle_list").val("");
-                    $("#su_numero_id").prop("disabled", false);
-                    $("#su_letra_venezuela").css("display", "none");
-                    $("#su_foto_m1").attr("src", "../img/default.jpg");
-                    $("#su_foto_m2").attr("src", "../img/foto_cedula_front.png");
-                    $("#su_foto_m3").attr("src", "../img/foto_cedula_back.png");
+                    limpiarAsesores();
                     $("#su_cedula_div").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
                     toastr.success('Editado correctamente', 'Atención!');
                     setTimeout(() => {
@@ -7170,6 +7173,31 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             });
         }
     });
+
+    function limpiarAsesores(){
+        $("#su_telefono_fijo").val("");
+        $("#su_telefono_cel").val("");
+        $("#su_contra_sena").val("");
+        $("#su_correo_electronico").val("");
+        $("#su_tipo_cargo option[value=a]").attr("selected", true);
+        $("#su_pais_selecionado option[value='1']").attr("selected", true);
+        $("#su_tipo_departamento option[value='']").attr("selected", true);
+        $("#su_tipo_ciudades option[value='']").attr("selected", true);
+        $("#su_tipo_barrio option[value='']").attr("selected", true);
+        $("#su_moto_detalle").css("display", "none");
+        $("#su_numero_id").val("");
+        $("#su_nombre_id1").val("");
+        $("#su_nombre_id2").val("");
+        $("#su_apellido_id1").val("");
+        $("#su_apellido_id2").val("");
+        $("#su_direccion_ubica").val("");
+        $("#su_moto_detalle_list").val("");
+        $("#su_numero_id").prop("disabled", false);
+        $("#su_letra_venezuela").css("display", "none");
+        $("#su_foto_m1").attr("src", "../img/default.jpg");
+        $("#su_foto_m2").attr("src", "../img/foto_cedula_front.png");
+        $("#su_foto_m3").attr("src", "../img/foto_cedula_back.png");
+    }
 
     $("#crear_contrato_form_dos").css("display", "none");
     $("#crear_contrato_form").css("display", "none");
@@ -7191,9 +7219,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     $("#cierre_view").css("display", "none");
     $("#utilidades_view").css("display", "none");
 
-
-
     function asesores_panel() {
+        limpiarAsesores()
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#crear").css("display", "initial");
@@ -8199,10 +8226,11 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
         block.listadi ="";
-        block.arrays = [block.tokens[1],block.num];
-        block.obj = {"r": "lista_cliente_basic", "d": block.arrays};
+        block.arrays =  [block.tokens[1], block.num ];
+        block.obj = { "r": "lista_cliente_basic", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
+            var valor = JSON.parse(salida); 
+            console.log(valor);
             if (!valor.e) {
                 if(valor.d[1]!==null) {
                     for(let indice = 0; indice < valor.d[1].length; indice++){
@@ -8257,6 +8285,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#apellido_id1md").val(block.unicos[3]);
 		$("#apellido_id2md").val(block.unicos[4]);
 		$("#direccion_ubicamd").val(block.unicos[5]);
+		$("#add_barrio_lat_text").val(block.unicos[23]);
+		$("#add_barrio_lon_text").val(block.unicos[24]);
 		$("#numero_idmd").prop("disabled", true);
 		$("#foto_m1md").attr("src", block.unicos[9]);
 		$("#foto_m4md").attr("src", block.unicos[10]);
@@ -8482,6 +8512,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     }
 
     function informe_completo_cobros(){
+        $("#listado_cobros_por_fechas").empty();
+        $("#fecha_busqueda_cobros").val("");
+
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -8517,6 +8550,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     }
 
     function informe_completo_gastos(){
+        $("#lista_gastos_exe").empty();
+        $("#fecha_gasto").val("");
+        
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -8549,6 +8585,15 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     }
 
     function informe_completo_cierre(){
+        $("#fecha_cierre").val("");
+
+        $("#text_total_sistema").empty();
+        $("#text_baseAsesor").empty();
+        $("#text_gastosAsesor").empty();
+        $("#text_recolectadoAsesor").empty();
+        $("#listado_cobros_cierre").empty();
+        $("#lista_gastos_exeAsesor").empty();
+
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -8582,6 +8627,10 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     }
 
     function informe_completo_utilidades() {
+        $("#lista_utilidades").empty();
+        $("#fecha__inicial_utilidades").val("");
+        $("#fecha_final_utilidades").val("");
+
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -8613,6 +8662,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     }
 
     function vers_contratos(){
+
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -8645,6 +8695,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
 
     function crear_infor(){
+        limpiarCliente();
         $("#contratos_view").css("display", "none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
@@ -8673,7 +8724,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
-
     }
 
     var actuesli = moment().format('DD/MM/YYYY');
@@ -8724,6 +8774,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.obj = {"r": "down_geo_admin", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e) {
                 block.listao=valor.d[1];
 

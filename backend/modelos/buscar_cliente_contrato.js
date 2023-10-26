@@ -29,7 +29,7 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.get("registro_contrato_"+arrays[1],function(err3,reply_contrato){
-						if(reply_contrato!==null){
+						if(reply_contrato!==null || reply_contrato !== undefined){
 							for (contrato of JSON.parse(reply_contrato)){
 								elementos = contrato.split("_");
 								ultimo = elementos[elementos.length -1];

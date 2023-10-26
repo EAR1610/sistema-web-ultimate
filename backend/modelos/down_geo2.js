@@ -60,31 +60,35 @@ eje = function(arrays,origen,redisClient) {
                                             if(clientesHoy.length){
                                                 redisClient.get("cliente_"+inus[1],function(errs,datse){
                                                 
-                                                    if(datse!==null) {
+                                                    if( datse!==null || datse !== undefined ) {
                                                         var infes = JSON.parse(datse);
-    
-                                                        var uno = infes[8],
-                                                            tres = infes[10],
+                                                        var uno   = infes[8],
+                                                            tres  = infes[10],
                                                             cedua = infes[7],
                                                             direc = infes[12],
-                                                            tele = infes[17];
+                                                            tele  = infes[17],
+															lat   = infes[20],
+															lon   = infes[21];
                                                         
                                                         /*
                                                         	tomo la direccion y la reuno en un array
                                                         */
+													   lista.push({"u":uno+" "+tres,"c":cedua,"a":lat,"o":lon,"d":direc,"e":tele,"id":inus[5],"m":infeos[3],"f":infeos[5]});
+													   ind++;
+													   recurso(ind, arrs);
                                                         
-                                                        redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
-                                                            if(dastse!==null){
+                                                        // redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
+                                                        //     if(dastse!==null){
                                                                 
-                                                                var latos = JSON.parse(dastse);
-                                                                lista.push({"u":uno+" "+tres,"c":cedua,"a":latos[0],"o":latos[1],"d":direc,"e":tele,"id":inus[5],"m":infeos[3],"f":infeos[5]});
-                                                                ind++;
-                                                                recurso(ind, arrs);
-                                                            }else{
-                                                                ind++;
-                                                                recurso(ind, arrs);
-                                                            }
-                                                        });
+                                                        //         var latos = JSON.parse(dastse);
+                                                        //         lista.push({"u":uno+" "+tres,"c":cedua,"a":latos[0],"o":latos[1],"d":direc,"e":tele,"id":inus[5],"m":infeos[3],"f":infeos[5]});
+                                                        //         ind++;
+                                                        //         recurso(ind, arrs);
+                                                        //     }else{
+                                                        //         ind++;
+                                                        //         recurso(ind, arrs);
+                                                        //     }
+                                                        // });
                                                     }else{
                                                         ind++;
                                                         recurso(ind, arrs);

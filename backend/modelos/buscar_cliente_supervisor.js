@@ -34,7 +34,7 @@ eje = function(arrays,origen,redisClient) {
 													for ( let index = 0; index < replyCantidadContratos.length; index++ ) {	
 														redisClient.get(replyCantidadContratos[index], function(error, replyContrato) {
 															let contrato;
-															if( replyContrato !== null ){
+															if( replyContrato !== null || replyContrato !== undefined ){
 																contrato = JSON.parse( replyContrato );
 																for (let i = 0; i < contrato[13].length; i++) {
 																	const fechaAsignada = moment(contrato[13][i].fe)

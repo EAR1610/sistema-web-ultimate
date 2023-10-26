@@ -33,17 +33,18 @@ eje = function(arrays,origen,redisClient) {
 								total = total + parseInt(explit[2]);								
 								if(es==reply3.length-1){
 									redisClient.get("base_"+arrays[1]+"_"+dia,function(ersr,replcy) {
-										if(replcy!==null){
-											console.log("replcy");
-											console.log(replcy);
-											var inf = JSON.parse(replcy);
-											if(inf[3]){
-												resolve([true,total,"0","Sin base"]);
+										if( replcy !==null || replcy !== undefined ){
+											var inf = JSON.parse(replcy);											
+											if( inf !== null  ) {
+												if( inf[3] ){
+													resolve([true,total,"0","Sin base"]);
+												} else {
+													resolve([true,total,inf[1],dia]);
+												}
 											} else {
-												resolve([true,total,inf[1],dia]);
+												resolve([true,total,"0","Sin base"]);												
 											}
 										}else{
-											console.log("Sin base");
 											resolve([true,total,"0","Sin base"]);
 										}
 									});

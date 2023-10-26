@@ -40,27 +40,32 @@ eje = function(arrays,origen,redisClient) {
 									*/
 									
 									redisClient.get("cliente_"+inus[1],function(errs,datse){
-										if(datse!==null) {
+										if( datse !== null || datse !== undefined ) {
 											var infes = JSON.parse(datse);
 
-											var uno = infes[8];
-                                            var tres = infes[10];
+											var uno   = infes[8];
+                                            var tres  = infes[10];
                                             var cedua = infes[7];
                                             var direc = infes[12];
-                                            var tele = infes[17];
+                                            var tele  = infes[17];
+											var lat   = infes[20];
+											var lon   = infes[21];
+											
 											
 											/*guarda la data para ser emitidad despues*/
+											lista.push({"user":uno+" "+tres,"cedula":cedua,"lat":lat,"lon":lon,"direcion":direc,"cel":tele});
+											ind++;
+											recurso(ind, arrs);
 											
-                                            redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
-												if(dastse!==null){
+                                            // redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
+											// 	if(dastse!==null){
 													
-													var latos = JSON.parse(dastse);
-													lista.push({"user":uno+" "+tres,"cedula":cedua,"lat":latos[0],"lon":latos[1],"direcion":direc,"cel":tele});
-													ind++;
-													recurso(ind, arrs);
+											// 		var latos = JSON.parse(dastse);
+											// 		ind++;
+											// 		recurso(ind, arrs);
 												
-												}
-											});
+											// 	}
+											// });
 										}else{
 											ind++;
 											recurso(ind, arrs);

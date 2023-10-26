@@ -20,31 +20,35 @@ eje = function(arrays,origen,redisClient) {
 				}else if( decoded.t == "0" || decoded.t == "1" || decoded.t == "2" || decoded.t== "5" ) {
 					
 					redisClient.keys('direccion_'+arrays[1]+'_*',function(err3,reply3){
-						if(reply3.length > 0){
-							
-							String.prototype.capitalize = function() {
-								return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
-							}
-							
-							/*
-								los uno y los unifico para mostrarlos 
-							*/
-							
-							var lista = [];
-							for(var h=0; h<reply3.length; h++){
-								var add = reply3[h].split("_");
-								lista.push(add[2].capitalize());
-							}
-							
-							function onlyUnique(value, index, self) { 
-								return self.indexOf(value) === index;
-							}
-							
-							var sal = lista.filter(onlyUnique);
-							var ordenado = sal.sort();
-							resolve([true,ordenado]);
-							
-						}else{
+						if(reply3 !== null || reply3 !== undefined) {
+							if(reply3.length > 0){
+								
+								String.prototype.capitalize = function() {
+									return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
+								}
+								
+								/*
+									los uno y los unifico para mostrarlos 
+								*/
+								
+								var lista = [];
+								for(var h=0; h<reply3.length; h++){
+									var add = reply3[h].split("_");
+									lista.push(add[2].capitalize());
+								}
+								
+								function onlyUnique(value, index, self) { 
+									return self.indexOf(value) === index;
+								}
+								
+								var sal = lista.filter(onlyUnique);
+								var ordenado = sal.sort();
+								resolve([true,ordenado]);
+								
+							}else{
+								reject([false,"4"]);
+							}							
+						} else {
 							reject([false,"4"]);
 						}
 					});

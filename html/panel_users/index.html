@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Money SS asesor</title>
-    <link rel="shortcut icon" href="../assets/img/money_credit.ico"/>
+    <link rel="shortcut icon" href="../assets/img/profile_small.png"/>
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
@@ -360,6 +360,19 @@
                             <option value="">Seleccione</option>
                         </select>
                     </div>
+
+                    <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                        <form role="form">
+                            <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                        </form>
+                    </div>
+                    
+                    <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                        <form role="form">
+                            <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                        </form>
+                    </div>
+
                     <div class="col-sm-6 col-md-3 col-xs-12">
                         <form role="form">
                             <div class="form-group">
@@ -827,7 +840,7 @@
                                 
                                 
                                 <div class="col-sm-6 col-md-4 col-xs-12" id="view_ciudades" >
-                                    <label>Ciudad</label>
+                                    <label>Municipio</label>
                                     <select class="form-control m-b" id="tipo_ciudades">
                                         <option value="0"></option>
                                         <option value="add">Agregar nuevo</option>
@@ -855,7 +868,7 @@
                                     </form>
                                 </div>
                                 
-                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                <!-- <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
                                     <form role="form">
                                         <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
                                     </form>
@@ -865,7 +878,7 @@
                                     <form role="form">
                                         <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
                                     </form>
-                                </div>
+                                </div> -->
                                 <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
                                     <button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
                                 </div>
@@ -2060,14 +2073,14 @@
 						//abono
 						block.abono = block.cuotas[13][x].pe.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 						block.abono = block.abono.split('').reverse().join('').replace(/^[\.]/,'');
-						block.compl = "Abono \n $"+block.abono;
+						block.compl = "Abono \n Q"+block.abono;
 						block.coloe = "#343a40";
 					}else if(block.cuotas[13][x].ct == true){
 						block.acumo = block.acumo + parseInt(block.cuotas[13][x].cp);
 						//completa
 						block.completo = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 						block.completo = block.completo.split('').reverse().join('').replace(/^[\.]/,'');
-						block.compl = "Pago cuota \n $"+block.completo;
+						block.compl = "Pago cuota \n Q"+block.completo;
 						block.coloe = "#28a745";
 					}else{
 						//falta
@@ -2170,9 +2183,8 @@
     });
 
     $("#crear_contrato").click(function () {
-        if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!==""){
-
-            if( block.nuevomonto >= block.min && block.nuevomonto <= block.max ) {
+        if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!=="") {            
+            if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {                
                 block.asesor = $("#selector_asesores_lista").val();
                 block.monto_prestar = $("#monto_prestar_ya_admin").val();
                 block.frecuencia = $("#selector_frecuencia").val();
@@ -3068,101 +3080,110 @@
         block.telefofijo = $("#telefono_fijom").val();
         block.telefomovil = $("#telefono_celm").val();
         block.correo = $("#correo_electronicom").val();
+        block.lat = $("#add_barrio_lat_text").val();
+        block.lon = $("#add_barrio_lon_text").val();
 
-        if ($("#telefono_fijom").val() == "") {
-            block.telefofijo = "0";
-        }		
-        if ($("#telefono_celm").val() == "") {
-            block.telefomovil = "0";
-        }		
-		if (window.localStorage.getItem("Money-vars-token") !== null) {
-			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-		} else {
-			block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-		}		
-        if (block.perfil == null) {
-			block.perfil = "p.png";
-		}
-		if (block.normal == null) {
-			block.normal = "n.png";
-		}
-		if (block.reverso == null) {
-			block.reverso = "r.png";
-        }
-		if( block.frontal == null ){
-            block.frontal="f.png";
-            block.blo = 2;
-        }		
-		if(block.blo==1){
-			toastr.warning('Falta datos', 'Atención!');
-		}else if (block.numero == "") {
-            toastr.warning('Falta insertar numero de cedula', 'Atención!');
-        } else if (block.nom1 == "") {
-            toastr.warning('Falta insertar primer nombre', 'Atención!');
-        } else if (block.ape1 == "") {
-            toastr.warning('Falta insertar primer apellido', 'Atención!');
-        } else if (block.direction == "") {
-            toastr.warning('Falta insertar dirección del usuario', 'Atención!');
-        } else if (block.departamento == "") {
-            toastr.warning('Falta insertar departamento del usuario', 'Atención!');
-        } else if (block.cuidad == "") {
-            toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
-        } else if (block.barrio == "") {
-            toastr.warning('Falta insertar barrio del usuario', 'Atención!');
-        }else{
+        if(block.lon.substr(0,1) !== "." && block.lat.substr(0,1) !== "." && block.lat !== "" && block.lon !== "" && block.lat.indexOf(".") >-1 && block.lon.indexOf(".") >- 1 && block.lon.indexOf("-") >- 1 && block.lat.indexOf("e") == -1 && block.lon.indexOf("e") == -1 && block.lat.indexOf(",") == -1 && block.lon.indexOf(",") == -1) {
 
-            if(block.alias==""){
-                block.alias ="No asignado";
-            }
-
+            if ($("#telefono_fijom").val() == "") {
+                block.telefofijo = "0";
+            }		
+            if ($("#telefono_celm").val() == "") {
+                block.telefomovil = "0";
+            }		
             if (window.localStorage.getItem("Money-vars-token") !== null) {
                 block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
             } else {
                 block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }		
+            if (block.perfil == null) {
+                block.perfil = "p.png";
             }
-
-            block.arrays = [ block.tokens[1], block.perfil, block.normal, block.reverso, block.frontal, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo,block.alias ];
-
-            block.obj = {"r": "crear_cliente_asesor", "d": block.arrays};
-            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-                var valor = JSON.parse(salida);
-                if (!valor.e) {
-                    block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
-                    $("#text_nombre_cliente").val(block.escrito);
-                    $("#text_cedula_cliente").val(block.numero);
-                    $("#text_alias_cliente").prop("disabled", false);					
-                    window.sessionStorage.setItem("Money-vars-registrado",block.numero);
-                    window.sessionStorage.removeItem("Money-vars-foto-id-reversom");
-                    window.sessionStorage.removeItem("Money-vars-foto-id-normalm");
-                    $("#foto_user_clien").attr("src",window.sessionStorage.getItem("Money-vars-foto-idm"));
-                    window.sessionStorage.removeItem("Money-vars-foto-idm");
-                    window.sessionStorage.removeItem("Money-vars-foto-frotal");
-                    $("#telefono_fijom").val("");
-                    $("#telefono_celm").val("");
-                    $("#correo_electronicom").val("");
-                    $("#tipo_cargom option[value=a]").attr("selected", true);
-                    $("#pais_selecionadom option[value='1']").attr("selected", true);
-                    $("#tipo_departamentom option[value='']").attr("selected", true);
-                    $("#tipo_ciudadesm option[value='']").attr("selected", true);
-                    $("#tipo_barriom option[value='']").attr("selected", true);
-                    $("#numero_idm").val("");
-                    $("#nombre_id1m").val("");
-                    $("#nombre_id2m").val("");
-                    $("#apellido_id1m").val("");
-                    $("#apellido_id2m").val("");
-                    $("#direccion_ubicam").val("");
-                    $("#numero_idm").prop("disabled", false);
-                    $("#Inserte cedula").prop("disabled", true);
-                    $("#letra_venezuelam").css("display", "none");
-                    $("#foto_m1m").attr("src", "../img/default.jpg");
-                    $("#foto_m2m").attr("src", "../img/foto_cedula_front.png");
-                    $("#foto_m3m").attr("src", "../img/foto_cedula_back.png");
-                    $("#foto_m4m").attr("src", "../img/foto_resivo.png"); //IMAGEN AÑADIDA
-                    $("#cedula_divm").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
-                    $("#popop_new_cliente").modal("hide");
-                    toastr.success('Registrado correctamente', 'Atención!');
+            if (block.normal == null) {
+                block.normal = "n.png";
+            }
+            if (block.reverso == null) {
+                block.reverso = "r.png";
+            }
+            if( block.frontal == null ){
+                block.frontal="f.png";
+                block.blo = 2;
+            }		
+            if(block.blo==1){
+                toastr.warning('Falta datos', 'Atención!');
+            }else if (block.numero == "") {
+                toastr.warning('Falta insertar numero de cedula', 'Atención!');
+            } else if (block.nom1 == "") {
+                toastr.warning('Falta insertar primer nombre', 'Atención!');
+            } else if (block.ape1 == "") {
+                toastr.warning('Falta insertar primer apellido', 'Atención!');
+            } else if (block.direction == "") {
+                toastr.warning('Falta insertar dirección del usuario', 'Atención!');
+            } else if (block.departamento == "") {
+                toastr.warning('Falta insertar departamento del usuario', 'Atención!');
+            } else if (block.cuidad == "") {
+                toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
+            } else if (block.barrio == "") {
+                toastr.warning('Falta insertar barrio del usuario', 'Atención!');
+            }else{
+    
+                if(block.alias==""){
+                    block.alias ="No asignado";
                 }
-            });
+    
+                if (window.localStorage.getItem("Money-vars-token") !== null) {
+                    block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+                } else {
+                    block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+                }
+    
+                block.arrays = [ block.tokens[1], block.perfil, block.normal, block.reverso, block.frontal, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo,block.alias, block.lat, block.lon ];
+    
+                block.obj = {"r": "crear_cliente_asesor", "d": block.arrays};
+                backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                    var valor = JSON.parse(salida);
+                    if (!valor.e) {
+                        block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
+                        $("#text_nombre_cliente").val(block.escrito);
+                        $("#text_cedula_cliente").val(block.numero);
+                        $("#text_alias_cliente").prop("disabled", false);					
+                        window.sessionStorage.setItem("Money-vars-registrado",block.numero);
+                        window.sessionStorage.removeItem("Money-vars-foto-id-reversom");
+                        window.sessionStorage.removeItem("Money-vars-foto-id-normalm");
+                        $("#foto_user_clien").attr("src",window.sessionStorage.getItem("Money-vars-foto-idm"));
+                        window.sessionStorage.removeItem("Money-vars-foto-idm");
+                        window.sessionStorage.removeItem("Money-vars-foto-frotal");
+                        $("#telefono_fijom").val("");
+                        $("#telefono_celm").val("");
+                        $("#correo_electronicom").val("");
+                        $("#tipo_cargom option[value=a]").attr("selected", true);
+                        $("#pais_selecionadom option[value='1']").attr("selected", true);
+                        $("#tipo_departamentom option[value='']").attr("selected", true);
+                        $("#tipo_ciudadesm option[value='']").attr("selected", true);
+                        $("#tipo_barriom option[value='']").attr("selected", true);
+                        $("#numero_idm").val("");
+                        $("#nombre_id1m").val("");
+                        $("#nombre_id2m").val("");
+                        $("#apellido_id1m").val("");
+                        $("#apellido_id2m").val("");
+                        $("#direccion_ubicam").val("");
+                        $("#add_barrio_lat_text").val("");
+                        $("#add_barrio_lon_text").val("");
+                        $("#numero_idm").prop("disabled", false);
+                        $("#Inserte cedula").prop("disabled", true);
+                        $("#letra_venezuelam").css("display", "none");
+                        $("#foto_m1m").attr("src", "../img/default.jpg");
+                        $("#foto_m2m").attr("src", "../img/foto_cedula_front.png");
+                        $("#foto_m3m").attr("src", "../img/foto_cedula_back.png");
+                        $("#foto_m4m").attr("src", "../img/foto_resivo.png"); //IMAGEN AÑADIDA
+                        $("#cedula_divm").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
+                        $("#popop_new_cliente").modal("hide");
+                        toastr.success('Registrado correctamente', 'Atención!');
+                    }
+                });
+            }
+        } else{
+            toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
         }
     });
 

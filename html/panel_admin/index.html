@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Money SS Supervisor</title>
-    <link rel="shortcut icon" href="../img/favicon-credit-card.ico"/>
+    <link rel="shortcut icon" href="../assets/img/profile_small.png"/>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -79,8 +79,8 @@
             doc.setFillColor(200,200,200);
             doc.rect(0,95,210,10,"F");
             doc.text("DPI", 10,100);
-            doc.text("Nombre Cliente",50,100);
-            doc.text("Dirección",130,100);
+            doc.text("Nombre Cliente",35,100);
+            doc.text("Dirección",100,100);
             doc.text("Monto",170,100);
             doc.text("Hora",190,100);
 
@@ -110,22 +110,22 @@
 
             for(var i = 0; i < datos2.length; i++){
                 if (y > maxPageHeight) {
-                        doc.addPage();
-                        y=20; 
-                        doc.setTextColor(0 ,0 ,0);
-                        doc.text('DPI',10,y);
-                        doc.text('Nombre Cliente',50,y1);
-                        doc.text('Dirección',130,y1);
-                        doc.text('Monto',170,y1);
-                        doc.text('Hora',190,y1);
-                        y +=10; 
-                    }
+                    doc.addPage();
+                    y=20; 
+                    doc.setTextColor(0 ,0 ,0);
+                    doc.text('DPI',10,y);
+                    doc.text('Nombre Cliente',50,y1);
+                    doc.text('Dirección',130,y1);
+                    doc.text('Monto',170,y1);
+                    doc.text('Hora',190,y1);
+                    y +=10; 
+                }
                 doc.setTextColor(0, 0, 0); 
                 doc.setFont("bold");
                 doc.setFontSize(10)
                 doc.text(datos2[i].dpi.toString(), 10, y1);
-                doc.text(datos2[i].nombre.toString(), 50, y1);
-                doc.text(datos2[i].direccion.toString(), 130, y1);
+                doc.text(datos2[i].nombre.toString(), 35, y1);
+                doc.text(datos2[i].direccion.toString(), 100, y1);
                 doc.text("Q"+datos2[i].monto.toString(), 170, y1);
                 doc.text(datos2[i].hora.toString(), 190, y1);
                 doc.setFont("normal");
@@ -137,7 +137,7 @@
                         y1 = 20;
                     }
                     doc.line(10, y1 + 5, 200, y1 + 5);
-                    }
+                }
                 y1 += 10; 
                 
             }
@@ -256,7 +256,7 @@
             doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
             doc.text("Nombre de asesor: "+nombreAsesorReportee, 100, 30);
 
-            doc.setTextColor(255, 255, 255); 
+            doc.setTextColor(0, 0, 0); 
             doc.text('DPI', 10, 40);
             doc.text('Nombre Cliente', 40, 40);
             doc.text('Dirección', 110, 40);
@@ -357,7 +357,7 @@
             doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
             doc.text("Nombre de asesor: "+nombreAsesorReportee, 100, 30);
 
-            doc.setTextColor(255, 255, 255);
+            doc.setTextColor(0, 0, 0);
             doc.text('Motivo de gasto', 10, 40);
             doc.text('Monto', 160, 40);
 
@@ -5258,7 +5258,11 @@
                 var map;
                 var bounds = new google.maps.LatLngBounds();
                 var mapOptions = {
+                    // mapTypeId: 'roadmap',
+					// gestureHandling: 'greedy'
+                    center: {lat: 16.91, lng: -89.89},
                     mapTypeId: 'roadmap',
+					zoom: 15,
 					gestureHandling: 'greedy'
                 };
 

@@ -27,28 +27,32 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.keys('direccion_'+arrays[1]+'_'+arrays[2]+'_*',function(err3,reply3){
-						if(reply3.length > 0){
-							
-							String.prototype.capitalize = function() {
-								return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
+						if(reply3 !== null || reply3 !== undefined){
+							if(reply3.length > 0){
+								
+								String.prototype.capitalize = function() {
+									return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
+								}
+								
+								var lista = [];
+								for(var h=0; h<reply3.length; h++){
+									var add = reply3[h].split("_");
+									lista.push(add[3].capitalize());
+								}
+								
+								function onlyUnique(value, index, self) { 
+									return self.indexOf(value) === index;
+								}
+								
+								var sal = lista.filter(onlyUnique);
+								var ordenado = sal.sort();
+								resolve([true,ordenado]);
+								
+							}else{
+								reject([false,"4"]);
 							}
-							
-							var lista = [];
-							for(var h=0; h<reply3.length; h++){
-								var add = reply3[h].split("_");
-								lista.push(add[3].capitalize());
-							}
-							
-							function onlyUnique(value, index, self) { 
-								return self.indexOf(value) === index;
-							}
-							
-							var sal = lista.filter(onlyUnique);
-							var ordenado = sal.sort();
-							resolve([true,ordenado]);
-							
-						}else{
-							reject([false,"4"]);
+						} else {
+							reject([false,"4"]);							
 						}
 					});
 					

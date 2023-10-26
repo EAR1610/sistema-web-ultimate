@@ -9,46 +9,37 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibe token, departmaneto, cuidad, barrio, lat, log
+		recibe token, departmaneto, ciudad, barrio
 		*/
 		
-		if (arrays.length==6){
-			
+		if ( arrays.length == 4 ){			
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
 				}else if(decoded.t == "0" || decoded.t == "2" || decoded.t == "1"){
-					if(largoc.test(arrays[1]) && largoc.test(arrays[2]) && largoc.test(arrays[3]) && numero.test(arrays[4]) && numero.test(arrays[5]) ){
-						
+					if(largoc.test( arrays[1]) && largoc.test(arrays[2]) && largoc.test(arrays[3]) ){
 						String.prototype.capitalize = function() {
 							return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
 						};
-						
 						var dep = arrays[1].capitalize();
 						var ciu = arrays[2].capitalize();
-						var bar = arrays[3].capitalize();
-					
+						var bar = arrays[3].capitalize();					
 						/*
-						guarda los datos como debe ser
-						*/
-						
+							guarda los datos como debe ser
+						*/						
 						var unico = [arrays[4],arrays[5]];
 						redisClient.set('direccion_'+dep+'_'+ciu+'_'+bar,JSON.stringify(unico),function(err3,reply3){
 							resolve([true,true]);
 						});
-
-					}
-					
+					}					
 				}else{
 					reject([false,"2"]);
 				}
-			});
-			
+			});			
 		}else{
 			reject([false,"3"]);
-		}
-		
+		}		
 	});
 };
 

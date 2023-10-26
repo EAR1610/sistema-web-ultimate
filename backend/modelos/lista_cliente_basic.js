@@ -33,9 +33,8 @@ eje = function(arrays,origen,redisClient) {
 									resolve([true, listado, 0]);
 								} else {									
 									redisClient.get(arrs[ind], function(errCliente, replyCliente){
-										if(replyCliente !== null) {
-
-											let [ id, imagen1, imagen2, imagen3, imagen4, tipoUno, clase, dpi, nombre, nombre2,apellido, apellido2, direccion, departamento, municipio, barrio, celular1, celular2, correo, alias, fecha ] = JSON.parse(replyCliente);
+										if(replyCliente !== null || replyCliente !== undefined) {
+											let [ id, imagen1, imagen2, imagen3, imagen4, tipoUno, clase, dpi, nombre, nombre2, apellido, apellido2, direccion, departamento, municipio, barrio, celular1, celular2, correo, alias, lat, lon, fecha ] = JSON.parse(replyCliente);
 											let datosCliente = [];
 
 											datosCliente.push(dpi)
@@ -61,6 +60,8 @@ eje = function(arrays,origen,redisClient) {
 											datosCliente.push(correo)
 											datosCliente.push(alias)
 											datosCliente.push(fecha)
+											datosCliente.push(lat)
+											datosCliente.push(lon)
 
 											listado.push(datosCliente);
 											ind++;
