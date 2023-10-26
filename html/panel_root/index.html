@@ -135,7 +135,7 @@
 							
 							
 							<div class="col-sm-6 col-md-4 col-xs-12" id="view_ciudades" >
-								<label>Ciudad</label>
+								<label>Municipio</label>
 								<select class="form-control m-b" id="tipo_ciudades">
 									<option value="0"></option>
 									<option value="add">Agregar nuevo</option>
@@ -144,7 +144,7 @@
 							
 							<div class="col-sm-6 col-md-4 col-xs-12" id="add_ciudades" style="display:none;">
 								<form role="form">
-									<div class="form-group"><label>Agregar ciudad</label> <input id="add_ciudad_text" type="text" placeholder="Inserte nombre de ciudad" class="form-control"></div>
+									<div class="form-group"><label>Agregar municipio</label> <input id="add_ciudad_text" type="text" placeholder="Inserte nombre de ciudad" class="form-control"></div>
 								</form>
 							</div>
 							
@@ -163,7 +163,7 @@
 								</form>
 							</div>
 							
-							<div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+							<!-- <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
 								<form role="form">
 									<div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
 								</form>
@@ -173,13 +173,13 @@
 								<form role="form">
 									<div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
 								</form>
-							</div>
+							</div> -->
 							<div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
 								<button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
 							</div>
-							<div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+							<!-- <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
 								<button class="btn btn-danger btn-block" id="eliminar_direccion" type="button" >Eliminar</button>
-							</div>
+							</div> -->
 							
                         </div>
                     </div>
@@ -358,8 +358,7 @@
 			
 			block.lon = $("#add_barrio_lon_text").val();
 			
-			if(block.lon.substr(0,1)!=="." && block.lat.substr(0,1)!=="." && block.depa!=="" && block.ciud!=="" && block.barr!=="" && block.lat!=="" && block.lon!=="" && block.lat.indexOf(".")>-1 && block.lon.indexOf(".")>-1 && block.lon.indexOf("-")>-1 && block.lat.indexOf("e")==-1 && block.lon.indexOf("e")==-1 && block.lat.indexOf(",")==-1 && block.lon.indexOf(",")==-1){
-				
+			if( block.depa!=="" && block.ciud!=="" && block.barr!=="" ){			
 				
 				if(window.localStorage.getItem("Money-vars-token")!==null){
 					block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -367,10 +366,11 @@
 					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
 				}
 				
-				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr,block.lat,block.lon];
+				block.arrays = [block.tokens[1],block.depa,block.ciud,block.barr];
 				block.obj = {"r":"crea_direccion","d":block.arrays};
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
 					var valor = JSON.parse(salida);
+					console.log(valor);
 					if(!valor.e){
 						$("#add_barrio_lon_text").val("");
 						$("#add_barrio_lat_text").val("");
