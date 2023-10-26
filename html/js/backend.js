@@ -4,7 +4,7 @@ backend.dev = false;
 
 if(!backend.dev){
 	// backend.usuando = "45.32.161.183";
-	backend.usuando = "192.168.1.6";
+	backend.usuando = "85.10.196.212";
 } else {
 	// backend.usuando = "45.32.160.1";
 	backend.usuando = "192.168.1.6";
@@ -14,9 +14,9 @@ backend.conexionEnvio = function (datos,callback){
 	if ("WebSocket" in window){
 
         if (!backend.dev) {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3000");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
         } else {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3000");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
         }
 
 		ws.onopen = function(){			
