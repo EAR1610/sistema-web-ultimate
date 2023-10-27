@@ -18,7 +18,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t=="5"){
+				}else if( decoded.t == "1" || decoded.t == "2" || decoded.t == "0" || decoded.t == "5" || decoded.t == "4" ){
 
 					// redisClient.get("base_"+arrays[2],function(ersr,replcy) {
 					// 	if(replcy!==""){

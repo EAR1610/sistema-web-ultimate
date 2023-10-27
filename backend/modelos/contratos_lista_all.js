@@ -22,7 +22,7 @@ eje = function(arrays,origen,redisClient) {
 						organizo los contratos 
 					*/
 					redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
-						if(redpsly!==null) {
+						if( redpsly!==null && redpsly !== undefined ) {
 							var infex = JSON.parse(redpsly);							
 							if(infex[arrays[2]]!==null && infex[arrays[2]]!==undefined){
 								var ogens = infex[arrays[2]].split("_");

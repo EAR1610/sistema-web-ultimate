@@ -48,22 +48,25 @@ eje = function(arrays,origen,redisClient) {
                                 }                                
 
 								for(let i = 0; i < datosSupervisor.length; i++){
-									var listado = [];
-									var elemento = datosSupervisor[i][1];
-									listado = reply3[i].split('_');
-									
-									if(contratos.includes(elemento)){
-										redisClient.get(reply3[contratos.indexOf(elemento)],function(err,reply) {
-											if (reply!==null) {																								
-												litado.push(reply);														
-											}
+									if( reply3[i] !== null && reply3[i] !== undefined ){
 
-											if( i === (datosSupervisor.length - 1)) {
-												resolve([true,litado]);
-											}
-										});												
+										var listado = [];
+										var elemento = datosSupervisor[i][1];										
+										listado = reply3[i].split('_');
+										
+										if(contratos.includes(elemento)){
+											redisClient.get(reply3[contratos.indexOf(elemento)],function(err,reply) {
+												if (reply!==null) {																								
+													litado.push(reply);														
+												}
+	
+												if( i === (datosSupervisor.length - 1)) {
+													resolve([true,litado]);
+												}
+											});												
+										}
 									}
-								}																		
+								}																
                             });
 						}else{
 							reject([false,"4"]);

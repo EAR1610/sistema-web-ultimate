@@ -3,10 +3,8 @@ var backend = this;
 backend.dev = false;
 
 if(!backend.dev){
-	// backend.usuando = "45.32.161.183";
 	backend.usuando = "85.10.196.212";
 } else {
-	// backend.usuando = "45.32.160.1";
 	backend.usuando = "192.168.1.6";
 }
 
@@ -28,13 +26,13 @@ backend.conexionEnvio = function (datos,callback){
 			return callback(evt.data);
 		};
 		ws.onerror = function (evt) {
-			toastr.error('Error en la conexion de internet','System notification!');			
+			toastr.error('Error en la conexion de internet','Atención!');
 			$("#conectado_server")[0].innerText ="false";
 		};
-		window.onbeforeunload = function(event) {			
+		window.onbeforeunload = function(event) {
 			ws.close();
 		};
-	} else {		
+	} else {
 	   return callback(JSON.stringify({"e":true,"m":"WebSocket NOT supported by your Browser"}));
 	}
 };

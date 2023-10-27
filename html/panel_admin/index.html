@@ -1146,14 +1146,14 @@
                     </div>
                 </div>
 
-				<!-- <div class="col-lg-12" id="liquidacion_page2" style="display:none;">
+				<div class="col-lg-12" id="liquidacion_page2" style="display:none;">
 					<div class="ibox-title">
 						Total recaudo: <label id="text_recolectado"></label>
                         <button class="btn btn-primary pull-right" id="registro_base"
 								type="button">Registro de base
 						</button>
 					</div>
-				</div> -->
+				</div>
 				
                 <div class="col-lg-12" id="liquidacion_page">
                     <div class="ibox ">
@@ -1357,6 +1357,41 @@
                     </div>
                 </div>
 
+                <div class="modal inmodal" id="modal_base" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content animated bounceInRight">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+                                <i class="fa fa-credit-card modal-icon"></i>
+                                <h4 class="modal-title">Registro y visualizacion de base</h4>
+                            </div>
+            
+                            <div class="modal-body" style="display: flex;">
+                                <div class="col-sm-9 col-md-9 col-xs-9" id="cedula_divm">
+                                    <form role="form">
+                                        <div class="form-group"><label>Monto de base</label> <input id="base_monto"
+                                                                                                    type="number"
+                                                                                                    placeholder=""
+                                                                                                    class="form-control">
+                                        </div>
+                                    </form>
+                                </div>
+            
+                                 <div class="ccol-sm-3 col-md-3 col-xs-3" style="margin-top: 6%">
+                                    <form role="form">
+                                        <button type="button" class="btn btn-primary" id="save_base" >Guardar</button>
+                                    </form>
+                                </div>
+            
+            
+                            </div>
+                            <div class="modal-footer">
+                                <label id="base_anterior">Base anterior: Q0 Guardado: cargando...</label>
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="col-lg-12" id="contratos_view">
                     <div class="ibox ">
@@ -1667,6 +1702,36 @@
     if (window.sessionStorage.getItem("Money-vars-token") == null) {
         salida_sistema();
     }
+
+    $("#save_base").click(function () {
+		block.asesor = $("#lista_asesores_general").val();
+
+		if($("#base_monto").val()!=="" && $("#base_monto").val()!=="0" && $("#base_monto").val()>0 && block.asesor !==""){
+
+			block.ecto = block.asesor.split("_");
+			if (window.localStorage.getItem("Money-vars-token") !== null) {
+				block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+			} else {
+				block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+			}
+
+			const id_usuario = block.tokens[5] = "-" ? "sa" : block.tokens[5];
+			block.arrays = [block.tokens[1],$("#base_monto").val(),block.ecto[0],id_usuario];
+
+			block.obj = {"r": "save_base_asesor", "d": block.arrays};
+			backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+				var valor = JSON.parse(salida);
+				if (!valor.e) {
+					$("#base_monto").val("");
+					$("#modal_base").modal("hide");
+					toastr.success('Actualizado con exito', 'Atención!');
+				}
+			});
+
+		}else{
+			toastr.warning('Necesita seleccionar asesor o colocar monto correcto', 'Atención!');
+		}
+	});
 
     $(document).ready( function () {
         $('#picker').dateTimePicker();

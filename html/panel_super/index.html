@@ -3450,9 +3450,7 @@
 	}
 
     $("#selector_cuotas_selec").change(function(){
-
         if ($("#monto_prestar_ya_admin").val()!=="" && $("#selector_cuotas_selec").val()!=="") {
-
             if(window.sessionStorage.getItem("Lista_cuota")!==null) {
                 block.cuotas = JSON.parse(window.sessionStorage.getItem("Lista_cuota"));
                 if ($("#monto_prestar_ya_admin").val()!=="") {
@@ -3514,7 +3512,7 @@
         block.arrays = [block.tokens[1], block.ase, fecha];
         block.obj = {"r": "sumatoria_diario_supervisor", "d": block.arrays}; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida); 
+            var valor = JSON.parse(salida);
             if (!valor.e) { 
                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                 $("#text_baseAsesor").text("Q"+valor.d[2]);
@@ -5499,7 +5497,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 								}
 						   }
 
-
 							if(block.cobarar<block.favolr){
 								block.cobfavol ='<i class="fa fa-arrow-up" style="color:#28a745"></i> '+(block.favolr - block.cobarar);
 							}else if(block.cobarar>block.favolr){
@@ -5544,7 +5541,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     toastr.success('Se guardo el orden', 'Atención!');
                 }
             });
-
         }
 
         $('table.sortable').sortable({
@@ -7042,7 +7038,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 block.obj = {"r": "crear_cliente_admin", "d": block.arrays};
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                     var valor = JSON.parse(salida);
-                    console.log(valor);
                     if (!valor.e) {
                         block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
                         window.sessionStorage.setItem("Money-vars-registrado", block.numero);
@@ -7864,8 +7859,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             block.obj = {"r": "crear_relacion", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
-                if (!valor.e) {
-                    
+                if (!valor.e) {                    
                     $("#tipo_cargo_select_ASIG option[value='']").attr("selected", true);
                     $("#tipo_cargo_dos option[value='']").attr("selected", true);
                     $("#tipo_cargo_uno option[value='']").attr("selected", true);
@@ -8246,7 +8240,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.obj = { "r": "lista_cliente_basic", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida); 
-            console.log(valor);
             if (!valor.e) {
                 if(valor.d[1]!==null) {
                     for(let indice = 0; indice < valor.d[1].length; indice++){
@@ -8790,7 +8783,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.obj = {"r": "down_geo_admin", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
-            console.log(valor);
             if (!valor.e) {
                 block.listao=valor.d[1];
 

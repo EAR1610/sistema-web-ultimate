@@ -39,7 +39,6 @@ if(!dev){
 /*
 	Conexion buena o no mediantes estos eventos en redis
 */
-
 redisClient.on('ready',function() {
 	console.log("Bien: Redis is ready... OK "+ Date());
 });
@@ -47,11 +46,9 @@ redisClient.on('ready',function() {
 redisClient.on('error',function() {
 	console.log("Mal: Error in Redis "+Date());
 });
-
 /*
 	Siempre asiganre la clave de acceso del root
 */
-
 var arrays = ["admin@alemo.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
 redisClient.set("usuario_admin@alemo.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
@@ -62,32 +59,26 @@ var http = require('http');
 
 var server = http.createServer(function(request, response) {
 	response.writeHead(200);
-	response.write("Online:active:3210");
+	response.write("Online:active:3000");
 	response.end();
 });
-
 /*
 	Conexion escucho ws en el puerto 3000
 */
-
 server.listen(3210, function() {
 	console.log("Online:active:3210");
 });
-
 wsServer = new WebSocketServer({
 	maxReceivedFrameSize: 20204848, //bytes
 	maxReceivedMessageSize: 20482048, //bytes
 	autoAcceptConnections: false,
 	httpServer: server
 });
-	
 wsServer.on('request', function(request) {
-	
 	var connection = request.accept(null, request.origin);
 	connection.on('message', function(message) {
 		if(message.type === 'utf8') {
-			
-			try{				
+			try {				
 				/*
 					Recibo un array lo parseo y lo redirigo a la funcion que se necesite
 				*/
@@ -97,12 +88,10 @@ wsServer.on('request', function(request) {
 					connection.send(JSON.stringify({"e":false,"d":info}));
 				}).catch(function(err){
 					connection.send(JSON.stringify({"e":true,"d":err}));
-				});
-				
-			}catch(e){
+				});				
+			} catch( e ){
 				connection.send(JSON.stringify({"e":true,"d":e}));
-			}
-			
+			}			
 		}
 	});
 	connection.on('close', function(connection) {
