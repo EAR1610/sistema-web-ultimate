@@ -43,7 +43,7 @@ eje = function(arrays,origen,redisClient) {
 														const response2 = JSON.parse(response);
 														resolve([true, total, inf[1], arrays[2], inf[3], response2[2], response2[4]]);
 													});
-												} else{
+												} else {
 													resolve([true,total,inf[1],arrays[2],inf[3],0]);
 												}
 											} else {
