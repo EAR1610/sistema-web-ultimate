@@ -12,13 +12,9 @@ var dev = false;
 
 if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
-	//GEOVANI: redis-16713.c17.us-east-1-4.ec2.cloud.redislabs.com | U7Mf1OJpEfVlQxSNAJdhDx5yyKBjpvFC
-	//AXEL: redis-18572.c9.us-east-1-2.ec2.cloud.redislabs.com | qyszfDN15m746VUt29AX1wV4A5mbr0aS 
-	//CreditosElAmigo: redis-16566.c93.us-east-1-3.ec2.cloud.redislabs.com | PU2IjRUHNswzeFRGQ99dohjNZvOkzqrB
-	//InversionesAlemo: redis-11075.c276.us-east-1-2.ec2.cloud.redislabs.com | 1Fu3kmWusorbbfZhy5JKTf5vbTMRzoXP
 
-	var redisClient = redis.createClient({ host : 'redis-11075.c276.us-east-1-2.ec2.cloud.redislabs.com', port : 11075 });
-	redisClient.auth('1Fu3kmWusorbbfZhy5JKTf5vbTMRzoXP',function(err,reply) {
+	var redisClient = redis.createClient({ host : 'redis-16566.c93.us-east-1-3.ec2.cloud.redislabs.com', port : 16566 });
+	redisClient.auth('PU2IjRUHNswzeFRGQ99dohjNZvOkzqrB',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
@@ -49,8 +45,8 @@ redisClient.on('error',function() {
 /*
 	Siempre asiganre la clave de acceso del root
 */
-var arrays = ["admin@alemo.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
-redisClient.set("usuario_admin@alemo.com_1000000",JSON.stringify(arrays),function(err2,reply2){
+var arrays = ["admin@elamigo.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
+redisClient.set("usuario_admin@elamigo.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });
 
@@ -59,14 +55,14 @@ var http = require('http');
 
 var server = http.createServer(function(request, response) {
 	response.writeHead(200);
-	response.write("Online:active:3210");
+	response.write("Online:active:3000");
 	response.end();
 });
 /*
 	Conexion escucho ws en el puerto 3000
 */
-server.listen(3210, function() {
-	console.log("Online:active:3210");
+server.listen(3000, function() {
+	console.log("Online:active:3000");
 });
 wsServer = new WebSocketServer({
 	maxReceivedFrameSize: 20204848, //bytes
