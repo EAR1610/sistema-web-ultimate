@@ -179,29 +179,20 @@
 						var hoy = moment().format('YYYY-MM-DD');
 						window.sessionStorage.setItem("Money-vars-token",JSON.stringify(valor.d));
 						window.localStorage.setItem("Money-vars-token-dura-"+hoy,JSON.stringify(valor.d));
-						if(valor.d[3]=="0"){
-							location.href = "./panel_root"; //SUPER ADMIN
-						}else if(valor.d[3]=="1"){
-							location.href = "./panel_super"; //(SOLICITAR AL SUPERADMIN)
-						}else if(valor.d[3]=="2"){
-							location.href = "./panel_users"; //ASESOR
-						}else if(valor.d[3]=="3"){
-							location.href = "./panel_client";
-						}else if(valor.d[3]=="4"){
-                            location.href = "./panel_admin"; //ROL SUPERVISOR
-						}else if(valor.d[3]=="5"){
-                            location.href = "./panel_admin"; //ROL ADMINISTRADOR
-                        } 
-					}else{
-						if(valor.d[1]=="1"){
-							toastr.warning('Esta cuenta No Existe','¡Error!');
-						}else if(valor.d[1]=="2"){
-							toastr.warning('Caracteres No permitidos','¡Atención!');
-						}else if(valor.d[1]=="3"){
-							toastr.warning('Esta cuenta no está activada, comuníquese con el administrador del sistema','¡Atención!');
-						}else if(valor.d[1]=="4"){
-							toastr.warning('Contraseña invalida','¡Error!');
-						}
+
+						if(valor.d[3]=="0") 	 location.href = "./panel_root"; //SUPER ADMIN
+						else if(valor.d[3]=="1") location.href = "./panel_super"; //(SOLICITAR AL SUPERADMIN)
+						else if(valor.d[3]=="2") location.href = "./panel_users"; //ASESOR
+						else if(valor.d[3]=="3") location.href = "./panel_client";
+						else if(valor.d[3]=="4") location.href = "./panel_admin"; //ROL SUPERVISOR
+						else if(valor.d[3]=="5") location.href = "./panel_admin"; //ROL ADMINISTRADOR
+                        
+					} else {
+						if ( valor.d[1]=="1" ) 		  toastr.warning('Esta cuenta No Existe','¡Error!');
+						else if ( valor.d[1] == "2" ) toastr.warning('Caracteres No permitidos','¡Atención!');
+						else if ( valor.d[1] == "3" ) toastr.warning('Esta cuenta no está activada, comuníquese con el administrador del sistema','¡Atención!');
+						else if ( valor.d[1] == "4" ) toastr.warning('Contraseña invalida','¡Error!');
+						else if ( valor.d[1] == "5" ) toastr.warning('Su horario laboral, ha culminado', 'Atención');
 					}
 				});
 			}else{

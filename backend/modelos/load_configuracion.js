@@ -12,7 +12,7 @@ eje = function(arrays,origen,redisClient) {
 		recibo toda la configuracion
 		*/
 		
-		if (arrays.length==16){
+		if (arrays.length==18){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {

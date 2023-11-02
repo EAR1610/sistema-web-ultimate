@@ -137,20 +137,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('buscarContratos').addEventListener('input', function() {
-                    let searchValue = this.value.toLowerCase();
-                    let rows = document.querySelectorAll('#lista_enorme tr');
-                    for (let row of rows) {
-                        let dpiCell = row.querySelector('td:nth-child(3)');
-                        if (dpiCell) {
-                            let dpiValue = dpiCell.textContent.toLowerCase();
-                            row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
-                        }
-                    }
-                });
-            });
+            document.getElementById('buscarContratos').addEventListener('input', function() {
+                let searchValue = this.value.toLowerCase();
+                let rows = document.querySelectorAll('#lista_enorme tr');
+                for (let row of rows) {
+                    let dpiCell = row.querySelector('td:nth-child(3)');
+                    let nombreCell = row.querySelector('td:nth-child(4)');
+                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
+                    let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
 
-    </script>
+                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
+                }
+            });
+        });
+
+</script>
 
     <style>
         @media (max-width: 576px) {
@@ -363,13 +364,13 @@
 
                     <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
                         <form role="form">
-                            <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                            <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="text" placeholder="Inserte latitud del barrio" class="form-control"></div>
                         </form>
                     </div>
                     
                     <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
                         <form role="form">
-                            <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                            <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="text" placeholder="Inserte longitud del barrio" class="form-control"></div>
                         </form>
                     </div>
 
@@ -704,7 +705,9 @@
 
                 <div class="col-lg-12" id="cobrar_couta">
 
-                    <div class="slick_demo_2" id="listado_tarjeta" style="text-align: center;"> Cargando tarjetas...</div>
+                    <input type="text" id="nombre_cliente_cuota" placeholder="Nombre del cliente" class="form-control">
+
+                    <div class="slick_demo_2" id="listado_tarjeta" style="text-align: center;">Cargando tarjetas...</div>
 
 
                     <div class="ibox ">
@@ -880,10 +883,10 @@
                                     </form>
                                 </div> -->
                                 <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
-                                    <button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
+                                    <button class="btn btn-primary btn-block" id="crear_direccion" type="button">Agregar</button>
                                 </div>
                                 <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
-                                    <button class="btn btn-danger btn-block" id="eliminar_direccion" type="button" >Eliminar</button>
+                                    <button class="btn btn-danger btn-block" id="eliminar_direccion" type="button">Eliminar</button>
                                 </div>
                             </div>
                         </div>
@@ -895,7 +898,7 @@
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" >
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI o Nombre" >
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px; margin-left: 0px;">
         
@@ -1040,41 +1043,14 @@
 
     var firebaseConfig = {
         
-        // apiKey: "AIzaSyDm6brlpGU1WfSoh_jCtAChk5c5feszYxo",
-        // authDomain: "nororiente-f57b1.firebaseapp.com",
-        // databaseURL: "https://nororiente-f57b1-default-rtdb.firebaseio.com",
-        // projectId: "nororiente-f57b1",
-        // storageBucket: "nororiente-f57b1.appspot.com",
-        // messagingSenderId: "551056198200",
-        // appId: "1:551056198200:web:c131ade0d078e2956bb4cd",
-        // measurementId: "G-QPMR8Z13BH"
-
-        // apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
-        // authDomain: "axelssmoney.firebaseapp.com",
-        // databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
-        // projectId: "axelssmoney",
-        // storageBucket: "axelssmoney.appspot.com",
-        // messagingSenderId: "915189749485",
-        // appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
-        // measurementId: "G-N2Z1GX04BF"
-
-        apiKey: "AIzaSyAj2W3P9Qyg93M-4zt4z2C4hRCHU6GEdWE",
-        authDomain: "creditoselamigo-f3217.firebaseapp.com",
-        databaseURL: "https://creditoselamigo-f3217-default-rtdb.firebaseio.com",
-        projectId: "creditoselamigo-f3217",
-        storageBucket: "creditoselamigo-f3217.appspot.com",
-        messagingSenderId: "91763694848",
-        appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
-        measurementId: "G-DY06MSN1DM" 
-
-        // apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE",
-        // authDomain: "alexis-1e334.firebaseapp.com",
-        // databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        // projectId: "alexis-1e334",
-        // storageBucket: "alexis-1e334.appspot.com",
-        // messagingSenderId: "343288753135",
-        // appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        // measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyDm6brlpGU1WfSoh_jCtAChk5c5feszYxo",
+        authDomain: "nororiente-f57b1.firebaseapp.com",
+        databaseURL: "https://nororiente-f57b1-default-rtdb.firebaseio.com",
+        projectId: "nororiente-f57b1",
+        storageBucket: "nororiente-f57b1.appspot.com",
+        messagingSenderId: "551056198200",
+        appId: "1:551056198200:web:c131ade0d078e2956bb4cd",
+        measurementId: "G-QPMR8Z13BH"
 	};
 	
     firebase.initializeApp(firebaseConfig);
@@ -1095,7 +1071,7 @@
     var ticketClienteImpresion;
 
     function salida_sistema() {
-         window.sessionStorage.clear(); window.localStorage.clear();
+        window.sessionStorage.clear(); window.localStorage.clear();
         location.href = "../index.html";
     }
 
@@ -1151,6 +1127,7 @@
 
 
     function registrar_gastos(){
+        corroborarHora();
         $("#pendiente_form").css("display","none");
         $("#lista_ubicacniones_div").css("display","none");
         $("#crear_gastos").css("display","block");
@@ -1460,6 +1437,7 @@
     }
 
     function consultar_Contratos(){
+        corroborarHora();
         $("#lista_enorme").empty();
         $("#pendiente_form").css("display","none");
         $("#crear_gastos").css("display","none");
@@ -1614,6 +1592,24 @@
             input.value = input.value.replace(/[^\d\.]*/g,'');
         }
     }
+
+    $("#nombre_cliente_cuota").on("change paste keyup", function(){
+        console.log("cambiando")
+        $("#listado_tarjeta").html("");
+        var nombre = $(this).val(); // Obtener el valor del campo de entrada
+        var tarjetasFiltradas = yes.filter(function(tarjeta) {
+            return tarjeta.u.toLowerCase().includes(nombre.toLowerCase());
+        });
+
+        var tarjeteroFiltrado = '';
+        for (var i = 0; i < tarjetasFiltradas.length; i++) {
+            tarjeteroFiltrado += '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p></div></div>';
+        }
+        
+        $("#listado_tarjeta").html(tarjeteroFiltrado);
+        $("#listado_tarjeta").css("display", "block");        
+    });
+
 
 
     block.filein = document.querySelector("#foto1");
@@ -1980,6 +1976,7 @@
     $("contratos_view").css("display", "none");
 
     function buscar_mapa(){
+        corroborarHora();
         $("#googleMap").css("display","initial");
         $("#contratos_view").css("display", "none");          
         $("#crear_contrato_form").css("display", "none");
@@ -2201,7 +2198,7 @@
 
     $("#crear_contrato").click(function () {
         if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!=="") {            
-            if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {                
+            if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {                        
                 block.asesor = $("#selector_asesores_lista").val();
                 block.monto_prestar = $("#monto_prestar_ya_admin").val();
                 block.frecuencia = $("#selector_frecuencia").val();
@@ -2223,11 +2220,14 @@
                     block.obj = { "r": "crear_contrato", "d": block.arrays };
                     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                         var valor = JSON.parse(salida);
+                        console.log(valor);
                         $("#text_cedula_cliente").prop("disabled",false);
                         if (!valor.e) {                        
-                            if(valor.d[1]=="4"){
-                                toastr.warning('Este cliente ya está registrado con otro asesor', 'Atención!');
-                            } else {
+                            if(valor.d[1] == "4" ){
+                                toastr.warning('El cliente ha superado el número máximo de contratos vigentes', 'Atención!');
+                            } else if( valor.d[1] == "5" ){
+                                toastr.warning('El cliente tiene contrato con otro asesor', 'Atención!');
+                            }else {
                                 toastr.success('Creado con Atención el contrato', 'Atención!');
                             }
                             if( parseInt( block.descontar ) > 0 ){
@@ -3286,16 +3286,19 @@
     });
 
     function descontar_cuotax() {
-        location.reload();
-        down_configuracion();
-        window.sessionStorage.setItem("Money-perfil","descontar");
-        $("#googleMap").css("display","none");
-        $("#crear_contrato_form").css("display", "none");
-        $("#crear_contrato_form_dos").css("display", "none");
-        $("#cobrar_couta").css("display", "block");
-        $("#crear_gastos").css("display","none");
-        $("#lista_ubicacniones_div").css("display","none");
-        $("#contratos_view").css("display", "none");
+        corroborarHora();            
+        setTimeout(() => {
+            location.reload();
+            down_configuracion();
+            window.sessionStorage.setItem("Money-perfil","descontar");
+            $("#googleMap").css("display","none");
+            $("#crear_contrato_form").css("display", "none");
+            $("#crear_contrato_form_dos").css("display", "none");
+            $("#cobrar_couta").css("display", "block");
+            $("#crear_gastos").css("display","none");
+            $("#lista_ubicacniones_div").css("display","none");
+            $("#contratos_view").css("display", "none");
+        }, 500);
     }
 
     window.sessionStorage.setItem("Money-perfil","contrato");
@@ -3315,6 +3318,7 @@
     }
 	
     function crear_contrato_link() {
+        corroborarHora();
         window.sessionStorage.setItem("Money-perfil","contrato");
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "initial");
@@ -3343,6 +3347,29 @@
                     block.listax2 = block.listax2 + '<option value="' + block.item[21] + '_'+ block.item[6] +'_'+ block.item[1] +'">' + block.item[7] + ' ' + block.item[9] + ' ID: ' + block.item[21] + '</option>';
                 }
                 $("#selector_asesores_lista").html(block.listax2);
+            }
+        });
+    }
+
+    function corroborarHora(){
+        let fecha = new Date();
+        let tiempo = fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        
+        if(window.localStorage.getItem("Money-vars-token")!==null){
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        }else{
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+    
+        block.arrays = [block.tokens[1], tiempo];
+        block.obj = {"r":"verificar_horario","d":block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+            var valor = JSON.parse(salida);            
+            if(valor.e){
+                toastr.warning(valor.d[1], "Atención");
+                setTimeout(() => {
+                    salida_sistema();
+                }, 1000);
             }
         });
     }
@@ -3518,6 +3545,7 @@
 		});
 
         function ubicaciones_operaciones(){
+            corroborarHora();
             $("#lista_ubicacniones").html("");
             $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
             $("#googleMap").css("display","none");

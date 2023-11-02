@@ -554,10 +554,11 @@
                     let rows = document.querySelectorAll('#listado_asesores tr');
                     for (let row of rows) {
                         let dpiCell = row.querySelector('td:nth-child(3)');
-                        if (dpiCell) {
-                            let dpiValue = dpiCell.textContent.toLowerCase();
-                            row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
-                        }
+                        let nombreCell = row.querySelector('td:nth-child(2)');
+                        let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
+                        let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
+
+                        row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
                     }
                 });
             });
@@ -568,10 +569,11 @@
                 let rows = document.querySelectorAll('#listado_supervisor tr');
                 for (let row of rows) {
                     let dpiCell = row.querySelector('td:nth-child(3)');
-                    if (dpiCell) {
-                        let dpiValue = dpiCell.textContent.toLowerCase();
-                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
-                    }
+                    let nombreCell = row.querySelector('td:nth-child(2)');
+                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
+                    let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
+
+                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
                 }
             });
         });
@@ -582,10 +584,11 @@
                 let rows = document.querySelectorAll('#listado_liengenerela tr');
                 for (let row of rows) {
                     let dpiCell = row.querySelector('td:nth-child(2)');
-                    if (dpiCell) {
-                        let dpiValue = dpiCell.textContent.toLowerCase();
-                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
-                    }
+                    let nombreCell = row.querySelector('td:nth-child(1)');
+                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
+                    let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
+
+                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
                 }
             });
         });
@@ -596,10 +599,11 @@
                 let rows = document.querySelectorAll('#lista_enorme tr');
                 for (let row of rows) {
                     let dpiCell = row.querySelector('td:nth-child(3)');
-                    if (dpiCell) {
-                        let dpiValue = dpiCell.textContent.toLowerCase();
-                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
-                    }
+                    let nombreCell = row.querySelector('td:nth-child(4)');
+                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
+                    let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
+
+                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
                 }
             });
         });
@@ -608,12 +612,13 @@
             document.getElementById('buscarUtilidadesDPI').addEventListener('input', function(){
                 let searchValue = this.value.toLowerCase();
                 let rows = document.querySelectorAll('#lista_utilidades tr');
-                for(let row of rows){
+                for (let row of rows) {
                     let dpiCell = row.querySelector('td:nth-child(2)');
-                    if(dpiCell){
-                        let dpiValue = dpiCell.textContent.toLowerCase();
-                        row.style.display = dpiValue.includes(searchValue) ? '' : 'none';
-                    }
+                    let nombreCell = row.querySelector('td:nth-child(1)');
+                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
+                    let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
+
+                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
                 }
             });
         });
@@ -1733,7 +1738,7 @@
                         <div class="ibox-title">
                             <h5>Lista de asesores</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="searchDPI" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <input class="form-control col-md-4" type="text" id="searchDPI" placeholder="Buscar por DPI y Nombre">
                         </div>
                         <div class="ibox-content">
                             <div class="table-responsive">
@@ -1767,7 +1772,7 @@
                         <div class="ibox-title">
                             <h5>Lista de supervisores</h5>
                             &nbsp;
-                           <input class="form-control col-md-4" type="text" id="buscarAsesores" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                           <input class="form-control col-md-4" type="text" id="buscarAsesores" placeholder="Buscar por DPI y Nombre">
                         </div>
                         <div class="ibox-content">
                             <div class="table-responsive">
@@ -1776,7 +1781,7 @@
                                     <tr align="center">
                                         <th>Id</th>
                                         <th>Nombre</th>
-                                        <th>Cedula</th>
+                                        <th>DPI</th>
                                         <th>Departamento</th>
                                         <th>Municipio</th>
                                         <th>Barrio</th>
@@ -1926,7 +1931,7 @@
                         <div class="ibox-title">
                             <h5>Lista de clientes</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarClientes" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <input class="form-control col-md-4" type="text" id="buscarClientes" placeholder="Buscar por DPI y Nombre">
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             <div class="table-responsive">
@@ -2079,26 +2084,40 @@
                             </div>
 
 
-                            <div class="col-sm-6 col-md-6 col-xs-12">
-
+                            <div class="col-sm-6 col-md-4 col-xs-12">
                                 <form role="form">
                                     <label>Colores de dia</label>
                                     <select class="form-control m-b" id="dias_colores">
                                     </select>
                                 </form>
-
                             </div>
 
-                            <div class="col-sm-2 col-md-2 col-xs-12" style="display: none;">
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Cantidad máxima de contratos por cliente</label> <input
+                                            id="NoContratos"
+                                            type="text"  maxlength="10"
+                                            class="form-control"></div>
+                                </form>
+                            </div>
 
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Hora de cierre</label> <input
+                                            id="HoraCierre"
+                                            type="time"
+                                            class="form-control"></div>
+                                </form>
+                            </div>
+                            
+                            <div class="col-sm-2 col-md-4 col-xs-12" style="display: none;">
                                 <form role="form">
                                     <input type="color"
-                                           class="form-control" id="color_click" style="margin-bottom: 11px;">
+                                        class="form-control" id="color_click" style="margin-bottom: 11px;">
                                 </form>
-
                             </div>
 
-                            <div class="col-sm-6 col-md-6 col-xs-12" style="margin-top: 3%;text-align: center;">
+                            <div class="col-sm-2 col-md-4 col-xs-12" style="margin-top: 3%;text-align: center;">
                                 <div class="form-group" style="display: inline-flex;">
                                     <div id="valor_lunes"
                                          style="padding-top: 12px;padding-left: 14px;padding-right: 14px;padding-bottom: 12px;background-color: #007bff;color: white;border-radius: 3px;">
@@ -2599,7 +2618,7 @@
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI y Nombre">
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             
@@ -2735,7 +2754,7 @@
                         <div class="ibox-title">
                             <h5>Consulta de utilidades</h5>
                             &nbsp;
-                           <input class="form-control col-md-4" type="text" id="buscarUtilidadesDPI" placeholder="Buscar por DPI" >
+                           <input class="form-control col-md-4" type="text" id="buscarUtilidadesDPI" placeholder="Buscar por DPI y Nombre" >
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
@@ -3115,41 +3134,15 @@
 <script>
     var firebaseConfig = {
         
-        // apiKey: "AIzaSyDm6brlpGU1WfSoh_jCtAChk5c5feszYxo",
-        // authDomain: "nororiente-f57b1.firebaseapp.com",
-        // databaseURL: "https://nororiente-f57b1-default-rtdb.firebaseio.com",
-        // projectId: "nororiente-f57b1",
-        // storageBucket: "nororiente-f57b1.appspot.com",
-        // messagingSenderId: "551056198200",
-        // appId: "1:551056198200:web:c131ade0d078e2956bb4cd",
-        // measurementId: "G-QPMR8Z13BH"
-
-        // apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
-        // authDomain: "axelssmoney.firebaseapp.com",
-        // databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
-        // projectId: "axelssmoney",
-        // storageBucket: "axelssmoney.appspot.com",
-        // messagingSenderId: "915189749485",
-        // appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
-        // measurementId: "G-N2Z1GX04BF"
-
-        apiKey: "AIzaSyAj2W3P9Qyg93M-4zt4z2C4hRCHU6GEdWE",
-        authDomain: "creditoselamigo-f3217.firebaseapp.com",
-        databaseURL: "https://creditoselamigo-f3217-default-rtdb.firebaseio.com",
-        projectId: "creditoselamigo-f3217",
-        storageBucket: "creditoselamigo-f3217.appspot.com",
-        messagingSenderId: "91763694848",
-        appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
-        measurementId: "G-DY06MSN1DM"    
-        
-        // apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE",
-        // authDomain: "alexis-1e334.firebaseapp.com",
-        // databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        // projectId: "alexis-1e334",
-        // storageBucket: "alexis-1e334.appspot.com",
-        // messagingSenderId: "343288753135",
-        // appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        // measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyDm6brlpGU1WfSoh_jCtAChk5c5feszYxo",
+        authDomain: "nororiente-f57b1.firebaseapp.com",
+        databaseURL: "https://nororiente-f57b1-default-rtdb.firebaseio.com",
+        projectId: "nororiente-f57b1",
+        storageBucket: "nororiente-f57b1.appspot.com",
+        messagingSenderId: "551056198200",
+        appId: "1:551056198200:web:c131ade0d078e2956bb4cd",
+        measurementId: "G-QPMR8Z13BH"
+              
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -6699,6 +6692,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     $("#foto_m3").attr("src", "../img/foto_cedula_back.png");
                     $("#cedula_div").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
                     toastr.success('Registrado correctamente', 'Atención!');
+                    setTimeout(() => {
+                        location.reload();                        
+                    }, 1500);
                 }
             });
 
@@ -7320,7 +7316,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 
-		  $("#suplanter").css("display", "none");
+        $("#suplanter").css("display", "none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -8382,7 +8378,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         consulta_x();
     }
 
-    $("#configurar_directa").click(function () {
+    $("#configurar_directa").click(function () {        
         block.refinanciacioinCoun = $("#count_refinansacion").val();
 
         if(block.refinanciacioinCoun==""){ block.refinanciacioinCoun = 3;}
@@ -8394,6 +8390,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.max = $("#monto_num_prestamo2").val();
         block.sobrePrestamo = $("#mora_clientes_prestamo").val();
         block.demora = $("#selector_demora").val();
+        block.cantidadContrato = $("#NoContratos").val();
+        block.horaCierre = $("#HoraCierre").val();
         block.is_color_lunes = $("#valor_lunes").css('background-color');
         block.is_color_martes = $("#valor_martes").css('background-color');
         block.is_color_miercoles = $("#valor_miercoles").css('background-color');
@@ -8408,7 +8406,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-        block.arrays = [block.tokens[1], block.min, block.max, block.demora, block.is_color_lunes, block.is_color_martes, block.is_color_miercoles, block.is_color_jueves, block.is_color_viernes, block.is_color_sabado, block.is_color_domingo,block.sobrePrestamo,block.refinanciacioinCoun,block.nombremp,block.direcccion,block.nit_empresa];
+        block.arrays = [ block.tokens[1], block.min, block.max, block.demora, block.is_color_lunes, block.is_color_martes, block.is_color_miercoles, block.is_color_jueves, block.is_color_viernes, block.is_color_sabado, block.is_color_domingo, block.sobrePrestamo, block.refinanciacioinCoun, block.nombremp, block.direcccion, block.nit_empresa, block.cantidadContrato, block.horaCierre ];
         block.obj = {"r": "load_configuracion", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -8455,6 +8453,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 $("#nit_empresa").val(block.lista[15]);
                 $("#dire_empresa").val(block.lista[14]);
                 $("#nom_empresa").val(block.lista[13]);
+                $("#NoContratos").val(block.lista[16]);
+                $("#HoraCierre").val(block.lista[17]);
                 NombreEmpresa = block.lista[13];
             }else{
 				toastr.warning('Configure el perfil de su empresa', 'Atención!');

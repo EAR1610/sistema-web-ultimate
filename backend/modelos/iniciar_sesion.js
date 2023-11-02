@@ -32,20 +32,34 @@ eje = function(arrays,origen,redisClient) {
 								if(info[1]==arrays[1]){
 									
 									/*verifica si es la clave y crea token util para el backend */
-									
-									var jwt = require('jsonwebtoken'),token = jwt.sign({"i":arrays[0],"d":info[5],"t":info[4],"n":info[6]},'clWve-G*-9)1',{ 
-										expiresIn: 60 * 60 * 12 
-									});
-									var comando = "listado_"+info[5]+"_asesor_"+info[6];
-									redisClient.get(comando,function(error,reply_asesor){
-										if(reply_asesor!=null){
-											var datos_asesor = JSON.parse(reply_asesor);
-											const asesor = datos_asesor[7]+" "+datos_asesor[8]+" "+datos_asesor[9]+" "+datos_asesor[10];
-											resolve([true,token,arrays[0],info[4],info[5],info[6],asesor]);
-										}else{
-											resolve([true,token,arrays[0],info[4],info[5],info[6],"Asesor"]);
+									redisClient.keys('configuracion_*', function(errEmpresa, datosEmpresa){
+
+										if( datosEmpresa !== null && datosEmpresa.length > 0 ){
+											redisClient.get(datosEmpresa[0], function(errorConfiguracion, configuracion){
+												let configuracionEmpresa = JSON.parse(configuracion);
+												console.log(configuracionEmpresa[17]);
+												var jwt = require('jsonwebtoken'),token = jwt.sign({"i":arrays[0],"d":info[5],"t":info[4],"n":info[6]},'clWve-G*-9)1',{ 
+													expiresIn: 60 * 60 * 12 
+												});
+												var comando = "listado_"+info[5]+"_asesor_"+info[6];
+												var moment = require("moment-timezone");
+												var hora = moment().tz("America/Guatemala").format('HH:mm');
+
+												redisClient.get(comando,function(error,reply_asesor){
+
+													if ( configuracionEmpresa[17] < hora && reply_asesor!=null ) {
+														reject([false,"5"]);
+													} else if ( reply_asesor!=null ) {														
+														var datos_asesor = JSON.parse(reply_asesor);
+														const asesor = datos_asesor[7]+" "+datos_asesor[8]+" "+datos_asesor[9]+" "+datos_asesor[10];
+														resolve([true,token,arrays[0],info[4],info[5],info[6],asesor]);
+													}else{														
+														resolve([true,token,arrays[0],info[4],info[5],info[6],"Asesor"]);
+													}
+												});
+											})
 										}
-									});
+									})
 									
 								}else{
 									reject([false,"4"]);
@@ -57,14 +71,11 @@ eje = function(arrays,origen,redisClient) {
 					}else{
 						reject([false,"1"]);
 					}
-				});
-				
+				});				
 			}else{
 				reject([false,"2"]);
-			}
-			
-		}
-		
+			}			
+		}		
 	});
 };
 

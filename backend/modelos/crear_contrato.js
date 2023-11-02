@@ -11,7 +11,7 @@ eje = function(arrays,origen,redisClient) {
 
 		/*
 			0		1		2		3		4		5			6			7						8					9						10				11			12
-			recibo tokens, cedula ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL]
+			recibo tokens, dpi ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL]
 		*/
 
 		if (arrays.length==12){
@@ -19,19 +19,15 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="5"){
-
+				}else if( decoded.t=="1" || decoded.t=="2" || decoded.t=="5" ) {
 					if(arrays[0]!==null && arrays[1]!==null && arrays[2]!==null && arrays[3]!==null && arrays[4]!==null && arrays[5]!==null && arrays[6]!==null && arrays[7]!==null && arrays[8]!==null && arrays[9]!==null && arrays[10]!==null ){
-						
 						function randomIntFromInterval(min,max){
 							return Math.floor(Math.random()*(max-min+1)+min);
 						}
-						var ids = randomIntFromInterval(1000000,9999999);
-						
+						var ids = randomIntFromInterval(1000000,9999999);					
 						/*
 							agrego otros valores al array principal y verifico la configuracion que tengo a crear el contrato
-						*/
-						
+						*/						
 						arrays[0] = decoded.d;
 						arrays.push(0);
 						arrays.push(ids);
@@ -40,10 +36,9 @@ eje = function(arrays,origen,redisClient) {
 							
 							if(reply!==null){
 								var info = JSON.parse(reply);
-								var extric = info[11]; 
-
+								var extric = info[11]; 								
 								redisClient.keys("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_*",function(ersr,replsy) {
-									if(replsy.length>0){
+									if( replsy.length >= info[16] ){
 										var miEmpresa = replsy.length;
 									}else{
 										var miEmpresa = 0;
@@ -53,20 +48,20 @@ eje = function(arrays,origen,redisClient) {
 										verifiquo si tiene otros contratos
 									*/
 									redisClient.keys("registry_"+arrays[1]+"_contrato_*",function(erxsr,replxsy) {
-										if(replsy.length>0){
+										if( replxsy.length > 0 ){
 											var otrasEmpresa = replxsy.length - miEmpresa;
 										}else{
 											var otrasEmpresa = 0;
 										}
 										
 										/*
-										verifiquo si tiene otros contratos en otras empresas										
+											verifiquo si tiene otros contratos en otras empresas										
 										*/
-
-										if(extric=="3" && miEmpresa>0){
-											resolve([false,"4",miEmpresa]);
+										
+										if(extric=="3" && miEmpresa > 0) {
+											resolve( [false,"4",miEmpresa] );
 										}else if(extric=="3" && otrasEmpresa>0 ){
-											resolve([false,"5",otrasEmpresa]);
+											resolve( [false,"5",otrasEmpresa] );
 										}else{
 		
 											var moment = require("moment-timezone");
@@ -198,8 +193,8 @@ eje = function(arrays,origen,redisClient) {
 													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/
 													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;
 													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(11 + 1));
+
 													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arraysDB),function(err,reply) {
-												
 														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {
 															if(replyw!==null){
 																var esa = JSON.parse(replyw);

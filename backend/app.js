@@ -13,8 +13,8 @@ var dev = false;
 if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
 
-	var redisClient = redis.createClient({ host : 'redis-16566.c93.us-east-1-3.ec2.cloud.redislabs.com', port : 16566 });
-	redisClient.auth('PU2IjRUHNswzeFRGQ99dohjNZvOkzqrB',function(err,reply) {
+	var redisClient = redis.createClient({ host : 'redis-16713.c17.us-east-1-4.ec2.cloud.redislabs.com', port : 16713 });
+	redisClient.auth('U7Mf1OJpEfVlQxSNAJdhDx5yyKBjpvFC',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
@@ -45,8 +45,8 @@ redisClient.on('error',function() {
 /*
 	Siempre asiganre la clave de acceso del root
 */
-var arrays = ["admin@elamigo.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin"];
-redisClient.set("usuario_admin@elamigo.com_1000000",JSON.stringify(arrays),function(err2,reply2){
+var arrays = [ "admin@ppnororiente.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
+redisClient.set("usuario_admin@ppnororiente.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });
 
@@ -55,14 +55,14 @@ var http = require('http');
 
 var server = http.createServer(function(request, response) {
 	response.writeHead(200);
-	response.write("Online:active:3000");
+	response.write("Online:active:3220");
 	response.end();
 });
 /*
-	Conexion escucho ws en el puerto 3000
+	Conexion escucho ws en el puerto 3220
 */
-server.listen(3000, function() {
-	console.log("Online:active:3000");
+server.listen(3220, function() {
+	console.log("Online:active:3220");
 });
 wsServer = new WebSocketServer({
 	maxReceivedFrameSize: 20204848, //bytes
