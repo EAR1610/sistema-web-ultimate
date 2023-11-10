@@ -35,7 +35,7 @@ eje = function(arrays,origen,redisClient) {
 						*/
 						
 						redisClient.get('direccion_'+dep+'_'+ciu+'_'+bar,function(err3,reply3){
-							if(reply3!==null){
+							if( reply3!==null && reply3 !== undefined ){
 								var nes =JSON.parse(reply3);
 								resolve([true,nes[0],nes[1]]);
 							}else{

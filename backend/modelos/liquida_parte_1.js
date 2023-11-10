@@ -16,16 +16,12 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "5" || decoded.t == "4"){
-					
+				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "5" || decoded.t == "4"){					
 					/*
-					listo los contratos de idasesor
-					*/
-					
-					redisClient.get("registro_contrato_"+arrays[2],function(err,reply) {
-							
-						if(reply!==null){
-							
+						listo los contratos de idasesor
+					*/					
+					redisClient.get("registro_contrato_"+arrays[2],function(err,reply) {							
+						if( reply!==null && reply !== undefined ){							
 							var hes = JSON.parse(reply);
 							var informe =[];
 							
@@ -34,11 +30,11 @@ eje = function(arrays,origen,redisClient) {
 									resolve([true,informe]);
 								}else{
 									/*
-									listo los cliente des ese contratos
+										listo los cliente des ese contratos
 									*/
 									var origena = arra[ind],cedulax = origena.split("_");
 									redisClient.get("cliente_"+cedulax[1], function (qersr, sreeply) {
-										if(sreeply!==null){
+										if( sreeply!==null && sreeply !== undefined ){
 											redisClient.get(origena, function (ersr, reeply) {
 												var interno = JSON.parse(reeply);
 												informe.push([interno,sreeply,cedulax[5]]);
@@ -49,24 +45,18 @@ eje = function(arrays,origen,redisClient) {
 											ind++;
 											inicar(ind,arra);
 										}
-									});
-									
+									});									
 								}
-							}
-							
-							inicar(0,hes);
-							
+							}							
+							inicar(0,hes);							
 						}else{
 							reject([false,"4"]);
-						}
-						
-				    });
-					
+						}						
+				    });					
 				}else{
 					reject([false,"2"]);
 				}
-			});
-			
+			});			
 		}else{
 			reject([false,"3"]);
 		}

@@ -24,7 +24,7 @@ eje = function(arrays,origen,redisClient) {
 						extraigo lista de supervidors asignados a la empresa
 					*/
 					redisClient.get('listado_'+decoded.d+'_supervisor_'+arrays[1],function(err3,reply3){
-						if(reply3 !==null){
+						if( reply3 !==null && reply3 !== undefined ){
                             resolve([false,JSON.parse(reply3)])
 						}else{
 							reject([false,"4"]);

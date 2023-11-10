@@ -21,11 +21,11 @@ eje = function(arrays,origen,redisClient) {
 				}else if(decoded.t=="0" || decoded.t=="1" || decoded.t=="2" || decoded.t=="5"){
 					
 					redisClient.keys('direccion_*',function(err3,reply3){
-						if(reply3 != null || reply3 != undefined){
+						if(reply3 !== null && reply3 !== undefined){
 							if(reply3.length > 0){
 								
 								/*
-								extraigo y los organizo
+									extraigo y los organizo
 								*/
 								
 								String.prototype.capitalize = function() {

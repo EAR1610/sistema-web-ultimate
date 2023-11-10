@@ -34,7 +34,7 @@ eje = function(arrays,origen,redisClient) {
                                             if( replyContrato !== null ){
                                                 if( fecha >= arrays[2] && fecha <= arrays[3] ) {
                                                     redisClient.get("cliente_"+dpiContrato, function(error, replyCliente){
-                                                        if( replyCliente !== null){
+                                                        if( replyCliente !== null && replyCliente !== undefined ){
                                                             let infoCliente = replyCliente;
                                                             let [,,,,,,, dpi, nombre1, nombre2, apellido1, apellido2 ,,,,,,,,,,,] = JSON.parse( infoCliente );                                                            
                                                             let informacionContrato = [];

@@ -2084,7 +2084,7 @@
                             </div>
 
 
-                            <div class="col-sm-6 col-md-4 col-xs-12">
+                            <div class="col-sm-6 col-md-3 col-xs-12">
                                 <form role="form">
                                     <label>Colores de dia</label>
                                     <select class="form-control m-b" id="dias_colores">
@@ -2092,7 +2092,7 @@
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-4 col-xs-12">
+                            <div class="col-sm-6 col-md-3 col-xs-12">
                                 <form role="form">
                                     <div class="form-group"><label>Cantidad máxima de contratos por cliente</label> <input
                                             id="NoContratos"
@@ -2101,13 +2101,37 @@
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-4 col-xs-12">
+                            <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
                                     <div class="form-group"><label>Hora de cierre</label> <input
                                             id="HoraCierre"
                                             type="time"
                                             class="form-control"></div>
                                 </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-2 col-xs-12">
+
+                                <form role="form">
+                                    <label>Utilizar ubicación de clientes</label>
+                                    <select class="form-control m-b" id="mostrar_obligatoriedad_ubicaciones">                                         
+                                         <option value="1">Si</option> 
+                                         <option value="2">No</option>
+                                    </select>
+                                </form>
+
+                            </div>
+
+                            <div class="col-sm-6 col-md-2 col-xs-12">
+
+                                <form role="form">
+                                    <label>Ocultar tarjetas una vez hecho el pago</label>
+                                    <select class="form-control m-b" id="ocultar_tarjetas_pago">
+                                         <option value="1">Si</option> 
+                                         <option value="2">No</option>
+                                    </select>
+                                </form>
+
                             </div>
                             
                             <div class="col-sm-2 col-md-4 col-xs-12" style="display: none;">
@@ -3025,13 +3049,13 @@
 
                             <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
                                 <form role="form">
-                                    <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                                    <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="text" placeholder="Inserte latitud del barrio" class="form-control"></div>
                                 </form>
                             </div>
                             
                             <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
                                 <form role="form">
-                                    <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                                    <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="text" placeholder="Inserte longitud del barrio" class="form-control"></div>
                                 </form>
                             </div>
 
@@ -6732,12 +6756,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 
-
-
 		window.sessionStorage.setItem("Money-vars-foto-id-reverso",block.daata[3]);
 		window.sessionStorage.setItem("Money-vars-foto-id-normal",block.daata[2]);
 		window.sessionStorage.setItem("Money-vars-foto-id",block.daata[1]);
-
 
 		$("#su_telefono_fijo").val(block.daata[15]);
 		$("#su_telefono_cel").val(block.daata[16]);
@@ -6746,7 +6767,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#su_tipo_cargo option[value='a']").attr("selected", true);
 		$("#su_pais_selecionado option[value='"+block.daata[4]+"']").attr("selected", true);
 		$("#su_tipo_departamento option[value='"+block.daata[12]+"']").attr("selected", true);
-
 
         $("#su_tipo_ciudades").html('<option value=""></option>');
 
@@ -6770,7 +6790,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 				$("#su_tipo_ciudades option[value='"+block.daata[13]+"']").attr("selected", true);
             }
         });
-
 
 		$("#su_tipo_barrio").html('<option value=""></option>');
         block.arrays = [block.tokens[1], block.daata[12], block.daata[13]];
@@ -6802,7 +6821,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 	}
 
     $("#registro_finalm").click(function () {
-
         block.pais = $("#pais_selecionadom").val();
         block.reverso = window.sessionStorage.getItem("Money-vars-foto-id-reversom");
         block.normal = window.sessionStorage.getItem("Money-vars-foto-id-normalm");
@@ -6812,14 +6830,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             block.tipo = "C";
         } else {
             block.tipo = $("#tipo_letram").val();
-        }
-
-		if (window.localStorage.getItem("Money-vars-token") !== null) {
-			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-		} else {
-			block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-		}
-
+        }       
         block.alias = $("#alias_text").val();
         block.numero = $("#numero_idm").val();
         block.nom1 = $("#nombre_id1m").val();
@@ -6833,7 +6844,18 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.telefofijo = $("#telefono_fijom").val();
         block.telefomovil = $("#telefono_celm").val();
         block.correo = $("#correo_electronicom").val();
+        
+        
+		if (window.localStorage.getItem("Money-vars-token") !== null) {
+			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+		} else {
+			block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+		}
 
+                
+    });
+
+    function insertar_cliente(){
         if ($("#telefono_fijom").val() == "") {
             block.telefofijo = "0";
         }
@@ -6885,11 +6907,13 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
             }
 
-
+            block.telefofijo = $("#telefono_fijomd").val();
+            block.telefomovil = $("#telefono_celmd").val();
             $("#asesor_foto_selec").attr("src", block.fotoas);
             $("#text_cedula_asesor").val(block.cedulasesor);
-            block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls,block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias];
-
+            block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias, block.lat, block.lon ];
+            debugger;
+            
             block.obj = {"r": "crear_cliente_admin", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
@@ -6929,10 +6953,13 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     $("#cedula_divm").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
                     $("#popop_new_cliente").modal("hide");
                     toastr.success('Registrado correctamente', 'Atención!');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 }
             });
         }
-    });
+    }
 
     $("#registro_finalmd").click(function () {
         block.pais = $("#pais_selecionadomd").val();
@@ -6974,86 +7001,24 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.asesorSuperAsis = "d";
         block.lat = $("#add_barrio_lat_text").val();
         block.lon = $("#add_barrio_lon_text").val();
-        
-        if(block.lon.substr(0,1) !== "." && block.lat.substr(0,1) !== "." && block.lat !== "" && block.lon !== "" && block.lat.indexOf(".") >-1 && block.lon.indexOf(".") >- 1 && block.lon.indexOf("-") >- 1 && block.lat.indexOf("e") == -1 && block.lon.indexOf("e") == -1 && block.lat.indexOf(",") == -1 && block.lon.indexOf(",") == -1) {
-
-            if ($("#telefono_fijomd").val() == "") {
-                block.telefofijo = "0";
-            }        
-            if (block.perfil == null) {
-                block.perfil = "default_profile_photo.jpg";
-            }
-            if (block.normal == null) {
-                block.normal = "front_card_by_default.png";
-            }
-            if (block.reverso == null) {
-                block.reverso = "back_card_by_default.png";
-            }
-            if(block.fronatls==null){
-                block.fronatls="default_invoice.png";
-            }
-            if (block.perfil == null) {
-                toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
-                block.blo = 1;
-            }
-            if (block.normal == null) {
-                toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
-                block.blo = 1;
-            }
-            if (block.reverso == null) {
-                toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
-                block.blo = 1;
-            }
-            if(block.blo==1){
-                toastr.warning('Falta datos', 'Atención!');
-            }else if (block.numero == "") {
-                toastr.warning('Falta insertar numero de cedula', 'Atención!');
-            } else if (block.nom1 == "") {
-                toastr.warning('Falta insertar primer nombre', 'Atención!');
-            } else if (block.ape1 == "") {
-                toastr.warning('Falta insertar primer apellido', 'Atención!');
-            } else if (block.direction == "") {
-                toastr.warning('Falta insertar dirección del usuario', 'Atención!');
-            } else if (block.departamento == "") {
-                toastr.warning('Falta insertar departamento del usuario', 'Atención!');
-            } else if (block.cuidad == "") {
-                toastr.warning('Falta insertar ciudad del usuario', 'Atención!');
-            } else if (block.barrio == "") {
-                toastr.warning('Falta insertar barrio del usuario', 'Atención!');
-            } else if (block.telefomovil == "") {
-                toastr.warning('Falta telefono celular del cliente', 'Atención!');
-            } else if (block.asesorSuperAsis == "") {
-                toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
-            }else{
-                if (block.alias == "") {
-                    block.alias = "No asignado";
-                }
-                block.arrays = [ block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias, block.lat, block.lon ];
-    
-                block.obj = {"r": "crear_cliente_admin", "d": block.arrays};
-                backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-                    var valor = JSON.parse(salida);
-                    if (!valor.e) {
-                        block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
-                        window.sessionStorage.setItem("Money-vars-registrado", block.numero);
-                        window.sessionStorage.removeItem("Money-vars-foto-id-reversomd");
-                        window.sessionStorage.removeItem("Money-vars-foto-id-normalmd");
-                        $("#foto_user_clien").attr("src", window.sessionStorage.getItem("Money-vars-foto-idmd"));
-                        window.sessionStorage.removeItem("Money-vars-foto-idmd");
-                        window.sessionStorage.removeItem("Money-vars-foto-frontald");                        
-                        limpiarCliente();
-                        toastr.success('Registrado correctamente', 'Atención!');
-                        
-                        setTimeout(() => {
-                            location.reload();                        
-                        }, 1500);
+        debugger;
+        block.arrays = [ block.tokens[1] ];
+        block.obj = {"r": "verificar_ubicaciones", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            console.log(valor);
+            if(!valor.e){
+                if( valor.d[1][18] === "1" ){                    
+                    if(block.lon.substr(0,1) !== "." && block.lat.substr(0,1) !== "." && block.lat !== "" && block.lon !== "" && block.lat.indexOf(".") >-1 && block.lon.indexOf(".") >- 1 && block.lon.indexOf("-") >- 1 && block.lat.indexOf("e") == -1 && block.lon.indexOf("e") == -1 && block.lat.indexOf(",") == -1 && block.lon.indexOf(",") == -1) {  
+                        insertar_cliente();                        
+                    } else{
+                        toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
                     }
-                });
+                } else {
+                    insertar_cliente();                                        
+                }
             }
-        } else{
-            toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
-        }
-
+        })            
     });
 
     function limpiarCliente(){
@@ -8392,6 +8357,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.demora = $("#selector_demora").val();
         block.cantidadContrato = $("#NoContratos").val();
         block.horaCierre = $("#HoraCierre").val();
+        block.ubicacionesObligatorias = $("#mostrar_obligatoriedad_ubicaciones").val();
+        block.ocultarTarjetas = $("#ocultar_tarjetas_pago").val();
         block.is_color_lunes = $("#valor_lunes").css('background-color');
         block.is_color_martes = $("#valor_martes").css('background-color');
         block.is_color_miercoles = $("#valor_miercoles").css('background-color');
@@ -8404,14 +8371,16 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-        }
-
-        block.arrays = [ block.tokens[1], block.min, block.max, block.demora, block.is_color_lunes, block.is_color_martes, block.is_color_miercoles, block.is_color_jueves, block.is_color_viernes, block.is_color_sabado, block.is_color_domingo, block.sobrePrestamo, block.refinanciacioinCoun, block.nombremp, block.direcccion, block.nit_empresa, block.cantidadContrato, block.horaCierre ];
+        }        
+        block.arrays = [ block.tokens[1], block.min, block.max, block.demora, block.is_color_lunes, block.is_color_martes, block.is_color_miercoles, block.is_color_jueves, block.is_color_viernes, block.is_color_sabado, block.is_color_domingo, block.sobrePrestamo, block.refinanciacioinCoun, block.nombremp, block.direcccion, block.nit_empresa, block.cantidadContrato, block.horaCierre, block.ubicacionesObligatorias, block.ocultarTarjetas ];
         block.obj = {"r": "load_configuracion", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
                 toastr.success('Se ha configurado correctamente', 'Atención!');
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
             }
         });
 
@@ -8427,20 +8396,24 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }
 
         block.arrays = [block.tokens[1]];
-        block.obj = {"r": "downconfiguracion", "d": block.arrays};
+        block.obj = { "r": "downconfiguracion", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e && valor.d[1] !== null) {
                 block.lista = JSON.parse(valor.d[1]);
                 $("#count_refinansacion").val(block.lista[12]);
                 $("#monto_num_prestamo").val(block.lista[1]);
                 $("#monto_num_prestamo2").val(block.lista[2]);
+                
 				ValorToMonto(block.lista[2], function (salidax) {
 					$("#prestamo_principal_ini2").text("Q"+salidax);
 				});
+
 				ValorToMonto(block.lista[1], function (salidax) {
 					$("#prestamo_principal_ini").text("Q"+salidax);
 				});
+
                 $("#selector_demora option[value='" + block.lista[3] + "']").attr("selected", true);
                 $("#mora_clientes_prestamo option[value='" + block.lista[11] + "']").attr("selected", true);
                 $("#valor_lunes").css('background-color', block.lista[4]);
@@ -8455,6 +8428,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 $("#nom_empresa").val(block.lista[13]);
                 $("#NoContratos").val(block.lista[16]);
                 $("#HoraCierre").val(block.lista[17]);
+                $("#mostrar_obligatoriedad_ubicaciones").val(block.lista[18]);
+                $("#ocultar_tarjetas_pago").val(block.lista[19]);
+
                 NombreEmpresa = block.lista[13];
             }else{
 				toastr.warning('Configure el perfil de su empresa', 'Atención!');
@@ -8784,7 +8760,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
                 block.listao=valor.d[1];
-
                 var bounds = new google.maps.LatLngBounds();
                 var mapOptions = {
 					center: {lat: 16.91, lng: -89.89},
@@ -8798,7 +8773,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 block.markesa=[];
                 block.tarjetero ="";
                 block.infoWindowContents=[];
-
+                console.log(block.listao);
                 for(var q=0; q<block.listao.length; q++){
                     block.markesa.push([block.listao[q].user,parseFloat(block.listao[q].lat),parseFloat(block.listao[q].lon)]);
                     block.infoWindowContents.push(['<div class="info_content">Nombre: '+block.listao[q].user+' <br> DPI: '+block.listao[q].cedula+'</div>']);

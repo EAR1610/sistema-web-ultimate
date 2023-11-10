@@ -27,7 +27,7 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.keys('direccion_'+arrays[1]+'_'+arrays[2]+'_*',function(err3,reply3){
-						if(reply3 !== null || reply3 !== undefined){
+						if(reply3 !== null && reply3 !== undefined){
 							if(reply3.length > 0){
 								
 								String.prototype.capitalize = function() {

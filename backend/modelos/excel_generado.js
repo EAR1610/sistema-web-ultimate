@@ -37,8 +37,7 @@ eje = function(arrays,origen,redisClient) {
 					}
 					
 					redisClient.get("configuracion_" + decoded.d, function (err, reply) {
-						if(reply!==null){
-
+						if( reply !==null && reply !== undefined ){
 							var unes = JSON.parse(reply),
 								nombreEmpresa = unes[13],
 								nit = unes[15];
@@ -67,7 +66,7 @@ eje = function(arrays,origen,redisClient) {
 														}else{
 															var inesd = arrs[ind];
 															redisClient.get(inesd,function(err,reply) {
-																if(reply!==null){
+																if( reply !== null && reply !== undefined ){
 																																		
 																	var unes = inesd.split("_");
 																	redisClient.get("cliente_"+arrays[1]+"_"+unes[1],function(eqrr,rqeply) {

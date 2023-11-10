@@ -35,9 +35,9 @@ eje = function(arrays,origen,redisClient) {
 								
 								if(es==reply3.length-1){
 									redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
-										if(replcy!==null){
+										if( replcy!==null && replcy !== undefined ){
 											var inf = JSON.parse(replcy);
-											if( inf !== null ){
+											if( inf !== null && inf !== undefined ){
 												if (inf[3]){
 													redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
 														const response2 = JSON.parse(response);

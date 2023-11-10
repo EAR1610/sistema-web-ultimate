@@ -29,7 +29,7 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.get("gasto_"+arrays[1]+"_"+ides,function(err,reply) {
-						if(reply!==null){
+						if( reply!==null && reply !== undefined ){
 							var total=0;
 							for(var i = 0; i < reply.length; i ++){
 								var gasto  = reply[i].split("_");

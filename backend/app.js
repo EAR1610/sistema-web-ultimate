@@ -8,13 +8,12 @@ var dev = false;
 /*
 	Solo una variable me indica si estoy en produccion o desarrollo
 */
-//8ICmRsaUHMS5caKp55cVvE09QKEtMQYU@redis-18996.c1.us-west-2-2.ec2.cloud.redislabs.com:18996
 
 if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
 
-	var redisClient = redis.createClient({ host : 'redis-16713.c17.us-east-1-4.ec2.cloud.redislabs.com', port : 16713 });
-	redisClient.auth('U7Mf1OJpEfVlQxSNAJdhDx5yyKBjpvFC',function(err,reply) {
+	var redisClient = redis.createClient({ host : 'redis-11075.c276.us-east-1-2.ec2.cloud.redislabs.com', port : 11075 });
+	redisClient.auth('1Fu3kmWusorbbfZhy5JKTf5vbTMRzoXP',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
@@ -45,8 +44,8 @@ redisClient.on('error',function() {
 /*
 	Siempre asiganre la clave de acceso del root
 */
-var arrays = [ "admin@ppnororiente.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
-redisClient.set("usuario_admin@ppnororiente.com_1000000",JSON.stringify(arrays),function(err2,reply2){
+var arrays = [ "admin@alemo.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
+redisClient.set("usuario_admin@alemo.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });
 
@@ -55,14 +54,14 @@ var http = require('http');
 
 var server = http.createServer(function(request, response) {
 	response.writeHead(200);
-	response.write("Online:active:3220");
+	response.write("Online:active:3210");
 	response.end();
 });
 /*
-	Conexion escucho ws en el puerto 3220
+	Conexion escucho ws en el puerto 3210
 */
-server.listen(3220, function() {
-	console.log("Online:active:3220");
+server.listen(3210, function() {
+	console.log("Online:active:3210");
 });
 wsServer = new WebSocketServer({
 	maxReceivedFrameSize: 20204848, //bytes

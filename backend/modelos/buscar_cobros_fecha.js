@@ -57,7 +57,7 @@ eje = function(arrays,origen,redisClient) {
 								} else {
 									var partes = arrs[ind].split("_");
 									redisClient.get("cliente_"+partes[partes.length-1], function(error,replycliente){
-										if (replycliente!=null){
+										if ( replycliente!=null && replycliente !== undefined ){
 											var datoscliente = JSON.parse(replycliente);
 											var nombre = datoscliente[8]+" "+datoscliente[9]+" "+datoscliente[10]+" "+datoscliente[11];
 											lista.push({"dpi":datoscliente[7], "nombre":nombre, "direccion":datoscliente[12],"monto":partes[2],"hora":partes[4]+":"+partes[5]+" "+partes[6]});
@@ -66,7 +66,7 @@ eje = function(arrays,origen,redisClient) {
 										}
 									});
 								}
-							}recurso(0,reply3);
+							} recurso(0,reply3);
 						}else{
 							resolve([false,lista]);
 						}

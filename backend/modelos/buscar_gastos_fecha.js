@@ -22,7 +22,7 @@ eje = function(arrays,origen,redisClient) {
 						verifico si existe sino envio codigo "4"
 					*/
 					redisClient.get("gasto_"+arrays[1]+"_"+arrays[2],function(err,reply) {
-						if(reply!==null){
+						if( reply!==null && reply !== undefined ){
 							resolve([true,reply]);
 						}else{
 							reject([false,"4"]);

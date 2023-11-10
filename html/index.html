@@ -195,6 +195,13 @@
 						else if ( valor.d[1] == "5" ) toastr.warning('Su horario laboral, ha culminado', 'Atención');
 					}
 				});
+				block.config = { "r" : "establecer_configuraciones", "d": block.arrays };
+				backend.conexionEnvio(JSON.stringify(block.config), function(salida){
+					const respuesta = JSON.parse(salida);
+					if (!respuesta.e) {						
+						window.sessionStorage.setItem("Configuracion",respuesta.d[ 1 ] );						
+					}
+				})
 			}else{
 				toastr.error('Faltan datos para iniciar sesion, corrobore sus credenciales','¡Atención!')
 			}
@@ -241,14 +248,27 @@
         });
 
 
+		// if ('serviceWorker' in navigator) {
+		//   window.addEventListener('load', () => {
+		// 	navigator.serviceWorker.register('sw.js')
+		// 		.then((reg) => {
+		// 		  console.log('Service worker registered.', reg);
+		// 		});				
+		//   });
+		// }
+
 		if ('serviceWorker' in navigator) {
-		  window.addEventListener('load', () => {
-			navigator.serviceWorker.register('sw.js')
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('sw.js')
 				.then((reg) => {
-				  console.log('Service worker registered.', reg);
-				});
-		  });
+					console.log('Service worker registered.', reg);
+				})
+				.catch((error) => {
+					console.error('Error al registrar el Service Worker: ', error);
+				});				
+			});
 		}
+
 	</script>
 </body>
 </html>

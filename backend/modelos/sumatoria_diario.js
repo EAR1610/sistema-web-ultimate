@@ -33,9 +33,9 @@ eje = function(arrays,origen,redisClient) {
 								total = total + parseInt(explit[2]);								
 								if(es==reply3.length-1){
 									redisClient.get("base_"+arrays[1]+"_"+dia,function(ersr,replcy) {
-										if( replcy !==null || replcy !== undefined ){
+										if( replcy !==null && replcy !== undefined ){
 											var inf = JSON.parse(replcy);											
-											if( inf !== null  ) {
+											if( inf !== null && inf !== undefined ) {
 												if( inf[3] ){
 													resolve([true,total,"0","Sin base"]);
 												} else {

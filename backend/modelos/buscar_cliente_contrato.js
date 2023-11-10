@@ -29,17 +29,17 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.get("registro_contrato_"+arrays[1],function(err3,reply_contrato){
-						if(reply_contrato!==null || reply_contrato !== undefined){
+						if(reply_contrato!==null && reply_contrato !== undefined){
 							for (contrato of JSON.parse(reply_contrato)){
 								elementos = contrato.split("_");
 								ultimo = elementos[elementos.length -1];
 								if (ultimo == arrays[2]){
 									redisClient.get('cliente_'+elementos[1],function(err3,reply_cliente){
 										var litado  = [];
-											if(reply_cliente!==null){
-												litado.push(reply_cliente);
-												resolve([true,litado]);
-											}
+										if(reply_cliente!==null){
+											litado.push(reply_cliente);
+											resolve([true,litado]);
+										}
 									}
 								);
 								}

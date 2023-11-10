@@ -18,32 +18,25 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
-					
+				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){					
 					/*
 						extraigo las lista de cuotas que tengo
-					*/
-					
+					*/					
 					redisClient.keys('cuotas_estaticas_'+decoded.d+'_*',function(err3,reply3){
-						if(reply3?.length > 0){
-							
-							
+						if(reply3?.length > 0){													
 							/*
 							ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
-							*/
-							
+							*/							
 							var litado = [];
 							function iterar(ind,arrs){
-								if(ind == arrs.length){
-									
+								if(ind == arrs.length){									
 									/*
-									resulvo resultado
-									*/
-									
+										resulvo resultado
+									*/									
 									resolve([true,litado]);
 								}else{
 									redisClient.get(arrs[ind],function(err,reply) {
-										if(reply!==null){
+										if( reply!==null && reply !== undefined ){
 											litado.push(reply);
 											ind++;
 											iterar(ind,arrs);
@@ -53,23 +46,19 @@ eje = function(arrays,origen,redisClient) {
 										}
 									});
 								}
-							}
-							
+							}							
 							iterar(0,reply3);
 						}else{
 							reject([false,"4"]);
 						}
-					});
-					
+					});					
 				}else{
 					reject([false,"2"]);
 				}
-			});
-			
+			});			
 		}else{
 			reject([false,"3"]);
-		}
-		
+		}		
 	});
 };
 

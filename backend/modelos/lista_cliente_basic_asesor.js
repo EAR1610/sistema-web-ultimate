@@ -26,7 +26,7 @@ eje = function(arrays,origen,redisClient) {
                         if(sreply!==null) {
                             var ines = JSON.parse(sreply);
                             redisClient.get(ines[arrays[2]], function (ewwr, sreplwy) {
-								if(sreplwy!==null){
+								if( sreplwy !== null && sreplwy !== undefined ){
 									resolve([true, sreplwy,0]);
 								}else{
 									redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){

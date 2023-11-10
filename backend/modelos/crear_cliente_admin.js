@@ -24,15 +24,17 @@ eje = function(arrays,origen,redisClient) {
 					function randomIntFromInterval(min,max){
 						return Math.floor(Math.random()*(max-min+1)+min);
 					}
+					
 					var ids = randomIntFromInterval(1000000,9999999);					
 					arrays.push(hoy);
 					arrays[0] = ids;
+
 					redisClient.set("cliente_"+arrays[7],JSON.stringify(arrays),function(err,reply) {						
 						/*
 							busco si exite sino lo creo y  ya
 						*/						
 						redisClient.get("registro_client_"+decoded.d,function(errw,replyw) {
-							if(replyw!==null){
+							if( replyw !== null && replyw !== undefined ){
 								var esa = JSON.parse(replyw);
 								
 								if(esa.indexOf("cliente_"+arrays[7])==-1){

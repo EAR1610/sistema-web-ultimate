@@ -47,7 +47,7 @@ eje = function(arrays,origen,redisClient) {
 									if(reply3.length > 0){
 										var litado  = [];
 										redisClient.get(reply3[0],function(err,reply) {
-											if(reply!==null){
+											if( reply!==null && reply !== undefined ){
 												litado.push(reply);
 												reject([false,"8",rkeply,litado]);
 											}

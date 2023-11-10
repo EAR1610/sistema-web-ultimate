@@ -20,8 +20,8 @@ eje = function(arrays,origen,redisClient) {
 				}else if( decoded.t == "0" || decoded.t == "1" || decoded.t == "2" || decoded.t== "5" ) {
 					
 					redisClient.keys('direccion_'+arrays[1]+'_*',function(err3,reply3){
-						if(reply3 !== null || reply3 !== undefined) {
-							if(reply3.length > 0){
+						if( reply3 !== null && reply3 !== undefined ) {
+							if( reply3.length > 0 ) {
 								
 								String.prototype.capitalize = function() {
 									return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()

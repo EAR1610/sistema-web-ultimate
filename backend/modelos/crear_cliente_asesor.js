@@ -35,7 +35,7 @@ eje = function(arrays,origen,redisClient) {
 							verifico si existe y listo
 						*/						
 						redisClient.get("registro_client_"+decoded.d,function(errw,replyw) {
-							if(replyw!==null){
+							if( replyw!==null && reply !== undefined){
 								var esa = JSON.parse(replyw);								
 								/*
 									guardo

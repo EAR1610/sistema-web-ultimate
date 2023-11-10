@@ -28,7 +28,7 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.get("gasto_"+arrays[1]+"_"+ides,function(err,reply) {
-						if(reply!==null){
+						if( reply !== null && reply !== undefined ){
 							resolve([true,reply]);
 						}else{
 							reject([false,"4"]);
@@ -53,7 +53,7 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.get("gasto_"+arrays[1]+"_"+arrays[2],function(err,reply) {
-						if(reply!==null){
+						if( reply!==null && reply !== undefined ){
 							resolve([true,reply]);
 						}else{
 							reject([false,"4"]);

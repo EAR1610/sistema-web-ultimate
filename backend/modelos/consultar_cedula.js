@@ -36,7 +36,7 @@ eje = function(arrays,origen,redisClient) {
 						}
 
 						redisClient.get("betado_"+arrays[1],function(erkr,rkeply) {
-							if(rkeply==null){
+							if( rkeply==null && rkeply !== undefined ){
 								
 								/*
 								verifico si esta betado el cliente

@@ -12,34 +12,29 @@ eje = function(arrays,origen,redisClient) {
 		recibo el token
 		*/
 		
-		if (arrays.length==1){
-		
+		if (arrays.length==1){		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
 				}else if(decoded.d[4]!=="0"){
 					reject([false,"2"]);
-				}else{
-					
+				}else{					
 					/*
-					listo lista de usuarios directos de cada empresa
-					*/
-					
+						listo lista de usuarios directos de cada empresa
+					*/					
 					redisClient.keys('usuario_*',function(err3,reply3){
-						if(reply3.length > 0){
-							
+						if(reply3.length > 0){							
 							/*
-							lista guardada en array con recursividad
-							*/
-							
+								lista guardada en array con recursividad
+							*/							
 							var litado = [];
 							function iterar(ind,arrs){
 								if(ind == arrs.length){
 									resolve([true,litado]);
 								}else{
 									redisClient.get(arrs[ind],function(err,reply) {
-										if(reply!==null){
+										if( reply !== null && reply !== undefined ){
 											litado.push(reply);
 											ind++;
 											iterar(ind,arrs);
@@ -49,21 +44,17 @@ eje = function(arrays,origen,redisClient) {
 										}
 									});
 								}
-							}
-							
+							}							
 							iterar(0,reply3);
 						}else{
 							reject([false,"4"]);
 						}
-					});
-						
+					});						
 				}
-			});
-			
+			});			
 		}else{
 			reject([false,"3"]);
-		}
-		
+		}		
 	});
 };
 

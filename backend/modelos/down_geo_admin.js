@@ -21,60 +21,62 @@ eje = function(arrays,origen,redisClient) {
 				} else if(decoded.t == "1" || decoded.t == "5" || decoded.t == "4"){
 					
 					/*
-					lista contratos segun orden
-					*/
-					
+						lista contratos segun orden
+					*/					
 					//[block.tokens[1],block.tokens[5],Numcuota,cedula];
 					redisClient.keys("registry_*_contrato_"+arrays[1]+"_*",function(err,reply) {
-						if(reply.length>0){
-							var lista = [];
-
-							function recurso(ind,arrs){
-								if(ind==arrs.length){
-									resolve([true,lista]);
-								} else{
-									var inus = arrs[ind].split("_");
-									
-									/*
-										extrae cliente
-									*/
-									
-									redisClient.get("cliente_"+inus[1],function(errs,datse){
-										if( datse !== null || datse !== undefined ) {
-											var infes = JSON.parse(datse);
-
-											var uno   = infes[8];
-                                            var tres  = infes[10];
-                                            var cedua = infes[7];
-                                            var direc = infes[12];
-                                            var tele  = infes[17];
-											var lat   = infes[20];
-											var lon   = infes[21];
-											
-											
-											/*guarda la data para ser emitidad despues*/
-											lista.push({"user":uno+" "+tres,"cedula":cedua,"lat":lat,"lon":lon,"direcion":direc,"cel":tele});
-											ind++;
-											recurso(ind, arrs);
-											
-                                            // redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
-											// 	if(dastse!==null){
-													
-											// 		var latos = JSON.parse(dastse);
-											// 		ind++;
-											// 		recurso(ind, arrs);
+						if ( reply !== null && reply !== undefined ){
+							if( reply.length>0 ){
+								var lista = [];
+	
+								function recurso(ind,arrs){
+									if(ind==arrs.length){
+										resolve([true,lista]);
+									} else{
+										var inus = arrs[ind].split("_");
+										
+										/*
+											extrae cliente
+										*/
+										
+										redisClient.get("cliente_"+inus[1],function(errs,datse){
+											if( datse !== null && datse !== undefined ) {
+												var infes = JSON.parse(datse);											
+												var uno   = infes[8];
+												var tres  = infes[10];
+												var cedua = infes[7];
+												var direc = infes[12];
+												var tele  = infes[17];
+												var lat   = infes[20];
+												var lon   = infes[21];
 												
-											// 	}
-											// });
-										}else{
-											ind++;
-											recurso(ind, arrs);
-										}
-									});
+												
+												/*guarda la data para ser emitidad despues*/
+												lista.push({"user":uno+" "+tres,"cedula":cedua,"lat":lat,"lon":lon,"direcion":direc,"cel":tele});
+												ind++;
+												recurso(ind, arrs);
+												
+												// redisClient.get("direccion_"+infes[13]+"_"+infes[14]+"_"+infes[15],function(errss,dastse) {
+												// 	if(dastse!==null){
+														
+												// 		var latos = JSON.parse(dastse);
+												// 		ind++;
+												// 		recurso(ind, arrs);
+													
+												// 	}
+												// });
+											}else{
+												ind++;
+												recurso(ind, arrs);
+											}
+										});
+									}
 								}
+								recurso(0,reply);
+							}else{
+								reject([false,"4"]);
 							}
-							recurso(0,reply);
-						}else{
+						} else{
 							reject([false,"4"]);
 						}
 					});

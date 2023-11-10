@@ -24,9 +24,9 @@ eje = function(arrays,origen,redisClient) {
 					var fecha_hora = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh:mm A');
 					var arraybase = [fecha_hora, arrays[1], arrays[2], arrays[4], arrays[5]];
 					redisClient.set("cierre_"+arrays[3]+"_"+arrays[1],JSON.stringify(arraybase),function(err,reply) {
-						if (reply!=null){
+						if ( reply!=null && reply !== undefined ){
 							redisClient.get("base_"+arrays[3]+"_"+arrays[1],function(ersr,replcy) {
-								if(replcy!==null){
+								if( replcy!==null && replcy !== undefined ){
 									var base = JSON.parse(replcy);
 									replcy[replcy.length-1]=true;
 									arraybase = [base[0],base[1],base[2],true];

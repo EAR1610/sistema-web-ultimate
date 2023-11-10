@@ -24,7 +24,7 @@ eje = function(arrays,origen,redisClient) {
 					redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
 						if( redpsly!==null && redpsly !== undefined ) {
 							var infex = JSON.parse(redpsly);							
-							if(infex[arrays[2]]!==null && infex[arrays[2]]!==undefined){
+							if(infex[arrays[2]] !== null && infex[arrays[2]] !== undefined){
 								var ogens = infex[arrays[2]].split("_");
 								var esde = ogens[5];
 								redisClient.get(infex[arrays[2]], function (edrr3, repdly3) {
