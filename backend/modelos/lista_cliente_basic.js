@@ -24,7 +24,7 @@ eje = function(arrays,origen,redisClient) {
 					
                     redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
 						const clientesTotales = JSON.parse( sreply );
-                        if( clientesTotales !==null ) {
+                        if( clientesTotales !==null && clientesTotales !== undefined ) {
 
 							var listado = [];
 

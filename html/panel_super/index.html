@@ -1441,6 +1441,7 @@
                                 <select class="form-control m-b" id="su_tipo_cargo">
                                     <option value="">Seleccione</option>
                                     <option value="a">Asesor</option>
+                                    <option value="c">Supervisor</option>
                                 </select>
                             </div>
 
@@ -1790,6 +1791,7 @@
                                         <th>Telefono</th>
                                         <th>Moto</th>
                                         <th>Imagen</th>
+                                        <th>Editar o suplantar</th>
                                     </tr>
                                     </thead>
                                     <tbody align="center" id="listado_supervisor">
@@ -3157,14 +3159,14 @@
 
 <script>
     var firebaseConfig = {        
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE",
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"              
+        apiKey: "AIzaSyAj2W3P9Qyg93M-4zt4z2C4hRCHU6GEdWE",
+        authDomain: "creditoselamigo-f3217.firebaseapp.com",
+        databaseURL: "https://creditoselamigo-f3217-default-rtdb.firebaseio.com",
+        projectId: "creditoselamigo-f3217",
+        storageBucket: "creditoselamigo-f3217.appspot.com",
+        messagingSenderId: "91763694848",
+        appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
+        measurementId: "G-DY06MSN1DM"
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -6818,6 +6820,100 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
 	}
 
+    function suplantare_supervisor(datas){
+		block.daata = JSON.parse(window.sessionStorage.getItem("Money-vars-temp-supervisor-"+datas));
+		window.sessionStorage.setItem("Money-vars-user-edit",datas);
+		$("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
+        $("#flotante2").css("display","none");
+        $("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+        $("#migrar_cion_div").css("display", "none");
+        $("#suplanter").css("display", "block");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
+
+		window.sessionStorage.setItem("Money-vars-foto-id-reverso",block.daata[3]);
+		window.sessionStorage.setItem("Money-vars-foto-id-normal",block.daata[2]);
+		window.sessionStorage.setItem("Money-vars-foto-id",block.daata[1]);
+
+		$("#su_telefono_fijo").val(block.daata[15]);
+		$("#su_telefono_cel").val(block.daata[16]);
+		$("#su_contra_sena").val(block.daata[20]);
+		$("#su_correo_electronico").val(block.daata[17]);
+		$("#su_tipo_cargo option[value='c']").attr("selected", true);
+		$("#su_pais_selecionado option[value='"+block.daata[4]+"']").attr("selected", true);
+		$("#su_tipo_departamento option[value='"+block.daata[12]+"']").attr("selected", true);
+
+        $("#su_tipo_ciudades").html('<option value=""></option>');
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1], block.daata[12]];
+        block.obj = {"r": "extraer_ciudades", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for (var e = 0; e < block.lista.length; e++) {
+                    block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
+                }
+                $("#su_tipo_ciudades").html($("#su_tipo_ciudades").html() + block.nuevo);
+				$("#su_tipo_ciudades option[value='"+block.daata[13]+"']").attr("selected", true);
+            }
+        });
+
+		$("#su_tipo_barrio").html('<option value=""></option>');
+        block.arrays = [block.tokens[1], block.daata[12], block.daata[13]];
+        block.obj = {"r": "extraer_barrios", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for (var e = 0; e < block.lista.length; e++) {
+                    block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
+                }
+                $("#su_tipo_barrio").html($("#su_tipo_barrio").html() + block.nuevo);
+				$("#su_tipo_barrio option[value='"+block.daata[14]+"']").attr("selected", true);
+            }
+        });
+
+		$("#su_numero_id").val(block.daata[6]);
+		$("#su_nombre_id1").val(block.daata[7]);
+		$("#su_nombre_id2").val(block.daata[8]);
+		$("#su_apellido_id1").val(block.daata[9]);
+		$("#su_apellido_id2").val(block.daata[10]);
+		$("#su_direccion_ubica").val(block.daata[11]);
+		$("#su_moto_detalle_list").val(block.daata[19]);
+		$("#su_foto_m1").attr("src", block.daata[1]);
+		$("#su_foto_m2").attr("src", block.daata[2]);
+		$("#su_foto_m3").attr("src", block.daata[3]);
+	}
+
     $("#registro_finalm").click(function () {
         block.pais = $("#pais_selecionadom").val();
         block.reverso = window.sessionStorage.getItem("Money-vars-foto-id-reversom");
@@ -7069,7 +7165,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.telefofijo = $("#su_telefono_fijo").val();
         block.telefomovil = $("#su_telefono_cel").val();
         block.correo = $("#su_correo_electronico").val();
-        block.asesorSuperAsis = "a";
+        block.asesorSuperAsis = $("#su_tipo_cargo").val();
         block.monto = $("#su_moto_detalle_list").val();
 
         if ($("#su_telefono_fijo").val() == "") {
@@ -7122,7 +7218,10 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             }
 
 			var datas = window.sessionStorage.getItem("Money-vars-user-edit");
-			block.daata = JSON.parse(window.sessionStorage.getItem("Money-vars-temp-asesor-"+datas));
+
+            if( block.asesorSuperAsis == "a") block.daata = JSON.parse(window.sessionStorage.getItem("Money-vars-temp-asesor-"+datas));
+            else block.daata = JSON.parse(window.sessionStorage.getItem("Money-vars-temp-supervisor-"+datas));
+			
 
             block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.asesorSuperAsis, block.monto,block.contras,block.daata[17],datas,block.daata[6]];
             block.obj = {"r": "crear_usuario_suplantao", "d": block.arrays};
@@ -7377,7 +7476,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     } else {
                         block.cedula = block.item[6];
                     }
-                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[22] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td></tr>';
+                    block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td><td><a href="javascript:ver_imagen(\'' + block.item[22] + '\');"><i class="fa fa-eye fa-2x" style="color:#01afef"></i></a></td><td><a href="javascript:suplantare_supervisor(' + String.fromCharCode(39) + block.item[22] + String.fromCharCode(39) + ');"><i class="fa fa-edit fa-2x" style="color:#01afef"></i></a></td></tr>';
                     // block.lista = block.lista + '<tr><td>' + block.item[22] + '</td><td>' + block.item[7] + ' ' + block.item[8] + ' ' + block.item[9] + ' ' + block.item[10] + '</td><td> ' + block.cedula + '</td><td>' + block.item[12] + '</td><td>' + block.item[13] + '</td><td>' + block.item[14] + '</td><td>' + block.item[11] + '</td><td>' + block.item[15] + '</td><td>' + block.item[16] + '</td><td>' + block.item[19] + '</td></tr>';
             
                 }
@@ -7506,6 +7605,23 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 }
                 $("#select_asesor").html(block.tes);
                 $("#listado_asesores").html(block.lista);                
+            }
+        });
+        
+        block.obj = {"r": "listar_supervisores", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);  
+            if (!valor.e) {
+                block.todo = valor.d[1];
+                for (var t = 0; t < block.todo.length; t++) {
+                    block.item = JSON.parse(block.todo[t]);
+                    if (block.item[4] == "2") {
+                        block.cedula = block.item[5] + block.item[6];
+                    } else {
+                        block.cedula = block.item[6];
+                    }
+                    window.sessionStorage.setItem("Money-vars-temp-supervisor-"+block.item[22],JSON.stringify(block.item));
+                }                
             }
         });
     }

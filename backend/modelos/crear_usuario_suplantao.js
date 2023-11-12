@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibo muchos datos, nota no estoy ostinado 
+			recibo muchos datos, nota no estoy ostinado 
 		*/
 		
 		if (arrays.length==24){
@@ -43,39 +43,28 @@ eje = function(arrays,origen,redisClient) {
 					new_user.push(arrays[22]);//id empresa
 					
 					/*
-					organizo los datos de la relacion y creo el nuevo usuario suplantado segun su cargo
-					*/
-					
+						organizo los datos de la relacion y creo el nuevo usuario suplantado segun su cargo
+					*/					
 					redisClient.del('usuario_'+arrays[21]+"_"+decoded.d,function(err2,reply2){
-						redisClient.del('relacion_usuario_'+arrays[23]+"_"+arrays[21],function(ersr2,redply2){
-							
-							
+						redisClient.del('relacion_usuario_'+arrays[23]+"_"+arrays[21],function(ersr2,redply2){														
 							redisClient.set('usuario_'+arrays[17]+"_"+decoded.d,JSON.stringify(new_user),function(err2,reply2){
-								redisClient.set('relacion_usuario_'+arrays[6]+"_"+arrays[17],"true",function(err2,reply2){
-									
-									
+								redisClient.set('relacion_usuario_'+arrays[6]+"_"+arrays[17],"true",function(err2,reply2){																
 									arrays[21]=hoy;
 									arrays[22]=arrays[22];
 									arrays[23]=decoded.d;
 									
 									redisClient.set("listado_"+decoded.d+"_"+tipo+"_"+arrays[22],JSON.stringify(arrays),function(err,reply) {
 										resolve([true,true]);
-									});
-									
-									
+									});																		
 								});
 							});
 							
 						});
-					});
-					
-					
-					
+					});														
 				}else{
 					reject([false,"2"]);
 				}
-			});
-			
+			});			
 		}else{
 			reject([false,"3"]);
 		}

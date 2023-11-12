@@ -12,9 +12,9 @@ backend.conexionEnvio = function (datos,callback){
 	if ("WebSocket" in window){
 
         if (!backend.dev) {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3000");
         } else {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3000");
         }
 
 		ws.onopen = function(){			
