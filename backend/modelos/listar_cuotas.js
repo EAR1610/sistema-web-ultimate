@@ -21,23 +21,31 @@ eje = function(arrays,origen,redisClient) {
 				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){					
 					/*
 						extraigo las lista de cuotas que tengo
-					*/					
+					*/			
+					console.log('cuotas_estaticas_+decoded.d+_*')	
+					console.log('cuotas_estaticas_'+decoded.d+'_*');
 					redisClient.keys('cuotas_estaticas_'+decoded.d+'_*',function(err3,reply3){
-						if(reply3?.length > 0){													
+						if(reply3?.length > 0){	
+							console.log("reply3");											
+							console.log(reply3);											
 							/*
 							ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
 							*/							
-							var litado = [];
+							var litado = [];				
 							function iterar(ind,arrs){
 								if(ind == arrs.length){									
 									/*
 										resulvo resultado
-									*/									
+									*/		
+									console.log("litado")							
+									console.log(litado)							
 									resolve([true,litado]);
 								}else{
 									redisClient.get(arrs[ind],function(err,reply) {
 										if( reply!==null && reply !== undefined ){
 											litado.push(reply);
+											console.log("reply")
+											console.log(reply)
 											ind++;
 											iterar(ind,arrs);
 										}else{
