@@ -3159,14 +3159,14 @@
 
 <script>
     var firebaseConfig = {        
-        apiKey: "AIzaSyAj2W3P9Qyg93M-4zt4z2C4hRCHU6GEdWE",
-        authDomain: "creditoselamigo-f3217.firebaseapp.com",
-        databaseURL: "https://creditoselamigo-f3217-default-rtdb.firebaseio.com",
-        projectId: "creditoselamigo-f3217",
-        storageBucket: "creditoselamigo-f3217.appspot.com",
-        messagingSenderId: "91763694848",
-        appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
-        measurementId: "G-DY06MSN1DM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -7099,8 +7099,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [ block.tokens[1] ];
         block.obj = {"r": "verificar_ubicaciones", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if(!valor.e){
                 if( valor.d[1][18] === "1" ){                    
                     if(block.lon.substr(0,1) !== "." && block.lat.substr(0,1) !== "." && block.lat !== "" && block.lon !== "" && block.lat.indexOf(".") >-1 && block.lon.indexOf(".") >- 1 && block.lon.indexOf("-") >- 1 && block.lat.indexOf("e") == -1 && block.lon.indexOf("e") == -1 && block.lat.indexOf(",") == -1 && block.lon.indexOf(",") == -1) {  
@@ -8512,8 +8511,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [block.tokens[1]];
         block.obj = { "r": "downconfiguracion", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if (!valor.e && valor.d[1] !== null) {
                 block.lista = JSON.parse(valor.d[1]);
                 $("#count_refinansacion").val(block.lista[12]);
@@ -8886,8 +8884,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
                 block.markesa=[];
                 block.tarjetero ="";
-                block.infoWindowContents=[];
-                console.log(block.listao);
+                block.infoWindowContents=[];                
                 for(var q=0; q<block.listao.length; q++){
                     block.markesa.push([block.listao[q].user,parseFloat(block.listao[q].lat),parseFloat(block.listao[q].lon)]);
                     block.infoWindowContents.push(['<div class="info_content">Nombre: '+block.listao[q].user+' <br> DPI: '+block.listao[q].cedula+'</div>']);
