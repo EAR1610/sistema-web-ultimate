@@ -2350,14 +2350,14 @@
                                 <form role="form">
                                     <label>Cuota a aplicar</label>
                                     <select class="form-control m-b" id="selector_cuotas_selec">
-                                        <option value=''>Seleccione</option>
+                                        <!-- <option value=''>Seleccione</option>
                                         <option value='20'>PLAN 20 DIAS 20 10%</option>
                                         <option value="30">PLAN 30 DIAS 30 15%</option>
                                         <option value='40'>PLAN 40 DIAS 40 20%</option>
                                         <option value='3'>PLAN 3 SEMANAS 10%</option>
                                         <option value='4'>PLAN 4 SEMANAS 15%</option>
                                         <option value='6'>PLAN 6 SEMANAS 20%</option>
-                                        <option value='8'>PLAN 8 SEMANAS 30%</option>
+                                        <option value='8'>PLAN 8 SEMANAS 30%</option> -->
                                     </select>
                                 </form>
                             </div>
@@ -3167,14 +3167,14 @@
 
 <script>
     var firebaseConfig = {        
-        apiKey: "AIzaSyAj2W3P9Qyg93M-4zt4z2C4hRCHU6GEdWE",
-        authDomain: "creditoselamigo-f3217.firebaseapp.com",
-        databaseURL: "https://creditoselamigo-f3217-default-rtdb.firebaseio.com",
-        projectId: "creditoselamigo-f3217",
-        storageBucket: "creditoselamigo-f3217.appspot.com",
-        messagingSenderId: "91763694848",
-        appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
-        measurementId: "G-DY06MSN1DM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -4879,36 +4879,36 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
 
     function listar_cuotas() {
-        // if (window.localStorage.getItem("Money-vars-token") !== null) {
-        //     block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-        // } else {
-        //     block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-        // }
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
 
-        // block.arrays = [block.tokens[1]];
-        // console.log(arrays);
-        // block.obj = {"r": "listar_cuotas", "d": block.arrays};
-        // backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-        //     var valor = JSON.parse(salida);            
-        //     console.log(valor);
-        //     if (!valor.e) {
-        //         block.lista = valor.d[1];
-        //         block.nuevo = "";
-        //         block.nuevo2 = "<option value=''>Seleccione</option>";
-        //         block.lisat = [];
-        //         for (var e = 0; e < block.lista.length; e++) {
-        //             block.iten = JSON.parse(block.lista[e]);
-        //             block.lisat.push(block.iten);
-        //             block.nuevo2 = block.nuevo2 + '<option value="'+block.iten[2]+'">'+block.iten[1]+'</option>';
-        //             block.nuevo = block.nuevo + '<tr><td>' + block.iten[1] + '</td><td>' + block.iten[2] + '</td><td>' + block.iten[3] + '%</td><td><a href="javascript:editar_couta_ya('+block.iten[2]+');">Eliminar</a></td></td>';
-        //         }
-        //         window.sessionStorage.setItem("Lista_cuota",JSON.stringify(block.lisat));
-        //         $("#selector_cuotas_selec").html(block.nuevo2);
-        //         $("#listado_cuotas_lis").html(block.nuevo);
-        //     }else{
-		// 		$("#listado_cuotas_lis").html("");
-		// 	}
-        // });
+        block.arrays = [block.tokens[1]];
+        console.log(arrays);
+        block.obj = {"r": "listar_cuotas", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            console.log(valor);
+            if (!valor.e) {
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                block.nuevo2 = "<option value=''>Seleccione</option>";
+                block.lisat = [];
+                for (var e = 0; e < block.lista.length; e++) {
+                    block.iten = JSON.parse(block.lista[e]);
+                    block.lisat.push(block.iten);
+                    block.nuevo2 = block.nuevo2 + '<option value="'+block.iten[2]+'">'+block.iten[1]+'</option>';
+                    block.nuevo = block.nuevo + '<tr><td>' + block.iten[1] + '</td><td>' + block.iten[2] + '</td><td>' + block.iten[3] + '%</td><td><a href="javascript:editar_couta_ya('+block.iten[2]+');">Eliminar</a></td></td>';
+                }
+                window.sessionStorage.setItem("Lista_cuota",JSON.stringify(block.lisat));
+                $("#selector_cuotas_selec").html(block.nuevo2);
+                $("#listado_cuotas_lis").html(block.nuevo);
+            }else{
+				$("#listado_cuotas_lis").html("");
+			}
+        });
     }
 
 	function editar_couta_ya(id){
