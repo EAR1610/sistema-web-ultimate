@@ -11,7 +11,7 @@ eje = function(arrays,origen,redisClient) {
 		/*
 		recibo el token
 		*/
-		
+		console.log(arrays);
 		if (arrays.length==1){//token,dueño
 		
 			var jwt = require('jsonwebtoken');

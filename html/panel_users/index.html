@@ -58,8 +58,9 @@
         let nombreCliente = ticketClienteImpresion.extraer[8] + ' ' +ticketClienteImpresion.extraer[9];
         let apellidoCliente = ticketClienteImpresion.extraer[10] + ' ' +ticketClienteImpresion.extraer[11];
         let NoCuota = ticketClienteImpresion.contador_cuotas;
-        let montoAPagar = parseInt(ticketClienteImpresion.cuotas[8].replace(/\./g, ''));
-        let saldoPendiente = ticketClienteImpresion.valoes - ticketClienteImpresion.acumo;
+        // let montoAPagar = parseInt(ticketClienteImpresion.cuotas[8].replace(/\./g, ''));
+        let montoAPagar = parseInt(window.sessionStorage.getItem("monto-pagado"));
+        let saldoPendiente = Math.ceil(parseInt(ticketClienteImpresion.valoes - ticketClienteImpresion.acumo));
         let saldoAnterior = montoAPagar + saldoPendiente;
         let infoSesion = JSON.parse(sessionStorage.getItem('Money-vars-token'));
         let infoSeparada = infoSesion[6].split(" ");
@@ -115,10 +116,11 @@
 
         doc.autoPrint(); 
         doc.output('dataurlnewwindow');
-        //doc.save('Boleta de pago de ' + fechaFormateada + ' Hora:' + hora +' de '+nombreCliente+'.pdf');    
+        //doc.save('Boleta de pago de ' + fechaFormateada + ' Hora:' + hora +' de '+nombreCliente+'.pdf');            
 
         setTimeout(function(){
             location.reload();
+            window.sessionStorage.setItem("monto-pagado", "0");
         }, 5000);
     }
 
@@ -575,6 +577,15 @@
                                 <form role="form">
                                     <label>Cuota a aplicar</label>
                                     <select class="form-control m-b" id="selector_cuotas_selec">
+                                        <option value=''>Seleccione</option>
+                                        <option value='20'>PLAN 20 DIAS 10%</option>
+                                        <option value="30">PLAN 30 DIAS 15%</option>
+                                        <option value='40'>PLAN 40 DIAS 20%</option>
+                                        <option value='3'>PLAN 3 SEMANAS 10%</option>
+                                        <option value='4'>PLAN 4 SEMANAS 15%</option>
+                                        <option value='6'>PLAN 6 SEMANAS 20%</option>
+                                        <option value='8'>PLAN 8 SEMANAS 30%</option>
+                                        <option value='1'>PLAN MENSUAL 1 15%</option>
                                     </select>
                                 </form>
                             </div>
@@ -1052,7 +1063,7 @@
         storageBucket: "creditoselamigo-f3217.appspot.com",
         messagingSenderId: "91763694848",
         appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
-        measurementId: "G-DY06MSN1DM" 
+        measurementId: "G-DY06MSN1DM"
 	};
 	
     firebase.initializeApp(firebaseConfig);
@@ -1375,17 +1386,18 @@
                 block.limitos = JSON.parse(window.sessionStorage.getItem("Configuracion"));
                 block.min = parseInt(block.limitos[1]);
                 block.max = parseInt(block.limitos[2]);
-
+                // console.log("change")
                 if ($("#monto_prestar_ya_admin").val()!=="") {                    
                     block.evad = $("#monto_prestar_ya_admin").val(); //cantidad de prestamo
                     block.resa = block.evad.replace(".","");
                     block.resa2 = block.resa.replace(".","");
-                    block.nuevomonto = parseInt(block.resa2);										
-                    
+                    block.nuevomonto = parseInt(block.resa2);
 					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max) {
-
                         for (var w = 0; w < block.cuotas.length; w++) {
-                            if (block.cuotas[w][2] == $("#selector_cuotas_selec").val()) { //cantidad de cuotas
+                            // console.log($("#selector_cuotas_selec").find("option:selected").text())
+                            // console.log(block.cuotas[w][1])
+                            if (block.cuotas[w][2] == $("#selector_cuotas_selec").val() &&  block.cuotas[w][1] == $("#selector_cuotas_selec").find("option:selected").text() ) { //cantidad de cuotas
+                                // console.log("INGRESO - COINICIDENCIA");
                                 $("#utilidad_prestada").html(block.cuotas[w][3]);
                                 block.limpi = $("#monto_prestar_ya_admin").val();
                                 block.comp = block.limpi.replace(".", "");
@@ -2063,7 +2075,7 @@
 
     function procesarDescuento( Numcuota, cedula ) {
         
-        if (window.localStorage.getItem("Money-vars-token") !== null) {
+        if ( window.localStorage.getItem("Money-vars-token") !== null ) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
@@ -2071,7 +2083,7 @@
 		
 		block.tempFecha = window.sessionStorage.getItem("Money-vars-fecha");
         
-        block.arrays = [block.tokens[1],block.tokens[5], Numcuota, cedula[0], cedula[1]];
+        block.arrays = [ block.tokens[1],block.tokens[5], Numcuota, cedula[0], cedula[1] ];
         block.obj = { "r": "descontar_cuota", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {  
 			var valor = JSON.parse(salida);
@@ -2175,10 +2187,10 @@
     */
 
     $("#status_prestamo").click(function () {
-        if($("#cuotas_coun").val()!=="" && $("#cuotas_coun").val()!=="0") {			
+        if( $("#cuotas_coun").val()!=="" && $("#cuotas_coun").val()!=="0" ) {			
 			block.loire = $("#cuotas_coun").val();
-			block.nega = parseInt(block.loire);			
-			if( block.loire.indexOf(".") == -1 && block.loire.indexOf(",") == -1 && block.loire.indexOf("+") == -1 && block.loire.indexOf("e") == -1 && block.loire.indexOf("E") == -1 && block.nega > 0 ) {	
+			block.nega = parseInt( block.loire );
+			if( block.loire.indexOf(".") == -1 && block.loire.indexOf(",") == -1 && block.loire.indexOf("+") == -1 && block.loire.indexOf("e") == -1 && block.loire.indexOf("E") == -1 && block.nega > 0 ) {
 				block.montoCuota = $("#cuotas_coun").val();
 				block.montoCuota = block.montoCuota.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
 				block.montoCuota = block.montoCuota.split('').reverse().join('').replace(/^[\.]/, '');
@@ -2192,6 +2204,8 @@
 					confirmButtonText: "Si, seguro!",
 					closeOnConfirm: true
 				}, function () {
+                    block.montoPagado = $("#cuotas_coun").val();
+                    window.sessionStorage.setItem("monto-pagado", parseInt(block.montoPagado));
 					procesarDescuento( $("#cuotas_coun").val(), JSON.parse( window.localStorage.getItem("Money-vars-pagar") ) );
 				});				
 			} else {
@@ -2359,32 +2373,32 @@
     });
 
     function listar_cuotas() {
-        if (window.localStorage.getItem("Money-vars-token") !== null) {
-            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-        } else {
-            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-        }
+        // if (window.localStorage.getItem("Money-vars-token") !== null) {
+        //     block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        // } else {
+        //     block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        // }
 
-        block.arrays = [block.tokens[1]];
-        block.obj = {"r": "listar_cuotas", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            if (!valor.e) {                
-                block.lista = valor.d[1];
-                block.nuevo = "";
-                block.nuevo2 = "<option value=''>Seleccione</option>";
-                block.lisat = [];
-                for (var e = 0; e < block.lista.length; e++) {
-                    block.iten = JSON.parse(block.lista[e]);
-                    block.lisat.push(block.iten);
-                    block.nuevo2 = block.nuevo2 + '<option value="'+block.iten[2]+'">'+block.iten[1]+'</option>';
-                    block.nuevo = block.nuevo + '<tr><td>' + block.iten[1] + '</td><td>' + block.iten[2] + '</td><td>' + block.iten[3] + '%</td></td>';
-                }
-                window.sessionStorage.setItem("Lista_cuota",JSON.stringify(block.lisat));
-                $("#selector_cuotas_selec").html(block.nuevo2);
-                $("#listado_cuotas_lis").html(block.nuevo);
-            }
-        });
+        // block.arrays = [block.tokens[1]];
+        // block.obj = {"r": "listar_cuotas", "d": block.arrays};
+        // backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        //     var valor = JSON.parse(salida);
+        //     if (!valor.e) {                
+        //         block.lista = valor.d[1];
+        //         block.nuevo = "";
+        //         block.nuevo2 = "<option value=''>Seleccione</option>";
+        //         block.lisat = [];
+        //         for (var e = 0; e < block.lista.length; e++) {
+        //             block.iten = JSON.parse(block.lista[e]);
+        //             block.lisat.push(block.iten);
+        //             block.nuevo2 = block.nuevo2 + '<option value="'+block.iten[2]+'">'+block.iten[1]+'</option>';
+        //             block.nuevo = block.nuevo + '<tr><td>' + block.iten[1] + '</td><td>' + block.iten[2] + '</td><td>' + block.iten[3] + '%</td></td>';
+        //         }
+        //         window.sessionStorage.setItem("Lista_cuota",JSON.stringify(block.lisat));
+        //         $("#selector_cuotas_selec").html(block.nuevo2);
+        //         $("#listado_cuotas_lis").html(block.nuevo);
+        //     }
+        // });
     }
 
     $("#nombre_id1").prop("disabled", true);
@@ -2673,6 +2687,11 @@
     $("#letra_venezuelam").css("display", "none");
 
     window.sessionStorage.setItem("Money-vars-tipo", "1");
+    //QUITAR ESTOOOOO
+    block.CuotasTotales = [[1393166, "PLAN 20 DIAS 10%", "20", "10"],[1393166, "PLAN 30 DIAS 15%", "30", "15"],[1393166, "PLAN 40 DIAS 20%", "40", "20"],[1393166, "PLAN 3 SEMANAS 10%", "3", "10"],
+    [1393166, "PLAN 4 SEMANAS 15%", "4", "15"], [1393166, "PLAN 6 SEMANAS 20%", "6", "20"],[1393166, "PLAN 8 SEMANAS 30%", "8", "30"],[1393166, "PLAN MENSUAL 1 15%", "1", "15"]];
+    window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
+
 
     $("#tipo_cargo").change(function () {
         if ($("#tipo_cargo").val() == "a" || $("#tipo_cargo").val() == "c") {
@@ -3025,10 +3044,14 @@
 					$("#dias_prestame").text("0");
 				}
                 ticketClienteImpresion = block;
+                console.log("block.acumo")
+                console.log(block.acumo)
+                console.log("block.valoes")
+                console.log(block.valoes)
 				$("#cuento_prestame").text(block.cuotas[3]);   //Creditos aprobados
 				$("#dias_prestame").text(block.contador_cuotas); //num_cuotas
 				$("#valor_prestame").text(block.cuotas[8]);      // cuota a pagar      
-				$("#pago_prestame").text(block.valoes-block.acumo); // saldo pendiente
+				$("#pago_prestame").text(Math.ceil(valoes-block.acumo)); // saldo pendiente
 				$("#entregado_prestame").text(block.cuotas[3]); //Saldo entregado
 				$("#descuento_prestame").text("0"); 
 				$("#text_nombre_cliente2").val(block.extraer[8]+" "+block.extraer[9]+" "+block.extraer[10]+" "+block.extraer[11]); //Nombre1, Nombre2, Apellido1, Apellido2

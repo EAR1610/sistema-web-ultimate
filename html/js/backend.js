@@ -1,6 +1,6 @@
 var backend = this;
 
-backend.dev = false;
+backend.dev = true;
 
 if(!backend.dev){
 	backend.usuando = "85.10.196.212";

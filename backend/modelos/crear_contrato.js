@@ -83,7 +83,7 @@ eje = function(arrays,origen,redisClient) {
 												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
 												
 												for (var k = 1; k < tiempo + 1; k++) {
-													if(k == 4){
+													if(k == tiempo){
 														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													}
@@ -161,7 +161,7 @@ eje = function(arrays,origen,redisClient) {
 												for(var k = 1; k < tiempo+1; k++){
 													// arrays[5]
 													var prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');	
-													if(k == tiempo - 1){
+													if(k == tiempo){
 														fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													} else {
 														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
@@ -173,9 +173,14 @@ eje = function(arrays,origen,redisClient) {
 													cuotaD2 = cuotaD.replace(".",""),
 													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4];
-												for(var k = 1; k < 2; k++){
+												for(var k = 1; k < tiempo + 1; k++){
 													var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
-													fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+													if(k == tiempo){
+														fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+													} else {
+														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
+													}
+
 													prox = prox2;
 												}												
 											}																						
