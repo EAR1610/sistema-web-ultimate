@@ -1056,14 +1056,14 @@
 <script>
 
     var firebaseConfig = {        
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE",
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
 	};
 	
     firebase.initializeApp(firebaseConfig);	
@@ -2960,7 +2960,8 @@
         block.cedula = window.sessionStorage.getItem("Money-vars-registrado");
     });
 	
-	function fijar_monto(id,cedula){   
+	function fijar_monto(id,cedula){ 
+        debugger;  
 		window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));
 		$("#cuotas_coun").css("display","block");
 		$("#cedula_elecion").css("display","none");
@@ -2990,14 +2991,15 @@
 				block.todosCal = [];
 				for(var x = 0; x < block.cuotas[13].length; x++){
 
-                    block.valoes += parseInt(block.cuotas[13][x].cp);
+                    block.valoes += parseInt(block.cuotas[13][x].cp.replace(/\./g, ''));
 
                     if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0){
                         block.contador_cuotas++;                        
 					}
                     
 					if(block.cuotas[13][x].pe!==0) {                        
-                        block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);                        
+                        block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);
+                        console.log(block.acumo);
 						//abono
 						block.abono = block.cuotas[13][x].pe.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
 						block.abono = block.abono.split('').reverse().join('').replace(/^[\.]/,'');
