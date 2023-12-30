@@ -3235,7 +3235,7 @@
 			
 			// block.lon = $("#add_barrio_lon_text").val();
 			
-			if( block.depa!=="" && block.ciud!=="" && block.barr!=="" ) {
+			if( block.depa !== "" && block.ciud !== "" && block.barr !== "" ) {
 								
 				if(window.localStorage.getItem("Money-vars-token")!==null){
 					block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3261,7 +3261,9 @@
 					}
 				});
 				
-			}
+			} else {
+                toastr.warning('Faltan datos para registrar la ubicación','Atencion!');
+            }
 		});
 
     if (window.sessionStorage.getItem("Money-vars-token") == null) {

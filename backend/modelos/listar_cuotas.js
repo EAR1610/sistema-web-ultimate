@@ -25,39 +25,43 @@ eje = function(arrays,origen,redisClient) {
 					console.log('cuotas_estaticas_+decoded.d+_*')	
 					console.log('cuotas_estaticas_'+decoded.d+'_*');
 					redisClient.keys('cuotas_estaticas_'+decoded.d+'_*',function(err3,reply3){
-						if(reply3?.length > 0){	
-							console.log("reply3");											
-							console.log(reply3);											
-							/*
-							ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
-							*/							
-							var litado = [];				
-							function iterar(ind,arrs){
-								if(ind == arrs.length){									
-									/*
-										resulvo resultado
-									*/		
-									console.log("litado")							
-									console.log(litado)							
-									resolve([true,litado]);
-								}else{
-									redisClient.get(arrs[ind],function(err,reply) {
-										if( reply!==null && reply !== undefined ){
-											litado.push(reply);
-											console.log("reply")
-											console.log(reply)
-											ind++;
-											iterar(ind,arrs);
-										}else{
-											ind++;
-											iterar(ind,arrs);
-										}
-									});
-								}
-							}							
-							iterar(0,reply3);
-						}else{
-							reject([false,"4"]);
+						if(reply3 !== null && reply3 !== undefined){
+							if(reply3?.length > 0){	
+								console.log("reply3");											
+								console.log(reply3);											
+								/*
+								ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
+								*/							
+								var litado = [];				
+								function iterar(ind,arrs){
+									if(ind == arrs.length){									
+										/*
+											resulvo resultado
+										*/		
+										console.log("litado")							
+										console.log(litado)							
+										resolve([true,litado]);
+									}else{
+										redisClient.get(arrs[ind],function(err,reply) {
+											if( reply!==null && reply !== undefined ){
+												litado.push(reply);
+												console.log("reply")
+												console.log(reply)
+												ind++;
+												iterar(ind,arrs);
+											}else{
+												ind++;
+												iterar(ind,arrs);
+											}
+										});
+									}
+								}							
+								iterar(0,reply3);
+							}else{
+								reject([false,"4"]);
+							}
+						} else {
+							reject([false,"4"]);							
 						}
 					});					
 				}else{

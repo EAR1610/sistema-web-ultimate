@@ -12,8 +12,8 @@ var dev = false;
 if(!dev){
 	//#908570 Essentials/AWS/us-west-1/Standard/30MB
 
-	var redisClient = redis.createClient({ host : 'redis-13613.c60.us-west-1-2.ec2.cloud.redislabs.com', port : 13613 });
-	redisClient.auth('xe7aMGLLIjG0ym6QROoRABGN6YOhggG7',function(err,reply) {
+	var redisClient = redis.createClient({ host : 'redis-11727.c274.us-east-1-3.ec2.cloud.redislabs.com', port : 11727 });
+	redisClient.auth('gNaiUJCflMayUMfsDkDCJP448PYqSKbY',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		}else{
@@ -44,8 +44,8 @@ redisClient.on('error',function() {
 /*
 	Siempre asiganre la clave de acceso del root
 */
-var arrays = [ "admin@credimas.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
-redisClient.set("usuario_admin@credimas.com_1000000",JSON.stringify(arrays),function(err2,reply2){
+var arrays = [ "admin@pruebas.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
+redisClient.set("usuario_admin@pruebas.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });
 

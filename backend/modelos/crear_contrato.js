@@ -42,16 +42,11 @@ eje = function(arrays,origen,redisClient) {
 										verifiquo si tiene otros contratos
 									*/
 									redisClient.keys("registry_"+arrays[1]+"_contrato_*",function(erxsr,replxsy) {	
-										console.log("replxsy");								
-										console.log(replxsy);		
-										console.log(arrays)
 										const contratosAsesoresDiferentes = replxsy.filter( registro => {
 											let partes = registro.split('_');
 											let id = partes[4];
 											return id != arrays[2];
 										});										
-										console.log("contratosAsesoresDiferentes")
-										console.log(contratosAsesoresDiferentes)
 
 										if( contratosAsesoresDiferentes.length > 0 ){
 											var otrasEmpresa = replxsy.length - miEmpresa;
@@ -63,9 +58,9 @@ eje = function(arrays,origen,redisClient) {
 										*/
 										if( extric == "3" && miEmpresa > 0 ) {
 											resolve( [false,"4",miEmpresa] );
-										}else if( extric=="3" && otrasEmpresa > 0 ){
+										} else if( extric=="3" && otrasEmpresa > 0 ) {
 											resolve( [false,"5",otrasEmpresa] );
-										}else{
+										} else {
 											var moment = require("moment-timezone");
 											/*
 												creo la cantidad de cuotas que require según el ciclo que tengan
@@ -93,7 +88,7 @@ eje = function(arrays,origen,redisClient) {
 												}
 												if (fes.length > parseInt(arrays[4])) {
 													fes.pop();
-												}																																				
+												}
 											} else if(arrays[10]=="1"){ //FRECUENCIA DE PAGO DIARIA												
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
@@ -151,7 +146,7 @@ eje = function(arrays,origen,redisClient) {
 												}											
 												if(fes.length > parseInt(arrays[4])){
 													fes.pop();
-												}												
+												}	
 											}else if(arrays[10]=="3"){ //PAGO QUINCENAL
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
@@ -167,7 +162,7 @@ eje = function(arrays,origen,redisClient) {
 														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													}
 													prox = prox2;													
-												}												
+												}
 											} else if(arrays[10]=="4"){	//PAGO MENSUAL	
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
@@ -182,7 +177,28 @@ eje = function(arrays,origen,redisClient) {
 													}
 
 													prox = prox2;
-												}												
+												}
+											} else if (arrays[10] == "5") { //PAGO CONFIGURABLE 4 PAGOS EN 25 DÍAS
+												var cuotaD = arrays[8].replace(".", ""),
+												cuotaD2 = cuotaD.replace(".", ""),
+												tiempo = arrays[4],
+												indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
+												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
+												
+												for (var k = 1; k < 4 + 1; k++) {
+													console.log(k);
+													if(k == 4){
+														var prox2 = moment(prox).add(4, 'days').format('YYYY-MM-DD'); // Agregar 4 días para obtener la próxima fecha del mismo día de la semana
+														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+													} else {
+														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+														prox = prox2;
+														fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
+													}
+												}
+												if (fes.length > parseInt(arrays[4])) {
+													fes.pop();
+												}
 											}																						
 											if(fes.length>0){										
 												var desc = parseInt(arrays[6]);

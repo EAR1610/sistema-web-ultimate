@@ -25,12 +25,7 @@ eje = function(arrays,origen,redisClient) {
 							if(info[3]==true){
 								if(info[1]==arrays[1]){									
 									/*verifica si es la clave y crea token util para el backend */
-									// var jwt = require('jsonwebtoken'),token = jwt.sign({"i":arrays[0],"d":info[5],"t":info[4],"n":info[6]},'clWve-G*-9)1',{ expiresIn: 60 * 60 * 12 });
-									// resolve([true,token,arrays[0],info[4],info[5],info[6],""]);
-
 									redisClient.keys('configuracion_*', function(errEmpresa, datosEmpresa){
-										console.log("datosEmpresa");
-										console.log(datosEmpresa);
 
 										if( datosEmpresa !== null && datosEmpresa.length > 0 ){
 											redisClient.get(datosEmpresa[0], function(errorConfiguracion, configuracion){
@@ -53,6 +48,9 @@ eje = function(arrays,origen,redisClient) {
 													}
 												});
 											})
+										} else {
+											var jwt = require('jsonwebtoken'),token = jwt.sign({"i":arrays[0],"d":info[5],"t":info[4],"n":info[6]},'clWve-G*-9)1',{ expiresIn: 60 * 60 * 12 });
+											resolve([true,token,arrays[0],info[4],info[5],info[6],""]);
 										}
 									})								
 								}else{
