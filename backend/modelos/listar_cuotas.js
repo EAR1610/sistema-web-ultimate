@@ -27,8 +27,7 @@ eje = function(arrays,origen,redisClient) {
 					redisClient.keys('cuotas_estaticas_'+decoded.d+'_*',function(err3,reply3){
 						if(reply3 !== null && reply3 !== undefined){
 							if(reply3?.length > 0){	
-								console.log("reply3");											
-								console.log(reply3);											
+																			
 								/*
 								ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
 								*/							
@@ -38,8 +37,7 @@ eje = function(arrays,origen,redisClient) {
 										/*
 											resulvo resultado
 										*/		
-										console.log("litado")							
-										console.log(litado)							
+																
 										resolve([true,litado]);
 									}else{
 										redisClient.get(arrs[ind],function(err,reply) {

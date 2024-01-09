@@ -80,7 +80,7 @@ eje = function(arrays,origen,redisClient) {
 												for (var k = 1; k < tiempo + 1; k++) {
 													if(k == tiempo){
 														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
-														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+														fes.push({ "cp": ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													}
 													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 													prox = prox2;
@@ -103,13 +103,13 @@ eje = function(arrays,origen,redisClient) {
 													if( k == (tiempo - 1) ) {
 														if(k<residuo){
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');															
-															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+															fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k==residuo){
 															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
 															acum++;
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+															fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 														} else if(k>residuo){
 															if(acum==7){
@@ -117,7 +117,7 @@ eje = function(arrays,origen,redisClient) {
 																acum=1;
 															}
 															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+															fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
 															prox = prox2;
 															acum++;
 														}
@@ -157,7 +157,7 @@ eje = function(arrays,origen,redisClient) {
 													// arrays[5]
 													var prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');	
 													if(k == tiempo){
-														fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
+														fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													} else {
 														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													}
@@ -171,7 +171,7 @@ eje = function(arrays,origen,redisClient) {
 												for(var k = 1; k < tiempo + 1; k++){
 													var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
 													if(k == tiempo){
-														fes.push({ "cp":ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+														fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													} else {
 														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
 													}
@@ -183,17 +183,22 @@ eje = function(arrays,origen,redisClient) {
 												cuotaD2 = cuotaD.replace(".", ""),
 												tiempo = arrays[4],
 												indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
-												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
+												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual
 												
 												for (var k = 1; k < 4 + 1; k++) {
-													console.log(k);
 													if(k == 4){
-														var prox2 = moment(prox).add(4, 'days').format('YYYY-MM-DD'); // Agregar 4 días para obtener la próxima fecha del mismo día de la semana
-														fes.push({ "cp": ultima_cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+														var prox2 = moment(prox).add(4, 'days'); // Agregar 4 días para obtener la próxima fecha del mismo día de la semana
+														if( prox2.isoWeekday() === 7 ){ //Si es Domingo
+															prox2 = prox2.subtract(1, 'days'); // Restar un día para que sea sábado
+														}
+														prox2 = prox2.format('YYYY-MM-DD');
+														fes.push({ "cp": ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
+
 													} else {
 														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 														prox = prox2;
 														fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
+
 													}
 												}
 												if (fes.length > parseInt(arrays[4])) {

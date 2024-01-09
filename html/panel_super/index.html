@@ -2673,6 +2673,7 @@
                                         <th>Prestamo</th>
                                         <th>Porcentaje</th>
                                         <th>Cuotas</th>
+                                        <th>Fecha de culminación</th>
                                         <!-- <th>Ayudante</th>
                                         <th>Supervidor</th> -->
                                         <!-- <th>Opciones</th> -->
@@ -3166,15 +3167,15 @@
 <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
 
 <script>
-    var firebaseConfig = {        
-        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
-        authDomain: "axelssmoney.firebaseapp.com",
-        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
-        projectId: "axelssmoney",
-        storageBucket: "axelssmoney.appspot.com",
-        messagingSenderId: "915189749485",
-        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
-        measurementId: "G-N2Z1GX04BF"
+    var firebaseConfig = {
+        apiKey: "AIzaSyDAOA9dH2MeN8xy6WqZpNzNuoJkjKYMvfQ",
+        authDomain: "axelssmoney-20658.firebaseapp.com",
+        databaseURL: "https://axelssmoney-20658-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney-20658",
+        storageBucket: "axelssmoney-20658.appspot.com",
+        messagingSenderId: "841250069817",
+        appId: "1:841250069817:web:76b46aa832b8bdfb0c5ce8",
+        measurementId: "G-X7JXRYZENR"
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -4888,11 +4889,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }
 
         block.arrays = [block.tokens[1]];
-        console.log(arrays);
         block.obj = {"r": "listar_cuotas", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);            
-            console.log(valor);
             if (!valor.e) {
                 block.lista = valor.d[1];
                 block.nuevo = "";
@@ -4907,7 +4906,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 window.sessionStorage.setItem("Lista_cuota",JSON.stringify(block.lisat));
                 $("#selector_cuotas_selec").html(block.nuevo2);
                 $("#listado_cuotas_lis").html(block.nuevo);
-            }else{
+            } else {
 				$("#listado_cuotas_lis").html("");
 			}
         });
@@ -5049,7 +5048,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 	$("#lista_enorme").append("");
 
     function listado_contratos(mun){
-
         block.unico =  parseInt(mun);
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -5091,29 +5089,37 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 				block.sumas = 0;
 				for(var u= 0; u<block.calsulo.length; u++){
 					if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
-						block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
+						block.sumas = block.sumas + parseInt(block.calsulo[u].cp.replace(/\./g, ""));
 					}else if(block.calsulo[u].pe!==0){
-						block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
+						block.sumas = block.sumas + parseInt(block.calsulo[u].cp.replace(/\./g, "")) - parseInt(block.calsulo[u].pe);
 					}
 				}
 
                 /*  *  PARA ELIMINAR UN CONTRATO POR PARTE DEL JEFE  */
                 // <td><div class="btn-group"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"></button> <ul class="dropdown-menu"><li><a class="dropdown-item"  href="javascript:eliminar_lis('+String.fromCharCode(39)+'registry_'+block.unox[1]+'_contrato_'+block.unox[0]+'_'+block.unox[2]+'_'+valor.d[1][0][4]+String.fromCharCode(39)+');"><i class="fa fa-times"></i> &nbsp Eliminar</a></li> </ul></div></td>
 
+                //Damos formato a la fechad de Registro del contrato (dd-mm-yyyy);
+                block.fechaSinFormatoRegistro = block.unox[5];
+                let partesFechaRegistroContrato = block.fechaSinFormatoRegistro.split('-');
+                block.fechaRegistro = `${ partesFechaRegistroContrato[2] }-${ partesFechaRegistroContrato[1] }-${ partesFechaRegistroContrato[0] }`;
+
+                //Damos formato a la fechad de Culminacion del contrato (dd-mm-yyyy);
+                block.fechaSinFormatoCulminacion = block.calsulo[block.calsulo.length - 1].fe;
+                let partesFecha = block.fechaSinFormatoCulminacion.split('-');
+                block.fechaCulminacion = `${ partesFecha[2] }-${ partesFecha[1] }-${ partesFecha[0] }`;
+
 				block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
-				block.oso = block.oso + '<tr><td>'+block.unox[5]+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td></tr>';
 
+				block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
                 block.unico++;
+
                 listado_contratos(block.unico);
                 $("#lista_enorme").append(block.oso);
-
             }else if(valor.d[2]!==0 && valor.d[2]>block.unico){
-
 				block.unico++;
 				listado_contratos(block.unico);
 			}
-
         });
     }
 

@@ -66,22 +66,13 @@ eje = function(arrays,origen,redisClient) {
 													complete++;
 												}
 
-												console.log("tolete, monto2");												
-												console.log(tolete + "-"+monto2);
-
 												var canti = parseInt(lisa[w].cp);
 												var moment = require("moment-timezone");
 												var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 	
 												if(!lisa[w].ct) {
-													console.log(monto);
-													console.log("monto");
-													console.log(lisa[w].pe);
-													console.log("lisa[w].pe");
 													if( monto < canti && lisa[w].pe != 0){
 														monto += lisa[w].pe;
-														console.log("monto abono");
-														console.log(monto);
 														if(monto < canti) {
 															lisa[w].pe = monto;
 															lisa[w].pago = dia;
@@ -103,23 +94,16 @@ eje = function(arrays,origen,redisClient) {
 														lisa[w].pe = 0;
 														lisa[w].pago = dia;
 													} else if (monto > canti &&  lisa[w].pe == 0) {
-														console.log("monto > canti &&  lisa[w].pe == 0");
 														lisa[w].ct = true;
 														monto = monto - parseInt(lisa[w].cp);
-														console.log("lisa[w].cp");
-														console.log(lisa[w].cp);
 														lisa[w].pago = dia;
 													} else if (monto == canti && lisa[w].pe == 0) {	//Pago exactooooo
-														console.log("monto == canti && lisa[w].pe == 0")
 														lisa[w].ct = true;
 														monto = 0;
 														lisa[w].pago = dia;
 													} else if(lisa[w].pe == 0 && monto>0){
-														console.log("lisa[w].pe == 0 && monto>0");
 														lisa[w].ct = false;
 														lisa[w].pe = monto;
-														console.log("lisa[w].pe");
-														console.log(lisa[w].pe);
 														monto = 0;
 														lisa[w].pago = dia;
 													}
@@ -129,20 +113,15 @@ eje = function(arrays,origen,redisClient) {
 												descuento y sumo los valores que necesito calcular
 											*/										
 											var asesorw = arrays[1];
-											console.log("arrays[2]==lisa[lisa.length-1].cp");
-											console.log(arrays[2]==lisa[lisa.length-1].cp);
 
 											if(arrays[2]==lisa[lisa.length-1].cp){
-												console.log("tolete_"+asesorw+"_"+fechaqx2);
 												redisClient.get("tolete_"+asesorw+"_"+fechaqx2, function (errex, rewprelyx) { 
 													if(rewprelyx == null){
-														console.log("tolete_"+asesorw+"_"+fechaqx2,JSON.stringify({"n":1,"c":arrays[2]}));
 														redisClient.set("tolete_"+asesorw+"_"+fechaqx2,JSON.stringify({"n":1,"c":arrays[2]}), function (errex, rewprelyx) {});
 													}else{
 														var infqo = JSON.parse(rewprelyx);
 														var sumo1 = parseInt(infqo.n) +1;
 														var sumo2 = parseInt(infqo.c) + parseInt(arrays[2]);
-														console.log("tolete_"+asesorw+"_"+fechaqx2,JSON.stringify({"n":sumo1,"c":sumo2}));
 														redisClient.set("tolete_"+asesorw+"_"+fechaqx2,JSON.stringify({"n":sumo1,"c":sumo2}), function (errex, rewprelyx) {});
 													}
 												});
@@ -153,13 +132,10 @@ eje = function(arrays,origen,redisClient) {
 	
 											var moment = require("moment-timezone"),fechaqx2 = moment().tz("America/Guatemala").format('YYYY-MM-DD');													
 											var fechaq = moment().tz("America/Guatemala").format('YYYY-MM-DD_hh_mm_A'),asesorw = arrays[1];
-											console.log("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3]+"_"+cedulax[1],"true");
 											redisClient.set("monto_" + asesorw + "_"+arrays[2]+"_"+fechaq+"_"+arrays[3]+"_"+cedulax[1],"true", function (errex, rewprlyx) {
 											});
 	
-											console.log("tolet is:")
-											console.log(tolete);
-											if( tolete == monto2 ){//si pago exacto
+											if( tolete == monto2 ){//Si pago exacto
 												
 												interno[13] = lisa;
 												redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
@@ -224,10 +200,8 @@ eje = function(arrays,origen,redisClient) {
 											// 		resolve([true,interno,sreeply]);
 											// 	});
 											// }
-											else{//descuento normal
-												console.log("descuento normal");												
+											else{ //Descuento normal
 												interno[13] = lisa;
-												console.log(interno[13]);
 												redisClient.set(origena,JSON.stringify(interno),function(errx,replyxs) {
 													resolve([true,interno,sreeply]);
 												});

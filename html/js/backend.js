@@ -1,6 +1,6 @@
 var backend = this;
 
-backend.dev = true;
+backend.dev = false;
 
 if(!backend.dev){
 	backend.usuando = "85.10.196.212";
@@ -17,12 +17,12 @@ backend.conexionEnvio = function (datos,callback){
             var ws = new WebSocket("ws://" + backend.usuando + ":3200");
         }
 
-		ws.onopen = function(){			
+		ws.onopen = function(){
 			$("#conectado_server")[0].innerText ="true";			
 			ws.send(datos);
 		};
 		ws.onmessage = function (evt) {
-			ws.close();						
+			ws.close();
 			return callback(evt.data);
 		};
 		ws.onerror = function (evt) {

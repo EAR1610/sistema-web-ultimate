@@ -28,7 +28,7 @@ eje = function(arrays,origen,redisClient) {
 								var ogens = infex[arrays[2]].split("_");
 								var esde = ogens[5];
 								redisClient.get(infex[arrays[2]], function (edrr3, repdly3) {
-									if(repdly3!==null) {
+									if( repdly3 !== null && repdly3 !== undefined ) {
 										var infe = JSON.parse(repdly3),
 											cedula = infe[1],
 											fecha = infe[5],
@@ -37,11 +37,11 @@ eje = function(arrays,origen,redisClient) {
 											fech2 = vesd[2] + "_" + vesd[1] + "_" + vesd[0];
 										
 										/*
-											exraigo clientes
+											extraigo clientes
 										*/
 										
 										redisClient.get("cliente_"+cedula, function (serr, srepsy) {
-											if(srepsy!==null){												
+											if( srepsy !== null && srepsy !== undefined ){
 												redisClient.keys("asig_supervisor_*"+fech2+"_"+ruta, function (sesrr, srepslsy) {
 													if (srepslsy.length > 0) {
 														/*
