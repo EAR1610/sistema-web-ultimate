@@ -7024,7 +7024,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             $("#asesor_foto_selec").attr("src", block.fotoas);
             $("#text_cedula_asesor").val(block.cedulasesor);
             block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias, block.lat, block.lon ];
-            debugger;
             
             block.obj = {"r": "crear_cliente_admin", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
@@ -7113,7 +7112,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.asesorSuperAsis = "d";
         block.lat = $("#add_barrio_lat_text").val();
         block.lon = $("#add_barrio_lon_text").val();
-        debugger;
         block.arrays = [ block.tokens[1] ];
         block.obj = {"r": "verificar_ubicaciones", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
