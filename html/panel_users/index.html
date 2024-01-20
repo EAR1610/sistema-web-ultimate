@@ -1208,7 +1208,7 @@
         var yes = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
         
         for(var q=0; q < yes.length; q++){
-            block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> DPI: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p></div></div>';
+            block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> DPI: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="" type="button">Renovar Contrato</button></p></div></div>';
         }
         // <p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p>
 
@@ -1302,7 +1302,7 @@
                 
                 block.lisas = [];
                 for(var q=0; q< block.listao.length; q++){
-                    block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p></div></div>';
+                    block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="" type="button">Renovar Contrato</button></p></div></div>';
                 }
                 // <p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p>
 
@@ -1637,7 +1637,7 @@
             });                
             var tarjeteroFiltrado = '';
             for (var i = 0; i < tarjetasFiltradas.length; i++) {
-                tarjeteroFiltrado += '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p></div></div>';
+                tarjeteroFiltrado += '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p><p><button class="btn btn-warning btn-block" onclick="" type="button">Renovar Contrato</button></p></div></div>';
             }            
             $("#listado_tarjeta").html(tarjeteroFiltrado);
             $("#listado_tarjeta").css("display", "block");
