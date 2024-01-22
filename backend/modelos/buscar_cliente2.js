@@ -27,22 +27,24 @@ eje = function(arrays,origen,redisClient) {
 					*/
 					
 					redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {
-						
-						if(reply.length>0){
-							
-							var origena = reply[0],cedulax = origena.split("_");
-							
-							/*
-								traigo datos del clientes
-							*/
-							
-							redisClient.get("cliente_"+cedulax[1], function (qersr, sreeply) {
+						if( reply !== null && reply !== undefined ){
+							if(reply.length>0){
 								
-								redisClient.get(reply[0], function (ersr, reeply) {
-									var interno = JSON.parse(reeply);
-									resolve([true,interno,sreeply]);
+								var origena = reply[0],cedulax = origena.split("_");
+								
+								/*
+									traigo datos del clientes
+								*/
+								
+								redisClient.get("cliente_"+cedulax[1], function (qersr, sreeply) {
+									if( sreeply !== undefined && sreeply !== null ){
+										redisClient.get(reply[0], function (ersr, reeply) {
+											var interno = JSON.parse(reeply);
+											resolve([true,interno,sreeply]);
+										});
+									}
 								});
-							});
+							}
 						}
 				    });
 				}else{

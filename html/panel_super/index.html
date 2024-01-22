@@ -1940,6 +1940,7 @@
                                 <table class="table table-striped">
                                     <thead>
                                     <tr align="center">
+                                        <th>Identificador</th>
                                         <th>Nombre</th>
                                         <th>DPI</th>
                                         <th>Dirección</th>
@@ -2412,6 +2413,11 @@
                                         <div class="form-group"><label>Valor de la cuota</label> <br> Q<label id="utilidad_cuota">0</label></div>
                                     </form>
                                 </div>
+                                <div class="col-sm-6 col-md-4 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor del contrato</label> <br> Q<label id="utilidad_contrato">0</label></div>
+                                    </form>
+                                </div>
                             </blockquote>
                          </div>
 
@@ -2667,6 +2673,7 @@
                                     <tr>
                                         <th>Fecha de prestamo </th>
                                         <th>A pagar</th>
+                                        <th>Identificador</th>
                                         <th>DPI</th>
                                         <th>Nombre cliente</th>
                                         <th>Asesor</th>
@@ -2674,9 +2681,6 @@
                                         <th>Porcentaje</th>
                                         <th>Cuotas</th>
                                         <th>Fecha de culminación</th>
-                                        <!-- <th>Ayudante</th>
-                                        <th>Supervidor</th> -->
-                                        <!-- <th>Opciones</th> -->
                                     </tr>
                                     </thead>
                                     <tbody id="lista_enorme">
@@ -5110,8 +5114,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
 				block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
+                block.infoCliente = JSON.parse(valor.d[1][0][3]); 
 
-				block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
+				block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
                 block.unico++;
 
                 listado_contratos(block.unico);
@@ -8341,7 +8346,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                         block.apellido2 = block.item[4];
                         block.direcion = block.item[5];
                         block.telefono = block.item[6];
-                        block.listadi = block.listadi + '<tr><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                        block.identificador = block.item[25];
+                        block.listadi = block.listadi + '<tr><td>'+block.identificador+'</td><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
                     }
                                         
                     $("#listado_liengenerela").append(block.listadi);

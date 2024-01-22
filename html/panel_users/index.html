@@ -653,18 +653,59 @@
                                         <div class="form-group"><label>Valor de la última cuota</label> <br> Q<label id="utilidad_ultima_cuota">0</label></div>
                                     </form>
                                 </div>
+                                <div class="col-sm-6 col-md-3 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor del contrato</label> <br> Q<label id="utilidad_contrato">0</label></div>
+                                    </form>
+                                </div>
                             </blockquote>
                          </div>
 
-                            <div class="col-xs-6">
+                            <div class="container" style="display: none;" id="FechaCuatropagos">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="PrimeraCuota">Primera Couta:</label>
+                                        <input
+                                            id="PrimeraCuota"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                        <label for="SegundaCuota">Segunda Couta:</label>
+                                        <input
+                                            id="SegundaCuota"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                    </div>
+                                    <div class="col">
+                                        <label for="TerceraCuota">Tercera Couta:</label>
+                                        <input
+                                            id="TerceraCuota"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                        <label for="CuartaCuota">Cuarta Couta:</label>
+                                        <input
+                                            id="CuartaCuota"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
 
-                                <button class="btn btn-primary btn-block " style="margin-left: 2px;" id="crear_contrato"
+                            <div class="container">
+                                <button class="btn btn-primary btn-block " style="margin-left: 2px; margin-top: 15px; text-align: center;" id="crear_contrato"
                                         type="button">Crear contrato
                                 </button>
                             </div>
 
-                            <div class="col-xs-6">
 
+                            <div class="col-xs-6">                            
                                 <button class="btn btn-primary btn-block " style="display:none;" id="limpiar_contrato"
                                         type="button">Limpiar contrato
                                 </button>
@@ -920,7 +961,7 @@
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI o Nombre" >
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI, Nombre o Identificador">
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px; margin-left: 0px;">
         
@@ -928,7 +969,8 @@
                                 <table class="table table-striped">
                                     <thead>
                                     <tr>
-                                        <th>Fecha de prestamo </th>
+                                        <th>Fecha de prestamo</th>
+                                        <th>Identificador</th>
                                         <th>A pagar</th>
                                         <th>DPI</th>
                                         <th>Nombre cliente</th>                                        
@@ -1406,10 +1448,12 @@
                                 block.wsqa = block.comp.replace(".", "");
                                 block.monq = parseInt(block.wsqa);
                                 block.poce = parseFloat(block.cuotas[w][3]);
-                                if ( $("#selector_frecuencia").val == 5 || $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") {
+                                if ( $('#selector_frecuencia option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") {
                                     block.dias = parseInt(4);
+                                    $("#FechaCuatropagos").css("display","block");
                                 } else {
                                     block.dias = parseInt(block.cuotas[w][2]);
+                                    $("#FechaCuatropagos").css("display","none");
                                 }
                                 block.resul = parseInt(monq * (block.poce / 100));
                                 block.reas = (block.monq + block.resul) / block.dias;
@@ -1442,7 +1486,7 @@
         var totalInteres = block.reas;
         var total_interes_final = totalInteres.replace(/\./g, "");
         
-        if(ganancia.includes(".")){
+        if(((ganancia).toString()).includes(".")){
             block.suma_total_prestamos = (parseInt(block.monq) + parseInt(ganancia.replace(/\./g, "")));
         } else {
             block.suma_total_prestamos = (parseInt(block.monq) + parseInt(ganancia));
@@ -1454,14 +1498,13 @@
             block.cantidad_normal = parseInt(block.reas) * block.dias;        
         }
 
-        
         if(Number.isInteger(block.suma_total_prestamos / block.dias)){
             block.ultima_cuota = totalInteres;
         } else {
-            block.ultima_cuota = (block.suma_total_prestamos - block.cantidad_normal) + parseInt(total_interes_final);
+            block.ultima_cuota = ((block.suma_total_prestamos - block.cantidad_normal) + parseInt(total_interes_final)).toString();
         }
-
-        $("#utilidad_ultima_cuota").html(block.ultima_cuota); 
+        $("#utilidad_ultima_cuota").html(block.ultima_cuota);
+        $("#utilidad_contrato").html((block.dias - 1) * parseInt(block.reas.replace(/\./g, "")) + parseInt(block.ultima_cuota.replace(/\./g, "")));
     }
 
     function consultar_Contratos(){
@@ -1495,6 +1538,7 @@
         block.obj = {"r": "contratos_lista_all", "d": block.arrays};         
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
+            console.log(valor);
             if (!valor.e) { 
                 block.oso="";
                 block.dat0s =valor.d[1][0];
@@ -1559,8 +1603,9 @@
                 block.fechaCulminacion = `${ partesFecha[2] }-${ partesFecha[1] }-${ partesFecha[0] }`;
 
                 block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');                                
-                block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
+                block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');  
+                block.infoCliente = JSON.parse(valor.d[1][0][3]);                
+                block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
                 block.unico++;
 
                 listado_contratos(block.unico);                
@@ -1571,7 +1616,7 @@
             }
         });
     }
-
+    
     function format(input) {
         var num = input.value.replace(/\./g,'');
         if(!isNaN(num)){
@@ -2236,17 +2281,59 @@
         }
     });
 
+    function validarRangoFechas(fecha1, fecha2, fecha3, fecha4) {
+
+        // Validamos que las fechas sean válidas
+        if (!validarFecha(fecha1)) {
+            return false;
+        }
+        if (!validarFecha(fecha2)) {
+            return false;
+        }
+        if (!validarFecha(fecha3)) {
+            return false;
+        }
+        if (!validarFecha(fecha4)) {
+            return false;
+        }
+
+        // Validamos que las fechas estén en orden
+        return fecha1 < fecha2 && fecha2 < fecha3 && fecha3 < fecha4;
+    }
+
+    function validarFecha(fecha) {
+        // Convertimos la fecha a un objeto Date
+        var fechaObj = new Date(fecha);
+
+        // Si la fecha es nula o no es válida, devolvemos false
+        if (fechaObj === null || isNaN(fechaObj.getTime())) {
+            return false;
+        }
+
+        // Devolvemos true
+        return true;
+    }   
+
     $("#crear_contrato").click(function () {
         if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!=="") {            
             if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {                        
                 block.asesor = $("#selector_asesores_lista").val();
                 block.monto_prestar = $("#monto_prestar_ya_admin").val();
                 block.frecuencia = $("#selector_frecuencia").val();
-                if (block.frecuencia == "5" || block.frecuencia == 5){
+                if (block.frecuencia == "5" || block.frecuencia == 5){ //Pago personalizado (25 días en 4 pagos)
                     block.dias = 4
+                    block.fechasCorrectas = validarRangoFechas($("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val());;                    
+
+                    if( !block.fechasCorrectas ) {
+                        toastr.warning("Las fechas de las cuotas no tienen un orden lógico", "Atención");
+                        return;
+                    }
+                    
                 } else {
                     block.dias = $("#selector_cuotas_selec").val();
                 }
+
+                
                 block.fecha_prestamo = $("#fechaActual").val();
                 block.descontar = parseInt($("#cuota_descontar_sistema").val());
                 block.porcentaje = $("#utilidad_prestada").html();
@@ -2260,7 +2347,7 @@
                         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
                     }
                     
-                    block.arrays = [block.tokens[1], window.sessionStorage.getItem("Money-vars-registrado"), block.tokens[5], block.monto_prestar, block.dias, block.fecha_prestamo, block.descontar, block.porcentaje,block.quedo_cuota,block.tokens[4], block.frecuencia, block.ultima_cuota];
+                    block.arrays = [block.tokens[1], window.sessionStorage.getItem("Money-vars-registrado"), block.tokens[5], block.monto_prestar, block.dias, block.fecha_prestamo, block.descontar, block.porcentaje,block.quedo_cuota, block.tokens[4], block.frecuencia, block.ultima_cuota, $("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val() ];
                     block.obj = { "r": "crear_contrato", "d": block.arrays };
                     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                         var valor = JSON.parse(salida);                        
@@ -2413,10 +2500,13 @@
                                 block.wsqa = block.comp.replace(".", "");
                                 block.monq = parseInt(block.wsqa);
                                 block.poce = parseFloat(block.cuotas[w][3]);
-                                if ( $("#selector_frecuencia").val == 5  || $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") { // 25 DíAS EN 4 PAGOS
+                                
+                                if ( $('#selector_frecuencia option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") { // 25 DíAS EN 4 PAGOS
                                     block.dias = parseInt(4);
+                                    $("#FechaCuatropagos").css("display","block");
                                 } else {
                                     block.dias = parseInt(block.cuotas[w][2]);
+                                    $("#FechaCuatropagos").css("display","none");
                                 }
                                 block.resul = parseInt(monq * (block.poce / 100));
                                 block.reas = (block.monq + block.resul) / block.dias;
@@ -2426,8 +2516,7 @@
                                 block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                                 block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
                                 $("#utilidad_prestada_peso").html(block.resul); //Label de utilidad quetzales
-                                $("#utilidad_cuota").html(block.reas); //Label de valor de la cuota
-
+                                $("#utilidad_cuota").html(block.reas); //Label de valor de la cuota                                
                                 obtener_Ultima_Cuota(block.resul);
                                 $("#crear_contrato").prop("disabled",false);
                             }
@@ -2976,7 +3065,7 @@
         window.sessionStorage.setItem("Money-perfil","busqueda")
     }
 
-    $("#buscar_cedula_cliente").click(function () {        
+    $("#buscar_cedula_cliente").click(function () {
         if ( $("#text_cedula_cliente").val() !== "" && $("#text_cedula_cliente").val().length >= 13 ) {
             if (window.localStorage.getItem("Money-vars-token") !== null) {
                 block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3065,8 +3154,11 @@
                 block.pagosRealizados = 0;
 
 				for(var x = 0; x < block.cuotas[13].length; x++){
-
-                    block.valoes += parseInt(block.cuotas[13][x].cp.replace(/\./g, ''));
+                    try {                        
+                        block.valoes += parseInt(block.cuotas[13][x].cp.replace(/\./g, ''));
+                    } catch (error) {
+                        block.valoes += parseInt(block.cuotas[17][x].cp.replace(/\./g, ''));                        
+                    }
 
                     if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0) block.contador_cuotas++;
 

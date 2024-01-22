@@ -5,7 +5,7 @@ backend.dev = true;
 if(!backend.dev){
 	backend.usuando = "85.10.196.212";
 } else {
-	backend.usuando = "192.168.1.6";
+	backend.usuando = "192.168.80.1";
 }
 
 backend.conexionEnvio = function (datos,callback){	

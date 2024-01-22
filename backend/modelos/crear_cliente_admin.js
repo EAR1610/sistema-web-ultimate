@@ -9,51 +9,112 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/* recibo tokens, foto_perfil, foto_normal, foto_reverso, foto_frontal, block.pais, tipoletracedula, numerocedula, nom1, nom2, ape1, ape2, direction, departamento, ciudad, barrio, telefofijo, telefomovil, correo, alias, lat, lon */
-
+				
 		if ( arrays.length == 22 ){
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="5"){
+				}else if(decoded.t=="1" || decoded.t=="5"){ //Jefe y Supervisor
 
 					var moment = require("moment-timezone");
 					var hoy = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss');
+					let identificadorMayor = 1;
 					
 					function randomIntFromInterval(min,max){
 						return Math.floor(Math.random()*(max-min+1)+min);
 					}
-					
-					var ids = randomIntFromInterval(1000000,9999999);					
+					var ids = randomIntFromInterval(1000000,9999999);
 					arrays.push(hoy);
 					arrays[0] = ids;
+					/*
+						asigno idicadores a cliente					
+					*/
 
-					redisClient.set("cliente_"+arrays[7],JSON.stringify(arrays),function(err,reply) {						
-						/*
-							busco si exite sino lo creo y  ya
-						*/						
-						redisClient.get("registro_client_"+decoded.d,function(errw,replyw) {
-							if( replyw !== null && replyw !== undefined ){
-								var esa = JSON.parse(replyw);
-								
-								if(esa.indexOf("cliente_"+arrays[7])==-1){
-									esa.push("cliente_"+arrays[7]);
-									redisClient.set("registro_client_"+decoded.d,JSON.stringify(esa),function(erwrw,repelyw) {
-										resolve([true,true]);
-									});
-								}else{
-									resolve([true,true]);
-								}
-							}else{
-								var esa = [];
-								esa.push("cliente_"+arrays[7]);
-								redisClient.set("registro_client_"+decoded.d,JSON.stringify(esa),function(erwrw,repelyw) {
-									resolve([true,true]);
+					redisClient.get("cliente_"+arrays[7],function(err, clienteActualizado){ //El cliente se va actualizar.
+						if( clienteActualizado !== null && clienteActualizado !== undefined ){
+							let actualizaciónCliente= JSON.parse(clienteActualizado);
+							arrays.push(actualizaciónCliente[23]) //Se le adjunta el Identificador.
+							console.log(arrays)
+							if( clienteActualizado !== null && clienteActualizado !== undefined){
+								redisClient.set("cliente_"+arrays[7],JSON.stringify(arrays),function(err,reply) {						
+									/*
+										verifico si existe y listo
+									*/						
+									redisClient.get("registro_client_"+decoded.d,function(errw,replyw) {
+										if( replyw!==null && reply !== undefined){
+											var esa = JSON.parse(replyw);								
+											/*
+												guardo
+											*/								
+											if(esa.indexOf("cliente_"+arrays[7])==-1){
+												esa.push("cliente_"+arrays[7]);
+												redisClient.set("registro_client_"+decoded.d,JSON.stringify(esa),function(erwrw,repelyw) {
+													resolve([true,true]);
+												});
+											}else{
+												resolve([true,true]);
+											}
+										}else{
+											var esa = [];
+											esa.push("cliente_"+arrays[7]);
+											redisClient.set("registro_client_"+decoded.d,JSON.stringify(esa),function(erwrw,repelyw) {
+												resolve([true,true]);
+											});
+										}
+									});						
 								});
 							}
-						});						
-					});						
+						}
+					});
+
+					redisClient.keys("cliente_*",function(err, todosLosClientes){
+						if (todosLosClientes !== null && todosLosClientes !== undefined) {
+							function recurso(ind, arrs){
+								if(ind === arrs.length){
+									arrays.push(++identificadorMayor);
+									redisClient.set("cliente_"+arrays[7],JSON.stringify(arrays),function(err,reply) {						
+										/*
+											verifico si existe y listo
+										*/						
+										redisClient.get("registro_client_"+decoded.d,function(errw,replyw) {
+											if( replyw!==null && reply !== undefined){
+												var esa = JSON.parse(replyw);								
+												/*
+													guardo
+												*/								
+												if(esa.indexOf("cliente_"+arrays[7])==-1){
+													esa.push("cliente_"+arrays[7]);
+													redisClient.set("registro_client_"+decoded.d,JSON.stringify(esa),function(erwrw,repelyw) {
+														resolve([true,true]);
+													});
+												}else{
+													resolve([true,true]);
+												}
+											}else{
+												var esa = [];
+												esa.push("cliente_"+arrays[7]);
+												redisClient.set("registro_client_"+decoded.d,JSON.stringify(esa),function(erwrw,repelyw) {
+													resolve([true,true]);
+												});
+											}
+										});						
+									});
+								} else {
+									redisClient.get(arrs[ind], function(errorCliente, miCliente){
+										var infoCliente = JSON.parse(miCliente);
+										if( infoCliente !== null && infoCliente !== undefined){																				
+											if( identificadorMayor < infoCliente[23] ) identificadorMayor = infoCliente[23];
+										}
+										ind++;
+										recurso(ind, arrs);
+									})
+								}
+							} 
+							recurso(0, todosLosClientes)
+						}
+					});									
 				}else{
 					reject([false,"2"]);
 				}

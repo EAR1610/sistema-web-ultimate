@@ -8,10 +8,10 @@ eje = function(arrays,origen,redisClient) {
 		var valurl = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/;
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		/*
-			0		1		2		3		4		5			6			7						8					9						10				11			12			
-			recibo tokens, dpi ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL]
+			0		1		2		3		4		5			6			7						8					9						10				11			12				 13 14 15 16
+			recibo tokens, dpi ,idasesor ,monto a prestar ,cicloendiad, fecha_prestamoNoSEUSA, descontarCUOTADEuNA, porcentajeDEPRESTAMO ,quedo_cuotauNICA, IDEMPRESA, dIARIOSEMANALMENSUAL, C1,C2,C3,C4]
 		*/
-		if ( arrays.length == 12){
+		if ( arrays.length == 16 ){
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
@@ -182,29 +182,21 @@ eje = function(arrays,origen,redisClient) {
 												var cuotaD = arrays[8].replace(".", ""),
 												cuotaD2 = cuotaD.replace(".", ""),
 												tiempo = arrays[4],
-												indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
-												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual
-												
+												indi = 12; //Fecha de la primera Cuota
+
 												for (var k = 1; k < 4 + 1; k++) {
 													if(k == 4){
-														var prox2 = moment(prox).add(4, 'days'); // Agregar 4 días para obtener la próxima fecha del mismo día de la semana
-														if( prox2.isoWeekday() === 7 ){ //Si es Domingo
-															prox2 = prox2.subtract(1, 'days'); // Restar un día para que sea sábado
-														}
-														prox2 = prox2.format('YYYY-MM-DD');
-														fes.push({ "cp": ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
-
+														fes.push({ "cp": ultima_cuota.replace(/\./g, ""),"ct":false,"fe":arrays[indi],"pe":0, "pago":"" });
 													} else {
-														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
-														prox = prox2;
-														fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
-
+														fes.push({ "cp": cuotaD2,"ct":false,"fe":arrays[indi],"pe":0, "pago":"" });
+														indi++;
 													}
 												}
 												if (fes.length > parseInt(arrays[4])) {
 													fes.pop();
 												}
-											}																						
+											}
+
 											if(fes.length>0){										
 												var desc = parseInt(arrays[6]);
 												if(desc>0){
@@ -219,8 +211,8 @@ eje = function(arrays,origen,redisClient) {
 													var consecutivo = cant.length + 1;
 													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/
 													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;
-													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(11 + 1));
-
+													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(15 + 1));
+													
 													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arraysDB),function(err,reply) {
 														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {
 															if( replyw!==null && replyw !== undefined ){

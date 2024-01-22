@@ -50,7 +50,6 @@ eje = function(arrays,origen,redisClient) {
 														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
 															if (srepslsyx.length > 0) {																															
 																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {																	
-
 																	redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {																		
 																		litado.push([repdly3, srepslsy2xq, srepslsy2x,srepsy,esde]);
 																		resolve([true, litado]);
@@ -59,7 +58,6 @@ eje = function(arrays,origen,redisClient) {
 																
 															}else{																
 																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) { //JEFE TERMINAN ACA																	
-																	
 																	litado.push([repdly3, srepslsy2xq, [],srepsy,esde]);
 																	resolve([true, litado]);
 																});
@@ -68,12 +66,14 @@ eje = function(arrays,origen,redisClient) {
 														});
 													}else{
 														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
+															
 															if (srepslsyx.length > 0) {
 																redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {
 																	litado.push([repdly3, [], srepslsy2x,srepsy,esde]);
 																	resolve([true, litado]);
 																});
 															}else{
+																
 																litado.push([repdly3, [], [],srepsy,esde]);
 																resolve([true, litado]);
 															}
