@@ -15,58 +15,64 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="2"){					
+				}else if(decoded.t=="2"){// Uso exclusivo del Asesor					
 					/*
 						busco contrato
 					*/					
 					redisClient.keys("registry_"+arrays[2]+"_contrato_*_"+arrays[1]+"_"+arrays[3],function(erre,daex){
-						if(daex.length>0) {
-							
-							var orin = daex[0];
-							let cuotasCanceladas = 0;
-							redisClient.get(orin,function(erre,dae) {
-								if( dae!==null ) {									
-									/*
-										lo abro y le sumo una cuota con el monto
-									*/
-									redisClient.keys("configuracion_*", function(errorConfig, configuraciones){
-										if(configuraciones.length > 0) {
-											let configuracion = configuraciones;
-											let indiceFinal = 0;
-											redisClient.get("configuracion_"+configuracion[0].split('_')[1], function(errorConf, configuracionData){
-												let configuracionesEmpresa = JSON.parse(configuracionData)
-												var jues = JSON.parse(dae);
+						if( daex !== null && daex !== undefined){
+							if(daex.length>0) {								
+								var orin = daex[0];
+								let cuotasCanceladas = 0;
 
-												if(jues.length > 0){
-													for(let i = 0; i < jues[13].length; i++){														
-														if(jues[13][i].ct == true) {
-															cuotasCanceladas += 1;
+								redisClient.get(orin,function(erre,dae) {
+									if( dae !== null && dae !== undefined ) {									
+										/*
+											lo abro y le sumo una cuota con el monto
+										*/
+										redisClient.keys("configuracion_*", function(errorConfig, configuraciones){
+											if( configuraciones !== null && configuraciones !== undefined ){
+												if(configuraciones.length > 0) {
+													let configuracion = configuraciones;
+													let indiceFinal = 0;
+													redisClient.get("configuracion_"+configuracion[0].split('_')[1], function(errorConf, configuracionData){
+														let configuracionesEmpresa = JSON.parse(configuracionData)
+														var jues = JSON.parse(dae);
+		
+														if(jues.length > 0){
+															for(let i = 0; i < jues[13].length; i++){														
+																if(jues[13][i].ct == true) {
+																	cuotasCanceladas += 1;
+																}
+															}
 														}
-													}
+														indiceFinal++;
+														if(indiceFinal === daex.length) {	
+															if( parseInt( configuracionesEmpresa[12] ) < cuotasCanceladas ) {
+																var moment = require("moment-timezone");
+																var ultimo = jues[13][jues[13].length-1];
+																var fecha = ultimo.fe;
+																//var dia = moment.tz(fecha,"America/Guatemala").add(1, 'days').format("YYYY-MM-DD");
+																var dia = moment.tz(fecha, "America/Guatemala").add(1, 'days').format("YYYY-MM-DD");
+							
+																jues[13].push( { "cp":arrays[4],"ct":false,"fe":dia,"pe":0 } );
+																
+																redisClient.set(orin,JSON.stringify(jues),function(erre,dae){
+																	resolve([true,true]);
+																});
+															} else {	
+																reject([false, "No ha llegado a la cantida de cuotas mínimas para refinanciación"]);
+															}
+														}													
+													})
 												}
-												indiceFinal++;
-												if(indiceFinal === daex.length) {	
-													if( parseInt( configuracionesEmpresa[12] ) < cuotasCanceladas ) {
-														var moment = require("moment-timezone");
-														var ultimo = jues[13][jues[13].length-1];
-														var fecha = ultimo.fe;
-														//var dia = moment.tz(fecha,"America/Guatemala").add(1, 'days').format("YYYY-MM-DD");
-														var dia = moment.tz(fecha, "America/Guatemala").add(1, 'days').format("YYYY-MM-DD");
-					
-														jues[13].push( { "cp":arrays[4],"ct":false,"fe":dia,"pe":0 } );
-														
-														redisClient.set(orin,JSON.stringify(jues),function(erre,dae){
-															resolve([true,true]);
-														});
-													} else {	
-														reject([false, "No ha llegado a la cantida de cuotas mínimas para refinanciación"]);
-													}
-												}													
-											})
-										}
-									});									
-								}
-							});							
+											}
+										});									
+									}
+								});							
+							}
+						} else {
+							reject([false,"2"]);
 						}
 					});						
 				}else{

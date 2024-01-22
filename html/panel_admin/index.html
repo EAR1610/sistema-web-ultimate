@@ -414,12 +414,14 @@
                 let searchValue = this.value.toLowerCase();
                 let rows = document.querySelectorAll('#lista_enorme tr');
                 for (let row of rows) {
-                    let dpiCell = row.querySelector('td:nth-child(3)');
-                    let nombreCell = row.querySelector('td:nth-child(4)');
+                    let idCell = row.querySelector('td:nth-child(2)');
+                    let dpiCell = row.querySelector('td:nth-child(4)');
+                    let nombreCell = row.querySelector('td:nth-child(5)');
+                    let idValue = idCell ? idCell.textContent.toLowerCase() : '';
                     let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
                     let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
 
-                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
+                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue) || idValue.includes(searchValue)) ? '' : 'none';
                 }
             });
         });
@@ -1396,7 +1398,7 @@
                         <div class="ibox-title">
                             <h5>Consulta de contrato</h5>
                             &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI o Nombre">
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por Identificador, DPI o Nombre">
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
@@ -1410,6 +1412,7 @@
                                     <thead>
                                     <tr>
                                         <th>Fecha de prestamo </th>
+                                        <th>Identificador</th>
                                         <th>A pagar</th>
                                         <th>DPI</th>
                                         <th>Nombre cliente</th>
@@ -2697,8 +2700,9 @@
 
 				block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
+                block.infoCliente = JSON.parse(valor.d[1][0][3]); 
 
-				block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
+				block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
                 block.unico++;
 
                 listado_contratos(block.unico);

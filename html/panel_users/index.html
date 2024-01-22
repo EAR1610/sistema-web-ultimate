@@ -145,12 +145,14 @@
                 let searchValue = this.value.toLowerCase();
                 let rows = document.querySelectorAll('#lista_enorme tr');
                 for (let row of rows) {
-                    let dpiCell = row.querySelector('td:nth-child(3)');
-                    let nombreCell = row.querySelector('td:nth-child(4)');
+                    let idCell = row.querySelector("td:nth-child(2)");
+                    let dpiCell = row.querySelector('td:nth-child(4)');
+                    let nombreCell = row.querySelector('td:nth-child(5)');
+                    let idValue = idCell ? idCell.textContent.toLowerCase() : '';
                     let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
                     let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
 
-                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
+                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue) || idValue.includes(searchValue)) ? '' : 'none';
                 }
             });
         });
@@ -554,7 +556,6 @@
                     </div>
                 </div>
 
-
                 <div class="col-lg-12" id="crear_contrato_form_dos">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -714,6 +715,228 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="col-lg-12" id="ampliar_contrato_form">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Ampliación de contrato</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-2 col-xs-12 profile-image">
+                                <img src="../img/default.jpg" id="foto_user_clien" class="rounded-circle circle-border m-b-md" alt="profile">
+                            </div>
+
+                            <div class="form-group col-sm-6 col-md-2 col-xs-12">
+                                <label>DPI del cliente</label>
+                                <div class="input-group"><input placeholder="Inserte el DPI" id="text_cedula_cliente_ampliacion" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append"> 
+                                    <button type="button" id="buscar_cedula_cliente_ampliacion" class="btn btn-primary" disabled><i class="fa fa-search"></i></button> </span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>DPI, nombre del cliente y apellido</label> <input
+                                            id="text_nombre_cliente_ampliacion"
+                                            type="text" disabled
+                                            placeholder=""
+                                            class="form-control"></div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha</label> <input
+                                            id="fechaActual"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12" id="ampliar_contrato_form_dos">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Asignación de cuotas</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Total de prestamo</label> <input onkeyup="format(this)" onchange="format(this)"
+                                        id="monto_prestar_ya_admin_ampliacion"
+                                        type="text"
+                                        placeholder="" maxlength="10"
+                                        class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            
+                            
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <form role="form">
+                                    <label>Cuota a aplicar</label>
+                                    <select class="form-control m-b" id="selector_cuotas_selec_ampliacion">
+                                        <option value=''>Seleccione</option>
+                                        <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
+                                        <option value='25'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
+                                        <!--<option value="30">PLAN 30 DIAS 15%</option>
+                                        <option value='40'>PLAN 40 DIAS 20%</option>
+                                        <option value='3'>PLAN 3 SEMANAS 10%</option>
+                                        <option value='4'>PLAN 4 SEMANAS 15%</option>
+                                        <option value='6'>PLAN 6 SEMANAS 20%</option>
+                                        <option value='8'>PLAN 8 SEMANAS 30%</option>
+                                        <option value='1'>PLAN MENSUAL 1 15%</option> -->
+                                    </select>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <label>Frecuencia de pago</label>
+                                    <select class="form-control m-b" id="selector_frecuencia_ampliacion">
+                                        <option value="">Seleccione</option>
+                                        <option value="1">Diario</option>
+                                        <!-- <option value="2">Semanal</option>
+                                        <option value="3">Quicenal</option>
+                                        <option value="4">Mensual</option> -->
+                                        <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
+                                    </select>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha</label> <input
+                                            id="fechaActual"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"></div>
+                                </form>
+                            </div>
+
+
+                            <div class="col-sm-6 col-md-2 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Cuotas a descontar</label>
+                                        <input
+                                        id="cuota_descontar_sistema"
+                                        type="number"  value="0"
+                                        placeholder="" maxlength="3"
+                                        class="form-control"
+                                        disabled= true>
+                                    </div>
+                                </form>
+                            </div>
+
+                        <div class="col-sm-12 col-md-12 col-xs-12" style="padding: 4%;margin-left: 8%;">
+                            <blockquote style="background-color: #e2c54278;padding: 4%;margin-left: -9%;" class="row col-sm-12 col-md-12 col-xs-12">
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor del contrato anterior: </label> <br> Q<label id="utilidad_prestada_anterior">0</label></div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor restante del contrato</label> <br> Q<label id="valor_restante_anterior">0</label></div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Cantidad de cuotas canceladas: </label> <br> <label id="cuota_anterior">0</label></div>
+                                    </form>
+                                </div>                                
+                            </blockquote>
+                         </div>
+
+                        <div class="col-sm-12 col-md-12 col-xs-12" style="padding: 4%;margin-left: 8%;">
+                            <blockquote style="background-color: #8abbe678;padding: 4%;margin-left: -9%;" class="row col-sm-12 col-md-12 col-xs-12">
+                                <div class="col-sm-6 col-md-3 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Utilidad del porcentaje</label> <br> <label id="utilidad_prestada_ampliacion">0</label>%</div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6 col-md-3 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Utilidad en Quetzales</label> <br> Q<label id="utilidad_prestada_peso_ampliacion">0</label></div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6 col-md-3 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor de la cuota</label> <br> Q<label id="utilidad_cuota_ampliacion">0</label></div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6 col-md-3 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor de la última cuota</label> <br> Q<label id="utilidad_ultima_cuota_ampliacion">0</label></div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6 col-md-3 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Valor del contrato</label> <br> Q<label id="utilidad_contrato_ampliacion">0</label></div>
+                                    </form>
+                                </div>
+                            </blockquote>
+                         </div>
+
+                            <div class="container" style="display: none;" id="FechaCuatropagosAmpliacion">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="PrimeraCuotaAmpliacion">Primera Couta:</label>
+                                        <input
+                                            id="PrimeraCuotaAmpliacion"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                        <label for="SegundaCuotaAmpliacion">Segunda Couta:</label>
+                                        <input
+                                            id="SegundaCuotaAmpliacion"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                    </div>
+                                    <div class="col">
+                                        <label for="TerceraCuotaAmpliacion">Tercera Couta:</label>
+                                        <input
+                                            id="TerceraCuotaAmpliacion"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                        <label for="CuartaCuotaAmpliacion">Cuarta Couta:</label>
+                                        <input
+                                            id="CuartaCuotaAmpliacion"
+                                            type="date"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <button class="btn btn-primary btn-block " style="margin-left: 2px; margin-top: 15px; text-align: center;" id="ampliar_contrato"
+                                        type="button">Renovar contrato
+                                </button>
+                            </div>
+
+
+                            <div class="col-xs-6">                            
+                                <button class="btn btn-primary btn-block " style="display:none;" id="limpiar_contrato_ampliar"
+                                        type="button">Limpiar contrato
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
 				
 				<div class="col-lg-12" id="pendiente_form">
                     <div class="ibox ">
@@ -1142,12 +1365,15 @@
         salida_sistema();
     }
 
-    function monto_meter(cedula,fecha){    
+    function monto_meter(cedula,fecha){
 		window.sessionStorage.setItem("Money-vars-fecha",fecha);    
         $("#text_cedula_cliente2").val(cedula);
         $("#buscar_cedula_cliente2").click();
         $("#cuotas_coun").focus();
         listado_contratos("0");
+    }
+    function renovar_contrato( cedula, id ){
+        ampliar_contrato_link( cedula, id );
     }
 
     //Parte de consultar contrato panel users
@@ -1197,6 +1423,8 @@
         $("#cobrar_couta").css("display","none");
         $("#crear_contrato_form_dos").css("display","none");
         $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#googleMap").css("display","none");
         $("#contratos_view").css("display","none");
     }
@@ -1248,11 +1476,10 @@
         block.infoWindowContents=[];                    
 
         var yes = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
-        
+        console.log(yes);
         for(var q=0; q < yes.length; q++){
-            block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> DPI: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="" type="button">Renovar Contrato</button></p></div></div>';
+            block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> DPI: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+')" type="button">Renovar Contrato</button></p></div></div>';
         }
-        // <p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p>
 
         $("#listado_tarjeta").html(block.tarjetero);
         $("#listado_tarjeta").css("display","block");
@@ -1344,7 +1571,7 @@
                 
                 block.lisas = [];
                 for(var q=0; q< block.listao.length; q++){
-                    block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="" type="button">Renovar Contrato</button></p></div></div>';
+                    block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+')" type="button">Renovar Contrato</button></p></div></div>';
                 }
                 // <p><button class="btn btn-danger btn-block" onclick="javascript:monto_sumar('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+');" type="button">Ampliar deuda</button></p>
 
@@ -1515,6 +1742,8 @@
         $("#cobrar_couta").css("display","none");
         $("#crear_contrato_form_dos").css("display","none");
         $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#googleMap").css("display","none");
         $("#contratos_view").css("display","block");
         $("#lista_ubicacniones_div").css("display","none");
@@ -1682,7 +1911,7 @@
             });                
             var tarjeteroFiltrado = '';
             for (var i = 0; i < tarjetasFiltradas.length; i++) {
-                tarjeteroFiltrado += '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p><p><button class="btn btn-warning btn-block" onclick="" type="button">Renovar Contrato</button></p></div></div>';
+                tarjeteroFiltrado += '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+')" type="button">Renovar Contrato</button></p></div></div>';
             }            
             $("#listado_tarjeta").html(tarjeteroFiltrado);
             $("#listado_tarjeta").css("display", "block");
@@ -2053,6 +2282,8 @@
     $("#crear_contrato").prop("disabled",true);
     $("#crear_contrato_form").css("display", "none");
     $("#crear_contrato_form_dos").css("display", "none");
+    $("#ampliar_contrato_form").css("display", "none");
+    $("#ampliar_contrato_form_dos").css("display", "none"); 
 	$("#pendiente_form").css("display", "none");
     $("contratos_view").css("display", "none");
 
@@ -2062,6 +2293,8 @@
         $("#contratos_view").css("display", "none");          
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
 		$("#pendiente_form").css("display", "none");
@@ -3118,6 +3351,59 @@
         }
     });
 
+    $("#buscar_cedula_cliente_ampliacion").click(function () {
+        if ( $("#text_cedula_cliente_ampliacion").val() !== "" && $("#text_cedula_cliente_ampliacion").val().length >= 13 ) {
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+            block.arrays = [block.tokens[1],$("#text_cedula_cliente_ampliacion").val()];
+            block.obj = {"r": "buscar_cliente", "d": block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                if (!valor.e) {  
+                    block.partes = JSON.parse(valor.d[1]);
+                    block.nomre = block.partes[7] +" "+block.partes[8] +" "+block.partes[9] +" "+block.partes[10];
+                     $("#text_nombre_cliente_ampliacion").val(block.nomre);
+                    window.sessionStorage.setItem("Money-vars-registrado",block.partes[7]);
+                    $("#foto_user_clien").attr("src",block.partes[1]);
+                } else {
+                    if(valor.d[1]=="6"){
+						 block.frito = JSON.parse(valor.d[2]);
+						if(block.frito[1]=="1"){
+							block.des = "El cliente no quiere pagar en esta empresa(Clavo)";
+						}else if(block.frito[1]=="2"){
+							block.des = "El cliente no se encuentra en esta empresa(Volado)";
+						}else if(block.frito[1]=="3"){
+							block.des = "El cliente inventado en esta empresa(Ficticia)";
+						}
+						toastr.warning(block.des, 'Atencion!');
+					}else if(valor.d[1]=="8"){
+						 block.frito = JSON.parse(valor.d[2]);
+						if(block.frito[1]=="1"){
+							block.des = "El cliente no quiere pagar en otra empresa(Clavo)";
+						}else if(block.frito[1]=="2"){
+							block.des = "El cliente no se encuentra en otra empresa(Volado)";
+						}else if(block.frito[1]=="3"){
+							block.des = "El cliente inventado en otra empresa(Ficticia)";
+						}
+						toastr.warning(block.des, 'Atencion!');                        
+						block.partes = JSON.parse(valor.d[3][0]);
+						block.nomre = block.partes[7] +" "+block.partes[8] +" "+block.partes[9] +" "+block.partes[10];
+						 $("#text_nombre_cliente_ampliacion").val(block.nomre);
+						window.sessionStorage.setItem("Money-vars-registrado",block.partes[7]);
+						$("#foto_user_clien").attr("src",block.partes[1]);
+					}else{
+						no_exite_cliente();
+					}
+                }
+            });
+        } else {
+            toastr.warning('DPI no válido', 'Atencion!');
+        }
+    });
+
     $("#refinanciar_accion").click(function () {
         block.cedula = window.sessionStorage.getItem("Money-vars-registrado");
     });
@@ -3243,7 +3529,7 @@
 		});		
 	}
 
-    $("#buscar_cedula_cliente2").click(function () {        
+    $("#buscar_cedula_cliente2").click(function () {
         var clientePago;
         if ($("#text_cedula_cliente2").val() !== "") {		
 			$("#cuotas_coun").css("display","none");			
@@ -3420,6 +3706,8 @@
 	function pendiente_link(){
 	    $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#crear").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#lista_sup").css("display", "none");
@@ -3472,6 +3760,8 @@
 		$("#pendiente_form").css("display", "none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#crear").css("display", "initial");
         $("#lista_ase").css("display", "none");
         $("#lista_sup").css("display", "none");
@@ -3507,6 +3797,8 @@
             $("#googleMap").css("display","none");
             $("#crear_contrato_form").css("display", "none");
             $("#crear_contrato_form_dos").css("display", "none");
+            $("#ampliar_contrato_form").css("display", "none");
+            $("#ampliar_contrato_form_dos").css("display", "none"); 
             $("#cobrar_couta").css("display", "block");
             $("#crear_gastos").css("display","none");
             $("#lista_ubicacniones_div").css("display","none");
@@ -3524,6 +3816,8 @@
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
         $("contratos_view").css("display", "none");
@@ -3536,6 +3830,8 @@
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "initial");
         $("#crear_contrato_form_dos").css("display", "initial");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
         $("#contratos_view").css("display", "none");
@@ -3562,6 +3858,97 @@
                 $("#selector_asesores_lista").html(block.listax2);
             }
         });
+    }
+
+    function ampliar_contrato_link(cedula, id) {
+        corroborarHora();
+        window.sessionStorage.setItem("Money-perfil","contrato");
+        $("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#ampliar_contrato_form").css("display", "initial");
+        $("#ampliar_contrato_form_dos").css("display", "initial");
+        $("#cobrar_couta").css("display", "none");
+        $("#crear_gastos").css("display","none");
+        $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display","none");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        $("#text_cedula_cliente_ampliacion").val(cedula);
+        $("#buscar_cedula_cliente_ampliacion").click();
+
+        block.listax2 = '<option value="">Seleccione</option>';
+        block.lista = '';
+        block.arrays = [block.tokens[1]];
+        block.obj = {"r": "listar_asesores", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.todo = valor.d[1];
+                for (var t = 0; t < block.todo.length; t++) {
+                    block.item = JSON.parse(block.todo[t]);
+                    block.listax2 = block.listax2 + '<option value="' + block.item[21] + '_'+ block.item[6] +'_'+ block.item[1] +'">' + block.item[7] + ' ' + block.item[9] + ' ID: ' + block.item[21] + '</option>';
+                }
+                $("#selector_asesores_lista").html(block.listax2);
+            }
+        });
+        debugger;
+        block.arrays = [ block.tokens[1], block.tokens[5], "", id, cedula ];
+		block.obj = { "r": "buscar_cliente2", "d": block.arrays };        
+		backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+			var valor = JSON.parse(salida); 
+			if (!valor.e) {    
+                block.cuotas = valor.d[1];
+				block.cliente = valor.d[2];
+				block.limpo = block.cuotas[3].replace(".","");
+				block.limpo2 = block.limpo.replace(".","");
+				block.valoes = 0;
+				block.contador_cuotas = 0;
+				block.extraer = JSON.parse(block.cliente);
+				block.acumo = 0;
+				block.todosCal = [];
+                block.obtenerUltimaCuota = false;
+                block.pagosRealizados = 0;
+
+				for(var x = 0; x < block.cuotas[13].length; x++){
+                    try {                        
+                        block.valoes += parseInt(block.cuotas[13][x].cp.replace(/\./g, ''));
+                    } catch (error) {
+                        block.valoes += parseInt(block.cuotas[17][x].cp.replace(/\./g, ''));                        
+                    }
+
+                    if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0) block.contador_cuotas++;
+
+                    if( block.cuotas[13][x].ct === true || block.cuotas[13][x].pe !== 0 ) block.pagosRealizados += 1; //Tomamos en cuenta los pagos realizados
+
+                    if( ( block.pagosRealizados === (block.cuotas[13].length) - 1 ) ) block.obtenerUltimaCuota = true;
+                    
+					if(block.cuotas[13][x].pe!==0) {                        
+                        block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);
+						
+					} else if(block.cuotas[13][x].ct == true) {
+                        block.acumo = block.acumo + parseInt(block.cuotas[13][x].cp);                        
+						
+					}                     
+					block.fes = block.cuotas[13][x].fe.split("-");
+					block.conve = parseFloat(block.fes[1]) - 1;
+					block.yeart = block.fes[0];
+					block.moute= block.conve;
+					block.daysw = block.fes[2];
+				}
+
+                ticketClienteImpresion = block;
+				$("#utilidad_prestada_anterior").text(block.cuotas[3]);   //Creditos aprobados
+				$("#cuota_anterior").text(block.contador_cuotas); //num_cuotas
+				$("#valor_restante_anterior").text(Math.ceil(valoes-block.acumo)); // saldo pendiente
+			}
+		});	
+
     }
 
     function corroborarHora(){
@@ -3763,7 +4150,9 @@
             $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
             $("#googleMap").css("display","none");
             $("#crear_contrato_form").css("display", "none");
-            $("#crear_contrato_form_dos").css("display", "none");        
+            $("#crear_contrato_form_dos").css("display", "none");            
+            $("#ampliar_contrato_form").css("display", "none");
+            $("#ampliar_contrato_form_dos").css("display", "none");        
             $("#cobrar_couta").css("display", "none");
             $("#crear_gastos").css("display","none");      
             $("#contratos_view").css("display","none");

@@ -583,12 +583,14 @@
                 let searchValue = this.value.toLowerCase();
                 let rows = document.querySelectorAll('#listado_liengenerela tr');
                 for (let row of rows) {
-                    let dpiCell = row.querySelector('td:nth-child(2)');
-                    let nombreCell = row.querySelector('td:nth-child(1)');
-                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
+                    let idCell = row.querySelector('td:nth-child(1)');
+                    let nombreCell = row.querySelector('td:nth-child(2)');
+                    let dpiCell = row.querySelector('td:nth-child(3)');
+                    let idValue = idCell ? idCell.textContent.toLowerCase() : '';
                     let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
+                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
 
-                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue)) ? '' : 'none';
+                    row.style.display = ( dpiValue.includes(searchValue) || nombreValue.includes(searchValue) || idValue.includes(searchValue) ) ? '' : 'none';
                 }
             });
         });
@@ -8347,7 +8349,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                         block.direcion = block.item[5];
                         block.telefono = block.item[6];
                         block.identificador = block.item[25];
-                        block.listadi = block.listadi + '<tr><td>'+block.identificador+'</td><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                        // block.listadi = block.listadi + '<tr><td>'+block.identificador+'</td><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                        block.listadi = block.listadi + '<tr><td>'+block.identificador+'</td><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</button></td></tr>';
                     }
                                         
                     $("#listado_liengenerela").append(block.listadi);
