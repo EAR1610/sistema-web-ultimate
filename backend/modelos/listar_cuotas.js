@@ -22,14 +22,12 @@ eje = function(arrays,origen,redisClient) {
 					/*
 						extraigo las lista de cuotas que tengo
 					*/			
-					console.log('cuotas_estaticas_+decoded.d+_*')	
-					console.log('cuotas_estaticas_'+decoded.d+'_*');
 					redisClient.keys('cuotas_estaticas_'+decoded.d+'_*',function(err3,reply3){
 						if(reply3 !== null && reply3 !== undefined){
 							if(reply3?.length > 0){	
 																			
 								/*
-								ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
+									ciclo metodologico tipo kanban para extracion ded datos de cuotas para un array nuevo
 								*/							
 								var litado = [];				
 								function iterar(ind,arrs){
@@ -42,9 +40,7 @@ eje = function(arrays,origen,redisClient) {
 									}else{
 										redisClient.get(arrs[ind],function(err,reply) {
 											if( reply!==null && reply !== undefined ){
-												litado.push(reply);
-												console.log("reply")
-												console.log(reply)
+												litado.push(reply);												
 												ind++;
 												iterar(ind,arrs);
 											}else{

@@ -1419,7 +1419,7 @@
                                         <th>Asesor</th>
                                         <th>Prestamo</th>
                                         <th>Porcentaje</th>
-                                        <th>Cuotas</th>
+                                        <th>Cuota</th>
                                         <th>Fecha de Culminación</th>
                                     </tr>
                                     </thead>
@@ -1577,14 +1577,14 @@
 
 <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyDAOA9dH2MeN8xy6WqZpNzNuoJkjKYMvfQ",
-        authDomain: "axelssmoney-20658.firebaseapp.com",
-        databaseURL: "https://axelssmoney-20658-default-rtdb.firebaseio.com",
-        projectId: "axelssmoney-20658",
-        storageBucket: "axelssmoney-20658.appspot.com",
-        messagingSenderId: "841250069817",
-        appId: "1:841250069817:web:76b46aa832b8bdfb0c5ce8",
-        measurementId: "G-X7JXRYZENR"
+        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE",
+        authDomain: "alexis-1e334.firebaseapp.com",
+        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
+        projectId: "alexis-1e334",
+        storageBucket: "alexis-1e334.appspot.com",
+        messagingSenderId: "343288753135",
+        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
+        measurementId: "G-QPDM99F0RM"
     };
     firebase.initializeApp(firebaseConfig);	
 </script>
@@ -2768,7 +2768,6 @@
 
 
     function liquidar_sincro(arrws){
-
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -2792,7 +2791,6 @@
                         ind++;
                         liqui(ind,arrws);
                     });
-
                 }
             }
 
@@ -2992,7 +2990,6 @@
 
 
     function extraes(){
-
         if($("#lista_asesores_general").val()!=="" && $("#result2").val()!==""){
 
             $("#listado_operacion_asesore").html("");
@@ -3069,7 +3066,6 @@
                         block.evals2 = block.evals.replace(".","");
                         block.sale2 = block.sale2.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                         block.totaldu = block.sale2.split('').reverse().join('').replace(/^[\.]/,'');
-
                         block.unids = block.unids + '<tr class="item" id="iten'+bc+'" data-ubic="'+bc+'"><td>'+bc+'</td><td>'+block.clienes[8]+" "+block.clienes[10]+'</td><td>'+block.clienes[19]+'</td><td>Q'+block.contra[8]+'</td><td id="musc_'+block.clienes[7]+'_'+block.ince+'">'+block.cobfavol+'</td><td>Q'+block.contra[3]+'</td><td id="montos_'+block.clienes[7]+'_'+block.ince+'">Q'+block.totaldu+'</td></tr>';
                     }
                     $("#listado_operacion_asesore").html(block.unids);
@@ -3272,6 +3268,7 @@
 		window.sessionStorage.setItem("asesore_lis_limp",block.tesq[1]);
 		sumatoria();
 		$("#listado_operacion_asesore").html("");
+        liquidar_sincro(block.aline);
         extraes();
     });
 

@@ -1,6 +1,6 @@
 var backend = this;
 
-backend.dev = true;
+backend.dev = false;
 
 if(!backend.dev){
 	backend.usuando = "85.10.196.212";
@@ -12,9 +12,9 @@ backend.conexionEnvio = function (datos,callback){
 	if ("WebSocket" in window){
 
         if (!backend.dev) {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3200");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
         } else {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3200");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
         }
 
 		ws.onopen = function(){

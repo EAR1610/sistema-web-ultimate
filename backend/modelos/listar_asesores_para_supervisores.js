@@ -19,50 +19,54 @@ eje = function(arrays,origen,redisClient) {
 						Según el token me extraigo los asesores que pertenecen a esta empresa
 					*/					
 					redisClient.keys('listado_'+decoded.d+'_asesor_*',function(err3,reply3){
-						if(reply3.length > 0){							
-							/*Recursividad para guardar los datos*/							
-							var litado = [];
-                            var datosSupervisor = [];
-							var contratos = [];
-
-							for(let i = 0; i < reply3.length; i++){
-								var lista = reply3[i].split('_');								
-								contratos.push(lista[3]);
-							}
-
-                            redisClient.keys('asig_supervisor_'+decoded.d+'_'+decoded.n+'_*', function(err4, replySup){
-                                if(replySup.length > 0) {
-                                    for(let i = 0; i < replySup.length; i+=1){
-                                        const campos = replySup[i].split('_');
-                                        const posicionSupervisor = campos[3];
-                                        const posicionAsesor = campos[7];
-                                        datosSupervisor.push([posicionSupervisor, posicionAsesor]);
-                                    }
-                                }                                
-
-								for(let i = 0; i < datosSupervisor.length; i++){
-									if( reply3[i] !== null && reply3[i] !== undefined ){
-
-										var listado = [];
-										var elemento = datosSupervisor[i][1];										
-										listado = reply3[i].split('_');
-										
-										if(contratos.includes(elemento)){
-											redisClient.get(reply3[contratos.indexOf(elemento)],function(err,reply) {
-												if (reply!==null) {																								
-													litado.push(reply);														
-												}
+						if( reply3 !== undefined && reply3 !== null ){
+							if(reply3.length > 0){							
+								/*Recursividad para guardar los datos*/							
+								var litado = [];
+								var datosSupervisor = [];
+								var contratos = [];
 	
-												if( i === (datosSupervisor.length - 1)) {
-													resolve([true,litado]);
+								for(let i = 0; i < reply3.length; i++){
+									var lista = reply3[i].split('_');								
+									contratos.push(lista[3]);
+								}
+	
+								redisClient.keys('asig_supervisor_'+decoded.d+'_'+decoded.n+'_*', function(err4, replySup){
+									if( replySup !== undefined && replySup !== null){
+										if(replySup.length > 0) {
+											for(let i = 0; i < replySup.length; i+=1){
+												const campos = replySup[i].split('_');
+												const posicionSupervisor = campos[3];
+												const posicionAsesor = campos[7];
+												datosSupervisor.push([posicionSupervisor, posicionAsesor]);
+											}
+										}                                
+		
+										for(let i = 0; i < datosSupervisor.length; i++){
+											if( reply3[i] !== null && reply3[i] !== undefined ){
+		
+												var listado = [];
+												var elemento = datosSupervisor[i][1];										
+												listado = reply3[i].split('_');
+												
+												if(contratos.includes(elemento)){
+													redisClient.get(reply3[contratos.indexOf(elemento)],function(err,reply) {
+														if (reply!==null && reply !== undefined) {
+															litado.push(reply);														
+														}
+			
+														if( i === (datosSupervisor.length - 1)) {
+															resolve([true,litado]);
+														}
+													});												
 												}
-											});												
-										}
-									}
-								}																
-                            });
-						}else{
-							reject([false,"4"]);
+											}
+										}																
+									} 
+								});
+							}else{
+								reject([false,"4"]);
+							}
 						}
 					});
 				}else{

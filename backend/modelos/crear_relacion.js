@@ -24,36 +24,40 @@ eje = function(arrays,origen,redisClient) {
 					var existeAsesor = false;
 					arrays[0]=hoy;					
 
-					redisClient.keys("asig_"+uni[1]+"_"+uni[2]+"_*",function (sali,slai) {						
-						redisClient.keys("asig_" + uni[1] + "_*_" + uni[0] + "_" + hoy,function (salix,slais) {							
-							redisClient.keys("asig_supervisor_"+arrays[3].split("_")[2]+"_*_*", function(errorAsesores, replyAsesores){
-								if( replyAsesores.length > 0 ){
-									for ( let i = 0; i < replyAsesores.length; ++i ){
-										if( replyAsesores[i].split("_")[7] === arrays[2].split("_")[0] ){
-											existeAsesor = true;
+					redisClient.keys("asig_"+uni[1]+"_"+uni[2]+"_*",function (sali,slai) {
+						redisClient.keys("asig_" + uni[1] + "_*_" + uni[0] + "_" + hoy,function (salix,slais) {	
+							if( slais !== undefined && slais !== null){
+								redisClient.keys("asig_supervisor_"+arrays[3].split("_")[2]+"_*_*", function(errorAsesores, replyAsesores){
+									if( replyAsesores !== null && replyAsesores !== undefined){
+										if( replyAsesores.length > 0 ){
+											for ( let i = 0; i < replyAsesores.length; ++i ){
+												if( replyAsesores[i].split("_")[7] === arrays[2].split("_")[0] ){
+													existeAsesor = true;
+												}
+											}
+											if(existeAsesor){
+												reject([false,"6"]);									
+											} else {										
+												if (slais.length > 0) {
+													reject([false,"6"]);
+												}else{
+													redisClient.set("asig_" + uni[1] + "_" + uni[2] + "_" + uni[0] + "_" + hoy+"_"+uni2[0], JSON.stringify(arrays), function (err, reply) {
+														resolve([true, true]);
+													});
+												}
+											}
+										} else {									
+											if (slais.length > 0) {
+												reject([false,"6"]);
+											}else{
+												redisClient.set("asig_" + uni[1] + "_" + uni[2] + "_" + uni[0] + "_" + hoy+"_"+uni2[0], JSON.stringify(arrays), function (err, reply) {
+													resolve([true, true]);
+												});
+											}
 										}
-									}
-									if(existeAsesor){
-										reject([false,"6"]);									
-									} else {										
-										if (slais.length > 0) {
-											reject([false,"6"]);
-										}else{
-											redisClient.set("asig_" + uni[1] + "_" + uni[2] + "_" + uni[0] + "_" + hoy+"_"+uni2[0], JSON.stringify(arrays), function (err, reply) {
-												resolve([true, true]);
-											});
-										}
-									}
-								} else {									
-									if (slais.length > 0) {
-										reject([false,"6"]);
-									}else{
-										redisClient.set("asig_" + uni[1] + "_" + uni[2] + "_" + uni[0] + "_" + hoy+"_"+uni2[0], JSON.stringify(arrays), function (err, reply) {
-											resolve([true, true]);
-										});
-									}
-								}
-							})
+									} 
+								})
+							}						
 						});
 					});					
 				}else{
