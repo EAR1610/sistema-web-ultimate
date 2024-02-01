@@ -43,7 +43,7 @@
             var total = 0; 
             for (var i = 0; i < tabla.rows.length; i++) {
                 var montoTexto = tabla.rows[i].cells[3].innerText;
-                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                var montoNumero = parseFloat( ( montoTexto.replace ("Q", "") ).replace(/\./g,'') );
                 if (!isNaN(montoNumero)) {
                     datos.push({
                         dpi: tabla.rows[i].cells[0].innerText,
@@ -159,7 +159,7 @@
 
             for (var i = 0; i < tabla.rows.length; i++) {
                 var montoTexto = tabla.rows[i].cells[1].innerText;
-                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                var montoNumero = parseFloat( ( montoTexto.replace ("Q", "") ).replace(/\./g,'') );
                 if (!isNaN(montoNumero)) {
                     datos.push({
                         motivo: tabla.rows[i].cells[0].innerText,
@@ -225,15 +225,102 @@
             doc.save('Reporte de gastos por fechas ' + fechaFormateada + ' Hora:' + hora + '.pdf');
         }
 
+        function generarPDFRenovaciones() {
+            
+            var doc = new window.jspdf.jsPDF();
+            var fecha = new Date();
+            var fechaFormateada = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+            var hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+            var tabla = document.getElementById('lista_renovaciones_exe');
+            var selectElement = document.getElementById('id_asesor_renovaciones_consulta');
+            var datosAsesor = selectElement.options[selectElement.selectedIndex].text;
+            var nombreAsesorReportee = datosAsesor.match(/^(.*?)\sID:/)[1];
+            var datos = [];
+            var total = 0; 
+
+            for (var i = 0; i < tabla.rows.length; i++) {
+                var montoTexto = tabla.rows[i].cells[1].innerText;
+                var montoNumero = parseFloat( ( montoTexto.replace ("Q", "") ).replace(/\./g,'') );
+                if (!isNaN(montoNumero)) {
+                    datos.push({
+                        motivo: tabla.rows[i].cells[0].innerText,
+                        monto: montoNumero
+                    });
+                    total += montoNumero; 
+                } 
+            }
+
+            doc.setFillColor(200, 200, 200);
+            doc.rect(0, 35, 210, 10, 'F');
+            doc.setFontSize(18);
+            doc.setFont('Helvetica', 'bold')
+            doc.text(NombreEmpresa, 105, 10, null, null, "center");
+            doc.text("Reporte de renovaciones", 105, 20, null, null, "center");
+            doc.setFontSize(10);
+            
+            doc.text('Fecha: ' + fechaFormateada + ' Hora: ' + hora, 10, 30);
+            doc.text("Nombre de asesor: "+ nombreAsesorReportee, 80, 30);
+           
+            doc.setTextColor(0,0,0);
+            doc.text('Motivo de renovación', 10, 40);
+            doc.text('Monto', 160, 40);
+
+            var y = 50;
+            var maxPageHeight = doc.internal.pageSize.height - 20; 
+            
+            for (var i = 0; i < datos.length; i++) {
+                
+                if (y > maxPageHeight) {
+                    doc.addPage();
+                    y = 20; 
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('Motivo de renovación', 10, y);
+                    doc.text('Monto', 160, y);
+                    y += 10; 
+                }
+                doc.setTextColor(0, 0, 0); 
+                doc.setFont("bold");
+                doc.setFontSize(10)
+                doc.text(datos[i].motivo.toString(), 10, y);
+                doc.text("Q"+datos[i].monto.toString(), 160, y);
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datos.length - 1) {
+                    doc.line(10, y + 5, 200, y + 5);
+                }
+                y += 10; 
+            }
+            
+            if (y > maxPageHeight) {
+                doc.addPage();
+                y = 20;
+            }
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Helvetica', 'bold'); 
+            doc.text('Total', 10, y);
+            doc.text("Q" + total.toString(), 160, y);
+            doc.setFont('Helvetica');        
+
+            doc.save('Reporte de renovaciones por fechas ' + fechaFormateada + ' Hora:' + hora + '.pdf');
+        }
+
     
-    function imprimir_texto(doc, texto, x, y, size, color, align) {
-        doc.setFontSize(size);
-        doc.setTextColor(color);
-        doc.text(texto, x, y,{align: align});
-    }
+        function imprimir_texto(doc, texto, x, y, size, color, align) {
+            doc.setFontSize(size);
+            doc.setTextColor(color);
+            doc.text(texto, x, y,{align: align});
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('boton_Reporte_Gastos').addEventListener('click', function() {
                 generarPDFGastos();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('boton_Reporte_Renovaciones').addEventListener('click', function() {
+                generarPDFRenovaciones();
             });
         });
 
@@ -251,6 +338,7 @@
             var baseDiaria = document.getElementById('text_baseAsesor').textContent;
             var totalRecaudado = document.getElementById('text_recolectadoAsesor').textContent;
             var totalGastos = document.getElementById('text_gastosAsesor').textContent;
+            var totalRenovaciones = document.getElementById('text_renovacionesAsesor').textContent;
             var totalSistema = document.getElementById('text_total_sistema').textContent;
             var totalAsesor = document.getElementById('text_total_asesor').value;
             var totalDiferencia = document.getElementById('text_diferencia_cierre').textContent;
@@ -269,6 +357,12 @@
             var datos2 = [];
             var total2 = 0; 
 
+            //Renovaciones
+            var tabla2 = document.getElementById('lista_renovaciones_exeAsesor');
+            var filas2 = tabla2.getElementsByTagName('tr');
+            var datos3 = [];
+            var total3 = 0;
+
             doc.setFontSize(18);
             doc.setFont("Helvetica","bold")
             doc.text(NombreEmpresa,105,10,null,null,"center");
@@ -281,8 +375,9 @@
             doc.setFillColor(200, 200, 200);
             doc.rect(0, 55, 210,10, "F");
             doc.text("Base diaria: " + baseDiaria,10,60);
-            doc.text("Total recaudado: "+ totalRecaudado, 70, 60);
-            doc.text("Total gastos: " + totalGastos, 140,60);
+            doc.text("Total recaudado: "+ totalRecaudado, 47, 60);
+            doc.text("Total gastos: " + totalGastos, 95,60);
+            doc.text("Total renovaciones: " + totalRenovaciones, 140,60);
 
             doc.text("Total sistema: " + totalSistema,10,70);
             doc.text("Total asesor: Q" + totalAsesor,70,70);
@@ -296,13 +391,13 @@
             doc.text("Monto",170,100);
             doc.text("Hora",190,100);
 
-            //Cobros
+            /*  IMPLEMENTACIÓN DE COBROS   */
             for (var i = 0; i < tabla1.rows.length; i++) {
                 var dpi = tabla1.rows[i].cells[0].innerText;
                 var nombre = tabla1.rows[i].cells[1].innerText;
                 var direccion = tabla1.rows[i].cells[2].innerText;
                 var montoTexto = tabla1.rows[i].cells[3].innerText;
-                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                var montoNumero = parseFloat( ( montoTexto.replace ("Q", "") ).replace(/\./g,'') );
                 var hora = tabla1.rows[i].cells[4].innerText;
                 if (!isNaN(montoNumero)) {
                     datos2.push({
@@ -361,7 +456,7 @@
             doc.setFont("Helvetica","bold");
             doc.text("Total:                                                                                                                            Q"+ total2.toString(),10,y1);
 
-            //Gastos
+            /*  IMPLEMENTACIÓN DE GASTOS   */
             var datos = [];
             var total = 0;
 
@@ -414,6 +509,60 @@
             doc.setTextColor(0,0,0)
             doc.setFont("Helvetica", "bold");
             doc.text("Total:                                                                                                                              Q"+ total.toString(),10,y);
+
+            /*  IMPLEMENTACIÓN DE RENOVACIONES   */
+            var datosR = [];
+            var totalR = 0;
+            for(var i = 0; i < filas2.length; i++){
+                var celdas = filas2[i].getElementsByTagName("td");
+                if(celdas.length === 2){
+                    var motivo = celdas[0].textContent;
+                    debugger;
+                    var monto = parseFloat( ( celdas[1].textContent.replace("Q","") ).replace(/\./g,'') );
+                    datosR.push( { motivo: motivo, monto: monto } );
+                    totalR += monto;
+                }
+            }
+
+            var y2 = y + 20;
+
+            doc.setFillColor(200,200,200);
+            doc.rect(0,y2 -10, 210,10, "F");
+            doc.setTextColor(0,0,0);
+            doc.text("Motivo de renovación",10, y2 -4);
+            doc.text("Monto",170, y2 -4);
+            y2 += 10;
+
+            for(var i = 0; i < datosR.length; i ++){
+                if(y2 > maxPageHeight){
+                    doc.addPage();
+                    y2 = 20;
+                    doc.setTextColor(0,0,0);
+                    doc.text("Motivo de renovación",10, y2);
+                    doc.text("Monto",170,y2);
+                    y2 += 10;
+                }
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("bold");
+                doc.setFontSize(10);
+                doc.text(datosR[i].motivo.toString(), 10, y2);
+                doc.text("Q" + datosR[i].monto.toString(), 170, y2);
+                doc.setFont("normal");
+                doc.setFontSize(12);
+                if (i < datosR.length - 1) {
+                    doc.line(10, y2 + 5, 200, y2 + 5);
+                }
+                y2 += 10;
+            }
+
+            if(y2 > maxPageHeight){
+                doc.addPage();
+                y2 = 20;
+            }
+
+            doc.setTextColor(0,0,0)
+            doc.setFont("Helvetica", "bold");
+            doc.text("Total:                                                                                                                              Q"+ totalR.toString(),10,y2);
                          
             doc.save('Reporte Cierre de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf'); 
         }
@@ -449,9 +598,8 @@
                 var nombre = tabla.rows[i].cells[0].innerText;
                 var dpiTexto = tabla.rows[i].cells[1].innerText;
                 var montoTexto = tabla.rows[i].cells[2].innerText; // Cambiando el índice a 2
-                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
-                // var montoTexto = tabla.rows[i].cells[1].innerText;
-                // var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                var montoNumero = parseFloat( ( montoTexto.replace ("Q", "") ).replace(/\./g,'') );
+                
                 if (!isNaN(montoNumero)) {
                     datos.push({
                         nombre: tabla.rows[i].cells[0].innerText,
@@ -1226,20 +1374,21 @@
                 </li>
 
                 <li>
-
                     <a href="#"><i class="fa fa-hand-holding-usd"></i> <span class="nav-label">Administración</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:informe_completo();">Liquidación</a></li>
                         <li><a href="javascript:informe_completo_cobros();">Consultar cobros</a></li>
                         <li><a href="javascript:informe_completo_gastos();">Consultar gastos</a></li>
+                        <li><a href="javascript:informe_completo_renovaciones();">Consultar renovaciones</a></li>
                         <li><a href="javascript:informe_completo_cierre();">Cierre</a></li>
                         <li><a href="javascript:informe_completo_utilidades();">Utilidades</a></li>
                     </ul>
-                    <!-- <ul class="nav nav-second-level collapse">
-                        <li><a href="javascript:informe_completo_finanza();">Finanza</a></li>
-                    </ul> -->
-
-
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Reportes</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="javascript:">Cuotas</a></li>
+                    </ul>
                 </li>
 
 
@@ -2646,9 +2795,60 @@
                                     <tr align="center">
                                         <th>Motivo de gasto</th>
                                         <th>Monto</th>
+                                        <th>Opcion</th>
                                     </tr>
                                     </thead>
                                     <tbody align="center" id="lista_gastos_exe">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12" id="consulta_renovaciones">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Busqueda de renovaciones por fecha</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <label>Id asesor</label>
+                                <select class="form-control m-b" id="id_asesor_renovaciones_consulta">
+                                </select>
+
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Fecha de asignación</label> <input id="fecha_renovacion"
+                                                                                                      type="date"
+                                                                                                      placeholder="Inserte fecha de asignación"
+                                                                                                      class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" style="margin-top: 3%;">
+                                <button class="btn btn-primary btn-lg btn-block btn-sm" style="margin-left: 2px;"
+                                        id="busqueda_renovacion"
+                                        type="button">Buscar
+                                </button>
+                                <form role="form" style="margin-top: 24px;display:grid;">
+                                    <button type="button" class="btn btn-danger" id="boton_Reporte_Renovaciones"><i class="fa fa-file-pdf"></i></button>
+                                </form>
+
+                            </div>
+                            <div class="table-responsive" style="margin-top: 50px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Motivo de renovaciones</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="lista_renovaciones_exe">
                                     </tbody>
                                 </table>
                             </div>
@@ -2737,6 +2937,7 @@
                                             <div>Base diaria: <label id="text_baseAsesor"></label></div>
                                             <div>Total recaudado: <label id="text_recolectadoAsesor"></label></div>
                                             <div>Total gastos: <label id="text_gastosAsesor"></label></div>
+                                            <div>Total renovaciones: <label id="text_renovacionesAsesor"></label></div>
                                         </div>
                                     </div>
                                 </table>
@@ -2785,6 +2986,21 @@
                                         </tr>
                                         </thead>
                                         <tbody align="center" id="lista_gastos_exeAsesor">
+                                        </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <div class="ibox-title">
+                                    <h5>Consulta de renovaciones</h5>
+                                </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr align="center">
+                                            <th>Motivo de renovacion</th>
+                                            <th>Monto</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody align="center" id="lista_renovaciones_exeAsesor">
                                         </tbody>
                                 </table>
                             </div>
@@ -3176,14 +3392,14 @@
 
 <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE",
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -3430,6 +3646,7 @@
         $("#contratos_view").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         
         if(window.localStorage.getItem("Money-vars-token")!==null){
@@ -3480,6 +3697,7 @@
         $("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 	}
@@ -3532,8 +3750,8 @@
 
     function buscar_cierre(asesor, fecha){        
         // fecha para usarla en registrar cierre
-        $("#listado_cobros_cierre").empty();
-        block.fecha_cierre=fecha;
+        $("#listado_cobros_cierre").empty();        
+        block.fecha_cierre = fecha;
         block.ase = asesor;
         $("#lista_enorme").html("");
         listado_contratos("0");
@@ -3553,8 +3771,8 @@
                 $("#text_baseAsesor").text("Q"+valor.d[2]);
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-                const totalSistema = (base + recaudado);
-                $("#text_total_sistema").text("Q"+totalSistema);
+                const totalSistema = ( base + recaudado );
+                $("#text_total_sistema").text( "Q "+totalSistema );
 
                 if ( valor.d[2] == 0 || valor.d[4] ) {
                     $("#registrar_cierre").prop("disabled", true);
@@ -3569,11 +3787,13 @@
                 }
 
                 totalGastos();
+                totalRenovaciones();
             } else {
                 $("#text_diferencia_cierre").text("0");
             }
         });
         extraer_gastosAsesor();
+        extraer_renovacionesAsesor();
         extraer_cobros_cierre(asesor, "#listado_cobros_cierre");
     }
 
@@ -3649,7 +3869,7 @@
         const asesor = $('#id_asesor_cierre').val();
         const fecha_cierre = $('#fecha_cierre').val();
         
-        if ( asesor!=="" && fecha_cierre!=="" ){
+        if ( asesor !== "" && fecha_cierre !== "" ){
             buscar_cierre(asesor, fecha_cierre);
         }
 
@@ -3926,6 +4146,10 @@
         extraer_gastos();
     });
 
+    $("#busqueda_renovacion").click(function(){
+        extraer_renovaciones();
+    });
+
     $("#busqueda_cobros").click(function(){
         $("#listado_cobros_por_fechas").empty();
         extraer_cobros("#id_asesor_cobros","#listado_cobros_por_fechas",false);
@@ -3956,6 +4180,7 @@
         $("#contratos_view").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
         $("#utilidades_view").css("display", "none");
@@ -3990,11 +4215,47 @@
                     block.iteds = block.pasero[wq];
                     block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
-                    block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+                    block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td> <td><a href="javascript:eliminar_gasto_ya(\''+block.iteds[1]+'\');">Eliminar</a></td></tr>';
                 }
                 $("#lista_gastos_exe").html(block.inefd);
             } else {
                 toastr.warning("No hay gastos registrados para esa fecha", "Atención");
+            }
+        });
+    
+    }   
+
+    //Funcion para extraer datos con fecha pasandole la fecha al array
+    function extraer_renovaciones() {
+            
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        $("#lista_renovaciones_exe").empty();
+
+        var fecha = $("#fecha_renovacion").val()
+        block.estraa = $("#id_asesor_renovaciones_consulta").val();
+        block.estraaq = block.estraa.split("_");
+        block.estra = block.estraaq[0];
+        block.cedulasesor = block.estraaq[1];
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.obj = { "r": "buscar_renovaciones_fecha", "d": block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse( salida );
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                block.inefd = '';
+                for (var wq = 0; wq < block.pasero.length; wq++) {
+                    block.iteds = block.pasero[wq];
+                    block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                    block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+                }
+                $("#lista_renovaciones_exe").html(block.inefd);
+            } else {
+                toastr.warning("No hay renovaciones registrados para esa fecha", "Atención");
             }
         });
     
@@ -4028,33 +4289,65 @@
         });        
     }
 
-function extraer_cobros(id_asesor, id_tabla, hoy) {    
-    if (window.localStorage.getItem("Money-vars-token") !== null) {
-        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-    } else {
-        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-    }
-    var fecha = hoy ? moment().format('YYYY-MM-DD') : $("#fecha_busqueda_cobros").val();
-    
-    block.estraa = $(id_asesor).val();
-	block.estraaq = block.estraa.split("_");
-	block.estra = block.estraaq[0];
-	block.cedulasesor = block.estraaq[1];
-    block.arrays = [block.tokens[1], block.estraa, fecha];
-    block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
-    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-        var valor = JSON.parse(salida);
-        var cobro;
-        block.inefd='';
-        if(valor.d[1].length>0){
-            for(var j=0; j<valor.d[1].length;j++){
-                cobro = valor.d[1][j];
-                block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
-            }
-            $(id_tabla).html(block.inefd);
+    function extraer_renovacionesAsesor() {        
+        $("#lista_renovaciones_exeAsesor").empty();
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
-            toastr.warning("No hay cobros registrados para esa fecha", "Atención");
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
+    
+        var fecha = $("#fecha_cierre").val();
+        block.estraa = $("#id_asesor_cierre").val().split('_');
+        block.estraa = block.estraa[0];
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.obj = {"r": "buscar_renovaciones_fecha", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                block.inefd = '';
+                for (var wq = 0; wq < block.pasero.length; wq++) {
+                    block.iteds = block.pasero[wq];
+                    block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                    block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+                }
+                $("#lista_renovaciones_exeAsesor").html(block.inefd);
+            } else {
+                toastr.warning("No se registraron renovaciones de contrato en la fecha seleccionada", "Atención");
+            }
+        });        
+    }
+
+
+    function extraer_cobros(id_asesor, id_tabla, hoy) {    
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        var fecha = hoy ? moment().format('YYYY-MM-DD') : $("#fecha_busqueda_cobros").val();
+        
+        block.estraa = $(id_asesor).val();
+        block.estraaq = block.estraa.split("_");
+        block.estra = block.estraaq[0];
+        block.cedulasesor = block.estraaq[1];
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            var cobro;
+            block.inefd='';
+            if(valor.d[1].length>0){
+                for(var j=0; j<valor.d[1].length;j++){
+                    cobro = valor.d[1][j];
+                    block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
+                }
+                $(id_tabla).html(block.inefd);
+            } else {
+                toastr.warning("No hay cobros registrados para esa fecha", "Atención");
+            }
     });
 }   
 
@@ -4896,12 +5189,12 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-        block.arrays = [block.tokens[1]];
-        block.obj = {"r": "listar_cuotas", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);            
-            if (!valor.e) {
-                block.lista = valor.d[1];
+        block.arrays = [ block.tokens[ 1 ] ];
+        block.obj = { "r": "listar_cuotas", "d": block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function ( salida ) {
+            var valor = JSON.parse( salida );            
+            if ( !valor.e ) {
+                block.lista = valor.d[ 1 ];
                 block.nuevo = "";
                 block.nuevo2 = "<option value=''>Seleccione</option>";
                 block.lisat = [];
@@ -4926,18 +5219,40 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
-
+        
 		block.arrays = [block.tokens[1],id];
-        block.obj = {"r": "eliminar_cuota_config", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        block.obj = { "r": "eliminar_cuota_config", "d" : block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function ( salida ) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-				toastr.success('Eliminado correctamente', 'Atención!');
+                toastr.success('Eliminado correctamente', 'Atención!');
 				listar_cuotas();
 			}
 		});
-
+        
 	}
+    
+    function eliminar_gasto_ya(gasto){
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        } 
+
+        let selectElement = document.getElementById('id_asesor_gastos_consulta');
+        let datosAsesor = selectElement.options[selectElement.selectedIndex].text;
+        let IdAsesorGasto = datosAsesor.match(/ID:(\d+)/)[1];
+        let fechaGasto = $("#fecha_gasto").val()
+        block.arrays = [ block.tokens[1], gasto, IdAsesorGasto, fechaGasto ];
+        block.obj = { "r": "eliminar_gasto", "d" : block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function ( salida ) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                toastr.success('Eliminado correctamente', 'Atención!');
+                $("#busqueda_gasto").click();
+            }
+        });
+    }
 
     $("#nombre_id1").prop("disabled", true);
     $("#nombre_id2").prop("disabled", true);
@@ -6780,6 +7095,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#suplanter").css("display", "block");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 
@@ -6875,6 +7191,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#suplanter").css("display", "block");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 
@@ -7308,6 +7625,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     $("#cliente_lista_admi").css("display", "none");
     $("#consulta_cobros").css("display", "none");
     $("#consulta_gastos").css("display", "none");
+    $("#consulta_renovaciones").css("display", "none");
     $("#cierre_view").css("display", "none");
     $("#utilidades_view").css("display", "none");
 
@@ -7337,6 +7655,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#suplanter").css("display", "none");
         $("#utilidades_view").css("display", "none");
@@ -7368,6 +7687,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 
@@ -7399,6 +7719,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 
@@ -7475,6 +7796,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -7534,6 +7856,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
 
@@ -7594,6 +7917,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -7824,6 +8148,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 $("#id_asesor").html(block.listax2);
                 $("#id_asesor_consulta").html(block.listax2);
                 $("#id_asesor_gastos_consulta").html(block.listax2);
+                $("#id_asesor_renovaciones_consulta").html(block.listax2);
                 $("#id_asesor_cobros").html(block.listax2);
                 $("#id_asesor_cierre").html(block.listax2);
             }
@@ -7897,17 +8222,46 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 for(var i= 0; i< block.pasero.length; i++){
                     gastos += parseFloat(block.pasero[i][2]);
                 }
-                $("#text_gastosAsesor").text("Q "+ gastos);
-                const base = parseFloat($("#text_baseAsesor").text().slice(1));
-                const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-                const totalSistema = base + recaudado - gastos;
-                $("#text_total_sistema").text("Q "+ totalSistema);
+                $("#text_gastosAsesor").text("Q "+ gastos);                
             } else {
                 $("#text_gastosAsesor").text("Q "+ 0);
             }
         });
         return gastos;
-    }  
+    }
+    
+    function totalRenovaciones(){
+        $("#text_renovacionesAsesor").empty();
+        block.fechaABuscar = $("#fecha_cierre").val();
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        let renovaciones = 0;
+        block.arrays = [ block.tokens[1], $("#id_asesor_cierre").val().split('_')[0], block.fechaABuscar ];
+        block.obj = {"r": "extrae_renovaciones_supervisor", "d": block.arrays};
+        debugger;
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                
+                for(var i= 0; i< block.pasero.length; i++){
+                    renovaciones += parseFloat(block.pasero[i][2]);
+                }
+                $("#text_renovacionesAsesor").text("Q "+renovaciones);
+                const base = parseFloat($("#text_baseAsesor").text().slice(1));
+                const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
+                const gastos = parseFloat($("#text_gastosAsesor").text().slice(1));
+                const totalSistema = base + recaudado - gastos - renovaciones;
+                $("#text_total_sistema").text("Q "+totalSistema);
+            } else {
+                $("#text_diferencia_cierre").text("0");
+            }
+        });
+        return renovaciones;
+    }
 
 
     function asignar_supervisor_asesor() {
@@ -7935,6 +8289,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#suplanter").css("display", "none");
@@ -8122,6 +8477,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -8475,6 +8831,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -8629,6 +8986,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -8662,6 +9020,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#migrar_cion_div").css("display", "none");
 		$("#suplanter").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#consulta_cobros").css("display", "initial");
         $("#utilidades_view").css("display", "none");
@@ -8702,6 +9061,44 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#consulta_cobros").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#consulta_gastos").css("display", "initial");
+        $("#consulta_renovaciones").css("display", "none");
+        $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
+        cargarListas_asigandos();
+    }
+
+    function informe_completo_renovaciones(){
+        $("#lista_renovaciones_exe").empty();
+        $("#fecha_gasto").val("");
+        
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
+        $("#consulta_renovaciones").css("display", "initial");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
         cargarListas_asigandos();
@@ -8742,6 +9139,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "initial");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -8779,6 +9177,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "initial");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -8811,6 +9210,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -8844,6 +9244,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 		$("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display", "none");
@@ -8877,6 +9278,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#suplanter").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#utilidades_view").css("display", "none");
         $("#HistorialClientes").css("display", "none");

@@ -71,113 +71,167 @@ eje = function(arrays,origen,redisClient) {
 											
 											var fes =[];											
 											if(arrays[10]=="2"){ //FRECUENCIA DE PAGO: SEMANAL
-												var cuotaD = arrays[8].replace(".", ""),
-												cuotaD2 = cuotaD.replace(".", ""),
-												tiempo = arrays[4],
-												indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
-												prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
-												
-												for (var k = 1; k < tiempo + 1; k++) {
-													if(k == tiempo){
-														var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
-														fes.push({ "cp": ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
-													}
-													var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+												let cuotaD = arrays[8].replace(/\./g, ""),
+													tiempo = arrays[4],
+													indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
+													prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
+												for (let k = 1; k < tiempo + 1; k++) {
+													let prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+													let cuota = (k == tiempo) ? ultima_cuota.replace(/\./g, "") : cuotaD;
+													fes.push({ "cp":cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;
-													fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
 												}
 												if (fes.length > parseInt(arrays[4])) {
 													fes.pop();
 												}
+
+												// var cuotaD = arrays[8].replace(".", ""),
+												// cuotaD2 = cuotaD.replace(".", ""),
+												// tiempo = arrays[4],
+												// indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
+												// prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
+												
+												// for (var k = 1; k < tiempo + 1; k++) {
+												// 	if(k == tiempo){
+												// 		var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+												// 		fes.push({ "cp": ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 	}
+												// 	var prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
+												// 	prox = prox2;
+												// 	fes.push({ "cp": cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":"" });
+												// }
+												// if (fes.length > parseInt(arrays[4])) {
+												// 	fes.pop();
+												// }
 											} else if(arrays[10]=="1"){ //FRECUENCIA DE PAGO DIARIA												
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													indi = moment().format('E'),
-													residuo = (7 - indi),													
 													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
-													tiempo = arrays[4],
-													acum=1;
+													tiempo = arrays[4];
 
-												fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":""});
-												for(var k = 1; k < tiempo; k++){
-													if( k == (tiempo - 1) ) {
-														if(k<residuo){
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');															
-															fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
-															prox = prox2;
-														} else if(k==residuo){
-															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															acum++;
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
-															prox = prox2;
-														} else if(k>residuo){
-															if(acum==7){
-																prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-																acum=1;
-															}
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
-															prox = prox2;
-															acum++;
+													for(var k = 1; k < tiempo + 1; k++){
+														var prox2 = moment(prox).add(1, 'days');
+														if(prox2.day() === 0) { // Si es domingo
+															prox2 = prox2.add(1, 'days'); // Agrega un día adicional
 														}
-													} else {
-														if(k<residuo){
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+														prox2 = prox2.format('YYYY-MM-DD');
+														if( k == (tiempo) ) {
+															fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
+														} else {
 															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
-															prox = prox2;
-														} else if(k==residuo){
-															prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															acum++;
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
-															prox = prox2;
-														} else if(k>residuo){
-															if(acum==7){
-																prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-																acum=1;
-															}
-															var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
-															fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
-															prox = prox2;
-															acum++;
 														}
-													}													
-												}											
-												if(fes.length > parseInt(arrays[4])){
-													fes.pop();
-												}	
+														prox = prox2;
+													}
+													
+													if(fes.length > parseInt(arrays[4])){
+														fes.pop();
+													}	
+
+													// prox = moment(prox).add(1, 'days').format("YYYY-MM-DD");
+													// fes.push({"cp":cuotaD2,"ct":false,"fe":prox,"pe":0, "pago":""});
+													
+												// for(var k = 1; k < tiempo + 1; k++){
+												// 	if( k == (tiempo) ) {
+												// 		if( k < residuo ){
+												// 			var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');															
+												// 			fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 			prox = prox2;
+												// 		} else if( k == residuo ){
+												// 			prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 			acum++;
+												// 			var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 			fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 			prox = prox2;
+												// 		} else if(k>residuo){
+												// 			if( acum == 1 ){
+												// 				prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 				acum = 2;
+												// 			}
+												// 			var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 			fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 			prox = prox2;
+												// 			acum++;
+												// 		}
+												// 	} else {
+												// 		if( k < residuo ){
+												// 			var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 			fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 			prox = prox2;
+												// 		} else if( k == residuo ){
+												// 			prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 			acum++;
+												// 			var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 			fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 			prox = prox2;
+												// 		} else if( k>residuo ){
+												// 			if( acum == 1 ){
+												// 				prox = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 				acum=2;
+												// 			}
+												// 			var prox2 = moment(prox).add(1, 'days').format('YYYY-MM-DD');
+												// 			fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 			prox = prox2;
+												// 			acum++;
+												// 		}
+												// 	}													
+												// }
+
+												// if(fes.length > parseInt(arrays[4])){
+												// 	fes.pop();
+												// }	
 											}else if(arrays[10]=="3"){ //PAGO QUINCENAL
-												var cuotaD = arrays[8].replace(".",""),
-													cuotaD2 = cuotaD.replace(".",""),
+												let cuotaD = arrays[8].replace(/\./g, ""),
 													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4];	
-																															
-												for(var k = 1; k < tiempo+1; k++){
-													// arrays[5]
-													var prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');	
-													if(k == tiempo){
-														fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });														
-													} else {
-														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
-													}
+
+												for(let k = 1; k < tiempo+1; k++){
+													let prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');	
+													let cuota = (k == tiempo) ? ultima_cuota.replace(/\./g, "") : cuotaD;
+													fes.push({ "cp":cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;													
 												}
+
+												// var cuotaD = arrays[8].replace(".",""),
+												// 	cuotaD2 = cuotaD.replace(".",""),
+												// 	prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
+												// 	tiempo = arrays[4];	
+																															
+												// for(var k = 1; k < tiempo+1; k++){
+												// 	// arrays[5]
+												// 	var prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');	
+												// 	if(k == tiempo){
+												// 		fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });														
+												// 	} else {
+												// 		fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
+												// 	}
+												// 	prox = prox2;													
+												// }
 											} else if(arrays[10]=="4"){	//PAGO MENSUAL	
-												var cuotaD = arrays[8].replace(".",""),
-													cuotaD2 = cuotaD.replace(".",""),
+												let cuotaD = arrays[8].replace(/\./g, ""),
 													prox = moment().format('YYYY-MM-DD'),
 													tiempo = arrays[4];
-												for(var k = 1; k < tiempo + 1; k++){
-													var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
-													if(k == tiempo){
-														fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
-													} else {
-														fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
-													}
 
+												for(let k = 1; k < tiempo + 1; k++){
+													let prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
+													let cuota = (k == tiempo) ? ultima_cuota.replace(/\./g, "") : cuotaD;
+													fes.push({ "cp":cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;
 												}
+												// var cuotaD = arrays[8].replace(".",""),
+												// 	cuotaD2 = cuotaD.replace(".",""),
+												// 	prox = moment().format('YYYY-MM-DD'),
+												// 	tiempo = arrays[4];
+												// for(var k = 1; k < tiempo + 1; k++){
+												// 	var prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
+												// 	if(k == tiempo){
+												// 		fes.push({ "cp":ultima_cuota.replace(/\./g, ""),"ct":false,"fe":prox2,"pe":0, "pago":"" });
+												// 	} else {
+												// 		fes.push({ "cp":cuotaD2,"ct":false,"fe":prox2,"pe":0, "pago":"" });														
+												// 	}
+
+												// 	prox = prox2;
+												// }
 											} else if (arrays[10] == "5") { //PAGO CONFIGURABLE 4 PAGOS EN 25 DÍAS
 												var cuotaD = arrays[8].replace(".", ""),
 												cuotaD2 = cuotaD.replace(".", ""),

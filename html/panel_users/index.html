@@ -472,6 +472,14 @@
                             class="nav-label">Gastos</span></a>
                 </li>
                 <li>
+                    <a id="couta_sear" href="javascript:consultar_Contratos_Vencimiento();"><i class="fa fa-book"></i> <span
+                            class="nav-label">Contratos en vencimiento</span></a>
+                </li>
+                <li>
+                    <a id="couta_sear" href="javascript:registrar_renovaciones();"><i class="fa fa-money"></i><span
+                            class="nav-label">Renovaciones</span></a>
+                </li>
+                <li>
                     <a id="couta_search" href="javascript:buscar_mapa();"><i class="fa fa-map-marker"></i> <span
                             class="nav-label">Mapa de clientes</span></a>
                 </li>
@@ -1006,6 +1014,7 @@
                             <div>Base diaria: <label id="text_base"></label></div>
                             <div>Total recaudado: <label id="text_recolectado"></label></div>
                             <div>Total gastos: <label id="text_gastos">Q0</label></div>
+                            <div>Total renovaciones: <label id="text_renovaciones">Q0</label></div>
                         </div>
 
                     </div>
@@ -1216,6 +1225,39 @@
                     </div>
                 </div>
 
+                <div class="col-lg-12" id="contratos_vencimiento_view" style="display:none;">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Consulta de contrato que vencen el día de hoy.</h5>
+                            &nbsp;
+                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por DPI, Nombre o Identificador">
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px; margin-left: 0px;">
+        
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Fecha de prestamo</th>
+                                        <th>Identificador</th>
+                                        <th>A pagar</th>
+                                        <th>DPI</th>
+                                        <th>Nombre cliente</th>                                        
+                                        <th>Prestamo</th>
+                                        <th>Porcentaje</th>
+                                        <th>Cuota</th>
+                                        <th>Fecha de culminación</th>
+                                        <th>Aplicar interes</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="lista_enorme_vencimiento">
+                                    </tbody>
+                                </table>
+                            </div>                
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-lg-12" id="crear_gastos" style="display:none;">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -1257,6 +1299,53 @@
                             </tr>
                             </thead>
                             <tbody align="center" id="lista_gastos_exe">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-12" id="crear_renovaciones" style="display:none;">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Renovaciones</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="form-group col-sm-4 col-md-4 col-xs-12">
+                                <label>Motivo de la renovación</label>
+                                <div class="input-group"><input placeholder="Renovación de contrato del cliente ........" id="motivo_renovacion" type="text" class="form-control"></div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-4 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Monto de la renovación</label> <input
+                                            id="monto_renovacion"
+                                            type="number"
+                                            min="0"
+                                            placeholder=""
+                                            class="form-control"></div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-4 col-md-4 col-xs-12" align="center" style="margin-top: 28px;" >
+                                <button class="btn btn-primary btn-block" id="renovacion_executar"
+                                        type="button">Guardar renovacion
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" >
+                            <thead>
+                            <tr align="center">
+                                <th>Motivo de la renovación</th>
+                                <th>Monto</th>
+                            </tr>
+                            </thead>
+                            <tbody align="center" id="lista_renovaciones_exe">
                             </tbody>
                         </table>
                     </div>
@@ -1335,14 +1424,14 @@
 <script>
 
     var firebaseConfig = {        
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE",
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
 	};
 	
     firebase.initializeApp(firebaseConfig);	
@@ -1425,6 +1514,7 @@
         $("#pendiente_form").css("display","none");
         $("#lista_ubicacniones_div").css("display","none");
         $("#crear_gastos").css("display","block");
+        $("#crear_renovaciones").css("display","none");
         $("#cobrar_couta").css("display","none");
         $("#crear_contrato_form_dos").css("display","none");
         $("#crear_contrato_form").css("display","none");
@@ -1432,6 +1522,23 @@
         $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#googleMap").css("display","none");
         $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","none"); 
+    }
+
+    function registrar_renovaciones(){
+        corroborarHora();
+        $("#pendiente_form").css("display","none");
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","block");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none"); 
+        $("#contratos_vencimiento_view").css("display","none"); 
     }
 	
 	$("#procesar_aplico").click(function(){
@@ -1747,6 +1854,7 @@
         $("#lista_enorme").empty();
         $("#pendiente_form").css("display","none");
         $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
         $("#cobrar_couta").css("display","none");
         $("#crear_contrato_form_dos").css("display","none");
         $("#crear_contrato_form").css("display","none");
@@ -1754,8 +1862,27 @@
         $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#googleMap").css("display","none");
         $("#contratos_view").css("display","block");
+        $("#contratos_vencimiento_view").css("display","none"); 
         $("#lista_ubicacniones_div").css("display","none");
         listado_contratos("0");
+    }
+
+    function consultar_Contratos_Vencimiento(){
+        corroborarHora();
+        $("#lista_enorme_vencimiento").empty();
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","block");
+        $("#lista_ubicacniones_div").css("display","none");
+        listado_contratos_vencimiento("0"); 
     }
     
     block.unico = 0;
@@ -1850,6 +1977,98 @@
             } else if(valor.d[2]!==0 && valor.d[2]>block.unico){
                 block.unico++;
                 listado_contratos(block.unico);
+            }
+        });
+    }
+    function listado_contratos_vencimiento(mun){ 
+        block.unico =  parseInt(mun);
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [ block.tokens[1], block.tokens[4], block.unico, block.tokens[5].toString() ];
+        console.log(block.arrays);
+        block.obj = { "r": "contratos_lista_all_vencimiento", "d": block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            console.log(valor);
+            if (!valor.e) { 
+                block.oso="";
+                block.dat0s =valor.d[1][0];
+                block.unox = JSON.parse(block.dat0s[0]);
+                if(block.dat0s[1].length>0) {
+                    block.dosx = JSON.parse(dat0s[1]);
+                } else {
+                    block.dosx = dat0s[1];
+                }
+                block.tresx = block.dat0s[2];
+                block.cuatrosx = JSON.parse(block.dat0s[3]);
+                
+                if (block.dosx.length>0) {
+                    block.exta2 = block.dosx[3];
+                    block.exta = block.exta2.split("_");
+                    block.superv = block.exta[3] + " " +block.exta[4];
+                } else {
+                    block.superv = "No asignado";
+                }
+                if(block.tresx.length>0) {
+                    block.exta2a = JSON.parse(block.tresx);
+                    block.extaa = block.exta2a[3].split("_");
+                    block.ayudan = block.extaa[3] + " " +block.extaa[4];
+                } else {
+                    block.ayudan = "No asignado";
+                }
+
+
+                block.calsulo = block.unox[13];
+                block.sumas = 0;
+                
+                var valorCp = "";
+                var valorPe = "";
+                for(var u= 0; u<block.calsulo.length; u++){
+                    if(!block.calsulo[u].ct && block.calsulo[u].pe==0){ 
+                        valorCp = block.calsulo[u].cp;  
+                        if(valorCp.includes(".")){                            
+                            block.sumas = (parseInt(block.sumas) + parseInt(valorCp.replace(/\./g, "")));
+                        } else {
+                            block.sumas = block.sumas + parseInt(valorCp);
+                        }
+                    }else if(block.calsulo[u].pe!==0){       
+                        valorPe = String(block.calsulo[u].pe);
+                        
+                        if(valorPe.includes(".")){                            
+                            block.sumas = (parseInt(block.sumas) + parseInt(valorPe.replace(/\./g, "")));
+                        } else { 
+                            // block.sumas = block.sumas + parseInt(valorPe);
+                            block.sumas = block.sumas + parseInt(block.calsulo[u].cp) - parseInt(valorPe);
+                        }
+                    }
+                }
+
+                //Damos formato a la fechad de Registro del contrato (dd-mm-yyyy);
+                block.fechaSinFormatoRegistro = block.unox[5];
+                let partesFechaRegistroContrato = block.fechaSinFormatoRegistro.split('-');
+                block.fechaRegistro = `${ partesFechaRegistroContrato[2] }-${ partesFechaRegistroContrato[1] }-${ partesFechaRegistroContrato[0] }`;
+
+                //Damos formato a la fechad de Culminacion del contrato (dd-mm-yyyy);
+                block.fechaSinFormatoCulminacion = block.calsulo[block.calsulo.length - 1].fe;
+                let partesFecha = block.fechaSinFormatoCulminacion.split('-');
+                block.fechaCulminacion = `${ partesFecha[2] }-${ partesFecha[1] }-${ partesFecha[0] }`;
+
+                block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');  
+                block.infoCliente = JSON.parse(valor.d[1][0][3]);                
+                block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
+                block.unico++;
+
+                listado_contratos_vencimiento(block.unico);
+                $("#lista_enorme_vencimiento").append(block.oso);
+            } else if(valor.d[2]!==0 && valor.d[2]>block.unico){
+                block.unico++;
+                listado_contratos_vencimiento(block.unico);
             }
         });
     }
@@ -2206,6 +2425,32 @@
         });
     }
 
+    function extraer_renovaciones(){
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1],block.tokens[5]];
+        block.obj = {"r": "extrae_renovaciones", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            console.log(valor);
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                block.inefd ='';
+                for(var wq = 0; wq < block.pasero.length; wq++){
+                    block.iteds = block.pasero[wq];
+                    block.iteds[2]= block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                    block.inefd = block.inefd + '<tr><td>'+block.iteds[1]+'</td><td>Q'+block.iteds[2]+'</td></tr>';
+                }
+                $("#lista_renovaciones_exe").html(block.inefd);
+            }
+        });
+    }
+
     function totalGastos(){
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -2227,7 +2472,31 @@
             }
         });
         return gastos;
-    }    
+    }
+    
+    function totalRenovaciones(){
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        let renovaciones = 0;
+        block.arrays = [block.tokens[1],block.tokens[5]];
+        block.obj = {"r": "extrae_renovaciones", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.pasero = JSON.parse(valor.d[1]);
+                
+                for(var i= 0; i< block.pasero.length; i++){
+                    renovaciones += parseInt(block.pasero[i][2]);
+                }
+                $("#text_renovaciones").text("Q"+renovaciones);
+            }
+        });
+        return renovaciones;
+
+    }
 
     $("#boton_pdf").click(function () {
         let datos = ["Supersistemas", "Hugo", "435", "1985"];
@@ -2269,6 +2538,41 @@
 
     });
 
+    $("#renovacion_executar").click(function () {
+        block.motivo = $("#motivo_renovacion").val();
+        block.renovacion = $("#monto_renovacion").val();
+
+        if(block.motivo == '' || block.renovacion == ''){
+            toastr.warning('Hay campos vacíos', 'Atención!');
+            return;
+        }
+
+        if(block.renovacion <= 0) {
+            toastr.warning('La renovación no debe ser negativo', 'Atención!');
+            return;
+        }
+        
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [ block.tokens[1], block.motivo, block.renovacion, block.tokens[5] ];
+        block.obj = {"r": "crear_renovacion", "d": block.arrays};
+        
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                $("#motivo_renovacion").val("");
+                $("#monto_renovacion").val("");
+                extraer_renovaciones();
+                toastr.success('Procesado correctamente', 'Atención!');
+            }
+        });
+
+    });
+
     $("#limpiar_contrato").click(function () {
         $("#asesor_foto_selec").attr("src", "../img/default.jpg");
         $("#foto_user_clien").attr("src", "../img/default.jpg");
@@ -2295,23 +2599,27 @@
     $("#ampliar_contrato_form").css("display", "none");
     $("#ampliar_contrato_form_dos").css("display", "none"); 
 	$("#pendiente_form").css("display", "none");
-    $("contratos_view").css("display", "none");
+    $("#contratos_view").css("display", "none");
+    $("#contratos_vencimiento_view").css("display", "none");
 
     function buscar_mapa(){
         corroborarHora();
         $("#googleMap").css("display","initial");
         $("#contratos_view").css("display", "none");          
+        $("#contratos_vencimiento_view").css("display", "none");          
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#ampliar_contrato_form").css("display", "none");
         $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
 		$("#pendiente_form").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
     }
 
     extraer_gastos();
+    extraer_renovaciones();
 
     function recargarCalendar(datosa){
         $('#calendar').fullCalendar("destroy");
@@ -2368,6 +2676,7 @@
                     $("#text_base").text("Q"+valor.d[2]);
                 }
                 totalGastos();
+                totalRenovaciones();
             }
         });        
     }
@@ -3736,9 +4045,11 @@
         $("#lista_ubicacniones_div").css("display", "none");
         $("#googleMap").css("display", "none");
         $("#crear_gastos").css("display", "none");
+        $("#crear_renovaciones").css("display", "none");
         $("#configuracion_general_cuotas").css("display", "none");
         $("#pendiente_form").css("display", "initial");
-        $("contratos_view").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#contratos_vencimiento_view").css("display", "none");
 		
 		if (window.localStorage.getItem("Money-vars-token") !== null) {
 			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3816,8 +4127,10 @@
             $("#ampliar_contrato_form_dos").css("display", "none"); 
             $("#cobrar_couta").css("display", "block");
             $("#crear_gastos").css("display","none");
+            $("#crear_renovaciones").css("display","none");
             $("#lista_ubicacniones_div").css("display","none");
             $("#contratos_view").css("display", "none");
+            $("#contratos_vencimiento_view").css("display", "none");
         }, 1800);
     }
 
@@ -3835,7 +4148,9 @@
         $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
-        $("contratos_view").css("display", "none");
+        $("#crear_renovaciones").css("display","none");
+        $("#contratos_view").css("display", "none");
+        $("#contratos_vencimiento_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
     }
 	
@@ -3849,7 +4164,9 @@
         $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
         $("#contratos_view").css("display", "none");
+        $("#contratos_vencimiento_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -3885,7 +4202,9 @@
         $("#ampliar_contrato_form_dos").css("display", "initial");
         $("#cobrar_couta").css("display", "none");
         $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
         $("#contratos_view").css("display", "none");
+        $("#contratos_vencimiento_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -4169,7 +4488,9 @@
             $("#ampliar_contrato_form_dos").css("display", "none");        
             $("#cobrar_couta").css("display", "none");
             $("#crear_gastos").css("display","none");      
+            $("#crear_renovaciones").css("display","none");      
             $("#contratos_view").css("display","none");
+            $("#contratos_vencimiento_view").css("display","none");
             $("#lista_ubicacniones_div").css("display","initial");
             
 			
