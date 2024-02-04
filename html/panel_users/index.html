@@ -116,12 +116,23 @@
 
         doc.autoPrint(); 
         doc.output('dataurlnewwindow');
-        //doc.save('Boleta de pago de ' + fechaFormateada + ' Hora:' + hora +' de '+nombreCliente+'.pdf');            
-
-        setTimeout(function(){
-            location.reload();
-            window.sessionStorage.setItem("monto-pagado", "0");
-        }, 5000);
+        //doc.save('Boleta de pago de ' + fechaFormateada + ' Hora:' + hora +' de '+nombreCliente+'.pdf');   
+        
+        swal({
+            title: "¿Ya ha entregado el ticket?",
+            text: 'Es necesaria su confirmación, para cargar los nuevos datos al sistema',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "¡Si, Ya!",
+            cancelButtonText: 'No, aún no',
+            closeOnConfirm: true
+        }, function () {
+            setTimeout(function(){
+                location.reload();
+                window.sessionStorage.setItem("monto-pagado", "0");
+            }, 1000);
+        });
     }
 
     function imprimir_texto(doc, texto, x, y, size, color, align) {
@@ -535,6 +546,12 @@
                             </div>
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
+                                <label>Nombre del cliente</label>
+                                <div class="input-group"><input placeholder="Inserte el nombre" id="text_nombre_cliente_buscar" type="text"  class="form-control"> <span class="input-group-append"> 
+                                    <button type="button" id="buscar_nombre_cliente_buscar" class="btn btn-info"><i class="fa fa-search"></i></button> </span>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-2 col-xs-12">
                                 <label>DPI del cliente</label>
                                 <div class="input-group"><input placeholder="Inserte el DPI" id="text_cedula_cliente" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append"> 
                                     <button type="button" id="buscar_cedula_cliente" class="btn btn-primary"><i class="fa fa-search"></i></button> </span>
@@ -559,6 +576,22 @@
                                             placeholder=""
                                             class="form-control"></div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lbox">
+                        <div class="ibox-content row" id="datos_cliente" style="margin-right: 0px;margin-left: 0px; display: none;">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>                 
+                                        <th>Nombre cliente</th>
+                                        <th>Insertar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="lista_clientes_encontrados">
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -1538,7 +1571,8 @@
         $("#ampliar_contrato_form_dos").css("display", "none"); 
         $("#googleMap").css("display","none");
         $("#contratos_view").css("display","none"); 
-        $("#contratos_vencimiento_view").css("display","none"); 
+        $("#contratos_vencimiento_view").css("display","none");
+        $("#datos_cliente").css("display","none"); 
     }
 	
 	$("#procesar_aplico").click(function(){
@@ -1864,6 +1898,7 @@
         $("#contratos_view").css("display","block");
         $("#contratos_vencimiento_view").css("display","none"); 
         $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
         listado_contratos("0");
     }
 
@@ -1882,6 +1917,7 @@
         $("#contratos_view").css("display","none");
         $("#contratos_vencimiento_view").css("display","block");
         $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
         listado_contratos_vencimiento("0"); 
     }
     
@@ -1899,7 +1935,7 @@
         }
 
         block.arrays = [block.tokens[1],block.tokens[4],block.unico,block.tokens[5].toString()];
-        block.obj = {"r": "contratos_lista_all", "d": block.arrays};         
+        block.obj = { "r": "contratos_lista_all", "d": block.arrays };         
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             console.log(valor);
@@ -2616,6 +2652,7 @@
         $("#crear_renovaciones").css("display","none");
 		$("#pendiente_form").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
     }
 
     extraer_gastos();
@@ -3674,6 +3711,48 @@
             toastr.warning('DPI no válido', 'Atencion!');
         }
     });
+    
+    $("#buscar_nombre_cliente_buscar").click(function() {
+        if( $("#text_nombre_cliente_buscar").val() !== "" ){
+
+            $("#lista_clientes_encontrados").html("");
+            $("#datos_cliente").css("display","block");
+
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+
+            block.arrays = [ block.tokens[1], $("#text_nombre_cliente_buscar").val() ];
+            block.obj = { "r": "buscar_cliente_nombre", "d": block.arrays };
+            backend.conexionEnvio(JSON.stringify( block.obj ), function( salida ){
+                let valor = JSON.parse(salida);
+                if( !valor.e ){
+                    let clientesInformacion = valor.d[1];
+                    if( clientesInformacion.length > 0){
+                        let clientes = "";
+                        for(let i = 0; i < clientesInformacion.length; i++){
+                            clientes = clientes += '<tr><td>'+clientesInformacion[i][8] + ' ' + clientesInformacion[i][9] + ' ' + clientesInformacion[i][10] + ' ' + clientesInformacion[i][11] + '</td><td><button class="btn btn-primary btn-block" onclick="javascript:insertarCliente('+String.fromCharCode(39)+clientesInformacion[i][7]+String.fromCharCode(39)+');" type="button">Insertar Cliente</button></td><tr/>';
+                        }                    
+                        $("#lista_clientes_encontrados").html(clientes);
+                    } else {
+                        toastr.warning('No se encontraron clientes con los datos  proporcionados', 'Atención!');
+                    }
+                } else {
+                    toast.warning('El nombre a buscar, no se ha encontrado', 'Atención!');
+                }
+            });
+            
+        } else {
+            toastr.warning('Debe de especificar un nombre del cliente a buscar', 'Atencion!');
+        }
+    })
+    
+    function insertarCliente(cedula){
+        $("#text_cedula_cliente").val(cedula);
+        $("#buscar_cedula_cliente").click();
+    }
 
     $("#buscar_cedula_cliente_ampliacion").click(function () {
         if ( $("#text_cedula_cliente_ampliacion").val() !== "" && $("#text_cedula_cliente_ampliacion").val().length >= 13 ) {
@@ -3682,7 +3761,7 @@
             } else {
                 block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
             }
-            block.arrays = [block.tokens[1],$("#text_cedula_cliente_ampliacion").val()];
+            block.arrays = [ block.tokens[1], $("#text_cedula_cliente_ampliacion").val() ];
             block.obj = {"r": "buscar_cliente", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
@@ -4131,6 +4210,7 @@
             $("#lista_ubicacniones_div").css("display","none");
             $("#contratos_view").css("display", "none");
             $("#contratos_vencimiento_view").css("display", "none");
+            $("#datos_cliente").css("display","none");
         }, 1800);
     }
 
@@ -4168,6 +4248,7 @@
         $("#contratos_view").css("display", "none");
         $("#contratos_vencimiento_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -4491,6 +4572,7 @@
             $("#crear_renovaciones").css("display","none");      
             $("#contratos_view").css("display","none");
             $("#contratos_vencimiento_view").css("display","none");
+            $("#datos_cliente").css("display","none");
             $("#lista_ubicacniones_div").css("display","initial");
             
 			

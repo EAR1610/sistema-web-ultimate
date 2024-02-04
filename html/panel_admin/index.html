@@ -96,7 +96,7 @@
                 var nombre = tabla1.rows[i].cells[1].innerText;
                 var direccion = tabla1.rows[i].cells[2].innerText;
                 var montoTexto = tabla1.rows[i].cells[3].innerText;
-                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                var montoNumero = parseFloat( ( montoTexto.replace ("Q", "") ).replace(/\./g,'') );                
                 var hora = tabla1.rows[i].cells[4].innerText;
                 if (!isNaN(montoNumero)) {
                     datos2.push({
@@ -211,8 +211,7 @@
             for(var i = 0; i < filas2.length; i++){
                 var celdas = filas2[i].getElementsByTagName("td");
                 if(celdas.length === 2){
-                    var motivo = celdas[0].textContent;
-                    debugger;
+                    var motivo = celdas[0].textContent;                    
                     var monto = parseFloat( ( celdas[1].textContent.replace("Q","") ).replace(/\./g,'') );
                     datosR.push( { motivo: motivo, monto: monto } );
                     totalR += monto;
@@ -389,7 +388,7 @@
 
             for (var i = 0; i < tabla.rows.length; i++) {
                 var montoTexto = tabla.rows[i].cells[1].innerText;
-                var montoNumero = parseFloat(montoTexto.replace("Q", ""));
+                var montoNumero = parseFloat( ( montoTexto.replace ("Q", "") ).replace(/\./g,'') );
                 if (!isNaN(montoNumero)) {
                     datos.push({
                         motivo: tabla.rows[i].cells[0].innerText,
@@ -1856,6 +1855,22 @@
     }
 
     function informe_completo_cierre(){
+
+        $("#fecha_busqueda_cobros_supervisor").val('');
+        $("#id_asesor_cierre").val('');
+        $("#text_total_asesor").val('');
+
+        $("#text_baseAsesor").empty();
+        $("#text_recolectadoAsesor").empty();
+        $("#text_gastosAsesor").empty();
+        $("#text_gastosAsesor").empty();
+        $("#text_renovacionesAsesor").empty();
+        $("#text_total_sistema").empty();
+        $("#text_diferencia_cierre").empty();
+        
+        $("#listado_cobros_cierre").empty();
+        $("#lista_gastos_exeAsesor").empty();
+        $("#lista_renovaciones_exeAsesor").empty();
 
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
@@ -4720,7 +4735,7 @@
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         } 
-        debugger;
+        
         let selectElement = document.getElementById('id_asesor_gastos_consulta');
         let datosAsesor = selectElement.options[selectElement.selectedIndex].text;
         let IdAsesorGasto = datosAsesor.match(/ID: (\d+)/)[1];
@@ -4908,7 +4923,7 @@
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
         let gastos = 0;
-        block.arrays = [ block.tokens[1], $("#id_asesor_cierre").val().split('_')[0], block.fechaABuscar ];
+        block.arrays = [ block.tokens[1], $("#id_asesor_cierre").val().split('_')[0], block.fechaABuscar ];        
         block.obj = {"r": "extrae_gastos_supervisor", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -4920,7 +4935,7 @@
                 }
                 $("#text_gastosAsesor").text("Q"+gastos);                
             } else {
-                $("#text_diferencia_cierre").text("0");
+                $("#text_diferencia_cierre").text("Q" + 0);
             }
         });
         return gastos;

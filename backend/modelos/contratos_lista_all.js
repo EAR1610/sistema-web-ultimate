@@ -27,6 +27,7 @@ eje = function(arrays,origen,redisClient) {
 							if(infex[arrays[2]] !== null && infex[arrays[2]] !== undefined){
 								var ogens = infex[arrays[2]].split("_");
 								var esde = ogens[5];
+
 								redisClient.get(infex[arrays[2]], function (edrr3, repdly3) {
 									if( repdly3 !== null && repdly3 !== undefined ) {
 										var infe = JSON.parse(repdly3),
@@ -48,7 +49,7 @@ eje = function(arrays,origen,redisClient) {
 															verifico que tengan supervidor o ayudante
 														*/														
 														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
-															if (srepslsyx.length > 0) {																															
+															if (srepslsyx.length > 0) {																									
 																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {																	
 																	redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {																		
 																		litado.push([repdly3, srepslsy2xq, srepslsy2x,srepsy,esde]);
@@ -72,12 +73,14 @@ eje = function(arrays,origen,redisClient) {
 																	litado.push([repdly3, [], srepslsy2x,srepsy,esde]);
 																	resolve([true, litado]);
 																});
-															}else{
-																
-																litado.push([repdly3, [], [],srepsy,esde]);
-																resolve([true, litado]);
+
+															}else{																
+																litado.push( [ repdly3, [], [],srepsy,esde ] );
+																resolve( [ true, litado ] );
+
 															}
 														});
+
 													}
 												});
 											} else {
@@ -85,13 +88,16 @@ eje = function(arrays,origen,redisClient) {
 													var redpslys = JSON.parse(redpsly);
 													reject([false,"4",redpslys.length]);
 												});
+
 											}
 										});
+
 									} else {
 										redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
 											var redpslys = JSON.parse(redpsly);
 											reject([false,"4",redpslys.length]);
 										});
+
 									}
 								});
 							}

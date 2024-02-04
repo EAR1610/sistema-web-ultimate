@@ -43,7 +43,9 @@ eje = function(arrays,origen,redisClient) {
                                     });
                                 }
                             }                                                                              
-                        };
+                        }else {
+							reject([false,"2"]);
+						}
                     });		
 				}else{
 					reject([false,"2"]);

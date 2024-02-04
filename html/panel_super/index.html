@@ -464,7 +464,7 @@
                 var celdas = filas[i].getElementsByTagName("td");
                 if(celdas.length === 2){
                     var motivo = celdas[0].textContent;
-                    var monto = parseFloat(celdas[1].textContent.replace("Q",""));
+                    var monto = parseFloat( ( celdas[1].textContent.replace("Q","") ).replace(/\./g,'') );
                     datos.push({motivo: motivo, monto: monto});
                     total += monto;
                 }
@@ -516,8 +516,7 @@
             for(var i = 0; i < filas2.length; i++){
                 var celdas = filas2[i].getElementsByTagName("td");
                 if(celdas.length === 2){
-                    var motivo = celdas[0].textContent;
-                    debugger;
+                    var motivo = celdas[0].textContent;                    
                     var monto = parseFloat( ( celdas[1].textContent.replace("Q","") ).replace(/\./g,'') );
                     datosR.push( { motivo: motivo, monto: monto } );
                     totalR += monto;
@@ -3849,19 +3848,30 @@
             }
             block.arrays = [ block.tokens[1], block.tokens[4], $("#fecha__inicial_utilidades").val(), $("#fecha_final_utilidades").val() ];
             block.obj = { "r":"obtener_utilidades","d":block.arrays };
+        
             backend.conexionEnvio(JSON.stringify(block.obj), function( salida ){
                 var valor = JSON.parse(salida);
+                console.log(valor);
                 if( !valor.e ){
                     block.lista = valor.d[1];
                     for (var e = 0; e < block.lista.length; e++) {
                         block.iten = block.lista[e];        
-                        block.monto = block.iten[6] 
-                        block.oso = block.oso + '<tr><td>'+block.iten[1]+" "+block.iten[2]+" "+block.iten[3]+" "+block.iten[4]+'</td> <td>'+block.iten[0]+'</td> <td>'+parseInt(block.monto)+'</td> <td>'+block.iten[5]+'</td></tr>';
+                        block.monto = block.iten[6];
+
+                        //Damos formato a la fechad de Registro del contrato (dd-mm-yyyy);
+                        block.fechaSinFormatoRegistro = block.iten[5];
+                        let partesFechaRegistroContrato = block.fechaSinFormatoRegistro.split('-');
+                        block.fechaRegistro = `${ partesFechaRegistroContrato[2] }-${ partesFechaRegistroContrato[1] }-${ partesFechaRegistroContrato[0] }`; 
+
+                        block.oso = block.oso + '<tr><td>'+block.iten[1]+" "+block.iten[2]+" "+block.iten[3]+" "+block.iten[4]+'</td> <td>'+block.iten[0]+'</td> <td>'+parseInt(block.monto)+'</td> <td>'+block.fechaRegistro+'</td></tr>';
                     }
                     $("#lista_utilidades").html(block.oso);
                     block.oso = "";
+                } else {
+                    toastr.warning( "Error al obtener los datos", "Atención" );
                 }
             })
+            console.log("SALIENDO DE LA CONSULTA");
         }
     });
 
@@ -5228,8 +5238,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 toastr.success('Eliminado correctamente', 'Atención!');
 				listar_cuotas();
 			}
-		});
-        
+		});        
 	}
     
     function eliminar_gasto_ya(gasto){
@@ -5250,6 +5259,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             if (!valor.e) {
                 toastr.success('Eliminado correctamente', 'Atención!');
                 $("#busqueda_gasto").click();
+            } else {
+                toastr.warning('Error al intentar eliminar el gasto', 'Oops!');
             }
         });
     }
@@ -9069,8 +9080,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
     function informe_completo_renovaciones(){
         $("#lista_renovaciones_exe").empty();
-        $("#fecha_gasto").val("");
-        
+        $("#fecha_renovacion").val("");
+
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -9110,9 +9121,12 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#text_total_sistema").empty();
         $("#text_baseAsesor").empty();
         $("#text_gastosAsesor").empty();
+        $("#text_renovacionesAsesor").empty();
+        $("#text_total_asesor").val('');
         $("#text_recolectadoAsesor").empty();
         $("#listado_cobros_cierre").empty();
         $("#lista_gastos_exeAsesor").empty();
+        $("#lista_renovaciones_exeAsesor").empty();
 
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");

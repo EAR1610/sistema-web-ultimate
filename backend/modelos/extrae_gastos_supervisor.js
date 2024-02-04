@@ -26,7 +26,7 @@ eje = function(arrays,origen,redisClient) {
 						if( reply !== null && reply !== undefined ){
 							resolve([true,reply]);
 						} else {
-							reject([false,"4"]);
+							resolve([true,0]);
 						}
 					});						
 				}else{

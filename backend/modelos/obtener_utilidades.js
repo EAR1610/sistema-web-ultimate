@@ -11,57 +11,59 @@ eje = function(arrays,origen,redisClient) {
 		/*
 			Recibo tokens,idempresa, fechaInicio, fechaFinal
 		*/
-		if ( arrays.length == 4){
+		if ( arrays.length == 4){            
             var jwt = require('jsonwebtoken');
-			jwt.verify( arrays[0], 'clWve-G*-9)1', function( err, decoded ) {
+			jwt.verify( arrays[0], 'clWve-G*-9)1', function( err, decoded ) {                
                 if( err ){
                     reject([false,"1"]);
-                } else if( decoded.t == "1" ){
-                    redisClient.keys("old_registry_*_contrato_*_*_*", function( error, replyContratosFinalizados ) {
-                        if( replyContratosFinalizados.length > 0 ) {
-                            var utilidadesGeneradas = [];                            
-
-                            function iterar(ind, arrs) {
-                                if( ind === arrs.length ){
-                                    resolve( [ true, utilidadesGeneradas ] );
-                                } else {
-                                    redisClient.get(arrs[ind], function(errorContrato, replyContrato){
-                                        if( replyContrato !== null){
-                                            let [,dpiContrato,,cantidad,,fecha,,porcentaje,,,,,,,] = JSON.parse(replyContrato); 
-                                            let porcentajeFinal = parseInt(porcentaje) / 100;
-                                            let utilidadContrato = parseInt(cantidad.replace(".", "")) * porcentajeFinal;
-
-                                            if( replyContrato !== null ){
-                                                if( fecha >= arrays[2] && fecha <= arrays[3] ) {
-                                                    redisClient.get("cliente_"+dpiContrato, function(error, replyCliente){
-                                                        if( replyCliente !== null && replyCliente !== undefined ){
-                                                            let infoCliente = replyCliente;
-                                                            let [,,,,,,, dpi, nombre1, nombre2, apellido1, apellido2 ,,,,,,,,,,,] = JSON.parse( infoCliente );                                                            
-                                                            let informacionContrato = [];
-
-                                                            informacionContrato.push(dpi);
-                                                            informacionContrato.push(nombre1);
-                                                            informacionContrato.push(nombre2);
-                                                            informacionContrato.push(apellido1);
-                                                            informacionContrato.push(apellido2);
-                                                            informacionContrato.push(fecha);
-                                                            informacionContrato.push(utilidadContrato);
-
-                                                            utilidadesGeneradas.push(informacionContrato);
-                                                        }
-                                                    })
-                                                }
+                } else if( decoded.t == "1" ){                    
+                    redisClient.keys("old_registry_*_contrato_*_*_*", function( error, replyContratosFinalizados ) {                        
+                        if( replyContratosFinalizados !== null && replyContratosFinalizados !== undefined ){
+                            if( replyContratosFinalizados.length > 0 ) {
+                                var utilidadesGeneradas = [];                            
+    
+                                function iterar(ind, arrs) {
+                                    if( ind === arrs.length ){
+                                        resolve( [ true, utilidadesGeneradas ] );
+                                    } else {
+                                        redisClient.get(arrs[ind], function(errorContrato, replyContrato){
+                                            if( replyContrato !== null && replyContrato !== undefined ){
+                                                let [,dpiContrato,,cantidad,,fecha,,porcentaje,,,,,,,] = JSON.parse(replyContrato); 
+                                                let porcentajeFinal = parseInt(porcentaje) / 100;
+                                                let utilidadContrato = parseInt(cantidad.replace(".", "")) * porcentajeFinal;
+    
+                                                if( replyContrato !== null && replyContrato !== undefined ){
+                                                    if( fecha >= arrays[2] && fecha <= arrays[3] ) {
+                                                        redisClient.get("cliente_"+dpiContrato, function(error, replyCliente){
+                                                            if( replyCliente !== null && replyCliente !== undefined ){
+                                                                let infoCliente = replyCliente;
+                                                                let [,,,,,,, dpi, nombre1, nombre2, apellido1, apellido2 ,,,,,,,,,,,] = JSON.parse( infoCliente );                                                            
+                                                                let informacionContrato = [];
+    
+                                                                informacionContrato.push(dpi);
+                                                                informacionContrato.push(nombre1);
+                                                                informacionContrato.push(nombre2);
+                                                                informacionContrato.push(apellido1);
+                                                                informacionContrato.push(apellido2);
+                                                                informacionContrato.push(fecha);
+                                                                informacionContrato.push(utilidadContrato);
+    
+                                                                utilidadesGeneradas.push(informacionContrato);                                                                
+                                                            }
+                                                        })
+                                                    }
+                                                }                                            
                                                 ind++;
                                                 iterar(ind, arrs);
-                                            }                                            
-                                        } else {
-                                            ind++;
-                                            iterar(ind, arrs);
-                                        }
-                                    })
-                                }
-                            } iterar(0, replyContratosFinalizados);
-                        } 
+                                            } else {
+                                                ind++;
+                                                iterar(ind, arrs);
+                                            }
+                                        })
+                                    }
+                                } iterar(0, replyContratosFinalizados);
+                            } 
+                        }
                     })
                 }
             })
