@@ -807,18 +807,17 @@
                         ME
                     </div>
                 </li>
-                <!-- <li>
-                    <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span><span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="javascript:crear_infor();">Registrar</a></li>
-                        <li><a href="javascript:cliente_lista();">Consultar</a></li>
-                    </ul>
-                </li> -->
                 <li>
                     <a href="#"><i class="fa fa-copy"></i> <span class="nav-label">Contratos de asesores</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <!-- <li><a href="javascript:crear_contrato();">Registrar</a></li> -->
                         <li><a href="javascript:vers_contratos();">Consultar</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">                        
+                        <li><a href="javascript:cliente_lista();">Consultar</a></li>
                     </ul>
                 </li>
                 <li>
@@ -1504,6 +1503,33 @@
                     </div>
                 </div>
 
+                <div class="col-lg-12" id="cliente_lista_admi" style="display: none;">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Lista de clientes</h5>
+                            &nbsp;
+                            <input class="form-control col-md-4" type="text" id="buscarClientes" placeholder="Buscar por DPI y Nombre">
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Identificador</th>
+                                        <th>Nombre</th>
+                                        <th>DPI</th>
+                                        <th>Dirección</th>
+                                        <th>Celular</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" id="listado_liengenerela">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-lg-12" id="consulta_gastos" style="display:none;">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -1871,7 +1897,7 @@
         $("#listado_cobros_cierre").empty();
         $("#lista_gastos_exeAsesor").empty();
         $("#lista_renovaciones_exeAsesor").empty();
-
+        
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -1905,6 +1931,168 @@
 
     if (window.sessionStorage.getItem("Money-vars-token") == null) {
         salida_sistema();
+    }
+
+    function cliente_lista() {        
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#cliente_lista_admi").css("display", "initial");
+        $("#listado_liengenerela").html("");
+        $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
+      
+		window.sessionStorage.setItem("numero_lista","0");
+        consulta_x();
+    }
+
+    function consulta_x(){
+        
+        toastr.success("Se está consultando los clientes en el sistema", "Atención");
+
+        block.num = window.sessionStorage.getItem("numero_lista");        
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        block.listadi ="";
+        block.arrays =  [block.tokens[1], block.num ];
+        block.obj = { "r": "lista_cliente_basic", "d": block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida); 
+            if (!valor.e) {
+                if(valor.d[1]!==null) {
+                    for(let indice = 0; indice < valor.d[1].length; indice++){
+                        block.item = valor.d[1][indice];
+                        window.localStorage.setItem("Money-vars-cliente-"+ block.item[0], JSON.stringify(valor.d[1][indice]));
+                        block.cedula = block.item[0];
+                        block.nomre = block.item[1];
+                        block.nomre2 = block.item[2];
+                        block.apellido = block.item[3];
+                        block.apellido2 = block.item[4];
+                        block.direcion = block.item[5];
+                        block.telefono = block.item[6];
+                        block.identificador = block.item[25];
+                        // block.listadi = block.listadi + '<tr><td>'+block.identificador+'</td><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
+                        block.listadi = block.listadi + '<tr><td>'+block.identificador+'</td><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td></tr>';
+                    }
+                                        
+                    $("#listado_liengenerela").append(block.listadi);
+                    block.nexr = parseInt(block.num) + 1;
+                    window.sessionStorage.setItem("numero_lista", block.nexr);
+                }
+            }else if(valor.d[1]=="4" && parseInt(block.num)<parseInt(valor.d[2]) ){
+				block.nexr = parseInt(block.num) + 1;
+				window.sessionStorage.setItem("numero_lista", block.nexr);
+            } else {
+                return 
+            }
+        });
+    }
+
+    function editar_cliente( cedula ){
+        block.unicos = JSON.parse( window.localStorage.getItem("Money-vars-cliente-"+cedula));
+
+		crear_infor();
+
+		window.sessionStorage.setItem("Money-vars-foto-id-reversomd",block.unicos[9]);
+		window.sessionStorage.setItem("Money-vars-foto-id-normalmd",block.unicos[10]);
+		window.sessionStorage.setItem("Money-vars-foto-idmd",block.unicos[11]);
+		window.sessionStorage.setItem("Money-vars-foto-frontald",block.unicos[12]);
+
+		$("#telefono_fijomd").val(block.unicos[18]);
+		$("#telefono_celmd").val(block.unicos[19]);
+		$("#correo_electronicomd").val(block.unicos[20]);
+		block.ele = "2";
+
+		if(block.unicos[14]=="C"){
+			block.ele = "1";
+		}
+		$("#pais_selecionadomd option[value='"+block.ele+"']").attr("selected", true);
+
+		$("#alias_textd").val(block.unicos[21]);
+		$("#numero_idmd").val(block.unicos[0]);
+		$("#nombre_id1md").val(block.unicos[1]);
+		$("#nombre_id2md").val(block.unicos[2]);
+		$("#apellido_id1md").val(block.unicos[3]);
+		$("#apellido_id2md").val(block.unicos[4]);
+		$("#direccion_ubicamd").val(block.unicos[5]);
+		$("#add_barrio_lat_text").val(block.unicos[23]);
+		$("#add_barrio_lon_text").val(block.unicos[24]);
+		$("#numero_idmd").prop("disabled", true);
+		$("#foto_m1md").attr("src", block.unicos[9]);
+		$("#foto_m4md").attr("src", block.unicos[10]);
+		$("#foto_m2md").attr("src", block.unicos[11]);
+		$("#foto_m3md").attr("src", block.unicos[12]);
+
+		$("#tipo_departamentomd option[value='"+block.unicos[15]+"']").attr("selected", true);
+
+		block.depart = $("#tipo_departamentomd").val();
+        $("#tipo_ciudadesmd").html('<option value=""></option>');
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        block.arrays = [block.tokens[1], block.unicos[15]];
+        block.obj = {"r": "extraer_ciudades", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for (var e = 0; e < block.lista.length; e++) {
+                    block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
+                }
+                $("#tipo_ciudadesmd").html($("#tipo_ciudadesmd").html() + block.nuevo);
+				$("#tipo_ciudadesmd option[value='"+block.unicos[16]+"']").attr("selected", true);
+            }
+        });
+
+
+        $("#tipo_barriomd").html('<option value=""></option>');
+
+        block.arrays = [block.tokens[1], block.unicos[15], block.unicos[16]];
+        block.obj = {"r": "extraer_barrios", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for (var e = 0; e < block.lista.length; e++) {
+                    block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
+                }
+                $("#tipo_barriomd").html($("#tipo_barriomd").html() + block.nuevo);
+                $("#tipo_barriomd option[value='"+block.unicos[17]+"']").attr("selected", true);
+            }
+        });
+
     }
 
     $("#save_base").click(function () {
@@ -2870,8 +3058,7 @@
         block.arrays = [block.tokens[1],block.tokens[4],block.unico,$("#lista_asesores_general3").val()];        
         block.obj = {"r": "contratos_lista_all", "d": block.arrays};    
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.oso="";
                 block.dat0s =valor.d[1][0];
@@ -3464,6 +3651,7 @@
         $("#contratos_view").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
         $("#consulta_renovaciones").css("display", "none");
         $("#cierre_view").css("display", "none");
     }
@@ -3483,6 +3671,7 @@
         $("#configuracion_general").css("display", "none");
         $("#busqueda_asignaciones").css("display", "none");
         $("#configuracion_general_cuotas").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
         $("#liquidacion_page").css("display", "none");
         $("#liquidacion_page2").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
@@ -3491,8 +3680,7 @@
         $("#HistorialClientes").css("display","none");
         $("#consulta_cobros").css("display", "none");
         $("#consulta_gastos").css("display", "none");
-        $("#consulta_renovaciones").css("display", "none");
-        // $("#cliente_lista_admi").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");        
     }
 
     $("#lista_asesores_general").change(function () {
@@ -4592,7 +4780,6 @@
     $("#contratos_view").css("display", "block");
     $("#cierre_view").css("display", "none");
     $("#HistorialClientes").css("display","none");
-    // $("#cliente_lista_admi").css("display", "none");
 
     function crear_contrato() {
         $("#lista_ase").css("display", "none");
@@ -4612,7 +4799,6 @@
         $("#contratos_view").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
-        // $("#cliente_lista_admi").css("display", "none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -5118,8 +5304,7 @@
         block.arrays = [block.tokens[1], block.estraa, fecha];
         block.obj = {"r": "buscar_renovaciones_fecha", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log
+            var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 block.inefd = '';
@@ -5154,7 +5339,6 @@
         $("#contratos_view").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
-        // $("#cliente_lista_admi").css("display", "none");
 
         cargarListas_asigandos();
     }
@@ -5340,76 +5524,12 @@
         }
     });
 
-    function consulta_x(){
-        block.num = window.sessionStorage.getItem("numero_lista");
-        if (window.localStorage.getItem("Money-vars-token") !== null) {
-            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-        } else {
-            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-        }
-        block.listadi ="";
-        block.arrays = [block.tokens[1],$("#lista_asesores_general2").val(),block.num];
-        block.obj = {"r": "lista_cliente_basic_asesor", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            if (!valor.e) {
-                if(valor.d[1]!==null) {
-                    block.item = JSON.parse(valor.d[1]);
-                    block.cedula = block.item[7];
-                    block.nomre = block.item[8];
-                    block.nomre2 = block.item[9];
-                    block.apellido = block.item[10];
-                    block.apellido2 = block.item[11];
-                    block.direcion = block.item[12];
-                    block.telefono = block.item[16];
-                    block.listadi = block.listadi + '<tr><td>' + block.nomre + ' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td><td><a href="javascript:editar_cliente(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Editar</a></td></tr>';
-                    $("#listado_liengenerela").append(block.listadi);
-                    block.nexr = parseInt(block.num) + 1;
-                    window.sessionStorage.setItem("numero_lista", block.nexr);
-                    consulta_x();
-                }
-            }
-            // else{
-            //     if(valor.d[1]=="4"){
-            //         $("#listado_liengenerela").html("");
-            //         window.sessionStorage.setItem("numero_lista","0");
-            //     }
-            // }
-        });
-    }
-
     $("#lista_asesores_general2").change(function () {
         if($("#lista_asesores_general2").val()!==""){
             window.sessionStorage.setItem("numero_lista","0");
             consulta_x();
         }
     });
-
-
-    function editar_cliente(cedula){
-        alert(cedula);
-    }
-
-    // function cliente_lista() {
-    //     $("#crear_contrato_form").css("display", "none");
-    //     $("#crear_contrato_form_dos").css("display", "none");
-    //     $("#lista_ayu").css("display", "none");
-    //     $("#lista_sup").css("display", "none");
-    //     $("#lista_ase").css("display", "none");
-    //     $("#asig_supervidor").css("display", "none");
-    //     $("#lista_asi_ayu").css("display", "none");
-    //     $("#lista_asi_sup").css("display", "none");
-    //     $("#configuracion_general").css("display", "none");
-    //     $("#busqueda_asignaciones").css("display", "none");
-    //     $("#configuracion_general_cuotas").css("display", "none");
-    //     $("#liquidacion_page2").css("display", "none");
-    //     $("#liquidacion_page").css("display", "none");
-    //     $("#create_clientes_listo").css("display", "none");
-    //     $("#contratos_view").css("display", "none");
-    //     $("#cliente_lista_admi").css("display", "initial");
-    //     $("#listado_liengenerela").html("");
-    //     window.sessionStorage.setItem("numero_lista","0");
-    // }
 
     $("#configurar_directa").click(function () {
         block.refinanciacioinCoun = $("#count_refinansacion").val();
@@ -5536,6 +5656,7 @@
         $("#lista_ase").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
         $("#lista_asi_sup").css("display", "none");
         $("#configuracion_general").css("display", "none");
         $("#busqueda_asignaciones").css("display", "none");
@@ -5550,8 +5671,6 @@
         $("#consulta_gastos").css("display", "none");
         $("#consulta_renovaciones").css("display", "none");
         $("#googleMap").css("display","none");
-        // $("#cliente_lista_admi").css("display", "none");
-
     }
 
     function informe_completo_gastos(){
@@ -5598,7 +5717,7 @@
         $("#lista_asi_sup").css("display", "none");
         $("#configuracion_general").css("display", "none");
         $("#busqueda_asignaciones").css("display", "none");
-        $("#configuracion_general_cuotas").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");        
         $("#create_clientes_listo").css("display", "none");
         $("#liquidacion_page").css("display", "none");
         $("#contratos_view").css("display", "none");
@@ -5624,7 +5743,7 @@
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
-        $("#crear").css("display", "none");
+        $("#crear").css("display", "none");        
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
         $("#lista_asi_sup").css("display", "none");
@@ -5664,6 +5783,7 @@
         $("#configuracion_general").css("display", "none");
         $("#busqueda_asignaciones").css("display", "none");
         $("#configuracion_general_cuotas").css("display", "none");
+        $("#cliente_lista_admi").css("display", "none");
         $("#liquidacion_page2").css("display", "none");
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
@@ -5673,10 +5793,7 @@
         $("#contratos_view").css("display", "initial");
         $("#HistorialClientes").css("display","none");
         $("#cierre_view").css("display","none");
-        $("#googleMap").css("display","none");
-        
-        
-        // $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");    
     }
 
     function crear_infor(){
@@ -5698,9 +5815,6 @@
         $("#liquidacion_page").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#create_clientes_listo").css("display", "initial");
-        // $("#cliente_lista_admi").css("display", "none");
-
-
     }
 
     var actuesli = moment().format('DD/MM/YYYY');

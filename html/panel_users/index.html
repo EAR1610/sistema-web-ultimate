@@ -1621,8 +1621,7 @@
         block.tarjetero ="";
         block.infoWindowContents=[];                    
 
-        var yes = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
-        console.log(yes);
+        var yes = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));        
         for(var q=0; q < yes.length; q++){
             // block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> DPI: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+')" type="button">Renovar Contrato</button></p></div></div>';
 
@@ -1689,8 +1688,9 @@
         if ( block.configuracion[19] == "1" ) block.obj = { "r": "down_geo2", "d": block.arrays };
         else block.obj = { "r": "down_geo", "d": block.arrays };
 
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida); 
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {            
+            var valor = JSON.parse(salida);
+            console.log(valor)  
             if (!valor.e) {
                 block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
                 var map;
@@ -1710,11 +1710,12 @@
                 if( window.localStorage.getItem("Money-vars-slick") == null ){
                     window.localStorage.setItem("Money-vars-slick","0");
                 }
-                
+
                 if( window.localStorage.getItem("Money-vars-tarjetas_old") !== null ){
                     $("#listado_tarjeta").html("");
                     $('.slick_demo_2').slick('unslick');
                 }
+
                 window.localStorage.setItem("Money-vars-tarjetas_old",JSON.stringify(valor.d[1]));
                 
                 block.lisas = [];
@@ -1795,8 +1796,9 @@
                         }
                     })(marker, i));
                 }
-            }else{
+            } else{
                 toastr.warning('No posee contratos para generar ruta', 'Atencion!');
+                window.localStorage.removeItem("Money-vars-tarjetas_old");
             }
         });
 
@@ -1937,8 +1939,7 @@
         block.arrays = [block.tokens[1],block.tokens[4],block.unico,block.tokens[5].toString()];
         block.obj = { "r": "contratos_lista_all", "d": block.arrays };         
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if (!valor.e) { 
                 block.oso="";
                 block.dat0s =valor.d[1][0];
@@ -2025,12 +2026,10 @@
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-        block.arrays = [ block.tokens[1], block.tokens[4], block.unico, block.tokens[5].toString() ];
-        console.log(block.arrays);
+        block.arrays = [ block.tokens[1], block.tokens[4], block.unico, block.tokens[5].toString() ];        
         block.obj = { "r": "contratos_lista_all_vencimiento", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if (!valor.e) { 
                 block.oso="";
                 block.dat0s =valor.d[1][0];
@@ -2471,8 +2470,7 @@
         block.arrays = [block.tokens[1],block.tokens[5]];
         block.obj = {"r": "extrae_renovaciones", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 block.inefd ='';
@@ -4249,6 +4247,23 @@
         $("#contratos_vencimiento_view").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
         $("#datos_cliente").css("display","none");
+
+        /* DATOS DEL CLIENTE */
+        $("#text_nombre_cliente_buscar").val('');
+        $("#text_cedula_cliente").val('');
+        $("#text_nombre_cliente").val('');
+
+        /* ASIGNACIÓN DE CUOTAS */
+        $("#monto_prestar_ya_admin").val('');
+        $("#selector_cuotas_selec").val(''); 
+        $("#selector_frecuencia").val('');
+        
+        /* INFORMACIÓN DEL CONTRATO */
+        $("#utilidad_prestada").html('0');
+        $("#utilidad_prestada_peso").html('0');
+        $("#utilidad_cuota").html('0');
+        $("#utilidad_ultima_cuota").html('0');
+        $("#utilidad_contrato").html('0');
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));

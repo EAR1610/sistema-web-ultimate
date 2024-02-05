@@ -673,7 +673,7 @@
             doc.setTextColor(0, 0, 0);
             doc.setFont('Helvetica', 'bold');
             doc.text('Total ', 10, y);
-            doc.text("Q" + total.toString(), 160, y);
+            doc.text("Q" + total.toString(), 138, y);
             doc.setFont('Helvetica');
 
             doc.save('Reporte de utilidades de Fecha: ' + fechaFormateada + ' Hora:' + hora + '.pdf');
@@ -1343,14 +1343,11 @@
 
                 </li>
                 <li>
-
                     <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:crear_infor();">Registrar</a></li>
                         <li><a href="javascript:cliente_lista();">Consultar</a></li>
                     </ul>
-
-
                 </li>
                 <li>
                     <a href="javascript:asignar_supervisor_asesor();"><i class="fa fa-check-square"></i> <span
@@ -3850,8 +3847,7 @@
             block.obj = { "r":"obtener_utilidades","d":block.arrays };
         
             backend.conexionEnvio(JSON.stringify(block.obj), function( salida ){
-                var valor = JSON.parse(salida);
-                console.log(valor);
+                var valor = JSON.parse(salida);                
                 if( !valor.e ){
                     block.lista = valor.d[1];
                     for (var e = 0; e < block.lista.length; e++) {
@@ -3870,8 +3866,7 @@
                 } else {
                     toastr.warning( "Error al obtener los datos", "Atención" );
                 }
-            })
-            console.log("SALIENDO DE LA CONSULTA");
+            });            
         }
     });
 
@@ -8251,8 +8246,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }
         let renovaciones = 0;
         block.arrays = [ block.tokens[1], $("#id_asesor_cierre").val().split('_')[0], block.fechaABuscar ];
-        block.obj = {"r": "extrae_renovaciones_supervisor", "d": block.arrays};
-        debugger;
+        block.obj = {"r": "extrae_renovaciones_supervisor", "d": block.arrays};        
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
@@ -8651,44 +8645,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     $("listado_consultas_por_fechas").html("");
 
 	window.sessionStorage.setItem("numero_lista","0");
-
-     
-    // function consulta_cobrinforme_completo_cobrososFecha(){
-    //     block.num = window.sessionStorage.getItem("numero_lista");
-
-    // if (window.localStorage.getItem("Money-vars-token") !== null) {
-    //     block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-    // } else {
-    //     block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-    // }
-
-    // block.listadi = "";
-    // block.arrays = [block.tokens[1], block.num];
-    // block.obj = { "r": "lista_cliente_basic", "d": block.arrays }; //falta
-    // backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-    //     var valor = JSON.parse(salida);
-    //     if (!valor.e) {
-    //         if (valor.d[1] !== null) {
-    //             block.item = JSON.parse(valor.d[1]);
-    //             window.localStorage.setItem("Money-vars-cliente-" + block.item[7], valor.d[1]);
-    //             block.cedula = block.item[6];
-    //             block.nomre = block.item[7];
-    //             block.direcion = block.item[12];
-    //             block.listadi = block.listadi + '<tr><td>' + block.cedula + '</td><td>' + block.nomre + '</td><td>' + block.direcion + '</td><td><button class="btn btn-primary" onclick="javascript:editar_cliente(' + String.fromCharCode(39) + block.nomre + String.fromCharCode(39) + ');">Editar</button> &nbsp &nbsp <button class="btn btn-danger" onclick="javascript:fallo_usuario(' + String.fromCharCode(39) + block.cedula + String.fromCharCode(39) + ');">Eliminar</button></td></tr>';
-    //             $("#listado_consultas_por_fechas").append(block.listadi);
-    //             block.nexr = parseInt(block.num) + 1;
-    //             window.sessionStorage.setItem("numero_lista", block.nexr);
-    //             consulta_cobrosFecha();
-    //         }
-    //     } else if (valor.d[1] == "4" && parseInt(block.num) < parseInt(valor.d[2])) {
-    //         block.nexr = parseInt(block.num) + 1;
-    //         window.sessionStorage.setItem("numero_lista", block.nexr);
-    //         consulta_cobrosFecha();
-    //     } else {
-    //         return;
-    //     }
-    // });
-    // }
 
     function consulta_x(){
         
