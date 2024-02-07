@@ -3388,14 +3388,14 @@
 
 <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
 	};
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -3759,7 +3759,7 @@
         }
 
         block.arrays = [block.tokens[1], block.ase, fecha];
-        block.obj = {"r": "sumatoria_diario_supervisor", "d": block.arrays}; //Obtiene el token y el ID del asesor
+        block.obj = { "r": "sumatoria_diario_supervisor", "d": block.arrays }; //Obtiene el token y el ID del asesor
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) { 
@@ -3784,8 +3784,6 @@
 
                 totalGastos();
                 totalRenovaciones();
-            } else {
-                $("#text_diferencia_cierre").text("0");
             }
         });
         extraer_gastosAsesor();
@@ -7994,9 +7992,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             toastr.warning('Espere mientras sincroniza liquidación de asesores', 'Atención!');
 
             function liqui(ind,arrws){
-                if(ind==arrws.length){
+                if( ind==arrws.length ){
                     toastr.success('Ha sincronizado todo los datos para liquidar', 'Atención!');
-                }else{
+                } else{
                     block.unids ="";
                     block.arrays = [block.tokens[1],"nada",arrws[ind][0],arrws[ind][1]];
                     block.obj = {"r": "liquida_parte_1", "d": block.arrays};
@@ -8023,7 +8021,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.listax2 = '<option value="">Seleccione</option>';
         block.listax3 = '<option value="">Seleccione asesor</option>';
         block.lista = '';
-        block.arrays = [block.tokens[1]];
+        block.arrays = [ block.tokens[1] ];
         block.obj = {"r": "listar_asesores", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -8063,25 +8061,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     $("#caratula").attr("src", valor.d[1][2]);
                     $("#reverso").attr("src", valor.d[1][3]);
                     $("#identidad_fotos").modal("show");
-                } else {
-                    
                 }
-            });
-        
-        // console.log(uno)
-        // console.log(dos)
-        // console.log(tres)
-        // $("#idfoto").attr("src", uno.replace(/"/g, ''));
-        // $("#caratula").attr("src", dos.replace(/"/g, ''));
-        // $("#reverso").attr("src", tres.replace(/"/g, ''));
-
-
-        // const json = JSON.parse(images);
-        // console.log(json);
-        // $("#idfoto").attr("src", json[1]);
-        // $("#caratula").attr("src", json[2]);
-        // $("#reverso").attr("src", json[3]);
-        // $("#identidad_fotos").modal("show");
+            });    
     }
 
     function cargarListas_asigandos() {
@@ -8170,47 +8151,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }else {
             $("#text_diferencia_cierre").text("Q");
         }
-    });
-    
-    // $("#id_asesor_cierre").change(function(){        
-    //     if($("#id_asesor_cierre").val()!==""){
-    //         block.ase = $("#id_asesor_cierre").val();
-    //         $("#lista_enorme").html("");
-    //         listado_contratos("0");
-
-    //         if (window.localStorage.getItem("Money-vars-token") !== null) {
-    //             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-    //         } else {
-    //             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-    //         }
-
-    //         block.arrays = [block.tokens[1]];  
-    //         block.obj = {"r": "down_configuracion", "d": block.arrays};
-    //         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-    //             var valor = JSON.parse(salida);
-    //             if (!valor.e && valor.d[1] !== null) {
-    //                 window.sessionStorage.setItem("Configuracion",valor.d[1]);
-    //             }
-    //         });
-            
-    //         block.arrays = [block.tokens[1],block.ase];
-    //         block.obj = {"r": "sumatoria_diario", "d": block.arrays};
-    //         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-    //             var valor = JSON.parse(salida);            
-    //             if (!valor.e) {                
-    //                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
-    //                 $("#text_baseAsesor").text("Q"+valor.d[2]);
-    //                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
-    //                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-    //                 const totalSistema = base + recaudado;
-    //                 $("#text_total_sistema").text("Q"+totalSistema);
-    //                 totalGastos();
-    //             }
-    //         });
-    //     }
-    //     extraer_gastosAsesor();
-    //     extraer_cobros("#id_asesor_cierre","#listado_cobros_cierre",true);
-    // });
+    });        
 
     function totalGastos(){        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -8255,15 +8196,13 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 for(var i= 0; i< block.pasero.length; i++){
                     renovaciones += parseFloat(block.pasero[i][2]);
                 }
-                $("#text_renovacionesAsesor").text("Q "+renovaciones);
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
                 const gastos = parseFloat($("#text_gastosAsesor").text().slice(1));
                 const totalSistema = base + recaudado - gastos - renovaciones;
                 $("#text_total_sistema").text("Q "+totalSistema);
-            } else {
-                $("#text_diferencia_cierre").text("0");
-            }
+            } 
+            $("#text_renovacionesAsesor").text("Q "+renovaciones);
         });
         return renovaciones;
     }

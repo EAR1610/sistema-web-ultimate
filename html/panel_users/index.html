@@ -624,7 +624,8 @@
                                         <option value=''>Seleccione</option>
                                         <!-- Don Axel -->
                                         <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
-                                        <option value='25'>PLAN 25 DIAS 10% EN 4 PAGOS</option> -->
+                                        <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
+                                        <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option> -->
 
                                         <!-- ALEMO S.A -->
                                         <!-- <option value="8">CUOTA SEMANAL 8 40%</option>
@@ -647,7 +648,8 @@
                                         <option value="2">Semanal</option>
                                         <option value="3">Quicenal</option>
                                         <option value="4">Mensual</option>
-                                        <!-- <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option> -->
+                                        <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
+                                        <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option>
                                     </select>
                                 </form>
                             </div>
@@ -828,7 +830,8 @@
                                         <option value=''>Seleccione</option>
                                         <!-- DOn Axel -->
                                         <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
-                                        <option value='25'>PLAN 25 DIAS 10% EN 4 PAGOS</option> -->
+                                        <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
+                                        <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option> -->
 
                                         <!-- ALEMO S.A -->
                                         <!-- <option value="8">CUOTA SEMANAL 8 40%</option>
@@ -1457,14 +1460,14 @@
 <script>
 
     var firebaseConfig = {        
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
 	};
 	
     firebase.initializeApp(firebaseConfig);	
@@ -1689,8 +1692,7 @@
         else block.obj = { "r": "down_geo", "d": block.arrays };
 
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {            
-            var valor = JSON.parse(salida);
-            console.log(valor)  
+            var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
                 var map;
@@ -1804,46 +1806,57 @@
 
     }
 
-    $("#selector_cuotas_selec").change(function(){ 
+    $("#selector_cuotas_selec").change(function(){    
+             
         $("#crear_contrato").prop("disabled",true);
         if ( $("#monto_prestar_ya_admin").val() !== "" && $("#selector_cuotas_selec").val() !== "" && $("#selector_frecuencia").val() !== "" ) {
+
             if( window.sessionStorage.getItem("Lista_cuota") !== null ) {
                 block.cuotas = JSON.parse(window.sessionStorage.getItem("Lista_cuota"));
                 block.limitos = JSON.parse(window.sessionStorage.getItem("Configuracion"));
                 block.min = parseInt(block.limitos[1]);
                 block.max = parseInt(block.limitos[2]);
-                if ($("#monto_prestar_ya_admin").val()!=="") {                    
+
+                if ($("#monto_prestar_ya_admin").val()!=="") { 
+
                     block.evad = $("#monto_prestar_ya_admin").val(); //cantidad de prestamo
                     block.resa = block.evad.replace(".","");
                     block.resa2 = block.resa.replace(".","");
                     block.nuevomonto = parseInt(block.resa2);
+
 					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max) {
-                        for (var w = 0; w < block.cuotas.length; w++) {
+                        for (var w = 0; w < block.cuotas.length; w++) {                            
                             if (block.cuotas[w][2] == $("#selector_cuotas_selec").val() &&  block.cuotas[w][1] == $("#selector_cuotas_selec").find("option:selected").text() ) { //cantidad de cuotas
+
                                 $("#utilidad_prestada").html(block.cuotas[w][3]); //Label de Utilidad porcentaje
-                                block.limpi = $("#monto_prestar_ya_admin").val();
+                                block.limpi = $("#monto_prestar_ya_admin").val(); //Monto del contrato
                                 block.comp = block.limpi.replace(".", "");
                                 block.wsqa = block.comp.replace(".", "");
                                 block.monq = parseInt(block.wsqa);
                                 block.poce = parseFloat(block.cuotas[w][3]);
-                                if ( $('#selector_frecuencia option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") {
-                                    block.dias = parseInt(4);
-                                    $("#FechaCuatropagos").css("display","block");
-                                } else {
-                                    block.dias = parseInt(block.cuotas[w][2]);
-                                    $("#FechaCuatropagos").css("display","none");
-                                }
+                                block.dias = parseInt(block.cuotas[w][2]);
                                 block.resul = parseInt(monq * (block.poce / 100));
-                                block.reas = (block.monq + block.resul) / block.dias;
                                 block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                                 block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/, '');
-                                block.reas = parseInt(block.reas);
-                                block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                                block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+
+                                if ( $('#selector_frecuencia option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") {
+                                    // block.dias = parseInt(4);
+                                    $("#FechaCuatropagos").css("display","block");
+                                } else  if ( $('#selector_cuotas_selec option:selected').text() == "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL" ){
+                                    block.reas = block.monq;
+                                } else {
+                                    $("#FechaCuatropagos").css("display","none");
+
+                                    block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
+                                    block.reas = parseInt(block.reas);
+                                    block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                    block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '');
+                                }
+
                                 $("#utilidad_prestada_peso").html(block.resul); //Label de utilidad quetzales
                                 $("#utilidad_cuota").html(block.reas); //Label de valor de la cuota
-
                                 obtener_Ultima_Cuota(block.resul);
+
                             }
                         }
                     }else{
@@ -1859,30 +1872,42 @@
         }
     });
 
-    function obtener_Ultima_Cuota(utilidad){
-        var ganancia = utilidad;
-        var totalInteres = block.reas;
-        var total_interes_final = totalInteres.replace(/\./g, "");
-        
-        if(((ganancia).toString()).includes(".")){
-            block.suma_total_prestamos = (parseInt(block.monq) + parseInt(ganancia.replace(/\./g, "")));
-        } else {
-            block.suma_total_prestamos = (parseInt(block.monq) + parseInt(ganancia));
+    function obtener_Ultima_Cuota( utilidad ){        
+        var ganancia = utilidad; // Ganancia
+        var totalInteres = block.reas; // Valor de la cuota
+        var total_interes_final = String(totalInteres).replace(/\./g,'');
+
+        if ( $('#selector_cuotas_selec option:selected').text() == "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL" ){ /* CUOTA CON TOTALIDAD DEL CONTRATO */
+
+            $("#utilidad_ultima_cuota").html( block.reas );
+            $("#utilidad_contrato").html( parseInt( String( block.reas ).replace(/\./g, "") ) +  parseInt( String( ganancia ).replace(/\./g,'') ) );
+            block.ultima_cuota =  parseInt( String( block.reas ).replace(/\./g, "") );
+             
+        } else { /* CUOTAS DEACUERDO A LA CANTIDAD DE INTERES Y DIAS DE PAGO */
+            
+            if(( ( ganancia ).toString() ).includes(".") ){
+                block.suma_total_prestamos = ( parseInt( block.monq ) + parseInt( ganancia.replace(/\./g, "") ) );
+            } else {
+                block.suma_total_prestamos = ( parseInt( block.monq ) + parseInt( ganancia ) );
+            }
+    
+            if( String( totalInteres ).includes(".") ){
+                block.cantidad_normal = parseInt( totalInteres.replace(/\./g, "") ) * block.dias;
+            } else {
+                block.cantidad_normal = parseInt(block.reas) * block.dias;        
+            }
+    
+            if( Number.isInteger( block.suma_total_prestamos / block.dias ) ){
+                block.ultima_cuota = totalInteres;
+            } else {
+                block.ultima_cuota = ( ( block.suma_total_prestamos - block.cantidad_normal ) + parseInt( total_interes_final ) ).toString();
+            }
+
+            $("#utilidad_ultima_cuota").html( block.ultima_cuota );
+            $("#utilidad_contrato").html( ( block.dias - 1 ) * parseInt( String( block.reas ).replace(/\./g, "") ) + parseInt( String( block.ultima_cuota ).replace(/\./g, "") ) );
+
         }
 
-        if(totalInteres.includes(".")){
-            block.cantidad_normal = parseInt(totalInteres.replace(/\./g, "")) * block.dias;
-        } else {
-            block.cantidad_normal = parseInt(block.reas) * block.dias;        
-        }
-
-        if(Number.isInteger(block.suma_total_prestamos / block.dias)){
-            block.ultima_cuota = totalInteres;
-        } else {
-            block.ultima_cuota = ((block.suma_total_prestamos - block.cantidad_normal) + parseInt(total_interes_final)).toString();
-        }
-        $("#utilidad_ultima_cuota").html(block.ultima_cuota);
-        $("#utilidad_contrato").html((block.dias - 1) * parseInt(block.reas.replace(/\./g, "")) + parseInt(block.ultima_cuota.replace(/\./g, "")));
     }
 
     function consultar_Contratos(){
@@ -2130,7 +2155,7 @@
                     if(block.nuevomonto >= block.min && block.nuevomonto <=block.max){
 
                         for(var w =0; w < block.cuotas.length; w++){
-                            if(block.cuotas[w][2]==$("#selector_cuotas_selec").val()){
+                            if( block.cuotas[w][2] == $("#selector_cuotas_selec").val() ){
                                 $("#utilidad_prestada").html(block.cuotas[w][3]);
                                 block.limpi = $("#monto_prestar_ya_admin").val();
                                 block.comp = block.limpi.replace(".","");
@@ -2902,14 +2927,14 @@
     }   
 
     $("#crear_contrato").click(function () {
-        if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!=="") {            
+        debugger;
+        if( window.sessionStorage.getItem("Money-vars-registrado") !== null &&  $("#monto_prestar_ya_admin").val() !== "" ) {            
             if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {                        
                 block.asesor = $("#selector_asesores_lista").val();
                 block.monto_prestar = $("#monto_prestar_ya_admin").val();
                 block.frecuencia = $("#selector_frecuencia").val();
-                if (block.frecuencia == "5" || block.frecuencia == 5){ //Pago personalizado (25 días en 4 pagos)
-                    block.dias = 4
-                    block.fechasCorrectas = validarRangoFechas($("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val());;                    
+                if (block.frecuencia == "5" || block.frecuencia == 5){ //Pago personalizado (25 días en 4 pagos)                    
+                    block.fechasCorrectas = validarRangoFechas( $("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val() );
 
                     if( !block.fechasCorrectas ) {
                         toastr.warning("Las fechas de las cuotas no tienen un orden lógico", "Atención");
@@ -2919,7 +2944,6 @@
                 } else {
                     block.dias = $("#selector_cuotas_selec").val();
                 }
-
                 
                 block.fecha_prestamo = $("#fechaActual").val();
                 block.descontar = parseInt($("#cuota_descontar_sistema").val());
@@ -2934,7 +2958,8 @@
                         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
                     }
                     
-                    block.arrays = [block.tokens[1], window.sessionStorage.getItem("Money-vars-registrado"), block.tokens[5], block.monto_prestar, block.dias, block.fecha_prestamo, block.descontar, block.porcentaje,block.quedo_cuota, block.tokens[4], block.frecuencia, block.ultima_cuota, $("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val() ];
+                    block.arrays = [ block.tokens[1], window.sessionStorage.getItem("Money-vars-registrado"), block.tokens[5], block.monto_prestar, block.dias, block.fecha_prestamo, block.descontar, block.porcentaje, block.quedo_cuota, block.tokens[4], block.frecuencia, block.ultima_cuota, $("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val() ];
+                    
                     block.obj = { "r": "crear_contrato", "d": block.arrays };
                     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                         var valor = JSON.parse(salida);                        
@@ -3066,42 +3091,59 @@
 	});
 	
 	
-    $("#selector_frecuencia").change(function(){
+    $("#selector_frecuencia").change(function(){        
         if ( $("#monto_prestar_ya_admin").val() !== "" && $("#selector_cuotas_selec").val() !== "" && $("#selector_frecuencia").val() !== "" ) {
             if( window.sessionStorage.getItem("Lista_cuota") !== null ) {
+
                 block.cuotas = JSON.parse(window.sessionStorage.getItem("Lista_cuota"));
                 block.limitos = JSON.parse(window.sessionStorage.getItem("Configuracion"));
                 block.min = parseInt(block.limitos[1]);
                 block.max = parseInt(block.limitos[2]);
-                if ($("#monto_prestar_ya_admin").val()!=="") {                    
+
+                if ($("#monto_prestar_ya_admin").val()!=="") { 
+
                     block.evad = $("#monto_prestar_ya_admin").val(); //cantidad de prestamo
                     block.resa = block.evad.replace(".","");
                     block.resa2 = block.resa.replace(".","");
                     block.nuevomonto = parseInt(block.resa2);
+
 					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max) {
                         for (var w = 0; w < block.cuotas.length; w++) {
                             if (block.cuotas[w][2] == $("#selector_cuotas_selec").val() &&  block.cuotas[w][1] == $("#selector_cuotas_selec").find("option:selected").text() ) { //cantidad de cuotas
+
                                 $("#utilidad_prestada").html(block.cuotas[w][3]); //Label de Utilidad porcentaje
                                 block.limpi = $("#monto_prestar_ya_admin").val();
                                 block.comp = block.limpi.replace(".", "");
                                 block.wsqa = block.comp.replace(".", "");
                                 block.monq = parseInt(block.wsqa);
                                 block.poce = parseFloat(block.cuotas[w][3]);
-                                
-                                if ( $('#selector_frecuencia option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") { // 25 DíAS EN 4 PAGOS
-                                    block.dias = parseInt(4);
-                                    $("#FechaCuatropagos").css("display","block");
-                                } else {
-                                    block.dias = parseInt(block.cuotas[w][2]);
-                                    $("#FechaCuatropagos").css("display","none");
-                                }
+                                block.dias = parseInt(block.cuotas[w][2]);
                                 block.resul = parseInt(monq * (block.poce / 100));
-                                block.reas = (block.monq + block.resul) / block.dias;
                                 block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                                 block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/, '');
-                                block.reas = parseInt(block.reas);
-                                block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                                block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+                                
+                                if ( $('#selector_frecuencia option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") { // 25 DíAS EN 4 PAGOS
+                                    // block.dias = parseInt(4);
+                                    $("#FechaCuatropagos").css("display","block");
+                                    block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
+                                    block.reas = parseInt(block.reas);
+                                    block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                    block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+
+                                } else if ( $('#selector_cuotas_selec option:selected').text() == "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL" ){
+
+                                    block.reas = block.monq;
+
+                                } else {
+
+                                    $("#FechaCuatropagos").css("display","none");
+                                    block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
+                                    block.reas = parseInt(block.reas);
+                                    block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                    block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+
+                                }
+
                                 $("#utilidad_prestada_peso").html(block.resul); //Label de utilidad quetzales
                                 $("#utilidad_cuota").html(block.reas); //Label de valor de la cuota                                
                                 obtener_Ultima_Cuota(block.resul);
@@ -3439,7 +3481,8 @@
     // block.CuotasTotales = [[5951893, "PLAN 25 DIAS 10% EN 4 PAGOS", "25", "10"],[1393166, "PLAN 20 DIAS 10%", "20", "10"],[1393166, "PLAN 30 DIAS 15%", "30", "15"],[1393166, "PLAN 40 DIAS 20%", "40", "20"],[1393166, "PLAN 3 SEMANAS 10%", "3", "10"],
     // [1393166, "PLAN 4 SEMANAS 15%", "4", "15"], [1393166, "PLAN 6 SEMANAS 20%", "6", "20"],[1393166, "PLAN 8 SEMANAS 30%", "8", "30"],[1393166, "PLAN MENSUAL 1 15%", "1", "15"]];
     
-    // block.CuotasTotales = [[5951893, "PLAN 25 DIAS 10% EN 4 PAGOS", "25", "10"],[5951893, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"]]; //DON AXEL
+    //DON AXEL
+    // block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"] ];
     
     // block.CuotasTotales = [ [7576793, "CUOTA SEMANAL 8 40%", "8", "40"], [7576793, "CUOTA MENSUAL 1 20%", "1", "20"], [7576793, "CUOTA DIARIA 23 15%", "23", "15"], [7576793, "CUOTA SEMANAL 4 20%", "4", "20"], [7576793, "CUOTA SEMANAL 12 60%", "12", "60"], [7576793, "CUOTA SEMANAL 6 30%", "6", "30"] ]; //ALEMO S.A
 

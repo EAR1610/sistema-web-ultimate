@@ -1703,7 +1703,7 @@
                                 <div class="ibox">
                                     <div style="display: flex; justify-content:space-evenly; flex-wrap: wrap;">
                                         <div>Total Sistema: <label id="text_total_sistema"></label></div>
-                                        <div>Total entregado por asesor: <input type="number" id="text_total_asesor"></div>
+                                        <div>Total entregado por asesor: <input type="number"  min="0" id="text_total_asesor"></div>
                                         <div>Diferencia: <label id="text_diferencia_cierre"></label></div>
                                         <button class="btn btn-primary btn-md" id="registrar_cierre"
                                                 type="button">Registrar cierre
@@ -1817,14 +1817,14 @@
 
 <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
     };
     firebase.initializeApp(firebaseConfig);	
 </script>
@@ -5119,10 +5119,8 @@
                 for(var i= 0; i< block.pasero.length; i++){
                     gastos += parseFloat(block.pasero[i][2]);
                 }
-                $("#text_gastosAsesor").text("Q"+gastos);                
-            } else {
-                $("#text_diferencia_cierre").text("Q" + 0);
             }
+            $("#text_gastosAsesor").text("Q"+gastos);
         });
         return gastos;
     }
@@ -5139,22 +5137,20 @@
         block.arrays = [ block.tokens[1], $("#id_asesor_cierre").val().split('_')[0], block.fechaABuscar ];
         block.obj = {"r": "extrae_renovaciones_supervisor", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
+            var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 
                 for(var i= 0; i< block.pasero.length; i++){
                     renovaciones += parseFloat(block.pasero[i][2]);
-                }
-                $("#text_renovacionesAsesor").text("Q "+renovaciones);
+                }                
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
                 const gastos = parseFloat($("#text_gastosAsesor").text().slice(1));
                 const totalSistema = base + recaudado - gastos - renovaciones;
                 $("#text_total_sistema").text("Q "+totalSistema);
-            } else {
-                $("#text_diferencia_cierre").text("0");
             }
+            $("#text_renovacionesAsesor").text("Q "+renovaciones);
         });
         return renovaciones;
     }
@@ -5162,7 +5158,7 @@
     $("#btn_buscar_cierre_supervisor").click(function(){
         $("#lista_gastos_exeAsesor").empty();                     
         $("#lista_renovaciones_exeAsesor").empty();
-        if($("#id_asesor_cierre").val() !== "" || $("#fecha_busqueda_cobros_supervisor").val() !== ""){
+        if($("#id_asesor_cierre").val() !== "" || $("#fecha_busqueda_cobros_supervisor").val() !== "") {
             block.ase = $("#id_asesor_cierre").val().split("_");
             block.ase = block.ase[0];
             block.fechaABuscar = $("#fecha_busqueda_cobros_supervisor").val();
@@ -5688,6 +5684,7 @@
         $("#configuracion_general_cuotas").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#liquidacion_page").css("display", "none");
+        $("#liquidacion_page2").css("display", "none");
         $("#contratos_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
@@ -5720,6 +5717,7 @@
         $("#configuracion_general_cuotas").css("display", "none");        
         $("#create_clientes_listo").css("display", "none");
         $("#liquidacion_page").css("display", "none");
+        $("#liquidacion_page2").css("display", "none");
         $("#contratos_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
@@ -5743,7 +5741,7 @@
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
-        $("#crear").css("display", "none");        
+        $("#crear").css("display", "none");                
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
         $("#lista_asi_sup").css("display", "none");
@@ -5752,6 +5750,7 @@
         $("#configuracion_general_cuotas").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#liquidacion_page").css("display", "none");
+        $("#liquidacion_page2").css("display", "none");
         $("#contratos_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
