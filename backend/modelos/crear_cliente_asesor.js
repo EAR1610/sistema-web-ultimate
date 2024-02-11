@@ -35,8 +35,7 @@ eje = function(arrays,origen,redisClient) {
 					redisClient.get("cliente_"+arrays[7],function(err, clienteActualizado){ //El cliente se va actualizar.
 						if( clienteActualizado !== null && clienteActualizado !== undefined ){
 							let actualizaciónCliente= JSON.parse(clienteActualizado);
-							arrays.push(actualizaciónCliente[23]) //Se le adjunta el Identificador.
-							console.log(arrays)
+							arrays.push(actualizaciónCliente[23]) //Se le adjunta el Identificador.							
 							if( clienteActualizado !== null && clienteActualizado !== undefined){
 								redisClient.set("cliente_"+arrays[7],JSON.stringify(arrays),function(err,reply) {						
 									/*

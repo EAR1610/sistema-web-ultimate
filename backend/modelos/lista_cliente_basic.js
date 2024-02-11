@@ -28,7 +28,7 @@ eje = function(arrays,origen,redisClient) {
 
 							var listado = [];
 
-							function iterar(ind, arrs){								
+							function iterar(ind, arrs){			
 								if(ind == arrs.length){
 									resolve([true, listado, 0]);
 								} else {									
@@ -74,18 +74,7 @@ eje = function(arrays,origen,redisClient) {
 									})
 								}
 							}
-							iterar(0, clientesTotales);
-                            // var ines = JSON.parse(sreply);
-                            // redisClient.get(ines[arrays[1]], function (ewwr, sreplwy) {
-							// 	if(sreplwy!==null){
-							// 		resolve([true, sreplwy,0]);
-							// 	}else{
-							// 		redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
-							// 			var ines = JSON.parse(sreply);
-							// 			reject([false,"4",ines]);
-							// 		});
-							// 	}
-                            // });
+							iterar(0, clientesTotales);                            
                         }else{
 							redisClient.get("registro_client_"+decoded.d,function(ewr,sreply){
 								var ines = JSON.parse(sreply);

@@ -11,7 +11,7 @@ eje = function(arrays,origen,redisClient) {
 		/*
 			Recibe token
 		*/
-		if (arrays.length==4){
+		if ( arrays.length == 4 ){
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {	
 				if (err) {
@@ -59,7 +59,7 @@ eje = function(arrays,origen,redisClient) {
 																
 															}else{																
 																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) { //JEFE TERMINAN ACA																	
-																	litado.push([repdly3, srepslsy2xq, [],srepsy,esde]);
+																	litado.push([repdly3, srepslsy2xq, [],srepsy,esde]);																	
 																	resolve([true, litado]);
 																});
 																

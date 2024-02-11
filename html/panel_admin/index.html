@@ -15,6 +15,11 @@
     <link href="../css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
     <link href="../css/datetimepicker.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -554,25 +559,6 @@
 
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('buscarContratos').addEventListener('input', function() {
-                let searchValue = this.value.toLowerCase();
-                let rows = document.querySelectorAll('#lista_enorme tr');
-                for (let row of rows) {
-                    let idCell = row.querySelector('td:nth-child(2)');
-                    let dpiCell = row.querySelector('td:nth-child(4)');
-                    let nombreCell = row.querySelector('td:nth-child(5)');
-                    let idValue = idCell ? idCell.textContent.toLowerCase() : '';
-                    let dpiValue = dpiCell ? dpiCell.textContent.toLowerCase() : '';
-                    let nombreValue = nombreCell ? nombreCell.textContent.toLowerCase() : '';
-
-                    row.style.display = (dpiValue.includes(searchValue) || nombreValue.includes(searchValue) || idValue.includes(searchValue)) ? '' : 'none';
-                }
-            });
-        });
-    </script>
-
     <style>
         @media (max-width: 576px) {
             .profile-info{
@@ -585,31 +571,7 @@
                 left: -3% !important;
                 width: auto !important;
             }
-        }
-        /*@media (max-width: 768px) {
-            .profile-info{
-                margin-left: 0%;
-            }
-            .profile-info{
-                margin-left: 0%;
-            }
-        }*/
-        /*@media (max-width: 992px) {
-            .profile-info{
-                margin-left: 0%;
-            }
-            .profile-info{
-                margin-left: 0%;
-            }
-        }*/
-        /*@media (max-width: 1200px) {
-            .profile-info{
-                margin-left: 0%;
-            }
-            .profile-info{
-                margin-left: 0%;
-            }
-        }*/
+        }        
     </style>
 </head>
 
@@ -1434,7 +1396,7 @@
                                 </form>
                             </div>
                             <div class="table-responsive" style="margin-top: 50px;">
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="datatableCobros">
                                     <thead>
                                     <tr align="center">
                                         <th>DPI</th>
@@ -1488,7 +1450,7 @@
                                 </form>
                             </div>
                             <div class="table-responsive" style="margin-top: 50px;">
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="datatableRenovaciones">
                                     <thead>
                                     <tr align="center">
                                         <th>Motivo de renovación</th>
@@ -1512,7 +1474,7 @@
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
                             <div class="table-responsive">
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="datatableClientes">
                                     <thead>
                                     <tr align="center">
                                         <th>Identificador</th>
@@ -1565,7 +1527,7 @@
 
                             </div>
                             <div class="table-responsive" style="margin-top: 50px;">
-                                <table class="table table-striped" >
+                                <table class="table table-striped" id="datatableGastos">
                                     <thead>
                                     <tr align="center">
                                         <th>Motivo de gasto</th>
@@ -1620,9 +1582,7 @@
                 <div class="col-lg-12" id="contratos_view">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Consulta de contrato</h5>
-                            &nbsp;
-                            <input class="form-control col-md-4" type="text" id="buscarContratos" placeholder="Buscar por Identificador, DPI o Nombre">
+                            <h5>Consulta de contrato</h5>                            
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
@@ -1632,7 +1592,7 @@
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="datatableContratos">
                                     <thead>
                                     <tr>
                                         <th>Fecha de prestamo </th>
@@ -1796,7 +1756,6 @@
 
 
 <!-- Mainly scripts -->
-<script src="../js/jquery-3.1.1.min.js"></script>
 <script src="../js/plugins/toastr/toastr.min.js" type="text/javascript"></script>
 <script src="../js/popper.min.js"></script>
 <script src="../js/bootstrap.js"></script>
@@ -1817,14 +1776,14 @@
 
 <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
-        authDomain: "axelssmoney.firebaseapp.com",
-        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
-        projectId: "axelssmoney",
-        storageBucket: "axelssmoney.appspot.com",
-        messagingSenderId: "915189749485",
-        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
-        measurementId: "G-N2Z1GX04BF"
+        apiKey: "AIzaSyDAOA9dH2MeN8xy6WqZpNzNuoJkjKYMvfQ",
+        authDomain: "axelssmoney-20658.firebaseapp.com",
+        databaseURL: "https://axelssmoney-20658-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney-20658",
+        storageBucket: "axelssmoney-20658.appspot.com",
+        messagingSenderId: "841250069817",
+        appId: "1:841250069817:web:76b46aa832b8bdfb0c5ce8",
+        measurementId: "G-X7JXRYZENR"
     };
     firebase.initializeApp(firebaseConfig);	
 </script>
@@ -2001,7 +1960,32 @@
                         block.listadi = block.listadi + '<tr><td>'+block.identificador+'</td><td>'+block.nomre +' ' + block.nomre2 + ' ' + block.apellido + ' ' + block.apellido2 + '</td><td>' + block.cedula + '</td><td>' + block.direcion + '</td><td>' + block.telefono + '</td></tr>';
                     }
                                         
-                    $("#listado_liengenerela").append(block.listadi);
+                    $("#listado_liengenerela").append(block.listadi);    
+                    $('#datatableClientes').DataTable({
+                        destroy: true,
+                        language: {
+                            processing:     "Procesando...",
+                            search:         "Buscar:",
+                            lengthMenu:    "Mostrar _MENU_ elementos",
+                            info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                            infoEmpty:      "Mostrando 0 elementos",
+                            infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                            infoPostFix:    "",
+                            loadingRecords: "Cargando registros...",
+                            zeroRecords:    "No se encontraron registros",
+                            emptyTable:     "No hay datos disponibles en la tabla",
+                            paginate: {
+                                first:      "Primero",
+                                previous:   "Anterior",
+                                next:       "Siguiente",
+                                last:       "Último"
+                            },
+                            aria: {
+                                sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                                sortDescending: ": activar para ordenar la columna de manera descendente"
+                            }
+                        }
+                    });
                     block.nexr = parseInt(block.num) + 1;
                     window.sessionStorage.setItem("numero_lista", block.nexr);
                 }
@@ -3040,8 +3024,110 @@
 
                 }
                 $("#lista_enorme").html(block.oso);
-
+                $('#datatableContratos').DataTable({
+                    destroy: true,
+                    language: {
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:    "Mostrar _MENU_ elementos",
+                        info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando registros...",
+                        zeroRecords:    "No se encontraron registros",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                            sortDescending: ": activar para ordenar la columna de manera descendente"
+                        }
+                    }
+                });                
             } 
+        });
+    }
+
+    function listado_contrato_datable(){
+        toastr.info('Se están consultando los datos de los asesores', 'Atención!');
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        block.arrays = [ block.tokens[1], block.tokens[4], $("#lista_asesores_general3").val() ];
+        block.obj = { "r": "contratos_lista_all_datatable", "d": block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida); 
+            console.log(valor.d);
+            if (!valor.e) {                                                  
+                
+                for(let index = 0; index < valor.d[1].length; index++){
+                    block.datos = valor.d[1][index];
+                    block.contrato = datos[0];
+                    block.cliente = datos[1]; 
+
+                    block.esf = $("#lista_asesores_general3")["0"].options.selectedIndex;
+                    block.tesq = $("#lista_asesores_general3")["0"][block.esf].label.split("ID:");
+                    block.calsulo = block.contrato[13];
+                    block.sumas = 0;
+
+                    for(var u= 0; u<block.calsulo.length; u++){
+                        if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
+                            block.sumas = block.sumas + parseInt(block.calsulo[u].cp.replace(/\./g, ""));
+                        }else if(block.calsulo[u].pe!==0){
+                            block.sumas = block.sumas + parseInt(block.calsulo[u].cp.replace(/\./g, "")) - parseInt(block.calsulo[u].pe);
+                        }
+                    }
+
+                    //Damos formato a la fechad de Registro del contrato (dd-mm-yyyy);
+                    block.fechaSinFormatoRegistro = block.contrato[5];
+                    let partesFechaRegistroContrato = block.fechaSinFormatoRegistro.split('-');
+                    block.fechaRegistro = `${ partesFechaRegistroContrato[2] }-${ partesFechaRegistroContrato[1] }-${ partesFechaRegistroContrato[0] }`;
+    
+                    //Damos formato a la fechad de Culminacion del contrato (dd-mm-yyyy);
+                    block.fechaSinFormatoCulminacion = block.calsulo[block.calsulo.length - 1].fe;
+                    let partesFecha = block.fechaSinFormatoCulminacion.split('-');
+                    block.fechaCulminacion = `${ partesFecha[2] }-${ partesFecha[1] }-${ partesFecha[0] }`;
+    
+                    block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                    block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
+    
+                    block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cliente[23]+'</td><td>'+block.cliente[7]+'</td> <td>'+block.cliente[8]+' '+block.cliente[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.contrato[3]+'</td><td>'+block.contrato[7]+'%</td><td>'+block.contrato[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';                        
+                }
+                
+                $("#lista_enorme").append(block.oso);
+                $('#datatableContratos').DataTable({ 
+                    destroy: true,                                      
+                    language: {
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:    "Mostrar _MENU_ elementos",
+                        info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando registros...",
+                        zeroRecords:    "No se encontraron registros",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                            sortDescending: ": activar para ordenar la columna de manera descendente"
+                        }
+                    }
+                });
+            }
         });
     }
 
@@ -3087,17 +3173,6 @@
 				block.calsulo = block.unox[13];
 				block.sumas = 0;
 
-				// for(var u= 0; u<block.calsulo.length; u++){ 
-                //     if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
-                //         if(block.calsulo.length>1){
-                //             block.sumas = block.sumas + parseInt(block.calsulo[u].cp);
-                //         } else {
-                //             block.sumas = block.calsulo[u].cp.replace(/\./g, "");
-                //         }
-				// 	} else if(block.calsulo[u].pe !== 0 ){
-                //         block.sumas = block.sumas + parseInt(block.calsulo[u].pe);
-				// 	}                
-				// }
                 for(var u= 0; u<block.calsulo.length; u++){
 					if(!block.calsulo[u].ct && block.calsulo[u].pe==0){
 						block.sumas = block.sumas + parseInt(block.calsulo[u].cp.replace(/\./g, ""));
@@ -3216,12 +3291,11 @@
         }
     }
 
-
     $("#lista_asesores_general3").change(function(){
         if($("#lista_asesores_general3").val()!==""){
             block.ase = $("#lista_asesores_general3").val();
             $("#lista_enorme").html("");
-            listado_contratos("0");
+            listado_contrato_datable();
         }
     });
 
@@ -4909,6 +4983,31 @@
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td> <td><a href="javascript:eliminar_gasto_ya(\''+block.iteds[1]+'\');">Eliminar</a></td></tr>';
                 }
                 $("#lista_gastos_exe").html(block.inefd);
+                $('#datatableGastos').DataTable({
+                        destroy: true,
+                        language: {
+                            processing:     "Procesando...",
+                            search:         "Buscar:",
+                            lengthMenu:    "Mostrar _MENU_ elementos",
+                            info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                            infoEmpty:      "Mostrando 0 elementos",
+                            infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                            infoPostFix:    "",
+                            loadingRecords: "Cargando registros...",
+                            zeroRecords:    "No se encontraron registros",
+                            emptyTable:     "No hay datos disponibles en la tabla",
+                            paginate: {
+                                first:      "Primero",
+                                previous:   "Anterior",
+                                next:       "Siguiente",
+                                last:       "Último"
+                            },
+                            aria: {
+                                sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                                sortDescending: ": activar para ordenar la columna de manera descendente"
+                            }
+                        }
+                    });
             } else {
                 toastr.warning("No hay gastos registrados para la fecha establecida", "Atención");
             }
@@ -4961,6 +5060,31 @@
                     block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
                 }
                 $(id_tabla).html(block.inefd);
+                $('#datatableCobros').DataTable({
+                        destroy: true,
+                        language: {
+                            processing:     "Procesando...",
+                            search:         "Buscar:",
+                            lengthMenu:    "Mostrar _MENU_ elementos",
+                            info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                            infoEmpty:      "Mostrando 0 elementos",
+                            infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                            infoPostFix:    "",
+                            loadingRecords: "Cargando registros...",
+                            zeroRecords:    "No se encontraron registros",
+                            emptyTable:     "No hay datos disponibles en la tabla",
+                            paginate: {
+                                first:      "Primero",
+                                previous:   "Anterior",
+                                next:       "Siguiente",
+                                last:       "Último"
+                            },
+                            aria: {
+                                sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                                sortDescending: ": activar para ordenar la columna de manera descendente"
+                            }
+                        }
+                    });
             }
         });
     }
@@ -4994,6 +5118,31 @@
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
                 }
                 $("#listado_renovaciones_por_fechas").html(block.inefd);
+                $('#datatableRenovaciones').DataTable({
+                        destroy: true,
+                        language: {
+                            processing:     "Procesando...",
+                            search:         "Buscar:",
+                            lengthMenu:    "Mostrar _MENU_ elementos",
+                            info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                            infoEmpty:      "Mostrando 0 elementos",
+                            infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                            infoPostFix:    "",
+                            loadingRecords: "Cargando registros...",
+                            zeroRecords:    "No se encontraron registros",
+                            emptyTable:     "No hay datos disponibles en la tabla",
+                            paginate: {
+                                first:      "Primero",
+                                previous:   "Anterior",
+                                next:       "Siguiente",
+                                last:       "Último"
+                            },
+                            aria: {
+                                sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                                sortDescending: ": activar para ordenar la columna de manera descendente"
+                            }
+                        }
+                    });
             } else {
                 toastr.warning("No hay renovaciones registrados para la fecha establecida", "Atención");
             }

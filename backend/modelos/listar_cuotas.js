@@ -9,9 +9,8 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibo el token
-		*/
-		console.log(arrays);
+			recibo el token
+		*/		
 		if (arrays.length==1){//token,dueño
 		
 			var jwt = require('jsonwebtoken');
