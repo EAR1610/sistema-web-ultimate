@@ -623,9 +623,9 @@
                                     <select class="form-control m-b" id="selector_cuotas_selec">
                                         <option value=''>Seleccione</option>
                                         <!-- Don Axel -->
-                                        <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
+                                        <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
                                         <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
-                                        <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option>
+                                        <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option> -->
 
                                         <!-- ALEMO S.A -->
                                         <!-- <option value="8">CUOTA SEMANAL 8 40%</option>
@@ -645,11 +645,11 @@
                                     <select class="form-control m-b" id="selector_frecuencia">
                                         <option value="">Seleccione</option>
                                         <option value="1">Diario</option>
-                                        <!-- <option value="2">Semanal</option>
+                                        <option value="2">Semanal</option>
                                         <option value="3">Quicenal</option>
-                                        <option value="4">Mensual</option> -->
-                                        <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
-                                        <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option>
+                                        <option value="4">Mensual</option>
+                                        <!-- <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
+                                        <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option> -->
                                     </select>
                                 </form>
                             </div>
@@ -3482,11 +3482,11 @@
     // [1393166, "PLAN 4 SEMANAS 15%", "4", "15"], [1393166, "PLAN 6 SEMANAS 20%", "6", "20"],[1393166, "PLAN 8 SEMANAS 30%", "8", "30"],[1393166, "PLAN MENSUAL 1 15%", "1", "15"]];
     
     //DON AXEL
-     block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"] ];
+    //  block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"] ];
     
     // block.CuotasTotales = [ [7576793, "CUOTA SEMANAL 8 40%", "8", "40"], [7576793, "CUOTA MENSUAL 1 20%", "1", "20"], [7576793, "CUOTA DIARIA 23 15%", "23", "15"], [7576793, "CUOTA SEMANAL 4 20%", "4", "20"], [7576793, "CUOTA SEMANAL 12 60%", "12", "60"], [7576793, "CUOTA SEMANAL 6 30%", "6", "30"] ]; //ALEMO S.A
 
-    window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
+    // window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
 
 
     $("#tipo_cargo").change(function () {
