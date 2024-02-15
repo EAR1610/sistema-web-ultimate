@@ -451,6 +451,71 @@
         </div>
     </div>
 
+    <div class="modal inmodal" id="popop_new_mora" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight modalete" style="left: -24%;width: 789px;margin: 30px auto;">
+                <div class="modal-header pull-left" style="text-align: inherit;padding: 1px 15px;">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Mora al cliente</h4>					
+                </div>
+                <div class="modal-body row" style="margin-left: 0px;margin-right: 0px;">
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <form role="form">
+                            <div class="form-group"><label>Nombre:</label> <input id="nombre_cliente_interes"
+                                type="text"
+                                placeholder=""
+                                class="form-control"
+                                disabled
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <form role="form">
+                            <div class="form-group"><label>DPI:</label> <input id="cedula_cliente_interes"
+                                type="text"
+                                placeholder=""
+                                class="form-control"
+                                disabled
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <form role="form">
+                            <div class="form-group">
+                                <label>Aplicar Interes (Ej: 20, 25 y 30)</label>
+                                <input id="porcentaje_cliente_interes"
+                                    type="number"
+                                    min="20"
+                                    max="30"
+                                    step="5"
+                                    class="form-control"
+                                    onchange="validateInput(this)"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6" style="margin-top: 1px;margin-right: 4%;">
+                        <div>
+                            <form role="form">
+                                <button class="btn btn-primary btn-sm" style="margin-left: 14px;" id="registro_final_mora"
+                                        type="button">Aplicar mora
+                                </button>
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                            </form>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav metismenu" id="side-menu">
@@ -648,8 +713,8 @@
                                         <option value="2">Semanal</option>
                                         <option value="3">Quicenal</option>
                                         <option value="4">Mensual</option>
-                                        <!-- <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
-                                        <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option> -->
+                                        <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
+                                        <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option>
                                     </select>
                                 </form>
                             </div>
@@ -1045,15 +1110,15 @@
                     <div class="slick_demo_2" id="listado_tarjeta" style="text-align: center;">Cargando tarjetas...</div>
 
 
-                    <div class="ibox ">
-                        <div class="ibox-title" style="display: flex; justify-content: space-around;">
-                            <div>Base diaria: <label id="text_base"></label></div>
-                            <div>Total recaudado: <label id="text_recolectado"></label></div>
-                            <div>Total gastos: <label id="text_gastos">Q0</label></div>
-                            <div>Total renovaciones: <label id="text_renovaciones">Q0</label></div>
+                    <div class="ibox">
+                        <div class="ibox-title" style="display: flex; width: 100%; align-items: center;">
+                            <div style="flex: 1">Base diaria: <label id="text_base"></label></div>
+                            <div style="flex: 1">Total recaudado: <label id="text_recolectado"></label></div>
+                            <div style="flex: 1">Total gastos: <label id="text_gastos">Q0</label></div>
+                            <div style="flex: 1">Total renovaciones: <label id="text_renovaciones">Q0</label></div>
                         </div>
-
                     </div>
+
                     <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Pago de cuota</h5> <label id="text_recolectado"></label>
@@ -1674,7 +1739,7 @@
     }    
 	    
     function myMap() {
-        
+
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -1803,7 +1868,13 @@
                 window.localStorage.removeItem("Money-vars-tarjetas_old");
             }
         });
+    }
 
+    function validateInput(input) {
+        const validValues = [20, 25, 30];
+        if (!validValues.includes(Number(input.value))) {
+            input.value = 20; // Valor predeterminado
+        }
     }
 
     $("#selector_cuotas_selec").change(function(){    
@@ -2042,7 +2113,7 @@
             }
         });
     }
-    function listado_contratos_vencimiento(mun){ 
+    function listado_contratos_vencimiento(mun){     
         block.unico =  parseInt(mun);
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -2099,9 +2170,9 @@
                     }else if(block.calsulo[u].pe!==0){       
                         valorPe = String(block.calsulo[u].pe);
                         
-                        if(valorPe.includes(".")){                            
+                        if(valorPe.includes(".")){
                             block.sumas = (parseInt(block.sumas) + parseInt(valorPe.replace(/\./g, "")));
-                        } else { 
+                        } else {
                             // block.sumas = block.sumas + parseInt(valorPe);
                             block.sumas = block.sumas + parseInt(block.calsulo[u].cp) - parseInt(valorPe);
                         }
@@ -2117,20 +2188,30 @@
                 block.fechaSinFormatoCulminacion = block.calsulo[block.calsulo.length - 1].fe;
                 let partesFecha = block.fechaSinFormatoCulminacion.split('-');
                 block.fechaCulminacion = `${ partesFecha[2] }-${ partesFecha[1] }-${ partesFecha[0] }`;
-
+                
                 block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');  
                 block.infoCliente = JSON.parse(valor.d[1][0][3]);                
-                block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
+                block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td><td><button class="btn btn-primary btn-block" onclick="javascript:interes_meter('+String.fromCharCode(39)+block.cuatrosx[7]+String.fromCharCode(39)+','+String.fromCharCode(39)+block.cuatrosx[8]+' '+block.cuatrosx[10]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.unox[5]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.unox[3]+String.fromCharCode(39)+');" type="button">Aplicar Interes</button></td></tr>';
+                
                 block.unico++;
 
                 listado_contratos_vencimiento(block.unico);
                 $("#lista_enorme_vencimiento").append(block.oso);
-            } else if(valor.d[2]!==0 && valor.d[2]>block.unico){
+            } 
                 block.unico++;
                 listado_contratos_vencimiento(block.unico);
-            }
         });
+    }
+
+    function interes_meter(cedula, nombre, fecha, prestado){        
+		$("#nombre_cliente_interes").val(nombre);
+		$("#cedula_cliente_interes").val(cedula);        
+        block.fechaContrato = fecha;
+        block.prestadoContrato = prestado;
+        $("#popop_new_mora").modal("show");
+        $('#popop_new_mora').modal({backdrop: 'static', keyboard: false})
+        // window.sessionStorage.setItem("Money-perfil","busqueda")
     }
     
     function format(input) {
@@ -2926,8 +3007,7 @@
         return true;
     }   
 
-    $("#crear_contrato").click(function () {
-        debugger;
+    $("#crear_contrato").click(function () {        
         if( window.sessionStorage.getItem("Money-vars-registrado") !== null &&  $("#monto_prestar_ya_admin").val() !== "" ) {            
             if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {                        
                 block.asesor = $("#selector_asesores_lista").val();
@@ -3981,7 +4061,7 @@
 			block.barra = '';
             if(frutos !== null){
                 for(var k = 0; k < frutos.length; k++){
-                    if(frutos[k].c == $("#text_cedula_cliente2").val()){
+                    if(frutos[k].c == $("#text_cedula_cliente2").val()){                        
                         block.barra = block.barra + ' <a class="btn btn-primary btn-rounded" href="javascript:fijar_monto('+String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+');"> '+frutos[k].u+' => Q'+frutos[k].m+' </a> ';
                         clientePago = frutos[k];                        
                     }
@@ -4045,6 +4125,51 @@
                 }
             }
         })
+    });
+
+    $("#registro_final_mora").click(function () {
+
+        if($("#porcentaje_cliente_interes").val() !== "" ){
+            block.cedula = $("#cedula_cliente_interes").val();
+            block.porcentaje = (parseInt($("#porcentaje_cliente_interes").val()) / 100);    
+    
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }
+    
+            var frutos = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
+            block.idContrato = '';
+            if(frutos !== null){
+                for(var k = 0; k < frutos.length; k++){
+                    if( frutos[k].c == block.cedula && frutos[k].f == block.fechaContrato && frutos[k].m == block.prestadoContrato ){
+                        block.idContrato = frutos[k].id;
+                        break;
+                    }
+                }
+            }              		
+            if( block.idContrato !== '') {
+                block.arrays = [ block.tokens[1], block.tokens[5], block.cedula, block.porcentaje, block.idContrato ];
+                block.obj = {"r": "aplicar_interes_contrato", "d": block.arrays};
+                backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                    var valor = JSON.parse(salida);  
+                    console.log(valor);          
+                    if(!valor.e){
+                        toastr.success('Interes aplicado al contrato','Atención!');
+                        setTimeout(function(){
+                            window.location.reload();
+                        }, 2000);
+                    } else {    
+                        toastr.warning('No se ha podido aplicar el interes al contrato','Atención!');
+                    }
+                })
+            } else {
+                toastr.warning('No se ha encontrado el contrato','Atención!');
+            }
+        } else {
+            toastr.warning('Falta el porcentaje de interes','Atención!');
+        }
     });
 
     function insertar_cliente(){

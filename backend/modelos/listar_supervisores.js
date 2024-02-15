@@ -24,30 +24,34 @@ eje = function(arrays,origen,redisClient) {
 						extraigo lista de supervidors asignados a la empresa
 					*/
 					redisClient.keys('listado_'+decoded.d+'_supervisor_*',function(err3,reply3){
-						if(reply3.length > 0){
-							
-							/*
-								guardo los datos en array mediante kanban
-							*/
-							
-							var litado = [];
-							function iterar(ind,arrs){
-								if(ind == arrs.length){
-									resolve([true,litado]);
-								}else{
-									redisClient.get(arrs[ind],function(err,reply) {
-										if( reply !== null && reply !== undefined ){
-											litado.push(reply);
-											ind++;
-											iterar(ind,arrs);
-										}else{
-											ind++;
-											iterar(ind,arrs);
-										}
-									});
+						if( reply3 !== null && reply3 !== undefined ){
+							if(reply3.length > 0){
+								
+								/*
+									guardo los datos en array mediante kanban
+								*/
+								
+								var litado = [];
+								function iterar(ind,arrs){
+									if(ind == arrs.length){
+										resolve([true,litado]);
+									}else{
+										redisClient.get(arrs[ind],function(err,reply) {
+											if( reply !== null && reply !== undefined ){
+												litado.push(reply);
+												ind++;
+												iterar(ind,arrs);
+											}else{
+												ind++;
+												iterar(ind,arrs);
+											}
+										});
+									}
 								}
+								iterar(0,reply3);
+							}else{
+								reject([false,"4"]);
 							}
-							iterar(0,reply3);
 						}else{
 							reject([false,"4"]);
 						}

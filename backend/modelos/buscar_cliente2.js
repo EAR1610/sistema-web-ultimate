@@ -13,17 +13,16 @@ eje = function(arrays,origen,redisClient) {
 		*/
 		
 		
-		if (arrays.length==5){		
+		if ( arrays.length == 5 ){		
 		
 			var jwt = require('jsonwebtoken');
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5"){
-					
-					
+				}else if(decoded.t == "1" || decoded.t == "0" || decoded.t == "2" || decoded.t == "5" || decoded.t == "4"){
+										
 					/*
-					verifico si teiene contrato
+						verifico si teiene contrato
 					*/
 					
 					redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {
@@ -45,6 +44,8 @@ eje = function(arrays,origen,redisClient) {
 									}
 								});
 							}
+						} else{
+							reject([false,"4"]);						
 						}
 				    });
 				}else{

@@ -16,6 +16,8 @@
     <link href="../assets/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="../assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
     <link href="../assets/css/datetimepicker.css" rel="stylesheet">
+    <link href="../css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
+    <link href="../css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
 
@@ -2879,13 +2881,69 @@
                                         <th>Porcentaje</th>
                                         <th>Cuota</th>
                                         <th>Fecha de culminación</th>
+                                        <th>Ver Contrato</th>
                                     </tr>
                                     </thead>
                                     <tbody id="lista_enorme">
                                     </tbody>
                                 </table>
                             </div>
+                        </div>                        
+                    </div>
+                </div>
 
+                <div class="col-lg-12" id="cobrar_couta">            
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Pago de cuota</h5> <label id="text_recolectado"></label>
+                            <span class="pull-right" style="font-size: medium;" id="queda_debiendo">Q0</span>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-6 col-xs-12 profile-image">
+                                <img src="../img/default.jpg" id="foto_user_clien2" class="rounded-circle circle-border m-b-md" alt="profile">
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Nombre</label> <input
+                                            id="text_nombre_cliente2"
+                                            type="text" disabled
+                                            placeholder=""
+                                            class="form-control"></div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
+                                Credito aprobado: <br>Q<span id="cuento_prestame">0</span>
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%;  margin-top: 4%;">
+                                Número de cuotas: <br><span id="dias_prestame">0</span>
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
+                                Valor de cuota: <br>Q<span id="valor_prestame">0</span>
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
+                                Saldo pendiente: <br>Q<span id="pago_prestame">0</span>
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
+                                Valor entregado: <br>Q<span id="entregado_prestame">0</span>
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xs-12" style=" text-align: center;font-size: x-large;margin-bottom: 4%; margin-top: 4%;">
+                                Valor de descuento: <br>Q<span id="descuento_prestame">0</span>
+                            </div>
+							
+                            <div class="col-sm-12 col-md-12 col-xs-12" id="refinanciar_div" align="center" style="display:none;">
+                                <button class="btn btn-primary btn-block" id="refinanciar_accion"
+                                        type="button">Puedes refinanciar aqui
+                                </button>
+                            </div>
+
+                            <div class="col-sm-12 col-md-12 col-xs-12" >
+                                <div class="ibox-content">
+                                    <div id="calendar"></div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -3385,6 +3443,9 @@
 <script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
 
+<script src="../js/plugins/fullcalendar/moment.min.js"></script>
+<script src="../js/plugins/fullcalendar/fullcalendar.min.js"></script>
+
 <script>
     var firebaseConfig = {
         apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
@@ -3621,6 +3682,7 @@
         $("#cliente_lista_admi").css("display", "none");
         $("#lista_empresa_div").css("display","none");
         $("#HistorialClientes").css("display","none");
+        $("#cobrar_couta").css("display","none");
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
@@ -3833,7 +3895,7 @@
         if($("#fecha__inicial_utilidades").val() === "" || $("#fecha_final_utilidades").val() === ""){
             toastr.warning("Por favor, verifique las fechas", "Atención");
         } else {
-            toastr.ínfo("Se están consultando las utilidades", "Atención");
+            toastr.info("Se están consultando las utilidades", "Atención");
             if (window.localStorage.getItem("Money-vars-token") !== null) {
                 block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
             } else {
@@ -3846,6 +3908,12 @@
                 var valor = JSON.parse(salida);                
                 if( !valor.e ){
                     block.lista = valor.d[1];
+                    // Obtén la referencia a la tabla
+                    let table = $('#datatableUtilidades').DataTable();
+
+                    // Limpia la tabla
+                    table.clear();
+
                     for (var e = 0; e < block.lista.length; e++) {
                         block.iten = block.lista[e];        
                         block.monto = block.iten[6];
@@ -3856,7 +3924,13 @@
                         block.fechaRegistro = `${ partesFechaRegistroContrato[2] }-${ partesFechaRegistroContrato[1] }-${ partesFechaRegistroContrato[0] }`; 
 
                         block.oso = block.oso + '<tr><td>'+block.iten[1]+" "+block.iten[2]+" "+block.iten[3]+" "+block.iten[4]+'</td> <td>'+block.iten[0]+'</td> <td>'+parseInt(block.monto)+'</td> <td>'+block.fechaRegistro+'</td></tr>';
+
+                        //Agregamos la fila a la tabla
+                        table.row.add([block.iten[1]+" "+block.iten[2]+" "+block.iten[3]+" "+block.iten[4], block.iten[0], parseInt(block.monto), block.fechaRegistro]);
                     }
+                    // Dibujamos la tabla
+                    table.draw();
+
                     $("#lista_utilidades").html(block.oso);
                     $('#datatableUtilidades').DataTable({
                         destroy: true,
@@ -4193,6 +4267,7 @@
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
@@ -4237,12 +4312,25 @@
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 block.inefd = '';
+
+                // Obtén la referencia a la tabla
+                let table = $('#datatableGastos').DataTable();
+
+                // Limpia la tabla
+                table.clear();
+
                 for (var wq = 0; wq < block.pasero.length; wq++) {
                     block.iteds = block.pasero[wq];
                     block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td> <td><a href="javascript:eliminar_gasto_ya(\''+block.iteds[1]+'\');">Eliminar</a></td></tr>';
+
+                    // Agrega una fila a la tabla
+                    table.row.add([block.iteds[1], "Q"+block.iteds[2], "<a href='javascript:eliminar_gasto_ya(\""+block.iteds[1]+"\");'>Eliminar</a>"]);
                 }
+                //Dibujar la tabla
+                table.draw();
+
                 $("#lista_gastos_exe").html(block.inefd);
                 $('#datatableGastos').DataTable({
                         destroy: true,
@@ -4298,12 +4386,25 @@
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 block.inefd = '';
+
+                // Obtén la referencia a la tabla
+                let table = $('#datatableRenovaciones').DataTable();
+
+                // Limpia la tabla
+                table.clear();
+
                 for (var wq = 0; wq < block.pasero.length; wq++) {
                     block.iteds = block.pasero[wq];
                     block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+                    //Agrega la fila o la tabla
+                    table.row.add([block.iteds[1], "Q"+block.iteds[2]]);
                 }
+                
+                //Dibujar la tabla
+                table.draw();
+
                 $("#lista_renovaciones_exe").html(block.inefd);
                 $('#datatableRenovaciones').DataTable({
                         destroy: true,
@@ -4416,12 +4517,25 @@
             var cobro;
             block.inefd='';
             if(valor.d[1].length>0){
+
+                // Obtén la referencia a la tabla
+                let table = $('#datatableCobros').DataTable();
+                $(id_tabla).empty();
+
+                // Limpia la tabla
+                table.clear();
+
                 for(var j=0; j<valor.d[1].length;j++){
                     cobro = valor.d[1][j];
                     block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
-                }
-                $(id_tabla).html(block.inefd);
 
+                    //Agregar la fila a la tabla
+                    table.row.add([cobro.dpi, cobro.nombre, cobro.direccion, cobro.monto, cobro.hora]);
+                }
+
+                // Dibuja la tabla
+                table.draw();
+                $(id_tabla).html(block.inefd);
                 $('#datatableCobros').DataTable({
                         destroy: true,
                         language: {
@@ -5484,9 +5598,18 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [ block.tokens[1], block.tokens[4], $("#lista_asesores_general3").val() ];
         block.obj = { "r": "contratos_lista_all_datatable", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida); 
-            console.log(valor.d);
-            if (!valor.e) {                                                  
+            var valor = JSON.parse(salida);             
+            if (!valor.e) { 
+                
+                // Antes de agregar nuevas filas, limpia la tabla
+                $("#lista_enorme").empty();
+                block.oso = "";
+
+                // Obtén la referencia a la tabla
+                let table = $('#datatableContratos').DataTable();
+
+                // Limpia la tabla
+                table.clear();
                 
                 for(let index = 0; index < valor.d[1].length; index++){
                     block.datos = valor.d[1][index];
@@ -5518,13 +5641,33 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     
                     block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
-    
-                    block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cliente[23]+'</td><td>'+block.cliente[7]+'</td> <td>'+block.cliente[8]+' '+block.cliente[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.contrato[3]+'</td><td>'+block.contrato[7]+'%</td><td>'+block.contrato[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';                        
+                
+                    block.contratoInfo = '<td><button class="btn btn-primary" onclick="javascript:fijar_monto('+String.fromCharCode(39)+block.cliente[7]+String.fromCharCode(39)+','+String.fromCharCode(39)+block.cliente[8]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[5]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[3]+String.fromCharCode(39)+');">Ver Contrato</button></td></tr>';
+                    // String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+
+
+                    block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cliente[23]+'</td><td>'+block.cliente[7]+'</td> <td>'+block.cliente[8]+' '+block.cliente[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.contrato[3]+'</td><td>'+block.contrato[7]+'%</td><td>'+block.contrato[8]+'</td><td>'+block.fechaCulminacion+'</td><td><button class="btn btn-primary" ">Ver Contrato</button></td></tr>'; 
+                    
+                    // Agrega la fila a la tabla
+                    table.row.add([
+                        block.fechaRegistro,
+                        block.sumas,
+                        block.cliente[23],
+                        block.cliente[7],
+                        block.cliente[8] + ' ' + block.cliente[10],
+                        block.tesq[0],
+                        block.contrato[3],
+                        block.contrato[7],
+                        block.contrato[8],
+                        block.fechaCulminacion,
+                        block.contratoInfo
+                    ]);
                 }
+
+                table.draw();
                 
                 $("#lista_enorme").append(block.oso);
                 $('#datatableContratos').DataTable({ 
-                    destroy: true,                                      
+                    destroy: true,
                     language: {
                         processing:     "Procesando...",
                         search:         "Buscar:",
@@ -5564,8 +5707,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [ block.tokens[1], block.tokens[4], block.unico, $("#lista_asesores_general3").val() ];
         block.obj = { "r": "contratos_lista_all", "d": block.arrays }; 
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            console.log(valor);
+            var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.oso="";
                 block.dat0s =valor.d[1][0];
@@ -5676,11 +5818,65 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 	}
 
     $("#lista_asesores_general3").change(function(){        
-        if($("#lista_asesores_general3").val()!==""){
-            block.ase = $("#lista_asesores_general3").val();
-            $("#lista_enorme").html("");            
-            listado_contrato_datable();
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
+
+        block.arrays = [ block.tokens[ 1 ],block.tokens[ 4 ],$("#lista_asesores_general3").val() ];         
+        block.obj = { "r": "down_geo", "d": block.arrays };        
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                window.localStorage.setItem("Money-vars-tarjetas_old",JSON.stringify(valor.d[1]));
+                $("#cobrar_couta").css("display","none");
+                if($("#lista_asesores_general3").val()!==""){
+                    block.ase = $("#lista_asesores_general3").val();
+                    $("#lista_enorme").html("");            
+                    listado_contrato_datable();
+                }
+            } else {
+                $("#cobrar_couta").css("display","none");
+                toastr.warning('No hay contratos vigentes a este asesor', 'Atención!');
+                // Antes de agregar nuevas filas, limpia la tabla
+                $("#lista_enorme").empty();
+                block.oso = "";
+                
+                // Limpia la tabla
+                table.clear(); 
+                
+                $("#lista_enorme").append(block.oso);
+                $('#datatableContratos').DataTable({ 
+                    destroy: true,
+                    language: {
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:    "Mostrar _MENU_ elementos",
+                        info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando registros...",
+                        zeroRecords:    "No se encontraron registros",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                            sortDescending: ": activar para ordenar la columna de manera descendente"
+                        }
+                    }
+                });
+            }
+        });
+
     });
 
     $("#buscar_contra").keypress(function (e) {
@@ -5722,6 +5918,169 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             if (!valor.e) {
             }
         });
+
+    }
+
+    function fijar_monto(cedula, nombre, fecha, prestado){            
+        $("#cobrar_couta").css("display","block");
+		$("#cedula_elecion").css("display","none");
+		$("#status_prestamo").prop("disabled",false);
+		
+		if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+		} else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+		}
+        
+        var frutos = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
+        block.idContrato = '';
+        if(frutos !== null){
+            for(var k = 0; k < frutos.length; k++){
+                if( frutos[k].c == cedula && frutos[k].f == fecha && frutos[k].m == prestado ){
+                    block.idContrato = frutos[k].id;
+                    break;
+                }
+            }
+        }
+        if( block.idContrato !== ""){
+            window.localStorage.setItem("Money-vars-pagar",JSON.stringify([block.idContrato,cedula]));
+            block.arrays = [ block.tokens[1], block.tokens[5], "", block.idContrato, cedula ];
+            block.obj = { "r": "buscar_cliente2", "d": block.arrays };        
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida); 
+                if (!valor.e) {
+                    block.cuotas = valor.d[1];
+                    block.cliente = valor.d[2];
+                    block.limpo = block.cuotas[3].replace(".","");
+                    block.limpo2 = block.limpo.replace(".","");				
+                    block.valoes = 0;
+                    block.contador_cuotas = 0;
+                    block.extraer = JSON.parse(block.cliente);
+                    block.acumo = 0;
+                    block.todosCal = [];
+                    block.obtenerUltimaCuota = false;
+                    block.pagosRealizados = 0;
+
+                    for(var x = 0; x < block.cuotas[13].length; x++){
+                        try {                        
+                            block.valoes += parseInt(block.cuotas[13][x].cp.replace(/\./g, ''));
+                        } catch (error) {
+                            block.valoes += parseInt(block.cuotas[17][x].cp.replace(/\./g, ''));                        
+                        }
+
+                        if(block.cuotas[13][x].ct == true || block.cuotas[13][x].pe!==0) block.contador_cuotas++;
+
+                        if( block.cuotas[13][x].ct === true || block.cuotas[13][x].pe !== 0 ) block.pagosRealizados += 1; //Tomamos en cuenta los pagos realizados
+
+                        if( ( block.pagosRealizados === (block.cuotas[13].length) - 1 ) ) block.obtenerUltimaCuota = true;
+                        
+                        if(block.cuotas[13][x].pe!==0) {                        
+                            block.acumo = block.acumo + parseInt(block.cuotas[13][x].pe);
+                            //abono
+                            block.abono = block.cuotas[13][x].pe.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                            block.abono = block.abono.split('').reverse().join('').replace(/^[\.]/,'');
+                            block.compl = "Abono \n Q"+block.abono;
+                            block.coloe = "#343a40";
+                        } else if(block.cuotas[13][x].ct == true) {
+                            block.acumo = block.acumo + parseInt(block.cuotas[13][x].cp);                        
+                            //completa
+                            block.completo = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                        
+                            block.completo = block.completo.split('').reverse().join('').replace(/^[\.]/,'');
+                            block.compl = "Pago cuota \n Q"+block.completo;
+                            block.coloe = "#28a745";
+                        } else {
+                            //falta                        
+                            block.espera = block.cuotas[13][x].cp.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                        
+                            block.espera = block.espera.split('').reverse().join('').replace(/^[\.]/,'');                        
+                            block.compl = "Espera por pago \n Q"+block.espera;
+                            block.coloe = "#ffc107";
+                        }                    
+                        block.fes = block.cuotas[13][x].fe.split("-");
+                        block.conve = parseFloat(block.fes[1]) - 1;
+                        block.yeart = block.fes[0];
+                        block.moute= block.conve;
+                        block.daysw = block.fes[2];
+
+                        block.todosCal.push({
+                            title: block.compl,
+                            start: new Date(block.yeart, block.moute, block.daysw),
+                            allDay: true,
+                            backgroundColor:block.coloe
+                        });
+                    }
+
+                    if(block.valoes-block.acumo == 0){
+                        myMap();
+                        $("#queda_debiendo").text("0");
+                        $("#pago_prestame").text("0");
+                        $("#deuda_prestame").text("0");
+                        $("#valor_prestame").text("0");
+                        $("#descuento_prestame").text("0");
+                        $("#cuento_prestame").text("0");
+                        $("#entregado_prestame").text("0");
+                        $("#dias_prestame").text("0");
+                    }
+
+                    // ticketClienteImpresion = block;
+                    $("#cuento_prestame").text(block.cuotas[3]);   //Creditos aprobados
+                    $("#dias_prestame").text(block.contador_cuotas); //num_cuotas
+                    if(block.obtenerUltimaCuota){ // cuota a pagar 
+                        $("#valor_prestame").text(Math.ceil(valoes-block.acumo));
+                    } else {
+                        $("#valor_prestame").text(block.cuotas[8]);
+                    }  
+                    $("#pago_prestame").text(Math.ceil(valoes-block.acumo)); // saldo pendiente
+                    $("#entregado_prestame").text(block.cuotas[3]); //Saldo entregado
+                    $("#descuento_prestame").text("0"); 
+                    $("#text_nombre_cliente2").val(block.extraer[8]+" "+block.extraer[9]+" "+block.extraer[10]+" "+block.extraer[11]); //Nombre1, Nombre2, Apellido1, Apellido2
+                    
+                    recargarCalendar(block.todosCal);
+                    
+                } else {
+                    toastr.warning('No exite cuotas con este usuario', 'Atención!');
+                    $("#queda_debiendo").text("0");
+                    $("#pago_prestame").text("0");
+                    $("#deuda_prestame").text("0");
+                    $("#valor_prestame").text("0");
+                    $("#descuento_prestame").text("0");
+                    $("#cuento_prestame").text("0");
+                    $("#entregado_prestame").text("0");
+                    $("#dias_prestame").text("0");
+                    $("#refinanciar_div").css("display","none");
+                    $('#calendar').fullCalendar("destroy");
+                }
+            });
+        } else {
+            toastr.warning('No exite cuotas con este usuario', 'Atención!');
+            $("#queda_debiendo").text("0");
+            $("#pago_prestame").text("0");
+            $("#deuda_prestame").text("0");
+            $("#valor_prestame").text("0");
+            $("#descuento_prestame").text("0");
+            $("#cuento_prestame").text("0");
+            $("#entregado_prestame").text("0");
+            $("#dias_prestame").text("0");
+            $("#refinanciar_div").css("display","none");
+            $('#calendar').fullCalendar("destroy");
+        }									
+	}
+
+    function recargarCalendar(datosa){
+        debugger;
+        $('#calendar').fullCalendar("destroy");
+
+        setTimeout(function () {
+
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next,today',
+                    center: 'title',
+                    right: 'month'
+                },
+                events: datosa
+            });
+
+        },1000);
 
     }
 
@@ -7845,6 +8204,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_sup").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#asig_supervidor").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
         $("#lista_asi_sup").css("display", "none");
         $("#configuracion_general").css("display", "none");
@@ -7983,6 +8343,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#crear_contrato_form_dos").css("display", "none");
         $("#crear").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#lista_sup").css("display", "initial");
         $("#lista_ayu").css("display", "none");
         $("#asig_supervidor").css("display", "none");
@@ -8105,6 +8466,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "initial");
         $("#crear").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
         $("#lista_asi_sup").css("display", "none");
@@ -8605,6 +8967,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#asig_supervidor").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#busqueda_asignaciones").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#crear").css("display", "none");
@@ -8944,6 +9307,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
@@ -9100,6 +9464,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
@@ -9134,6 +9499,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
@@ -9174,6 +9540,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
@@ -9209,6 +9576,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
@@ -9255,6 +9623,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
@@ -9292,6 +9661,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#crear").css("display", "none");
@@ -9325,6 +9695,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#crear").css("display", "none");
@@ -9362,6 +9733,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
@@ -9399,6 +9771,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
@@ -9435,7 +9808,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [block.tokens[1], block.tokens[4], block.tokens[5]];
         block.obj = {"r": "down_geo_admin", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
+            var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.listao=valor.d[1];
                 var bounds = new google.maps.LatLngBounds();

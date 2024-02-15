@@ -2100,7 +2100,10 @@
 				if (!valor.e) {
 					$("#base_monto").val("");
 					$("#modal_base").modal("hide");
-					toastr.success('Actualizado con exito', 'Atención!');
+					toastr.success('Se ha insertado la base al asesor, por favor espere a que se recargue el sistema.', 'Atención!');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1500);
 				}
 			});
 
@@ -3065,7 +3068,16 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida); 
             console.log(valor.d);
-            if (!valor.e) {                                                  
+            if (!valor.e) { 
+
+                $("#lista_enorme").empty();
+                block.oso = "";
+                
+                // Obtén la referencia a la tabla
+                let table = $('#datatableContratos').DataTable();
+
+                // Limpia la tabla
+                table.clear();
                 
                 for(let index = 0; index < valor.d[1].length; index++){
                     block.datos = valor.d[1][index];
@@ -3098,8 +3110,24 @@
                     block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                     block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
     
-                    block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cliente[23]+'</td><td>'+block.cliente[7]+'</td> <td>'+block.cliente[8]+' '+block.cliente[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.contrato[3]+'</td><td>'+block.contrato[7]+'%</td><td>'+block.contrato[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';                        
+                    block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cliente[23]+'</td><td>'+block.cliente[7]+'</td> <td>'+block.cliente[8]+' '+block.cliente[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.contrato[3]+'</td><td>'+block.contrato[7]+'%</td><td>'+block.contrato[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>'; 
+                    
+                    // Agrega una fila a la tabla
+                    table.row.add([
+                        block.fechaRegistro,
+                        block.sumas,
+                        block.cliente[23],
+                        block.cliente[7],
+                        block.cliente[8] + ' ' + block.cliente[10],
+                        block.tesq[0],
+                        block.contrato[3],
+                        block.contrato[7] + '%',
+                        block.contrato[8],
+                        block.fechaCulminacion
+                    ]);
                 }
+                //Dibuja la tabla
+                table.draw();
                 
                 $("#lista_enorme").append(block.oso);
                 $('#datatableContratos').DataTable({ 
@@ -4976,12 +5004,27 @@
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 block.inefd = '';
+
+                $("#lista_gastos_exe").empty();
+                // Obtén la referencia a la tabla
+                let table = $('#datatableGastos').DataTable();
+
+                // Limpia la tabla
+                table.clear();
+
                 for (var wq = 0; wq < block.pasero.length; wq++) {
                     block.iteds = block.pasero[wq];
                     block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td> <td><a href="javascript:eliminar_gasto_ya(\''+block.iteds[1]+'\');">Eliminar</a></td></tr>';
+
+                    // Agrega una fila a la tabla
+                    table.row.add([block.iteds[1], block.iteds[2], '<a href="javascript:eliminar_gasto_ya(\''+block.iteds[1]+'\');">Eliminar</a>']);
                 }
+
+                // Dibuja la tabla
+                table.draw();
+
                 $("#lista_gastos_exe").html(block.inefd);
                 $('#datatableGastos').DataTable({
                         destroy: true,
@@ -5054,11 +5097,26 @@
             var valor = JSON.parse(salida);
             var cobro;
             block.inefd='';
+            $(id_tabla).empty();
+
+            // Obtén la referencia a la tabla
+            let table = $('#datatableCobros').DataTable();
+
+            // Limpia la tabla
+            table.clear();
+
             if(valor.d[1].length>0){
                 for(var j=0; j<valor.d[1].length;j++){
                     cobro = valor.d[1][j];
                     block.inefd +='<tr><td>' + cobro.dpi + '</td><td>' + cobro.nombre + '</td><td>'+ cobro.direccion+ '</td><td>' + cobro.monto+ '</td><td>' + cobro.hora+'</td></tr>';
+
+                    // Agrega una fila a la tabla
+                    table.row.add([cobro.dpi, cobro.nombre, cobro.direccion, cobro.monto, cobro.hora]);
                 }
+                
+                // Dibuja la tabla
+                table.draw();
+
                 $(id_tabla).html(block.inefd);
                 $('#datatableCobros').DataTable({
                         destroy: true,
@@ -5084,7 +5142,7 @@
                                 sortDescending: ": activar para ordenar la columna de manera descendente"
                             }
                         }
-                    });
+                });
             }
         });
     }
@@ -5111,12 +5169,25 @@
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
                 block.inefd = '';
+                // Obtén la referencia a la tabla
+                let table = $('#datatableRenovaciones').DataTable();
+                $("#listado_renovaciones_por_fechas").empty();
+
+                // Limpia la tabla
+                table.clear();
+
                 for (var wq = 0; wq < block.pasero.length; wq++) {
                     block.iteds = block.pasero[wq];
                     block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
+
+                    // Agrega una fila a la tabla
+                    table.row.add([block.iteds[1], block.iteds[2]]);
                 }
+                //Dibujar la tabla
+                table.draw();
+                
                 $("#listado_renovaciones_por_fechas").html(block.inefd);
                 $('#datatableRenovaciones').DataTable({
                         destroy: true,

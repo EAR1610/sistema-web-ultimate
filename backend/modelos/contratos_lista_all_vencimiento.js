@@ -22,7 +22,7 @@ eje = function(arrays,origen,redisClient) {
 						organizo los contratos 
 					*/
 					redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
-						if( redpsly!==null && redpsly !== undefined ) {
+						if( redpsly !== null && redpsly !== undefined ) {
 							var infex = JSON.parse(redpsly);							
 							if(infex[arrays[2]] !== null && infex[arrays[2]] !== undefined){
 								var ogens = infex[arrays[2]].split("_");
@@ -35,58 +35,71 @@ eje = function(arrays,origen,redisClient) {
 											ruta = infe[2],
 											vesd = fecha.split("-"),
 											fech2 = vesd[2] + "_" + vesd[1] + "_" + vesd[0];
-										
-										/*
-											extraigo clientes
-										*/
-										
-										redisClient.get("cliente_"+cedula, function (serr, srepsy) {
-											if( srepsy !== null && srepsy !== undefined ){
-												redisClient.keys("asig_supervisor_*"+fech2+"_"+ruta, function (sesrr, srepslsy) {
-													if (srepslsy.length > 0) {
-														/*
-															verifico que tengan supervidor o ayudante
-														*/														
-														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
-															if (srepslsyx.length > 0) {																															
-																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {																	
-																	redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {																		
-																		litado.push([repdly3, srepslsy2xq, srepslsy2x,srepsy,esde]);
+																				
+										var moment = require("moment-timezone");
+										var hoy = moment().tz("America/Guatemala").format('YYYY-MM-DD');
+										var cuotas = infe[13];										
+										var fechaVencimiento = cuotas[cuotas.length-1].fe;
+
+										console.log("hoy: "+hoy);
+										console.log("fechaVencimiento: "+fechaVencimiento);
+										if( hoy >= fechaVencimiento ){
+
+											/*
+												extraigo clientes
+											*/
+											
+											redisClient.get("cliente_"+cedula, function (serr, srepsy) {
+												if( srepsy !== null && srepsy !== undefined ){
+													redisClient.keys("asig_supervisor_*"+fech2+"_"+ruta, function (sesrr, srepslsy) {
+														if (srepslsy.length > 0) {
+															/*
+																verifico que tengan supervidor o ayudante
+															*/														
+															redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
+																if (srepslsyx.length > 0) {																															
+																	redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) {																	
+																		redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {																		
+																			litado.push([repdly3, srepslsy2xq, srepslsy2x,srepsy,esde]);
+																			resolve([true, litado]);
+																		});
+																	});
+																	
+																}else{																
+																	redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) { //JEFE TERMINAN ACA																	
+																		litado.push([repdly3, srepslsy2xq, [],srepsy,esde]);
 																		resolve([true, litado]);
 																	});
-																});
+																	
+																}
+															});
+														}else{
+															redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
 																
-															}else{																
-																redisClient.get(srepslsy[0], function (ses2rr, srepslsy2xq) { //JEFE TERMINAN ACA																	
-																	litado.push([repdly3, srepslsy2xq, [],srepsy,esde]);
+																if (srepslsyx.length > 0) {
+																	redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {
+																		litado.push([repdly3, [], srepslsy2x,srepsy,esde]);
+																		resolve([true, litado]);
+																	});
+																}else{
+																	
+																	litado.push([repdly3, [], [],srepsy,esde]);
 																	resolve([true, litado]);
-																});
-																
-															}
-														});
-													}else{
-														redisClient.keys("asig_ayudante_*"+fech2+"_"+ruta, function (sesr, srepslsyx) {
-															
-															if (srepslsyx.length > 0) {
-																redisClient.get(srepslsyx[0], function (ses2rr, srepslsy2x) {
-																	litado.push([repdly3, [], srepslsy2x,srepsy,esde]);
-																	resolve([true, litado]);
-																});
-															}else{
-																
-																litado.push([repdly3, [], [],srepsy,esde]);
-																resolve([true, litado]);
-															}
-														});
-													}
-												});
-											} else {
-												redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
-													var redpslys = JSON.parse(redpsly);
-													reject([false,"4",redpslys.length]);
-												});
-											}
-										});
+																}
+															});
+														}
+													});
+												} else {
+													redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
+														var redpslys = JSON.parse(redpsly);
+														reject([false,"4",redpslys.length]);
+													});
+												}
+											});
+										} else {
+											reject([false,"4","0"]);
+										}
+										
 									} else {
 										redisClient.get("registro_contrato_"+arrays[3],function(edrr,redpsly) {
 											var redpslys = JSON.parse(redpsly);
