@@ -690,8 +690,7 @@
                                         <!-- Don Axel -->
                                         <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
                                         <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
-                                        <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option>
-                                        <option value='4'>PLAN 4 SEMANAS 10% EN 4 PAGOS</option>
+                                        <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option>                                        
                                         <option value='8'>PLAN 8 SEMANAS 20% EN 8 PAGOS</option>
                                         <option value='8'>PLAN 8 DIAS 20% EN 8 PAGOS</option>                                         -->
                                     </select>
@@ -1932,7 +1931,7 @@
         }
     });
 
-    $("#ampliar_contrato").click(function () {
+    $("#ampliar_contrato").click(function () {        
         if( $("#monto_prestar_ya_admin_ampliacion").val() !== "" || $("#selector_cuotas_selec_ampliacion").val() !== "" || $("#selector_frecuencia_ampliacion").val() !== "" ){
             if( $("#valor_restante_anterior").text() !== "" && $("#valor_restante_anterior").text() !== "0" ) {
                             
@@ -1942,7 +1941,8 @@
                     block.montoCuota = $("#valor_restante_anterior").text();
                     block.montoCuota = block.montoCuota.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.montoCuota = block.montoCuota.split('').reverse().join('').replace(/^[\.]/, '');
-                    block.menj = "Esta seguro que recibe un monto de  Q" + montoCuota + "? ";
+                    block.montoDar = parseInt( $("#monto_prestar_ya_admin_ampliacion").val().replace(/\./g,'') ) - parseInt( $("#valor_restante_anterior").text().replace(/\./g,'') )
+                    block.menj = "Esta seguro que recibe un monto de  Q" + montoCuota + "? Si es así, deberá de darle Q" + block.montoDar + " al cliente";                    
                     swal({
                         title: "Cancelacion de contrato?",
                         text: block.menj,
@@ -3046,7 +3046,7 @@
 				recargarCalendar(block.todosCal);
 				down_configuracion();
 				
-			}else{
+			} else{
 				toastr.warning('No exite cuotas con este usuario', '¡Atención!');
 				$("#queda_debiendo").text("0");
 				$("#pago_prestame").text("0");
@@ -3070,8 +3070,9 @@
         }
 		
 		block.tempFecha = window.sessionStorage.getItem("Money-vars-fecha");
+        block.frecuencia = $("#selector_frecuencia_ampliacion").val();
 
-        if( $("#monto_prestar_ya_admin_ampliacion").val() == "" && $("#selector_cuotas_selec_ampliacion").val() == ""  && $("#selector_frecuencia_ampliacion").val() == "" ) {
+        if( $("#monto_prestar_ya_admin_ampliacion").val() == "" || $("#selector_cuotas_selec_ampliacion").val() == ""  || $("#selector_frecuencia_ampliacion").val() == "" ) {
             toastr.warning('Debe de especificar, los valores del contrato', 'Atención');
             return;
         }
@@ -3097,17 +3098,6 @@
                         block.asesor = $("#selector_asesores_lista").val();
                         block.monto_prestar = $("#monto_prestar_ya_admin_ampliacion").val();
                         block.frecuencia = $("#selector_frecuencia_ampliacion").val();
-                        // if (block.frecuencia == "5" || block.frecuencia == 5){ //Pago personalizado (25 días en 4 pagos)                    
-                        //     block.fechasCorrectas = validarRangoFechas( $("#PrimeraCuotaAmpliacion").val(), $("#SegundaCuotaAmpliacion").val(), $("#TerceraCuotaAmpliacion").val(), $("#CuartaCuotaAmpliacion").val() );
-
-                        //     if( !block.fechasCorrectas ) {
-                        //         toastr.warning("Las fechas de las cuotas no tienen un orden lógico", "Atención");
-                        //         return;
-                        //     }
-                            
-                        // } else {
-                        //     block.dias = $("#selector_cuotas_selec_ampliacion").val();
-                        // }
                         
                         block.fecha_prestamo = $("#fechaActual").val();
                         block.descontar = parseInt($("#cuota_descontar_sistema").val());
@@ -3136,30 +3126,62 @@
                                     } else {
                                         toastr.success('Creado con éxito el contrato', 'Atención!');
                                     }
-                                    if( parseInt( block.descontar ) > 0 ){
-                                        window.sessionStorage.setItem("Money-vars-descontar-cuota",block.quedo_cuota);
-                                        block.teaa = window.sessionStorage.getItem("Money-vars-registrado");
-                                        $("#text_cedula_cliente2").val(block.teaa);
-            
-                                        setTimeout(function(){
-                                            block.numes = $("#cuota_descontar_sistema").val();
-                                            block.ress = block.quedo_cuota.replace(".","");
-                                            block.rewss = parseInt(block.ress.replace(".",""));
-                                            block.toes = block.numes * block.rewss;
-                                            $("#buscar_cedula_cliente2").click();
-                                            $("#cuotas_coun").val( block.toes);
-                                            $("#status_prestamo").click();
-                                            $("#limpiar_contrato").click();
-                                            descontar_cuotax();
-                                        },1000);
-            
-                                    }else{
-                                        $("#limpiar_contrato").click();
+                                    block.infoCliente = $("#text_nombre_cliente_ampliacion").val().split(" ");
+                                    
+                                    block.motivo = `Renovación de contrato de ${infoCliente[1]} ${infoCliente[2]} ${infoCliente[3]}`;
+                                    block.renovacion = $("#valor_restante_anterior").text();
+
+                                    if(block.motivo == '' || block.renovacion == ''){
+                                        toastr.warning('Hay campos vacíos', 'Atención!');
+                                        return;
                                     }
-            
-                                    setTimeout(function(){
-                                        location.reload();
-                                    }, 1500);
+
+                                    if(block.renovacion <= 0) {
+                                        toastr.warning('La renovación no debe ser negativo', 'Atención!');
+                                        return;
+                                    }
+                                    
+                                    if (window.localStorage.getItem("Money-vars-token") !== null) {
+                                        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+                                    } else {
+                                        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+                                    }
+
+                                    block.arrays = [ block.tokens[1], block.motivo, block.renovacion, block.tokens[5] ];
+                                    block.obj = {"r": "crear_renovacion", "d": block.arrays};
+                                    
+                                    backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                                        var valor = JSON.parse(salida);
+                                        if (!valor.e) {                                                                                       
+                                            
+                                            toastr.success('Renovación registrada correctamente', 'Atención!');
+                                            
+                                            if( parseInt( block.descontar ) > 0 ){
+                                                window.sessionStorage.setItem("Money-vars-descontar-cuota",block.quedo_cuota);
+                                                block.teaa = window.sessionStorage.getItem("Money-vars-registrado");
+                                                $("#text_cedula_cliente2").val(block.teaa);
+                    
+                                                setTimeout(function(){
+                                                    block.numes = $("#cuota_descontar_sistema").val();
+                                                    block.ress = block.quedo_cuota.replace(".","");
+                                                    block.rewss = parseInt(block.ress.replace(".",""));
+                                                    block.toes = block.numes * block.rewss;
+                                                    $("#buscar_cedula_cliente2").click();
+                                                    $("#cuotas_coun").val( block.toes);
+                                                    $("#status_prestamo").click();
+                                                    $("#limpiar_contrato").click();
+                                                    descontar_cuotax();
+                                                },1000);
+                    
+                                            }else{
+                                                $("#limpiar_contrato").click();
+                                            }
+                    
+                                            setTimeout(function(){
+                                                location.reload();
+                                            }, 1500);
+                                        }
+                                    });
                                 } else {
                                     if(valor.d[1]=="4"){
                                         toastr.warning('El cliente tiene '+valor.d[2]+' prestamos con mi empresa y no cumple con las condiciones del jefe', 'Atencion!');
@@ -3226,8 +3248,7 @@
         }
     });
 
-    function validarRangoFechas(fecha1, fecha2, fecha3, fecha4) {
-
+    function validarRangoFechas(fecha1, fecha2, fecha3, fecha4) {        
         // Validamos que las fechas sean válidas
         if (!validarFecha(fecha1)) {
             return false;
@@ -4071,7 +4092,7 @@
     window.sessionStorage.setItem("Money-vars-tipo", "1");
     //QUITAR ESTOOOOO    
     //DON AXEL
-    //  block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"], [7725991, "PLAN 4 SEMANAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 8 SEMANAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 8 DIAS 20% EN 8 PAGOS", "8", "20"] ];
+    //  block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"], [7725991, "PLAN 8 SEMANAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 8 DIAS 20% EN 8 PAGOS", "8", "20"] ];
 
     // window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
 
