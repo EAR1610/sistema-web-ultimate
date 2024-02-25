@@ -1776,14 +1776,14 @@
 
 <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
-        authDomain: "axelssmoney.firebaseapp.com",
-        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
-        projectId: "axelssmoney",
-        storageBucket: "axelssmoney.appspot.com",
-        messagingSenderId: "915189749485",
-        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
-        measurementId: "G-N2Z1GX04BF"
+        apiKey: "AIzaSyDAOA9dH2MeN8xy6WqZpNzNuoJkjKYMvfQ",
+        authDomain: "axelssmoney-20658.firebaseapp.com",
+        databaseURL: "https://axelssmoney-20658-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney-20658",
+        storageBucket: "axelssmoney-20658.appspot.com",
+        messagingSenderId: "841250069817",
+        appId: "1:841250069817:web:76b46aa832b8bdfb0c5ce8",
+        measurementId: "G-X7JXRYZENR"
     };
     firebase.initializeApp(firebaseConfig);	
 </script>
@@ -5179,7 +5179,7 @@
                 for (var wq = 0; wq < block.pasero.length; wq++) {
                     block.iteds = block.pasero[wq];
                     block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/\./g, "");
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
 
                     // Agrega una fila a la tabla
@@ -5360,9 +5360,10 @@
             var valor = JSON.parse(salida);            
             if (!valor.e) {
                 block.pasero = JSON.parse(valor.d[1]);
+                console.log(block.pasero)
                 
                 for(var i= 0; i< block.pasero.length; i++){
-                    renovaciones += parseFloat(block.pasero[i][2]);
+                    renovaciones += parseFloat(block.pasero[i][2].replace(/\./g, ""));
                 }                
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
@@ -5527,7 +5528,7 @@
                 for (var wq = 0; wq < block.pasero.length; wq++) {
                     block.iteds = block.pasero[wq];
                     block.iteds[2] = block.iteds[2].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/^[\.]/, '');
+                    block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/\./g, "");
                     block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
                 }
                 $("#lista_renovaciones_exeAsesor").html(block.inefd);

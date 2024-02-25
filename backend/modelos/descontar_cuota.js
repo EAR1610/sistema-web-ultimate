@@ -24,7 +24,7 @@ eje = function(arrays,origen,redisClient) {
 						/*
 							Busco contrato y traigo la informacion
 						*/						
-						redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {
+						redisClient.keys("registry_"+arrays[4]+"_contrato_*_*_"+arrays[3],function(err,reply) {							
 							if(reply != null && reply != undefined){
 								if(reply.length>0){
 									var origena = reply[0],cedulax = origena.split("_") ;
