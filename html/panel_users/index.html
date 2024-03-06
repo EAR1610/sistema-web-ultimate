@@ -688,12 +688,12 @@
                                     <select class="form-control m-b" id="selector_cuotas_selec">
                                         <option value=''>Seleccione</option>
                                         <!-- Don Axel -->
-                                        <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
+                                        <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
                                         <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
                                         <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option>                                        
                                         <option value='8'>PLAN 8 SEMANAS 20% EN 8 PAGOS</option>                                                                         
                                         <option value='8'>PLAN 8 DIAS 20% EN 8 PAGOS</option>                                                                         
-                                        <option value='50'>PLAN 50 DIAS 20% EN 50 PAGOS</option>                                        
+                                        <option value='50'>PLAN 50 DIAS 20% EN 50 PAGOS</option>                                         -->
                                     </select>
                                     
                                 </form>
@@ -889,12 +889,12 @@
                                     <select class="form-control m-b" id="selector_cuotas_selec_ampliacion">
                                         <option value=''>Seleccione</option>
                                         <!-- DOn Axel -->                                        
-                                        <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
+                                        <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
                                         <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
                                         <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option>                                        
                                         <option value='8'>PLAN 8 SEMANAS 20% EN 8 PAGOS</option>
                                         <option value='8'>PLAN 8 DIAS 20% EN 8 PAGOS</option>
-                                        <option value='50'>PLAN 50 DIAS 20% EN 50 PAGOS</option>                                      
+                                        <option value='50'>PLAN 50 DIAS 20% EN 50 PAGOS</option>                                       -->
                                     </select>
                                 </form>
                             </div>
@@ -1515,14 +1515,13 @@
 <script>
 
     var firebaseConfig = {        
-        apiKey: "AIzaSyDAOA9dH2MeN8xy6WqZpNzNuoJkjKYMvfQ",
-        authDomain: "axelssmoney-20658.firebaseapp.com",
-        databaseURL: "https://axelssmoney-20658-default-rtdb.firebaseio.com",
-        projectId: "axelssmoney-20658",
-        storageBucket: "axelssmoney-20658.appspot.com",
-        messagingSenderId: "841250069817",
-        appId: "1:841250069817:web:76b46aa832b8bdfb0c5ce8",
-        measurementId: "G-X7JXRYZENR"
+        apiKey: "AIzaSyB1dNfVJ_5ufd8NRFb2PeDIHoMAaSU7YC8",
+        authDomain: "prestamosya-82590.firebaseapp.com",
+        projectId: "prestamosya-82590",
+        storageBucket: "prestamosya-82590.appspot.com",
+        messagingSenderId: "965009677329",
+        appId: "1:965009677329:web:711797fb92cf4feca665b0",
+        measurementId: "G-04E7JNDVWW"
 	};
 	
     firebase.initializeApp(firebaseConfig);	
@@ -1557,7 +1556,8 @@
         $("#cuotas_coun").focus();
         listado_contratos("0");
     }
-    function renovar_contrato( cedula, id ){        
+    function renovar_contrato( cedula, id ){     
+        window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));   
         ampliar_contrato_link( cedula, id );
     }
 
@@ -1955,7 +1955,7 @@
                         closeOnConfirm: true
                     }, function () {
                         block.montoPagado = $("#valor_restante_anterior").text();
-                        window.sessionStorage.setItem("monto-pagado", parseInt(block.montoPagado));
+                        window.sessionStorage.setItem("monto-pagado", parseInt(block.montoPagado));                        
                         procesarDescuentoAmpliacion( $("#valor_restante_anterior").text(), JSON.parse( window.localStorage.getItem("Money-vars-pagar") ) );
                     });				
                 } else {
@@ -3804,6 +3804,7 @@
                 }
                 window.sessionStorage.setItem("Lista_cuota",JSON.stringify(block.lisat));
                 $("#selector_cuotas_selec").html(block.nuevo2);
+                $("#selector_cuotas_selec_ampliacion").html(block.nuevo2);
                 $("#listado_cuotas_lis").html(block.nuevo);
             }
         });
@@ -4097,9 +4098,9 @@
     window.sessionStorage.setItem("Money-vars-tipo", "1");
     //QUITAR ESTOOOOO    
     //DON AXEL
-     block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"], [7725991, "PLAN 8 SEMANAS 20% EN 8 PAGOS", "8", "20"],[7725991, "PLAN 8 DIAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 50 DIAS 20% EN 50 PAGOS", "50", "20"] ];
+    //  block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"], [7725991, "PLAN 8 SEMANAS 20% EN 8 PAGOS", "8", "20"],[7725991, "PLAN 8 DIAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 50 DIAS 20% EN 50 PAGOS", "50", "20"] ];
 
-    window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
+    // window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
 
 
     $("#tipo_cargo").change(function () {
