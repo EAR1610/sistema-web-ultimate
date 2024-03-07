@@ -1514,15 +1514,16 @@
 
 <script>
 
-    var firebaseConfig = {        
-        apiKey: "AIzaSyB1dNfVJ_5ufd8NRFb2PeDIHoMAaSU7YC8",
-        authDomain: "prestamosya-82590.firebaseapp.com",
-        projectId: "prestamosya-82590",
-        storageBucket: "prestamosya-82590.appspot.com",
-        messagingSenderId: "965009677329",
-        appId: "1:965009677329:web:711797fb92cf4feca665b0",
-        measurementId: "G-04E7JNDVWW"
-	};
+    const firebaseConfig = {
+    apiKey: "AIzaSyB1dNfVJ_5ufd8NRFb2PeDIHoMAaSU7YC8",
+    authDomain: "prestamosya-82590.firebaseapp.com",
+    databaseURL: "https://prestamosya-82590-default-rtdb.firebaseio.com",
+    projectId: "prestamosya-82590",
+    storageBucket: "prestamosya-82590.appspot.com",
+    messagingSenderId: "965009677329",
+    appId: "1:965009677329:web:711797fb92cf4feca665b0",
+    measurementId: "G-04E7JNDVWW"
+    };
 	
     firebase.initializeApp(firebaseConfig);	
 </script>
@@ -4098,9 +4099,9 @@
     window.sessionStorage.setItem("Money-vars-tipo", "1");
     //QUITAR ESTOOOOO    
     //DON AXEL
-    //  block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"], [7725991, "PLAN 8 SEMANAS 20% EN 8 PAGOS", "8", "20"],[7725991, "PLAN 8 DIAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 50 DIAS 20% EN 50 PAGOS", "50", "20"] ];
+    block.CuotasTotales = [ [9999855, "PLAN DIARIO, 10% EN 20 PAGOS", "20", "10"], [9999855, "PLAN SEMANAL, 15% EN 4 PAGOS", "4", "15"] ];
 
-    // window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
+    window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
 
 
     $("#tipo_cargo").change(function () {

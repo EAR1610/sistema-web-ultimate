@@ -16,17 +16,18 @@ eje = function(arrays,origen,redisClient) {
 				verifica si exite
 				*/				
 				redisClient.keys('usuario_'+arrays[0]+"_*",function(er2,repl2){
-
+					console.log("usuario_"+arrays[0]+"_*")
 					if(repl2 === undefined) return;
 					
 					if(repl2.length !== 0 ){
 						redisClient.get(repl2[0],function(ser2,repls2){
 							var info = JSON.parse(repls2);
+							console.log(info);
 							if(info[3]==true){
 								if(info[1]==arrays[1]){									
 									/*verifica si es la clave y crea token util para el backend */
 									redisClient.keys('configuracion_*', function(errEmpresa, datosEmpresa){
-
+										console.log(datosEmpresa);
 										if( datosEmpresa !== null && datosEmpresa.length > 0 ){
 											redisClient.get(datosEmpresa[0], function(errorConfiguracion, configuracion){
 												let configuracionEmpresa = JSON.parse(configuracion);												
@@ -50,6 +51,7 @@ eje = function(arrays,origen,redisClient) {
 											})
 										} else {
 											var jwt = require('jsonwebtoken'),token = jwt.sign({"i":arrays[0],"d":info[5],"t":info[4],"n":info[6]},'clWve-G*-9)1',{ expiresIn: 60 * 60 * 12 });
+											console.log(jwt)
 											resolve([true,token,arrays[0],info[4],info[5],info[6],""]);
 										}
 									})								

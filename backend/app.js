@@ -44,8 +44,8 @@ redisClient.on('error',function() {
 /*
 	Siempre asiganre la clave de acceso del root
 */
-var arrays = [ "admin@prestamosya","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
-redisClient.set("usuario_admin@prestamosya_1000000",JSON.stringify(arrays),function(err2,reply2){
+var arrays = [ "admin@prestamosya.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
+redisClient.set("usuario_admin@prestamosya.com_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });
 
@@ -60,7 +60,7 @@ var server = http.createServer(function(request, response) {
 /*
 	Conexion escucho ws en el puerto 3230
 */
-server.listen(3230, function() {
+server.listen(3300, function() {
 	console.log("Online:active:3230");
 });
 wsServer = new WebSocketServer({
