@@ -40,8 +40,7 @@
        
 
     
-    function generarPDFPago() {
-
+    function generarPDFPago() {        
         var doc = new window.jspdf.jsPDF({
             unit: 'mm',
             format: [80,Infinity],
@@ -57,8 +56,7 @@
 
         let nombreCliente = ticketClienteImpresion.extraer[8] + ' ' +ticketClienteImpresion.extraer[9];
         let apellidoCliente = ticketClienteImpresion.extraer[10] + ' ' +ticketClienteImpresion.extraer[11];
-        let NoCuota = ticketClienteImpresion.contador_cuotas;
-        // let montoAPagar = parseInt(ticketClienteImpresion.cuotas[8].replace(/\./g, ''));
+        let NoCuota = ticketClienteImpresion.contador_cuotas;        
         let montoAPagar = parseInt(window.sessionStorage.getItem("monto-pagado"));
         let saldoPendiente = Math.ceil(parseInt(ticketClienteImpresion.valoes - ticketClienteImpresion.acumo));
         let saldoAnterior = montoAPagar + saldoPendiente;
@@ -541,7 +539,19 @@
                             class="nav-label">Cobro de cuotas</span></a>
                 </li>
                 <li>
-                    <a id="couta_sear" href="javascript:consultar_Contratos()"><span class="nav-label">Consultar Contrato</a>
+                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Días de pago</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="javascript:pago_lunes();">Lunes</a></li>
+                        <li><a href="javascript:pago_martes();">Martes</a></li>
+                        <li><a href="javascript:pago_miercoles();">Miercoles</a></li>
+                        <li><a href="javascript:pago_jueves();">Jueves</a></li>
+                        <li><a href="javascript:pago_viernes();">Viernes</a></li>
+                        <li><a href="javascript:pago_sabado();">Sábado</a></li>
+                    </ul>
+
+                </li>
+                <li>
+                    <a id="couta_sear" href="javascript:consultar_Contratos()"><i class="fa fa-copy"></i><span class="nav-label">Consultar Contrato</a>
                 </li>
                 <li>
                     <a id="couta_sear" href="javascript:registrar_gastos();"><i class="fa fa-money"></i> <span
@@ -687,13 +697,18 @@
                                     <label>Cuota a aplicar</label>
                                     <select class="form-control m-b" id="selector_cuotas_selec">
                                         <option value=''>Seleccione</option>
+                                        <!-- Don Edy -->
+                                        <option value='20'>PLAN DIARIO, 10% EN 20 PAGOS</option>
+                                        <option value='4'>PLAN SEMANAL, 15% EN 4 PAGOS</option>
+                                        <option value='8'>PLAN SEMANAL, 30% EN 8 PAGOS</option>
+                                        <option value='4'>PLAN QUINCENAL, 30% EN 4 PAGOS</option>
                                         <!-- Don Axel -->
                                         <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
                                         <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
                                         <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option>                                        
-                                        <option value='8'>PLAN 8 SEMANAS 20% EN 8 PAGOS</option>                                                                         
-                                        <option value='8'>PLAN 8 DIAS 20% EN 8 PAGOS</option>                                                                         
-                                        <option value='50'>PLAN 50 DIAS 20% EN 50 PAGOS</option>                                         -->
+                                        <option value='8'>PLAN 8 SEMANAS 20% EN 8 PAGOS</option>
+                                        <option value='8'>PLAN 8 DIAS 20% EN 8 PAGOS</option>
+                                        <option value='50'>PLAN 50 DIAS 20% EN 50 PAGOS</option> -->                               
                                     </select>
                                     
                                 </form>
@@ -853,10 +868,10 @@
                             <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
                                 <form role="form">
                                     <div class="form-group"><label>Fecha</label> <input
-                                            id="fechaActual"
-                                            type="date"
-                                            placeholder=""
-                                            class="form-control"></div>
+                                        id="fechaActual"
+                                        type="date"
+                                        placeholder=""
+                                        class="form-control"></div>
                                 </form>
                             </div>
                         </div>
@@ -888,7 +903,13 @@
                                     <label>Cuota a aplicar</label>
                                     <select class="form-control m-b" id="selector_cuotas_selec_ampliacion">
                                         <option value=''>Seleccione</option>
-                                        <!-- DOn Axel -->                                        
+                                        <!-- Don Edy -->
+                                        <option value='20'>PLAN DIARIO, 10% EN 20 PAGOS</option>
+                                        <option value='4'>PLAN SEMANAL, 15% EN 4 PAGOS</option>
+                                        <option value='8'>PLAN SEMANAL, 30% EN 8 PAGOS</option>
+                                        <option value='4'>PLAN QUINCENAL, 30% EN 4 PAGOS</option>
+                                                                            
+                                        <!-- DOn Axel -->     
                                         <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
                                         <option value='4'>PLAN 25 DIAS 10% EN 4 PAGOS</option>
                                         <option value='3'>PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL</option>                                        
@@ -940,19 +961,29 @@
 
                         <div class="col-sm-12 col-md-12 col-xs-12" style="padding: 4%;margin-left: 8%;">
                             <blockquote style="background-color: #e2c54278;padding: 4%;margin-left: -9%;" class="row col-sm-12 col-md-12 col-xs-12">
-                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
                                     <form role="form">
                                         <div class="form-group"><label>Valor del contrato anterior: </label> <br> Q<label id="utilidad_prestada_anterior">0</label></div>
                                     </form>
                                 </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
                                     <form role="form">
                                         <div class="form-group"><label>Valor restante del contrato</label> <br> Q<label id="valor_restante_anterior">0</label></div>
                                     </form>
                                 </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-2 col-sm-6 col-xs-12">
                                     <form role="form">
                                         <div class="form-group"><label>Cantidad de cuotas canceladas: </label> <br> <label id="cuota_anterior">0</label></div>
+                                    </form>
+                                </div>                                
+                                <div class="col-md-2 col-sm-6 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Cantidad cuotas para renovacion: </label> <br> <label id="cantidad_cuotas_establecidas"></label></div>
+                                    </form>
+                                </div>                                
+                                <div class="col-md-2 col-sm-6 col-xs-12">
+                                    <form role="form">
+                                        <div class="form-group"><label>Estado: </label> <br> <label id="estado_renovacion"></label></div>
                                     </form>
                                 </div>                                
                             </blockquote>
@@ -1316,6 +1347,35 @@
                     </div>
                 </div>
 
+                <div class="col-lg-12" id="pago_lunes" style="display:none;">
+                    <h5>Pagos correspondientes al día Lunes</h5>                                 
+                    <div class="slick_demo_2" id="listado_tarjeta_lunes" style="text-align: center;">Cargando tarjetas...</div>                    
+                </div>
+
+                <div class="col-lg-12" id="pago_martes" style="display:none;">
+                    <h5>Pagos correspondientes al día Martes</h5>   
+                    <div class="slick_demo_2" id="listado_tarjeta_martes" style="text-align: center;">Cargando tarjetas...</div>                    
+                </div>
+                
+                <div class="col-lg-12" id="pago_miercoles" style="display:none;">
+                    <h5>Pagos correspondientes al día Miercoles</h5>                                 
+                    <div class="slick_demo_2" id="listado_tarjeta_miercoles" style="text-align: center;">Cargando tarjetas...</div>                    
+                </div>
+
+                <div class="col-lg-12" id="pago_jueves" style="display:none;">
+                    <h5>Pagos correspondientes al día Jueves</h5>                                 
+                    <div class="slick_demo_2" id="listado_tarjeta_jueves" style="text-align: center;">Cargando tarjetas...</div>                    
+                </div>
+
+                <div class="col-lg-12" id="pago_viernes" style="display:none;">
+                    <h5>Pagos correspondientes al día Viernes</h5>
+                    <div class="slick_demo_2" id="listado_tarjeta_viernes" style="text-align: center;">Cargando tarjetas...</div>                    
+                </div>
+                <div class="col-lg-12" id="pago_sabado" style="display:none;">
+                    <h5>Pagos correspondientes al día Sábado</h5>
+                    <div class="slick_demo_2" id="listado_tarjeta_sabado" style="text-align: center;">Cargando tarjetas...</div>
+                </div>
+
                 <div class="col-lg-12" id="contratos_vencimiento_view" style="display:none;">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -1515,14 +1575,13 @@
 <script>
 
     const firebaseConfig = {
-    apiKey: "AIzaSyB1dNfVJ_5ufd8NRFb2PeDIHoMAaSU7YC8",
-    authDomain: "prestamosya-82590.firebaseapp.com",
-    databaseURL: "https://prestamosya-82590-default-rtdb.firebaseio.com",
-    projectId: "prestamosya-82590",
-    storageBucket: "prestamosya-82590.appspot.com",
-    messagingSenderId: "965009677329",
-    appId: "1:965009677329:web:711797fb92cf4feca665b0",
-    measurementId: "G-04E7JNDVWW"
+        apiKey: "AIzaSyB1dNfVJ_5ufd8NRFb2PeDIHoMAaSU7YC8",
+        authDomain: "prestamosya-82590.firebaseapp.com",
+        projectId: "prestamosya-82590",
+        storageBucket: "prestamosya-82590.appspot.com",
+        messagingSenderId: "965009677329",
+        appId: "1:965009677329:web:711797fb92cf4feca665b0",
+        measurementId: "G-04E7JNDVWW"
     };
 	
     firebase.initializeApp(firebaseConfig);	
@@ -1556,6 +1615,33 @@
         $("#buscar_cedula_cliente2").click();
         $("#cuotas_coun").focus();
         listado_contratos("0");
+    }
+    function monto_meter_dia_pagos(cedula,fecha){        
+        down_configuracion();
+        window.sessionStorage.setItem("Money-perfil","descontar");
+        $("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#cobrar_couta").css("display", "block");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#contratos_view").css("display", "none");
+        $("#contratos_vencimiento_view").css("display", "none");
+        $("#datos_cliente").css("display","none");
+        
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
+
+        $("#text_cedula_cliente2").val(cedula);
+        $("#buscar_cedula_cliente2").click();
+        $("#cuotas_coun").focus();        
     }
     function renovar_contrato( cedula, id ){     
         window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));   
@@ -1615,6 +1701,13 @@
         $("#googleMap").css("display","none");
         $("#contratos_view").css("display","none");
         $("#contratos_vencimiento_view").css("display","none"); 
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");        
     }
 
     function registrar_renovaciones(){
@@ -1631,7 +1724,14 @@
         $("#googleMap").css("display","none");
         $("#contratos_view").css("display","none"); 
         $("#contratos_vencimiento_view").css("display","none");
-        $("#datos_cliente").css("display","none"); 
+        $("#datos_cliente").css("display","none");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
     }
 	
 	$("#procesar_aplico").click(function(){
@@ -1745,12 +1845,12 @@
         }
                 
         if ( block.configuracion[19] == "1" ) block.obj = { "r": "down_geo2", "d": block.arrays };
-        else block.obj = { "r": "down_geo", "d": block.arrays };
+        else block.obj = { "r": "down_geo", "d": block.arrays };        
 
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {            
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);            
             if (!valor.e) {
-                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.                
                 var map;
                 var mapOptions = {
                     center: {lat: 16.930351030698695, lng: -89.8912385219706},                    
@@ -1775,8 +1875,7 @@
                 }
 
                 window.localStorage.setItem("Money-vars-tarjetas_old",JSON.stringify(valor.d[1]));
-                
-                block.lisas = [];                
+                                         
                 for(var q=0; q< block.listao.length; q++){                   
                     block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+')">Renovar Contrato</button></p></div></div>';
 
@@ -1935,9 +2034,8 @@
     });
 
     $("#ampliar_contrato").click(function () {        
-        if( $("#monto_prestar_ya_admin_ampliacion").val() !== "" || $("#selector_cuotas_selec_ampliacion").val() !== "" || $("#selector_frecuencia_ampliacion").val() !== "" ){
-            if( $("#valor_restante_anterior").text() !== "" && $("#valor_restante_anterior").text() !== "0" ) {
-                            
+        if( $("#monto_prestar_ya_admin_ampliacion").val() !== "" && $("#selector_cuotas_selec_ampliacion").val() !== "" && $("#selector_frecuencia_ampliacion").val() !== "" ){
+            if( $("#valor_restante_anterior").text() !== "" && $("#valor_restante_anterior").text() !== "0" ) {                            
                 block.loire = $("#valor_restante_anterior").text();
                 block.nega = parseInt( block.loire );
                 if( block.loire.indexOf(".") == -1 && block.loire.indexOf(",") == -1 && block.loire.indexOf("+") == -1 && block.loire.indexOf("e") == -1 && block.loire.indexOf("E") == -1 && block.nega > 0 ) {
@@ -1945,7 +2043,7 @@
                     block.montoCuota = block.montoCuota.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
                     block.montoCuota = block.montoCuota.split('').reverse().join('').replace(/^[\.]/, '');
                     block.montoDar = parseInt( $("#monto_prestar_ya_admin_ampliacion").val().replace(/\./g,'') ) - parseInt( $("#valor_restante_anterior").text().replace(/\./g,'') )
-                    block.menj = "Esta seguro que recibe un monto de  Q" + montoCuota + "? Si es así, deberá de darle Q" + block.montoDar + " al cliente";                    
+                    block.menj = "Esta seguro que recibe un monto de  Q" + montoCuota + "? Si es así, deberá de darle Q" + block.montoDar + " al cliente";
                     swal({
                         title: "Cancelacion de contrato?",
                         text: block.menj,
@@ -1957,7 +2055,7 @@
                     }, function () {
                         block.montoPagado = $("#valor_restante_anterior").text();
                         window.sessionStorage.setItem("monto-pagado", parseInt(block.montoPagado));                        
-                        procesarDescuentoAmpliacion( $("#valor_restante_anterior").text(), JSON.parse( window.localStorage.getItem("Money-vars-pagar") ) );
+                        procesarDescuentoAmpliacion( $("#valor_restante_anterior").text(), JSON.parse( window.localStorage.getItem("Money-vars-pagar") ) );                        
                     });				
                 } else {
                     toastr.warning('No esta permitido ni puntos ni comas(.,) ó es menor a cero (0)', 'Atención!');
@@ -1988,7 +2086,7 @@
                     block.resa2 = block.resa.replace(".","");
                     block.nuevomonto = parseInt(block.resa2);
 
-					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max && block.minRenovar <= parseInt($("#cuota_anterior").text()) && block.nuevomonto > parseInt($("#valor_restante_anterior").text())) {
+					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.nuevomonto > parseInt($("#valor_restante_anterior").text())) {
                         for (var w = 0; w < block.cuotas.length; w++) {                            
                             if (block.cuotas[w][2] == $("#selector_cuotas_selec_ampliacion").val() &&  block.cuotas[w][1] == $("#selector_cuotas_selec_ampliacion").find("option:selected").text()) { //cantidad de cuotas
 
@@ -2024,7 +2122,7 @@
                         }
                     }else{
                         $("#ampliar_contrato").prop("disabled",true);
-                        toastr.warning("El prestamo no está en el rango permitido y/o la cantidad de cuotas no cumple con los requisitos", "Atenciòn");
+                        toastr.warning("El prestamo no está en el rango permitido y/o el pago del contrato nuevo, no alcanza para pagar la deuda pendiente.", "Atención");
                     }
 
                 }
@@ -2128,6 +2226,13 @@
         $("#lista_ubicacniones_div").css("display","none");
         $("#datos_cliente").css("display","none");
         listado_contratos("0");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
     }
 
     function consultar_Contratos_Vencimiento(){
@@ -2146,7 +2251,14 @@
         $("#contratos_vencimiento_view").css("display","block");
         $("#lista_ubicacniones_div").css("display","none");
         $("#datos_cliente").css("display","none");
-        listado_contratos_vencimiento("0"); 
+        listado_contratos_vencimiento("0");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
     }
     
     block.unico = 0;
@@ -2756,8 +2868,7 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) {
-                block.pasero = JSON.parse(valor.d[1]);
-                console.log(block.pasero)
+                block.pasero = JSON.parse(valor.d[1]);                
                 
                 for(var i= 0; i< block.pasero.length; i++){
                     renovaciones += parseInt(block.pasero[i][2].replace(/\./g, ""));
@@ -2888,6 +2999,13 @@
 		$("#pendiente_form").css("display", "none");
         $("#lista_ubicacniones_div").css("display","none");
         $("#datos_cliente").css("display","none");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
     }
 
     extraer_gastos();
@@ -3182,7 +3300,7 @@
                                             }else{
                                                 $("#limpiar_contrato").click();
                                             }
-                    
+                                                                
                                             setTimeout(function(){
                                                 location.reload();
                                             }, 1500);
@@ -3710,7 +3828,7 @@
         }
     });
 
-    $("#selector_frecuencia_ampliacion").change(function(){             
+    $("#selector_frecuencia_ampliacion").change(function(){         
         if ( $("#monto_prestar_ya_admin_ampliacion").val() !== "" && $("#selector_cuotas_selec_ampliacion").val() !== "" && $("#selector_frecuencia_ampliacion").val() !== "" ) {
             if( window.sessionStorage.getItem("Lista_cuota") !== null ) {
 
@@ -3718,66 +3836,126 @@
                 block.limitos = JSON.parse(window.sessionStorage.getItem("Configuracion"));
                 block.min = parseInt(block.limitos[1]);
                 block.max = parseInt(block.limitos[2]);
-                block.minRenovar = parseInt(block.limitos[12]);
+                block.minRenovar = parseInt(block.limitos[12]);                
 
                 if ($("#monto_prestar_ya_admin_ampliacion").val()!=="") { 
 
                     block.evad = $("#monto_prestar_ya_admin_ampliacion").val(); //cantidad de prestamo
                     block.resa = block.evad.replace(".","");
                     block.resa2 = block.resa.replace(".","");
-                    block.nuevomonto = parseInt(block.resa2);
+                    block.nuevomonto = parseInt(block.resa2);                 
 
-					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max && block.minRenovar <= parseInt($("#cuota_anterior").text()) && block.nuevomonto > parseInt($("#valor_restante_anterior").text())) {
-                        for (var w = 0; w < block.cuotas.length; w++) {
-                            if (block.cuotas[w][2] == $("#selector_cuotas_selec_ampliacion").val() &&  block.cuotas[w][1] == $("#selector_cuotas_selec_ampliacion").find("option:selected").text() ) { //cantidad de cuotas
-
-                                $("#utilidad_prestada_ampliacion").html(block.cuotas[w][3]); //Label de Utilidad porcentaje
-                                block.limpi = $("#monto_prestar_ya_admin_ampliacion").val();
-                                block.comp = block.limpi.replace(".", "");
-                                block.wsqa = block.comp.replace(".", "");
-                                block.monq = parseInt(block.wsqa);
-                                block.poce = parseFloat(block.cuotas[w][3]);
-                                block.dias = parseInt(block.cuotas[w][2]);
-                                block.resul = parseInt(monq * (block.poce / 100));
-                                block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                                block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/, '');
-                                
-                                if ( $('#selector_frecuencia_ampliacion option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec_ampliacion option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") { // 25 DíAS EN 4 PAGOS
-                                    // block.dias = parseInt(4);
-                                    $("#FechaCuatropagosAmpliacion").css("display","block");
-                                    block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
-                                    block.reas = parseInt(block.reas);
-                                    block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                                    block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
-
-                                } else if ( $('#selector_cuotas_selec_ampliacion option:selected').text() == "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL" ){
-
-                                    block.reas = block.monq;
-
+					if(block.nuevomonto >= block.min && block.nuevomonto <= block.max && block.nuevomonto > parseInt($("#valor_restante_anterior").text())) {                         
+                        if (block.minRenovar > parseInt($("#cuota_anterior").text())){
+                            swal({
+                                title: "Las cuotas finalizadas no cumplen con el mínimo de cuotas para renovar el contrato, ¿Desea continuar?",
+                                text: 'Por favor, tenga esto en cuenta al momento de renovar el contrato.',
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Si, continuar!",
+                                cancelButtonText: 'No, cancelar!',
+                                closeOnConfirm: true
+                            }, function (isConfirm) {
+                                if (isConfirm){
+                                    for (var w = 0; w < block.cuotas.length; w++) {
+                                        if (block.cuotas[w][2] == $("#selector_cuotas_selec_ampliacion").val() &&  block.cuotas[w][1] == $("#selector_cuotas_selec_ampliacion").find("option:selected").text() ) { //cantidad de cuotas
+            
+                                            $("#utilidad_prestada_ampliacion").html(block.cuotas[w][3]); //Label de Utilidad porcentaje
+                                            block.limpi = $("#monto_prestar_ya_admin_ampliacion").val();
+                                            block.comp = block.limpi.replace(".", "");
+                                            block.wsqa = block.comp.replace(".", "");
+                                            block.monq = parseInt(block.wsqa);
+                                            block.poce = parseFloat(block.cuotas[w][3]);
+                                            block.dias = parseInt(block.cuotas[w][2]);
+                                            block.resul = parseInt(monq * (block.poce / 100));
+                                            block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                            block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/, '');
+                                            
+                                            if ( $('#selector_frecuencia_ampliacion option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec_ampliacion option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") { // 25 DíAS EN 4 PAGOS
+                                                // block.dias = parseInt(4);
+                                                $("#FechaCuatropagosAmpliacion").css("display","block");
+                                                block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
+                                                block.reas = parseInt(block.reas);
+                                                block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                                block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+            
+                                            } else if ( $('#selector_cuotas_selec_ampliacion option:selected').text() == "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL" ){
+            
+                                                block.reas = block.monq;
+            
+                                            } else {
+            
+                                                $("#FechaCuatropagosAmpliacion").css("display","none");
+                                                block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
+                                                block.reas = parseInt(block.reas);
+                                                block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                                block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+            
+                                            }
+            
+                                            $("#utilidad_prestada_peso_ampliacion").html(block.resul); //Label de utilidad quetzales
+                                            $("#utilidad_cuota_ampliacion").html(block.reas); //Label de valor de la cuota                                
+                                            obtener_Ultima_Cuota_ampliacion(block.resul);
+                                            $("#ampliar_contrato").prop("disabled",false);                                                                                       
+                                        }
+                                    } 
                                 } else {
-
-                                    $("#FechaCuatropagosAmpliacion").css("display","none");
-                                    block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
-                                    block.reas = parseInt(block.reas);
-                                    block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
-                                    block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
-
-                                }
-
-                                $("#utilidad_prestada_peso_ampliacion").html(block.resul); //Label de utilidad quetzales
-                                $("#utilidad_cuota_ampliacion").html(block.reas); //Label de valor de la cuota                                
-                                obtener_Ultima_Cuota_ampliacion(block.resul);
-                                $("#ampliar_contrato").prop("disabled",false);
-                            }
-                        }
+                                    window.location.reload();
+                                }                                                                                    
+                            });                            
+                        } else if( block.minRenovar <= parseInt($("#cuota_anterior").text()) ) {
+                                for (var w = 0; w < block.cuotas.length; w++) {
+                                    if (block.cuotas[w][2] == $("#selector_cuotas_selec_ampliacion").val() &&  block.cuotas[w][1] == $("#selector_cuotas_selec_ampliacion").find("option:selected").text() ) { //cantidad de cuotas
+        
+                                        $("#utilidad_prestada_ampliacion").html(block.cuotas[w][3]); //Label de Utilidad porcentaje
+                                        block.limpi = $("#monto_prestar_ya_admin_ampliacion").val();
+                                        block.comp = block.limpi.replace(".", "");
+                                        block.wsqa = block.comp.replace(".", "");
+                                        block.monq = parseInt(block.wsqa);
+                                        block.poce = parseFloat(block.cuotas[w][3]);
+                                        block.dias = parseInt(block.cuotas[w][2]);
+                                        block.resul = parseInt(monq * (block.poce / 100));
+                                        block.resul = block.resul.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                        block.resul = block.resul.split('').reverse().join('').replace(/^[\.]/, '');
+                                        
+                                        if ( $('#selector_frecuencia_ampliacion option:selected').text() == "FRECUENCIA 25 DIAS 10% EN 4 PAGOS" && $('#selector_cuotas_selec_ampliacion option:selected').text() == "PLAN 25 DIAS 10% EN 4 PAGOS") { // 25 DíAS EN 4 PAGOS
+                                            // block.dias = parseInt(4);
+                                            $("#FechaCuatropagosAmpliacion").css("display","block");
+                                            block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
+                                            block.reas = parseInt(block.reas);
+                                            block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                            block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+        
+                                        } else if ( $('#selector_cuotas_selec_ampliacion option:selected').text() == "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL" ){
+        
+                                            block.reas = block.monq;
+        
+                                        } else {
+        
+                                            $("#FechaCuatropagosAmpliacion").css("display","none");
+                                            block.reas = (block.monq + parseFloat( block.resul.replace(/\./g,'') ) ) / block.dias;
+                                            block.reas = parseInt(block.reas);
+                                            block.reas = block.reas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                                            block.reas = block.reas.split('').reverse().join('').replace(/^[\.]/, '')
+        
+                                        }
+        
+                                        $("#utilidad_prestada_peso_ampliacion").html(block.resul); //Label de utilidad quetzales
+                                        $("#utilidad_cuota_ampliacion").html(block.reas); //Label de valor de la cuota                                
+                                        obtener_Ultima_Cuota_ampliacion(block.resul);
+                                        $("#ampliar_contrato").prop("disabled",false);                                                                                
+                                    }
+                                }                                    
+                            } 
                     }else{
                         $("#ampliar_contrato").prop("disabled",true);
-                        toastr.warning("El prestamo no está en el rango permitido y/o la cantidad de cuotas no cumple con los requerimientos y/o el pago del contrato nuevo, no alcanza para pagar la deuda pendiente.", "Atención");
+                        toastr.warning("El prestamo no está en el rango permitido y/o el pago del contrato nuevo, no alcanza para pagar la deuda pendiente.", "Atención");
                     }
                 }
             }        
         } else {
-            $("#ampliar_contrato").prop("disabled",true);
+            $("#ampliar_contrato").prop("disabled",true);            
         }
     });
 
@@ -4099,7 +4277,10 @@
     window.sessionStorage.setItem("Money-vars-tipo", "1");
     //QUITAR ESTOOOOO    
     //DON AXEL
-    block.CuotasTotales = [ [9999855, "PLAN DIARIO, 10% EN 20 PAGOS", "20", "10"], [9999855, "PLAN SEMANAL, 15% EN 4 PAGOS", "4", "15"] ];
+    // block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"], [7725991, "PLAN 8 SEMANAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 8 DIAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 50 DIAS 20% EN 50 PAGOS", "50", "20"] ];
+
+    //DON EDY
+    block.CuotasTotales = [ [9999855, "PLAN DIARIO, 10% EN 20 PAGOS", "20", "10"], [9999855, "PLAN SEMANAL, 15% EN 4 PAGOS", "4", "15"], [9999855, "PLAN SEMANAL, 30% EN 8 PAGOS", "8", "30"], [9999855, "PLAN QUINCENAL, 30% EN 4 PAGOS", "4", "30"] ];
 
     window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
 
@@ -4484,7 +4665,6 @@
 		block.obj = { "r": "buscar_cliente2", "d": block.arrays };        
 		backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
 			var valor = JSON.parse(salida); 
-            debugger;
 			if (!valor.e) {    
                 block.cuotas = valor.d[1];
 				block.cliente = valor.d[2];
@@ -4689,8 +4869,7 @@
                 block.arrays = [ block.tokens[1], block.tokens[5], block.cedula, block.porcentaje, block.idContrato ];
                 block.obj = {"r": "aplicar_interes_contrato", "d": block.arrays};
                 backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-                    var valor = JSON.parse(salida);  
-                    console.log(valor);          
+                    var valor = JSON.parse(salida);                              
                     if(!valor.e){
                         toastr.success('Interes aplicado al contrato','Atención!');
                         setTimeout(function(){
@@ -4898,7 +5077,7 @@
     function descontar_cuotax() {        
         corroborarHora();            
         setTimeout(() => {
-            location.reload();
+            // location.reload();
             down_configuracion();
             window.sessionStorage.setItem("Money-perfil","descontar");
             $("#googleMap").css("display","none");
@@ -4913,7 +5092,368 @@
             $("#contratos_view").css("display", "none");
             $("#contratos_vencimiento_view").css("display", "none");
             $("#datos_cliente").css("display","none");
+
+            $("#pago_lunes").css("display","none");
+            $("#pago_martes").css("display","none");
+            $("#pago_miercoles").css("display","none");
+            $("#pago_jueves").css("display","none");
+            $("#pago_viernes").css("display","none");
+            $("#pago_sabado").css("display","none");
         }, 1800);
+    }
+
+    function pago_lunes(){
+        corroborarHora();
+        $("#lista_enorme").empty();
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","none"); 
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
+        
+        $("#pago_lunes").css("display","block");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }        
+
+        block.arrays = [ block.tokens[ 1 ], block.tokens[ 4 ], block.tokens[ 5 ], 'L'];                
+        block.obj = { "r": "contrato_por_dia", "d": block.arrays };
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            if (!valor.e) {
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                if( block.listao.length === 0 ){
+                    toastr.warning('No hay fechas de pago para el día Lunes', 'Atencion!');
+                } else {
+                    block.tarjetero ="";
+    
+                    for(var q=0; q< block.listao.length; q++){
+                        block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter_dia_pagos('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+')">Renovar Contrato</button></p></div></div>';
+                    }
+    
+                    if(block.listao.length === 1){
+                        block.tarjetero = block.tarjetero + '<div></div>';
+                    }
+    
+                    $("#listado_tarjeta_lunes").html(block.tarjetero);
+                    $("#listado_tarjeta_lunes").css("display","block");
+                }                
+            } else{
+                toastr.warning('No posee contratos para generar ruta', 'Atencion!');
+                window.localStorage.removeItem("Money-vars-tarjetas_old");
+            }
+        });
+    }
+    function pago_martes(){
+        corroborarHora();
+        $("#lista_enorme").empty();
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","none"); 
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","block");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }        
+
+        block.arrays = [ block.tokens[ 1 ], block.tokens[ 4 ], block.tokens[ 5 ], 'M'];                
+        block.obj = { "r": "contrato_por_dia", "d": block.arrays };
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);               
+            if (!valor.e) {
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                if( block.listao.length === 0 ){
+                    toastr.warning('No hay fechas de pago para el día Martes', 'Atencion!');
+                } else {
+                    block.tarjetero ="";
+
+                    for(var q=0; q< block.listao.length; q++){
+                        block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter_dia_pagos('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+')">Renovar Contrato</button></p></div></div>';
+                    }
+
+                    if(block.listao.length === 1){
+                        block.tarjetero = block.tarjetero + '<div></div>';
+                    }
+
+                    $("#listado_tarjeta_martes").html(block.tarjetero);
+                    $("#listado_tarjeta_martes").css("display","block");
+                }
+            } else{
+                toastr.warning('No posee contratos para generar ruta', 'Atencion!');
+                window.localStorage.removeItem("Money-vars-tarjetas_old");
+            }
+        });
+    }
+    function pago_miercoles(){
+        corroborarHora();
+        $("#lista_enorme").empty();
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","none"); 
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","block");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }        
+
+        block.arrays = [ block.tokens[ 1 ], block.tokens[ 4 ], block.tokens[ 5 ], 'W'];                
+        block.obj = { "r": "contrato_por_dia", "d": block.arrays };
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            if (!valor.e) {
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                if( block.listao.length === 0 ){
+                    toastr.warning('No hay fechas de pago para el día Miercoles', 'Atencion!');
+                } else {
+                    block.tarjetero ="";
+
+                    for(var q=0; q< block.listao.length; q++){
+                        block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter_dia_pagos('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+')">Renovar Contrato</button></p></div></div>';
+                    }
+
+                    if(block.listao.length === 1){
+                        block.tarjetero = block.tarjetero + '<div></div>';
+                    }
+
+                    $("#listado_tarjeta_miercoles").html(block.tarjetero);
+                    $("#listado_tarjeta_miercoles").css("display","block");
+                }
+            } else{
+                toastr.warning('No posee contratos para generar ruta', 'Atencion!');
+                window.localStorage.removeItem("Money-vars-tarjetas_old");
+            }
+        });
+    }
+    function pago_jueves(){
+        corroborarHora();
+        $("#lista_enorme").empty();
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","none"); 
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","block");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }        
+
+        block.arrays = [ block.tokens[ 1 ], block.tokens[ 4 ], block.tokens[ 5 ], 'J'];                
+        block.obj = { "r": "contrato_por_dia", "d": block.arrays };
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            if (!valor.e) {
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                if( block.listao.length === 0 ){
+                    toastr.warning('No hay fechas de pago para el día Jueves', 'Atencion!');
+                } else {
+                    block.tarjetero ="";                    
+                    for(var q=0; q< block.listao.length; q++){
+                        block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter_dia_pagos('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+')">Renovar Contrato</button></p></div></div>';
+                    }
+
+                    if(block.listao.length === 1){
+                        block.tarjetero = block.tarjetero + '<div></div>';
+                    }
+
+                    $("#listado_tarjeta_jueves").html(block.tarjetero);
+                    $("#listado_tarjeta_jueves").css("display","block");
+                }
+            } else{
+                toastr.warning('No posee contratos para generar ruta', 'Atencion!');
+                window.localStorage.removeItem("Money-vars-tarjetas_old");
+            }
+        });
+    }
+    function pago_viernes(){
+        corroborarHora();
+        $("#lista_enorme").empty();
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","none"); 
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","block");
+        $("#pago_sabado").css("display","none");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }        
+
+        block.arrays = [ block.tokens[ 1 ], block.tokens[ 4 ], block.tokens[ 5 ], 'V'];                
+        block.obj = { "r": "contrato_por_dia", "d": block.arrays };
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            if (!valor.e) {
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                if( block.listao.length === 0 ){
+                    toastr.warning('No hay fechas de pago para el día Viernes', 'Atencion!');
+                } else {
+                    block.tarjetero ="";
+
+                    for(var q=0; q< block.listao.length; q++){
+                        block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter_dia_pagos('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+')">Renovar Contrato</button></p></div></div>';
+                    }
+
+                    if(block.listao.length === 1){
+                        block.tarjetero = block.tarjetero + '<div></div>';
+                    }
+
+                    $("#listado_tarjeta_viernes").html(block.tarjetero);
+                    $("#listado_tarjeta_viernes").css("display","block");
+                }
+            } else{
+                toastr.warning('No posee contratos para generar ruta', 'Atencion!');
+                window.localStorage.removeItem("Money-vars-tarjetas_old");
+            }
+        });
+    }
+    function pago_sabado(){
+        corroborarHora();
+        $("#lista_enorme").empty();
+        $("#pendiente_form").css("display","none");
+        $("#crear_gastos").css("display","none");
+        $("#crear_renovaciones").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#crear_contrato_form_dos").css("display","none");
+        $("#crear_contrato_form").css("display","none");
+        $("#ampliar_contrato_form").css("display", "none");
+        $("#ampliar_contrato_form_dos").css("display", "none"); 
+        $("#googleMap").css("display","none");
+        $("#contratos_view").css("display","none");
+        $("#contratos_vencimiento_view").css("display","none"); 
+        $("#lista_ubicacniones_div").css("display","none");
+        $("#datos_cliente").css("display","none");
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","block");
+
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }        
+
+        block.arrays = [ block.tokens[ 1 ], block.tokens[ 4 ], block.tokens[ 5 ], 'S'];
+        block.obj = { "r": "contrato_por_dia", "d": block.arrays };
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            if (!valor.e) {
+                block.listao = valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                if( block.listao.length === 0 ){
+                    toastr.warning('No hay fechas de pago para el día Sabado', 'Atencion!');
+                } else {
+                    block.tarjetero ="";
+
+                    for(var q=0; q< block.listao.length; q++){
+                        block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter_dia_pagos('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+block.listao[q].u+'</p><p> Monto: '+block.listao[q].m+'</p><p> Fecha: '+block.listao[q].f+'</p><p> DPI: '+block.listao[q].c+'</p><p> Celular: '+block.listao[q].e+'</p><p> Dirección: '+block.listao[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+block.listao[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+block.listao[q].id+String.fromCharCode(39)+')">Renovar Contrato</button></p></div></div>';
+                    }
+
+                    if(block.listao.length === 1){
+                        block.tarjetero = block.tarjetero + '<div></div>';
+                    }
+
+                    $("#listado_tarjeta_sabado").html(block.tarjetero);
+                    $("#listado_tarjeta_sabado").css("display","block");
+                }
+            } else{
+                toastr.warning('No posee contratos para generar ruta', 'Atencion!');
+                window.localStorage.removeItem("Money-vars-tarjetas_old");
+            }
+        });
     }
 
     window.sessionStorage.setItem("Money-perfil","contrato");
@@ -4968,6 +5508,13 @@
         $("#utilidad_cuota").html('0');
         $("#utilidad_ultima_cuota").html('0');
         $("#utilidad_contrato").html('0');
+
+        $("#pago_lunes").css("display","none");
+        $("#pago_martes").css("display","none");
+        $("#pago_miercoles").css("display","none");
+        $("#pago_jueves").css("display","none");
+        $("#pago_viernes").css("display","none");
+        $("#pago_sabado").css("display","none");
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -5078,7 +5625,13 @@
                 ticketClienteImpresion = block;
 				$("#utilidad_prestada_anterior").text(block.cuotas[3]);   //Creditos aprobados
 				$("#cuota_anterior").text(block.contador_cuotas); //num_cuotas
-				$("#valor_restante_anterior").text(Math.ceil(valoes-block.acumo)); // saldo pendiente
+				$("#valor_restante_anterior").text(Math.ceil(valoes-block.acumo)); // saldo pendiente                
+				$("#cantidad_cuotas_establecidas").text(JSON.parse(sessionStorage.getItem("Configuracion"))[12]); // Cantidad de cuotas establecidas para renovacion
+                if( block.contador_cuotas >= parseInt(JSON.parse(sessionStorage.getItem("Configuracion"))[12])){
+                    $("#estado_renovacion").text('Renovación disponible');                 
+                } else {
+                    $("#estado_renovacion").text('Renovación no disponible');
+                }
 			}
 		});	
 
@@ -5293,6 +5846,13 @@
             $("#contratos_vencimiento_view").css("display","none");
             $("#datos_cliente").css("display","none");
             $("#lista_ubicacniones_div").css("display","initial");
+
+            $("#pago_lunes").css("display","none");
+            $("#pago_martes").css("display","none");
+            $("#pago_miercoles").css("display","none");
+            $("#pago_jueves").css("display","none");
+            $("#pago_viernes").css("display","none");
+            $("#pago_sabado").css("display","none");
             
 			
 			if(window.localStorage.getItem("Money-vars-token")!==null){
@@ -5359,45 +5919,35 @@
 			}else{
 				block.barr = $("#add_barrio_text").val();
 			}
-			
-			// block.lat = $("#add_barrio_lat_text").val();
-			
-			// block.lon = $("#add_barrio_lon_text").val();
-			
-			// if(block.lon.substr(0,1)!=="." && block.lat.substr(0,1)!=="." && block.depa!=="" && block.ciud!=="" && block.barr!=="" && block.lat!=="" && block.lon!=="" && block.lat.indexOf(".")>-1 && block.lon.indexOf(".")>-1 && block.lon.indexOf("-")>-1 && block.lat.indexOf("e")==-1 && block.lon.indexOf("e")==-1 && block.lat.indexOf(",")==-1 && block.lon.indexOf(",")==-1){
-				
-				if( block.depa!=="" && block.ciud!=="" && block.barr!=="" ) {
+							
+            if( block.depa!=="" && block.ciud!=="" && block.barr!=="" ) {
 
-                    if(window.localStorage.getItem("Money-vars-token")!==null){
-                        block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-                    }else{
-                        block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+                if(window.localStorage.getItem("Money-vars-token")!==null){
+                    block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+                }else{
+                    block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+                }
+                
+                block.arrays = [ block.tokens[1],block.depa,block.ciud,block.barr ];
+                block.obj = {"r":"crea_direccion","d":block.arrays};
+                backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+                    var valor = JSON.parse(salida);
+                    if(!valor.e){
+                        $("#add_barrio_lon_text").val("");
+                        $("#add_barrio_lat_text").val("");
+                        $("#add_barrio_text").val("");
+
+                        $("#limpiar_agrega").click();
+                        ubicaciones_operaciones();
+                        toastr.success('Procesado con Atención','Atencion!');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
                     }
-                    
-                    block.arrays = [ block.tokens[1],block.depa,block.ciud,block.barr ];
-                    block.obj = {"r":"crea_direccion","d":block.arrays};
-                    backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
-                        var valor = JSON.parse(salida);
-                        if(!valor.e){
-                            $("#add_barrio_lon_text").val("");
-                            $("#add_barrio_lat_text").val("");
-                            $("#add_barrio_text").val("");
-    
-                            $("#limpiar_agrega").click();
-                            ubicaciones_operaciones();
-                            toastr.success('Procesado con Atención','Atencion!');
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000);
-                        }
-                    });
-                } else{
-				    toastr.warning('Faltan datos para registrar la ubicación','Atencion!');
-			    }
-				
-			// }else{
-			// 	toastr.warning('Faltan datos para registrar o coordenadas erradas','Atencion!');
-			// }
+                });
+            } else{
+                toastr.warning('Faltan datos para registrar la ubicación','Atencion!');
+            }
 		});
 
         function extraer_ciudades(){

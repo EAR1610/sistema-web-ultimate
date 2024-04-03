@@ -15,19 +15,16 @@ eje = function(arrays,origen,redisClient) {
 				/*
 				verifica si exite
 				*/				
-				redisClient.keys('usuario_'+arrays[0]+"_*",function(er2,repl2){
-					console.log("usuario_"+arrays[0]+"_*")
+				redisClient.keys('usuario_'+arrays[0]+"_*",function(er2,repl2){					
 					if(repl2 === undefined) return;
 					
 					if(repl2.length !== 0 ){
 						redisClient.get(repl2[0],function(ser2,repls2){
-							var info = JSON.parse(repls2);
-							console.log(info);
+							var info = JSON.parse(repls2);							
 							if(info[3]==true){
 								if(info[1]==arrays[1]){									
 									/*verifica si es la clave y crea token util para el backend */
-									redisClient.keys('configuracion_*', function(errEmpresa, datosEmpresa){
-										console.log(datosEmpresa);
+									redisClient.keys('configuracion_*', function(errEmpresa, datosEmpresa){										
 										if( datosEmpresa !== null && datosEmpresa.length > 0 ){
 											redisClient.get(datosEmpresa[0], function(errorConfiguracion, configuracion){
 												let configuracionEmpresa = JSON.parse(configuracion);												

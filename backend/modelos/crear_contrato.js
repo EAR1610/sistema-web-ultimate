@@ -116,7 +116,11 @@ eje = function(arrays,origen,redisClient) {
 													tiempo = arrays[4];	
 
 												for(let k = 1; k < tiempo+1; k++){
-													let prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');	
+													let prox2 = moment(prox).add(15, 'days');
+													if(prox2.day() === 0) { // Si es domingo
+														prox2 = prox2.add(1, 'days'); // Agrega un día adicional
+													}
+													prox2 = prox2.format('YYYY-MM-DD');
 													let cuota = (k == tiempo) ? ultima_cuota.replace(/\./g, "") : cuotaD;
 													fes.push({ "cp":cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;													

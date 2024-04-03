@@ -172,8 +172,7 @@
 		function iniciar_sesion(){
 			if($("#correo_usuario").val()!=="" && $("#pass_usuario").val()!==""){
 				block.arrays = [$("#correo_usuario").val(),$("#pass_usuario").val()];
-				block.obj = {"r":"iniciar_sesion","d":block.arrays};
-				console.log(block.obj)
+				block.obj = {"r":"iniciar_sesion","d":block.arrays};				
 				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
 					var valor = JSON.parse(salida);	
 					console.log(valor)
