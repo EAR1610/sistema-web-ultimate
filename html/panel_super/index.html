@@ -2237,7 +2237,7 @@
                             </div>
 
 
-                            <div class="col-sm-6 col-md-3 col-xs-12">
+                            <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
                                     <label>Colores de dia</label>
                                     <select class="form-control m-b" id="dias_colores">
@@ -2245,9 +2245,9 @@
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-3 col-xs-12">
+                            <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
-                                    <div class="form-group"><label>Cantidad máxima de contratos por cliente</label> <input
+                                    <div class="form-group"><label>Contratos máximos por cliente</label> <input
                                             id="NoContratos"
                                             type="text"  maxlength="10"
                                             class="form-control"></div>
@@ -2280,6 +2280,17 @@
                                 <form role="form">
                                     <label>Ocultar tarjetas una vez hecho el pago</label>
                                     <select class="form-control m-b" id="ocultar_tarjetas_pago">
+                                         <option value="1">Si</option> 
+                                         <option value="2">No</option>
+                                    </select>
+                                </form>
+
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xs-12">
+
+                                <form role="form">
+                                    <label>Generar un pagare en los contratos</label>
+                                    <select class="form-control m-b" id="generar_pagare_contrato">
                                          <option value="1">Si</option> 
                                          <option value="2">No</option>
                                     </select>
@@ -3448,12 +3459,14 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyCU1tj5fb4e4PzdnInor-3cMBKeM0tEgj8",
-        authDomain: "nestorssmoney-5d069.firebaseapp.com",
-        projectId: "nestorssmoney-5d069",
-        storageBucket: "nestorssmoney-5d069.appspot.com",
-        messagingSenderId: "870085871360",
-        appId: "1:870085871360:web:8d5bad2eb6d899d4c155e5"
+        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
+        authDomain: "axelssmoney.firebaseapp.com",
+        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
+        projectId: "axelssmoney",
+        storageBucket: "axelssmoney.appspot.com",
+        messagingSenderId: "915189749485",
+        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
+        measurementId: "G-N2Z1GX04BF"
     };
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -5127,7 +5140,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 	});
 
 	$("#crear_contrato").click(function () {
-
+        
         if(window.sessionStorage.getItem("Money-vars-registrado")!==null &&  $("#monto_prestar_ya_admin").val()!=="" &&  $("#selector_asesores_lista").val()!==""){
             block.asesor = $("#selector_asesores_lista").val();
             block.ruta = block.asesor.split("_");
@@ -9353,6 +9366,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.horaCierre = $("#HoraCierre").val();
         block.ubicacionesObligatorias = $("#mostrar_obligatoriedad_ubicaciones").val();
         block.ocultarTarjetas = $("#ocultar_tarjetas_pago").val();
+        block.generarPagare = $("#generar_pagare_contrato").val();
         block.is_color_lunes = $("#valor_lunes").css('background-color');
         block.is_color_martes = $("#valor_martes").css('background-color');
         block.is_color_miercoles = $("#valor_miercoles").css('background-color');
@@ -9366,7 +9380,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }        
-        block.arrays = [ block.tokens[1], block.min, block.max, block.demora, block.is_color_lunes, block.is_color_martes, block.is_color_miercoles, block.is_color_jueves, block.is_color_viernes, block.is_color_sabado, block.is_color_domingo, block.sobrePrestamo, block.refinanciacioinCoun, block.nombremp, block.direcccion, block.nit_empresa, block.cantidadContrato, block.horaCierre, block.ubicacionesObligatorias, block.ocultarTarjetas ];
+        block.arrays = [ block.tokens[1], block.min, block.max, block.demora, block.is_color_lunes, block.is_color_martes, block.is_color_miercoles, block.is_color_jueves, block.is_color_viernes, block.is_color_sabado, block.is_color_domingo, block.sobrePrestamo, block.refinanciacioinCoun, block.nombremp, block.direcccion, block.nit_empresa, block.cantidadContrato, block.horaCierre, block.ubicacionesObligatorias, block.ocultarTarjetas, block.generarPagare ];
         block.obj = {"r": "load_configuracion", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -9424,7 +9438,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 $("#HoraCierre").val(block.lista[17]);
                 $("#mostrar_obligatoriedad_ubicaciones").val(block.lista[18]);
                 $("#ocultar_tarjetas_pago").val(block.lista[19]);
+                $("#generar_pagare_contrato").val(block.lista[20]);
 
+                block.generarPagare = block.lista[20];
                 NombreEmpresa = block.lista[13];
             }else{
 				toastr.warning('Configure el perfil de su empresa', 'Atención!');
