@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-			recibo token y nombre
+			? recibo token y nombre
 		*/
 		
 		if ( arrays.length == 2 ){
@@ -19,7 +19,9 @@ eje = function(arrays,origen,redisClient) {
 					reject( [false,"1"] );
 				} else if( decoded.t=="1" || decoded.t=="0" || decoded.t=="2"  || decoded.t=="5" || decoded.t=="4" ){
 										
-					/* verifico si el nombre del cliente coincide dentro de los registros */
+					/* 
+                        ? verifico si el nombre del cliente coincide dentro de los registros 
+                    */
 
                     redisClient.keys("cliente_*", function(err, replyClientesTotales){
                         if( replyClientesTotales !== null && replyClientesTotales !== undefined){
@@ -38,8 +40,15 @@ eje = function(arrays,origen,redisClient) {
                                             let apellido1Cliente = datosCliente[10];
                                             let apellido2Cliente = datosCliente[11];
 
-											/* 	COMPRUEBO LOS DATOS PARA CORROBORAR SI HACE MATCH */ 
-                                            if( String( arrays[1] ).toUpperCase().includes( nombre1Cliente.toUpperCase()) || String( arrays[1] ).toUpperCase().includes( nombre2Cliente.toUpperCase() ) || String( arrays[1] ).toUpperCase().includes( apellido1Cliente.toUpperCase() ) || String( arrays[1] ).toUpperCase().includes( apellido2Cliente.toUpperCase() ) ){
+											/* 	
+                                                ? COMPRUEBO LOS DATOS PARA CORROBORAR SI HACE MATCH 
+                                            */
+
+                                            if( nombre1Cliente && String( arrays[1] ).toUpperCase().includes( nombre1Cliente.toUpperCase() ) || 
+                                                nombre2Cliente && String( arrays[1] ).toUpperCase().includes( nombre2Cliente.toUpperCase() ) || 
+                                                apellido1Cliente && String( arrays[1] ).toUpperCase().includes( apellido1Cliente.toUpperCase() ) || 
+                                                apellido2Cliente && String( arrays[1] ).toUpperCase().includes( apellido2Cliente.toUpperCase() ) 
+                                            ){
                                                 clientesMatch = [ ...clientesMatch, datosCliente ];
                                             }
                                             

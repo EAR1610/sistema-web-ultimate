@@ -19,32 +19,24 @@ eje = function(arrays,origen,redisClient) {
 				if (err) {
 					reject([false,"1"]);
 				} else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="0" || decoded.t=="5") {
-					
 					/* 
-						elimina el contrato directo 
+						restaura el contrato directo
 					*/
-					let contratoAEliminar = "registry_"+arrays[1]+"_contrato_"+arrays[2]+"_"+arrays[3]+"_"+arrays[4];
+					let contratoARestaurar = "deleted_registry_"+arrays[1]+"_contrato_"+arrays[2]+"_"+arrays[3]+"_"+arrays[4];
 							
 					redisClient.get("registro_contrato_"+arrays[3],function(erse,repli){
-						var contratoAsesorAntesDeEliminar = JSON.parse(repli);
-						var nuevoContratoAsesor = [];
+						var contratoAsesorAntesDeRestaurar = JSON.parse(repli);
+						var nuevoContratoAsesor = [ ...contratoAsesorAntesDeRestaurar ];
+						let contratoRestaurado = contratoARestaurar.replace('deleted_','');						
 
-						for(var index = 0; index < contratoAsesorAntesDeEliminar.length; index++) {
-							
-							if(contratoAsesorAntesDeEliminar[index] !== contratoAEliminar) {
-								nuevoContratoAsesor.push(contratoAsesorAntesDeEliminar[index]);
-							} else {
-								redisClient.rename(contratoAEliminar,"deleted_"+contratoAEliminar,function(erse,repli){});								
-							}
-
-							if( index == contratoAsesorAntesDeEliminar.length - 1 ) {
-								redisClient.set("registro_contrato_"+arrays[3],JSON.stringify(nuevoContratoAsesor),function(erse,repli){
-									resolve([true,true]);
-								});
-							}
-						}
+						redisClient.rename(contratoARestaurar,contratoRestaurado,function(erse,repli){	
+							nuevoContratoAsesor.push(contratoRestaurado);
+							console.log(nuevoContratoAsesor)
+							redisClient.set("registro_contrato_"+arrays[3],JSON.stringify(nuevoContratoAsesor),function(erse,repli){
+								resolve([true,true]);
+							});
+						});
 					});
-
 				}else{
 					reject([false,"2"]);
 				}

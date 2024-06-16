@@ -17,7 +17,7 @@ eje = function(arrays,origen,redisClient) {
 				if (err) {
 					reject([false,"1"]);
 				}else if( decoded.t=="1" || decoded.t=="2" || decoded.t=="5" ) {
-					if( arrays[0]!==null && arrays[1]!==null && arrays[2]!==null && arrays[3]!==null && arrays[4]!==null && arrays[5]!==null && arrays[6]!==null && arrays[7]!==null && arrays[8]!==null && arrays[9]!==null && arrays[10]!==null ){
+					if( arrays[0]!==null && arrays[1] !==null && arrays[2] !==null && arrays[3] !==null && arrays[4] !==null && arrays[5] !==null && arrays[6] !==null && arrays[7] !==null && arrays[8] !==null && arrays[9] !==null && arrays[10] !==null ){
 						function randomIntFromInterval(min,max){
 							return Math.floor(Math.random()*(max-min+1)+min);
 						}
@@ -58,19 +58,26 @@ eje = function(arrays,origen,redisClient) {
 										*/
 										if( extric == "3" && miEmpresa > 0 ) {
 											resolve( [false,"4",miEmpresa] );
-										} else if( extric=="3" && otrasEmpresa > 0 ) {
+										} else if( extric == "3" && otrasEmpresa > 0 ) {
 											resolve( [false,"5",otrasEmpresa] );
 										} else {
 											var moment = require("moment-timezone");
 											/*
 												creo la cantidad de cuotas que require según el ciclo que tengan
 											*/
+											
 											ultima_cuota = arrays[11].toString();
 
 											if( ultima_cuota === undefined || ultima_cuota === null || ultima_cuota === "" ) return;
 											
-											var fes =[];											
-											if(arrays[10]=="2"){ //FRECUENCIA DE PAGO: SEMANAL
+											
+											var fes =[];
+
+											/**
+											 * TODO: FRECUENCIA DE PAGO: SEMANAL
+											*/				
+
+											if(arrays[10]=="2"){
 												let cuotaD = arrays[8].replace(/\./g, ""),
 													tiempo = arrays[4],
 													indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
@@ -85,7 +92,10 @@ eje = function(arrays,origen,redisClient) {
 													fes.pop();
 												}
 
-											} else if(arrays[10]=="1"){ //FRECUENCIA DE PAGO DIARIA												
+											} else if(arrays[10]=="1"){ 
+												/**
+												 * TODO: FRECUENCIA DE PAGO: DIARIA
+												*/												
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
 													indi = moment().format('E'),
@@ -110,7 +120,10 @@ eje = function(arrays,origen,redisClient) {
 														fes.pop();
 													}	
 	
-											}else if(arrays[10]=="3"){ //PAGO QUINCENAL
+											}else if(arrays[10]=="3"){ 
+												/**
+												 * TODO: FRECUENCIA DE PAGO: QUINCENAL
+												*/	
 												let cuotaD = arrays[8].replace(/\./g, ""),
 													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4];	
@@ -126,19 +139,25 @@ eje = function(arrays,origen,redisClient) {
 													prox = prox2;													
 												}
 											
-											} else if(arrays[10]=="4"){	//PAGO MENSUAL	
+											} else if(arrays[10]=="4"){	
+												/**
+												 * TODO: FRECUENCIA DE PAGO: MENSUAL
+												*/	
 												let cuotaD = arrays[8].replace(/\./g, ""),
-													prox = moment().format('YYYY-MM-DD'),
+													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4];
 
 												for(let k = 1; k < tiempo + 1; k++){
-													let prox2 = moment(prox).add(30, 'days').format('YYYY-MM-DD');
+													let prox2 = moment(prox).add(30, 'days');
 													let cuota = (k == tiempo) ? ultima_cuota.replace(/\./g, "") : cuotaD;
 													fes.push({ "cp":cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;
 												}
 												
-											} else if (arrays[10] == "5") { //PAGO CONFIGURABLE 4 PAGOS EN 25 DÍAS
+											} else if (arrays[10] == "5") {
+												/**
+												 * TODO: FRECUENCIA DE PAGO: PAGO CONFIGURABLE 4 PAGOS EN 25 DÍAS
+												*/	
 												var cuotaD2 = arrays[8].replace(/\./g, ""),
 												tiempo = arrays[4],
 												indi = 12; //Fecha de la primera Cuota
@@ -154,11 +173,14 @@ eje = function(arrays,origen,redisClient) {
 												if ( fes.length > parseInt( arrays[4] ) ) {
 													fes.pop();
 												}
-											} else if( arrays[10] == "6" ) { //PAGO CONFIGURABLE 3 PAGOS EN 30 DÍAS
+											} else if( arrays[10] == "6" ) {
+												/**
+												 * TODO: FRECUENCIA DE PAGO: PAGO CONFIGURABLE 3 PAGOS EN 30 DÍAS
+												*/	
 												let cuotaD = arrays[8].replace(/\./g, ""),
-													prox = moment().format('YYYY-MM-DD'),
+													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
 													tiempo = arrays[4],
-													fechaFinal = moment(prox).add(30, 'days').format('YYYY-MM-DD'), 
+													fechaFinal = moment(prox).add(30, 'days'),
 													interes = parseInt( arrays[7].replace(/\./g, "") ),
 													ganancia = (cuotaD * interes) / 100,
 													pagosDeInteres = String( Math.ceil( ganancia / 2) );
@@ -168,23 +190,30 @@ eje = function(arrays,origen,redisClient) {
 													if( k == 3 ){
 														fes.push({ "cp":ultima_cuota,"ct":false,"fe":fechaFinal,"pe":0, "pago":"" });
 													} else {
-														let prox2 = moment(prox).add(15, 'days').format('YYYY-MM-DD');														
+														let prox2 = moment(prox).add(15, 'days');														
 														fes.push({ "cp":pagosDeInteres,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 														prox = prox2;
 													}
 												}
 											}
-
+											
 											if(fes.length>0){										
+												/**
+												 * ? Si tiene cuotas a descontar
+												*/	
 												var desc = parseInt(arrays[6]);
-												if(desc>0){
-													for(d = 0;d < desc; d++){
+												let prox = moment().tz("America/Guatemala").format('YYYY-MM-DD');
+
+												if( desc > 0 ) {
+													for(d = 0; d < desc; d++){
 														fes[d].ct = true;
+														fes[d].pago = prox;
 													}
 													arrays.push(fes);
-												}else{
+												} else {
 													arrays.push(fes);
 												}
+
 												redisClient.keys("registry_*",function(err,cant){
 													var consecutivo = cant.length + 1;
 													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/

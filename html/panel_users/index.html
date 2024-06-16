@@ -64,7 +64,8 @@
         imprimir_texto(doc, 'PAGARE LIBRE DE PROTESTO', doc.internal.pageSize.getWidth() / 2, 7, 4, 'black', 'center');
 
         doc.setFont('Helvetica', 'normal');
-        var texto = 'En la ciudad de la Esperanza del departamento de Quetzaltenango, el 09 de ABRIL de 2024 LUIS ALBERTO FUENTES NAVARRO de veintiocho años de edad con domicilio en CALLE DEL MERCADO HACIA LAS BRISAS, DESPUES DEL PUENTE, LADO DERECHO, ALDEA SANJON SANLORENZO, AYUTLA, SAN MARCOS, quien se identifica con el documento personal de identificación CUI 2497 12334 1217 extendido el Registro Nacional de las Personas de la República de Guatemala, adelante llamándose DEUDOR, quien actua en nombre propio; RECONOCE QUE DEBE Y PROMETE INCONDICIONALMENTE PAGAR a la orden de INVERSIONES TERRA NOVA, en adelante llamada ACREEDOR, la suma de MIL QUETZALES (1,000.00) acepto que cuyo domicilio y lugar en el que se realiza el pago es en, CALLE DEL MERCADO HACIA LAS BRISAS, DESPUES DEL PUENTE, LADO DERECHO, ALDEA SANJON SANLORENZO, AYUTLA, SAN MARCOS.';
+        var texto = 'En la ciudad de la Esperanza del departamento de Quetzaltenango, el 09 de ABRIL de 2024 '+ nombre +' de veintiocho años de edad con domicilio en '+ direccion +', quien se identifica con el documento personal de identificación CUI '+ cui +' extendido el Registro Nacional de las Personas de la República de Guatemala, adelante llamándose DEUDOR, quien actua en nombre propio; RECONOCE QUE DEBE Y PROMETE INCONDICIONALMENTE PAGAR a la orden de INVERSIONES TERRA NOVA, en adelante llamada ACREEDOR, la suma de MIL QUETZALES (1,000.00) acepto que cuyo domicilio y lugar en el que se realiza el pago es en '+ direccion + '.';
+
         var lineas = doc.splitTextToSize(texto, 65);
         var y = 13;
         for (var i = 0; i < lineas.length; i++) {
@@ -72,7 +73,7 @@
             y += 2; 
         }
 
-        var texto = 'La suma adeudada deberá cancelarse de la siguiente forma: 6 cuotas continúas ininterrumpidas de (216.67) Semanales a partir de la presente fecha, hasta la cancelación del presente crédito. INTERESES: La presente obligación devengará interese a razón del veinte por ciento (20%) mensual, FECHA DE VENCIMIENTO: la fecha de vencimiento del presente título de crédito es de cuarenta y cinco días después de la fecha de su emisión (un mes); EFECTOS PROCESALES: a) reconozco como título ejecutivo perfecto el presente título de crédito; b) Cualquier controversia derivada del incumplimiento del presente título de crédito, serán competentes con los tribunales del departamento de Quetzaltenango, renunciando para el efecto de cualquier otro domicilio que pudiere corresponderme; c) Acepto desde ya con buenas y exactas las cuentas que el ACREEDOR, presente acerca de este pagare y como líquido, exigible y de plazo vencido el saldo que se me demande, como consecuencia de está obligación; d) Que el incumplimiento de una sola de las cuotas en los plazos establecidos, da derecho al ACREEDOR a dar por vencida en forma anticipada la presente obligación y a exigir jurídicamente el cumplimiento de la misma. e) Señaló como lugar para recibir notificaciones en, CALLE DEL MERCADO HACIA LAS BRISAS, DESPUES DEL PUENTE, LADO DERECHO, ALDEA SANJON SANLORENZO, AYUTLA, SAN MARCOS. EL DEUDOR se obliga a comunicar por escrito cualquier cambio de domicilio que hiciere, en el entendido que a falta de tal aviso, se tendrá por válidas y bien hechas las citaciones notificaciones y emplazamientos que se efectuaren en el lugar señadalo. g) CESION este pagare es cedible, negociable mediante simple endoso del acreedor, sin necesidad de consentimiento previo ni posterior notificación al deudor.';
+        var texto = 'La suma adeudada deberá cancelarse de la siguiente forma: '+ cantidad_cuotas +' cuotas continúas ininterrumpidas de ('+ cuotas +') '+tipo_cuotas+' a partir de la presente fecha, hasta la cancelación del presente crédito. INTERESES: La presente obligación devengará interese a razón del veinte por ciento (20%) mensual, FECHA DE VENCIMIENTO: la fecha de vencimiento del presente título de crédito es de '+ fecha_vencimiento_contrato +' días después de la fecha de su emisión (un mes); EFECTOS PROCESALES: a) reconozco como título ejecutivo perfecto el presente título de crédito; b) Cualquier controversia derivada del incumplimiento del presente título de crédito, serán competentes con los tribunales del departamento de Quetzaltenango, renunciando para el efecto de cualquier otro domicilio que pudiere corresponderme; c) Acepto desde ya con buenas y exactas las cuentas que el ACREEDOR, presente acerca de este pagare y como líquido, exigible y de plazo vencido el saldo que se me demande, como consecuencia de está obligación; d) Que el incumplimiento de una sola de las cuotas en los plazos establecidos, da derecho al ACREEDOR a dar por vencida en forma anticipada la presente obligación y a exigir jurídicamente el cumplimiento de la misma. e) Señaló como lugar para recibir notificaciones en, '+ direccion +'. EL DEUDOR se obliga a comunicar por escrito cualquier cambio de domicilio que hiciere, en el entendido que a falta de tal aviso, se tendrá por válidas y bien hechas las citaciones notificaciones y emplazamientos que se efectuaren en el lugar señadalo. g) CESION este pagare es cedible, negociable mediante simple endoso del acreedor, sin necesidad de consentimiento previo ni posterior notificación al deudor.';
         var lineas = doc.splitTextToSize(texto, 65);
         var y = 35;
         for (var i = 0; i < lineas.length; i++) {
@@ -291,167 +292,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal inmoda" id="popop_data_pagare" tabindex="1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight modalete" style="width: 789px;margin: 30px auto;">
-                <h1 class="text-center font-bold">DATOS DEL DEUDOR PARA EL PAGARE</h1>
-                <div class="col-sm-12" id="nomb_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Nombre: </label> 
-                            <input id="nombre_deudor"
-                                type="text"
-                                placeholder=""
-                                class="form-control ml-2"
-                                required
-                            >
-                        </div>
-                    </form>
-                </div>                
-                <div class="col-sm-12" id="direc_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Dirección: </label> 
-                            <input id="direccion_deudor"
-                                type="text"
-                                placeholder=""
-                                class="form-control ml-2"
-                                required
-                            >
-                        </div>
-                    </form>
-                </div>                
-                <div class="col-sm-12" id="let_cont_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Valor del contrato: </label> 
-                            <input id="letra_contrato_deudor"
-                                type="text"
-                                placeholder=""
-                                class="form-control ml-2"                                
-                                disabled
-                                required
-                            >
-                        </div>
-                    </form>
-                </div> 
-                <div class="col-sm-12" id="cuo_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Cuotas: </label>
-                            <input id="cuotas_deudor"
-                                type="input"
-                                placeholder=""
-                                class="form-control ml-2" 
-                                disabled 
-                                required                 
-                            >
-                        </div>
-                    </form>
-                </div>               
-                <div class="col-sm-12" id="fec_cont_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Fecha del contrato: </label>
-                            <input id="fecha_contrato_deudor"
-                                type="text"                                
-                                class="form-control ml-2"
-                                disabled
-                                required
-                            >
-                        </div>
-                    </form>
-                </div>  
-                <div class="col-sm-12" id="fec_ven_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Fecha de vencimiento del contrato: </label>
-                            <input id="fecha_vencimiento_contrato_deudor"
-                                type="input"                                
-                                class="form-control ml-2"   
-                                required                                                     
-                            >
-                        </div>
-                    </form>
-                </div>              
-                <div class="col-sm-12" id="depa_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Departamento: </label>
-                            <input id="departamento_deudor"
-                                type="input"
-                                placeholder=""
-                                class="form-control ml-2"   
-                                required                             
-                            >
-                        </div>
-                    </form>
-                </div>                
-                <div class="col-sm-12" id="cui_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">CUI: </label>
-                            <input id="cui_deudor"
-                                type="input"                                
-                                class="form-control ml-2" 
-                                disabled        
-                                required                       
-                            >
-                        </div>
-                    </form>
-                </div>                
-                                
-                <div class="col-sm-12" id="cant_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Cantidad de cuotas: </label>
-                            <input id="cantidad_cuotas_deudor"
-                                type="number"
-                                min="0"
-                                class="form-control ml-2" 
-                                required                            
-                            >
-                        </div>
-                    </form>
-                </div>                
-                <div class="col-sm-12" id="edad_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Edad: </label>
-                            <input id="edad_deudor"
-                                type="number"
-                                min="0"
-                                class="form-control ml-2"                   
-                                required
-                            >
-                        </div>
-                    </form>
-                </div>                
-                <div class="col-sm-12" id="tipo_deu">
-                    <form role="form">
-                        <div class="form-group d-flex p-2">
-                            <label class="text-center" style="width: 35%">Tipo de cuotas: </label>
-                            <input id="tipo_cuotas_deudor"
-                                type="text"                                                            
-                                class="form-control ml-2 uppercase"
-                                disabled
-                                required
-                            >                            
-                        </div>
-                    </form>
-                </div>                
-                <div class="col-sm-12" id="reg_pag">
-                    <form role="form" class="text-center m-1">
-                        <button class="btn btn-primary btn-lg" style="margin-left: 14px;" id="registrar_pagare"
-                                type="button">GENERAR PAGARE
-                        </button>
-                    </form>
-                </div>                
-            </div>
-        </div>
-    </div>
+    </div>    
     
 
     <div class="modal inmodal" id="popop_new_cliente" tabindex="-1" role="dialog" aria-hidden="true">
@@ -664,7 +505,7 @@
                 <div class="modal-header pull-left" style="text-align: inherit;padding: 1px 15px;">
                     <button type="button" class="close" data-dismiss="modal"><span
                             aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Mora al cliente</h4>					
+                    <h4 class="modal-title">Mora al cliente</h4>	
                 </div>
                 <div class="modal-body row" style="margin-left: 0px;margin-right: 0px;">
 
@@ -695,15 +536,39 @@
                     <div class="col-sm-12 col-md-6">
                         <form role="form">
                             <div class="form-group">
-                                <label>Aplicar Interes (Ej: 20, 25 y 30)</label>
+                                <label>Aplicar Interes (Ej: 15, 20, 25 y 30)</label>
                                 <input id="porcentaje_cliente_interes"
                                     type="number"
-                                    min="20"
+                                    min="15"
                                     max="30"
                                     step="5"
                                     class="form-control"
                                     onchange="validateInput(this)"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <form role="form">
+                            <div class="form-group">
+                                <label>Valor del contrato</label>
+                                <input id="contrato_cliente_interes"
+                                    type="number"
+                                    class="form-control"
+                                    disabled>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <form role="form">
+                            <div class="form-group">
+                                <label>Valor del interes</label>
+                                <input id="valor_cliente_interes"
+                                    type="number"
+                                    class="form-control"
+                                    disabled>
                             </div>
                         </form>
                     </div>
@@ -748,7 +613,7 @@
                             class="nav-label">Cobro de cuotas</span></a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Días de pago</span><span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Días de pago</span><span class="fa arrow"></span></a>                    
                     <ul class="nav nav-second-level collapse">
                         <li><a href="javascript:pago_lunes();">Lunes</a></li>
                         <li><a href="javascript:pago_martes();">Martes</a></li>
@@ -758,17 +623,22 @@
                         <li><a href="javascript:pago_sabado();">Sábado</a></li>
                     </ul>
 
-                </li>
-                <li>
-                    <a id="couta_sear" href="javascript:consultar_Contratos()"><i class="fa fa-copy"></i><span class="nav-label">Consultar Contrato</a>
-                </li>
+                </li>                
                 <li>
                     <a id="couta_sear" href="javascript:registrar_gastos();"><i class="fa fa-money"></i> <span
                             class="nav-label">Gastos</span></a>
                 </li>
                 <li>
-                    <a id="couta_sear" href="javascript:consultar_Contratos_Vencimiento();"><i class="fa fa-book"></i> <span
-                            class="nav-label">Contratos en vencimiento</span></a>
+                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Contratos</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a id="couta_sear" href="javascript:consultar_Contratos()"><i class="fa fa-copy"></i><span class="nav-label">Consultar Contrato</a>
+                        </li>
+                        <li>
+                            <a id="couta_sear" href="javascript:consultar_Contratos_Vencimiento();"><i class="fa fa-book"></i> <span class="nav-label">Contratos en vencimiento</span></a>
+                        </li>
+
+                    </ul> 
                 </li>
                 <li>
                     <a id="couta_sear" href="javascript:registrar_renovaciones();"><i class="fa fa-money"></i><span
@@ -908,12 +778,12 @@
                                         <option value=''>Seleccione</option>
                                         <!-- Don Edy -->
 
-                                        <option value='20'>PLAN DIARIO, 10% EN 20 PAGOS</option>
+                                        <!-- <option value='20'>PLAN DIARIO, 10% EN 20 PAGOS</option>
                                         <option value='4'>PLAN SEMANAL, 15% EN 4 PAGOS</option>
                                         <option value='8'>PLAN SEMANAL, 30% EN 8 PAGOS</option>
                                         <option value='4'>PLAN QUINCENAL, 30% EN 4 PAGOS</option>
                                         <option value='4'>PLAN SEMANAL, 12% EN 4 PAGOS</option>
-                                        <option value='8'>PLAN SEMANAL, 24% EN 8 PAGOS</option>
+                                        <option value='8'>PLAN SEMANAL, 24% EN 8 PAGOS</option> -->
 
                                         <!-- Don Axel -->
                                         <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
@@ -932,6 +802,22 @@
                                         <option value='6'>Plan semanal 6 pagos al 30%</option>
                                         <option value='7'>Plan semanal 7 pagos al 35%</option>
                                         <option value='8'>Plan semanal 8 pagos al 40%</option> -->
+
+                                        <!-- ALEMO S.A -->
+                                        <!-- <option value="1">quincenal al 20%</option>
+                                        <option value="10">semanal al 10%</option>
+                                        <option value="4">semanal al 10% 4 semanas</option>
+                                        <option value="20">Diario 20%</option>
+                                        <option value="6">semanal 6 /40%</option>
+                                        <option value="6">CUOTA SEMANAL 6</option>
+                                        <option value="12">semanal 12 45%</option>
+                                        <option value="23">sobresaldo</option>
+                                        <option value="1">CUOTA MENSUAL </option>
+                                        <option value="8">CUOTA SEMANAL8</option>
+                                        <option value="23">CUOTA DIARIA </option>
+                                        <option value="4">CUOTA SEMANAL</option>
+                                        <option value="40">Diario plazo largo35%</option>
+                                        <option value="40">diario40%</option> -->
                                         </select>
                                     
                                 </form>
@@ -967,11 +853,10 @@
                                 <form role="form">
                                     <div class="form-group"><label>Cuotas a descontar</label>
                                         <input
-                                        id="cuota_descontar_sistema"
-                                        type="number"  value="0"
-                                        placeholder="" maxlength="3"
-                                        class="form-control"
-                                        disabled= true>
+                                            id="cuota_descontar_sistema"
+                                            type="number"  value="0" pattern="[0-9]*"
+                                            placeholder="" maxlength="3" min="0"
+                                            class="form-control">
                                     </div>
                                 </form>
                             </div>
@@ -1127,12 +1012,12 @@
                                     <select class="form-control m-b" id="selector_cuotas_selec_ampliacion">
                                         <option value=''>Seleccione</option>
                                         <!-- Don Edy -->
-                                        <option value='20'>PLAN DIARIO, 10% EN 20 PAGOS</option>
+                                        <!-- <option value='20'>PLAN DIARIO, 10% EN 20 PAGOS</option>
                                         <option value='4'>PLAN SEMANAL, 15% EN 4 PAGOS</option>
                                         <option value='8'>PLAN SEMANAL, 30% EN 8 PAGOS</option>
                                         <option value='4'>PLAN QUINCENAL, 30% EN 4 PAGOS</option>
                                         <option value='4'>PLAN SEMANAL, 12% EN 4 PAGOS</option>
-                                        <option value='8'>PLAN SEMANAL, 24% EN 8 PAGOS</option>
+                                        <option value='8'>PLAN SEMANAL, 24% EN 8 PAGOS</option> -->
 
                                         <!-- DOn Axel -->     
                                         <!-- <option value='25'>PLAN 25 DIAS 10% EN 25 PAGOS</option>
@@ -1151,6 +1036,22 @@
                                         <option value='6'>Plan semanal 6 pagos al 30%</option>
                                         <option value='7'>Plan semanal 7 pagos al 35%</option>
                                         <option value='8'>Plan semanal 8 pagos al 40%</option> -->
+
+                                        <!-- ALEMO S.A -->
+                                        <!-- <option value="1">quincenal al 20%</option>
+                                        <option value="10">semanal al 10%</option>
+                                        <option value="4">semanal al 10% 4 semanas</option>
+                                        <option value="20">Diario 20%</option>
+                                        <option value="6">semanal 6 /40%</option>
+                                        <option value="6">CUOTA SEMANAL 6</option>
+                                        <option value="12">semanal 12 45%</option>
+                                        <option value="23">sobresaldo</option>
+                                        <option value="1">CUOTA MENSUAL </option>
+                                        <option value="8">CUOTA SEMANAL8</option>
+                                        <option value="23">CUOTA DIARIA </option>
+                                        <option value="4">CUOTA SEMANAL</option>
+                                        <option value="40">Diario plazo largo35%</option>
+                                        <option value="40">diario40%</option> -->
                                     </select>
                                 </form>
                             </div>
@@ -1186,10 +1087,9 @@
                                     <div class="form-group"><label>Cuotas a descontar</label>
                                         <input
                                         id="cuota_descontar_sistema"
-                                        type="number"  value="0"
-                                        placeholder="" maxlength="3"
-                                        class="form-control"
-                                        disabled= true>
+                                        type="number"  value="0" pattern="[0-9]*"
+                                        placeholder="" maxlength="3" min="0"
+                                        class="form-control">
                                     </div>
                                 </form>
                             </div>
@@ -1572,6 +1472,7 @@
                                         <th>Porcentaje</th>
                                         <th>Cuota</th>
                                         <th>Fecha de culminación</th>
+                                        <th>Aplicar interes</th>
                                     </tr>
                                     </thead>
                                     <tbody id="lista_enorme">
@@ -1810,14 +1711,14 @@
 <script>
 
     const firebaseConfig = {
-        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
-        authDomain: "axelssmoney.firebaseapp.com",
-        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
-        projectId: "axelssmoney",
-        storageBucket: "axelssmoney.appspot.com",
-        messagingSenderId: "915189749485",
-        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
-        measurementId: "G-N2Z1GX04BF"
+        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
+        authDomain: "alexis-1e334.firebaseapp.com",
+        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
+        projectId: "alexis-1e334",
+        storageBucket: "alexis-1e334.appspot.com",
+        messagingSenderId: "343288753135",
+        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
+        measurementId: "G-QPDM99F0RM"
     };
 	
     firebase.initializeApp(firebaseConfig);	
@@ -1879,8 +1780,9 @@
         $("#buscar_cedula_cliente2").click();
         $("#cuotas_coun").focus();        
     }
-    function renovar_contrato( cedula, id ){     
-        window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));   
+    function renovar_contrato( cedula, id ){ 
+        console.log(cedula,id);
+        window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));
         ampliar_contrato_link( cedula, id );
     }
 
@@ -1970,37 +1872,50 @@
         $("#pago_sabado").css("display","none");
     }
 
-    $("#registrar_pagare").click(function(){
-        let nombre = $("#nombre_deudor").val();
-        let direccion = $("#direccion_deudor").val();
-        let letra_contrato = $("#letra_contrato_deudor").val();
-        let cuotas = $("#cuotas_deudor").val();
-        let fecha_contrato = $("#fecha_contrato_deudor").val();
-        let fecha_vencimiento_contrato = $("#fecha_vencimiento_contrato_deudor").val();
-        let departamento = $("#departamento_deudor").val();
-        let cui = $("#cui_deudor").val();
-        let cantidad_cuotas = $("#cantidad_cuotas_deudor").val();
-        let edad = $("#edad_deudor").val();
-        let tipo_cuotas = $("#tipo_cuotas_deudor").val();
+    // $("#registrar_pagare").click(function(){
+    //     let nombre = $("#nombre_deudor").val();
+    //     let direccion = $("#direccion_deudor").val();
+    //     let letra_contrato = $("#letra_contrato_deudor").val();
+    //     let cuotas = $("#cuotas_deudor").text();   
+    //     let fecha_contrato = $("#fecha_contrato_deudor").val();
+    //     let fecha_vencimiento_contrato = $("#fecha_vencimiento_contrato_deudor").val();
+    //     let departamento = $("#departamento_deudor").val();
+    //     let cui = $("#cui_deudor").val();
+    //     let cantidad_cuotas = $("#cantidad_cuotas_deudor").val();
+    //     let edad = $("#edad_deudor").val();
+    //     let tipo_cuotas = $("#tipo_cuotas_deudor").val();
 
-        if( nombre == "" || direccion == "" || letra_contrato == "" || cuotas == "" || fecha_contrato =="" || fecha_vencimiento_contrato == "" || departamento == "" || cui == "" || cantidad_cuotas == "" || edad == "" || tipo_cuotas == ""){
-            toastr.warning('Faltan campos por llenar', 'Atencion!');
-        } else {
-            generarPDFPagare(
-                nombre,
-                direccion,
-                letra_contrato,
-                cuotas,
-                fecha_contrato,
-                fecha_vencimiento_contrato,
-                departamento,
-                cui,
-                cantidad_cuotas,
-                edad,
-                tipo_cuotas
-            );
-        }
-    });
+    //     console.log(nombre);
+    //     console.log(direccion);
+    //     console.log(letra_contrato);
+    //     console.log(cuotas);
+    //     console.log(fecha_contrato);
+    //     console.log(fecha_vencimiento_contrato);
+    //     console.log(departamento);
+    //     console.log(cui);
+    //     console.log(cantidad_cuotas);
+    //     console.log(edad);
+    //     console.log(tipo_cuotas);
+
+
+    //     if( nombre == "" || direccion == "" || letra_contrato == "" || cuotas == "" || fecha_contrato =="" || fecha_vencimiento_contrato == "" || departamento == "" || cui == "" || cantidad_cuotas == "" || edad == "" || tipo_cuotas == ""){
+    //         toastr.warning('Faltan campos por llenar', 'Atencion!');
+    //     } else {
+    //         generarPDFPagare(
+    //             nombre,
+    //             direccion,
+    //             letra_contrato,
+    //             cuotas,
+    //             fecha_contrato,
+    //             fecha_vencimiento_contrato,
+    //             departamento,
+    //             cui,
+    //             cantidad_cuotas,
+    //             edad,
+    //             tipo_cuotas
+    //         );
+    //     }
+    // });
 	
 	$("#procesar_aplico").click(function(){
 		block.exprec = $("#iptu_aplio").val();
@@ -2048,7 +1963,7 @@
         block.tarjetero ="";
         block.infoWindowContents=[];                    
 
-        var yes = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));        
+        var yes = JSON.parse(window.localStorage.getItem("Money-vars-tarjetas_old"));
         for(var q=0; q < yes.length; q++){
             // block.tarjetero = block.tarjetero + '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+yes[q].u+'</p><p> Monto: '+yes[q].m+'</p><p> Fecha: '+yes[q].f+'</p><p> DPI: '+yes[q].c+'</p><p> Celular: '+yes[q].e+'</p><p> Dirección: '+yes[q].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+yes[q].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[q].id+String.fromCharCode(39)+')" type="button">Renovar Contrato</button></p></div></div>';
 
@@ -2229,10 +2144,15 @@
     }
 
     function validateInput(input) {
-        const validValues = [20, 25, 30];
+        const validValues = [15, 20, 25, 30];
         if (!validValues.includes(Number(input.value))) {
-            input.value = 20; // Valor predeterminado
+            input.value = 15; // Valor predeterminado
         }
+        
+        let valorInteres =  (parseInt( block.prestadoContrato.replace(/\./g, '') ) * ( parseInt(input.value) / 100 ) );
+
+        $("#contrato_cliente_interes").val( block.prestadoContrato );
+        $("#valor_cliente_interes").val( valorInteres );
     }
 
     $("#selector_cuotas_selec").change(function(){    
@@ -2612,7 +2532,7 @@
                 block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
                 block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');  
                 block.infoCliente = JSON.parse(valor.d[1][0][3]);                
-                block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'</td></tr>';
+                block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td><td>'+block.infoCliente[23]+'</td><td>'+block.sumas+'</td><td>'+block.cuatrosx[7]+'</td> <td>'+block.cuatrosx[8]+' '+block.cuatrosx[10]+'</td><td>'+block.unox[3]+'</td><td>'+block.unox[7]+'%</td><td>'+block.unox[8]+'</td><td>'+block.fechaCulminacion+'<td><button class="btn btn-primary btn-block" onclick="javascript:interes_meter('+String.fromCharCode(39)+block.cuatrosx[7]+String.fromCharCode(39)+','+String.fromCharCode(39)+block.cuatrosx[8]+' '+block.cuatrosx[10]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.unox[5]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.unox[3]+String.fromCharCode(39)+');" type="button">Aplicar Interes</button></td></tr>';
                 block.unico++;
 
                 listado_contratos(block.unico);                
@@ -2714,9 +2634,13 @@
         });
     }
 
-    function interes_meter(cedula, nombre, fecha, prestado){        
+    function interes_meter(cedula, nombre, fecha, prestado){               
 		$("#nombre_cliente_interes").val(nombre);
-		$("#cedula_cliente_interes").val(cedula);        
+		$("#cedula_cliente_interes").val(cedula);
+        $("#porcentaje_cliente_interes").val("");
+        $("#contrato_cliente_interes").val("");
+        $("#valor_cliente_interes").val("");
+
         block.fechaContrato = fecha;
         block.prestadoContrato = prestado;
         $("#popop_new_mora").modal("show");
@@ -3672,30 +3596,29 @@
         return true;
     }   
 
-    $("#crear_contrato").click(function () {        
-        if( window.sessionStorage.getItem("Money-vars-registrado") !== null &&  $("#monto_prestar_ya_admin").val() !== "" ) {            
-            if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {                        
+    $("#crear_contrato").click(function () {   
+        debugger;     
+        if( window.sessionStorage.getItem("Money-vars-registrado") !== null &&  $("#monto_prestar_ya_admin").val() !== "" ) {
+            if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {
                 block.asesor = $("#selector_asesores_lista").val();
                 block.monto_prestar = $("#monto_prestar_ya_admin").val();
                 block.frecuencia = $("#selector_frecuencia").val();
                 if (block.frecuencia == "5" || block.frecuencia == 5){ //Pago personalizado (25 días en 4 pagos)                    
                     block.fechasCorrectas = validarRangoFechas( $("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val() );
-
                     if( !block.fechasCorrectas ) {
                         toastr.warning("Las fechas de las cuotas no tienen un orden lógico", "Atención");
                         return;
-                    }
-                    
+                    }                    
                 } else {
-                    block.dias = $("#selector_cuotas_selec").val();
+                    block.dias = parseInt($("#selector_cuotas_selec").val());
                 }
                 
                 block.fecha_prestamo = $("#fechaActual").val();
-                block.descontar = parseInt($("#cuota_descontar_sistema").val());
+                block.descontar = parseInt( $("#cuota_descontar_sistema").val() != "" ? $("#cuota_descontar_sistema").val() : 0 );
                 block.porcentaje = $("#utilidad_prestada").html();
                 block.quedo_cuota = $("#utilidad_cuota").html();
-                block.dias = block.dias - block.descontar;                        
-                if( block.descontar < block.dias ){
+                block.diasTemp = block.dias - block.descontar;                        
+                if( block.descontar < block.diasTemp ){
     
                     if (window.localStorage.getItem("Money-vars-token") !== null) {
                         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3706,18 +3629,6 @@
                     block.arrays = [ block.tokens[1], window.sessionStorage.getItem("Money-vars-registrado"), block.tokens[5], block.monto_prestar, block.dias, block.fecha_prestamo, block.descontar, block.porcentaje, block.quedo_cuota, block.tokens[4], block.frecuencia, block.ultima_cuota, $("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val() ];
                     var datosFecha = block.fecha_prestamo.split("-");
                     var fecha = datosFecha[1] + "/" + datosFecha[2] + "/" + datosFecha[0];
-                    
-
-                    if (block.configuracion[20] = "1") {
-                        document.getElementById("letra_contrato_deudor").value = block.monto_prestar;
-                        document.getElementById("cuotas_deudor").value = $("#selector_cuotas_selec").val();
-                        document.getElementById("fecha_contrato_deudor").value = fecha;
-                        document.getElementById("cui_deudor").value = $("#text_cedula_cliente").val();
-                        document.getElementById("tipo_cuotas_deudor").value = $("#selector_frecuencia").find("option:selected").text();
-                        $("#popop_data_pagare").modal("show");
-                        $('#popop_data_pagare').modal({backdrop: 'static', keyboard: false})
-                        return;
-                    } 
                     
                     block.obj = { "r": "crear_contrato", "d": block.arrays };
                     backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
@@ -4558,13 +4469,20 @@
 
     window.sessionStorage.setItem("Money-vars-tipo", "1");
     //QUITAR ESTOOOOO
-    //DON AXEL
+    /*
+        ============= DON AXEL ===================
+    */
+   
     // block.CuotasTotales = [ [7725991, "PLAN 25 DIAS 10% EN 25 PAGOS", "25", "10"], [7725991, "PLAN 25 DIAS 10% EN 4 PAGOS", "4", "10"], [7725991, "PLAN 30 DIAS 10% EN 3 PAGOS CON INTERES - CAPITAL", "3", "10"], [7725991, "PLAN 8 SEMANAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 8 DIAS 20% EN 8 PAGOS", "8", "20"], [7725991, "PLAN 50 DIAS 20% EN 50 PAGOS", "50", "20"] ];
 
-    //DON EDY
-    block.CuotasTotales = [ [9999855, "PLAN DIARIO, 10% EN 20 PAGOS", "20", "10"], [9999855, "PLAN SEMANAL, 15% EN 4 PAGOS", "4", "15"], [9999855, "PLAN SEMANAL, 30% EN 8 PAGOS", "8", "30"], [9999855, "PLAN QUINCENAL, 30% EN 4 PAGOS", "4", "30"], [9999855, "PLAN SEMANAL, 12% EN 4 PAGOS", "4", "12"], [9999855, "PLAN SEMANAL, 24% EN 8 PAGOS", "8", "24"] ];
+    /*
+        ============= DON EDY ===================
+    */
+    // block.CuotasTotales = [ [9999855, "PLAN DIARIO, 10% EN 20 PAGOS", "20", "10"], [9999855, "PLAN SEMANAL, 15% EN 4 PAGOS", "4", "15"], [9999855, "PLAN SEMANAL, 30% EN 8 PAGOS", "8", "30"], [9999855, "PLAN QUINCENAL, 30% EN 4 PAGOS", "4", "30"], [9999855, "PLAN SEMANAL, 12% EN 4 PAGOS", "4", "12"], [9999855, "PLAN SEMANAL, 24% EN 8 PAGOS", "8", "24"] ];
     
-    //DON NESTOR
+    /*
+        ============= DON NESTOR ===================
+    */
     // block.CuotasTotales = [
     //     [9987575, "Plan semanal 2 pagos al 10%", "2", "10"], 
     //     [9987575, "Plan semanal 3 pagos al 15%", "3", "15"], 
@@ -4574,6 +4492,26 @@
     //     [9987575, "Plan semanal 7 pagos al 35%", "7", "35"], 
     //     [9987575, "Plan semanal 8 pagos al 40%", "8", "40"], 
     //     [9987575, "Plan diario 20 pagos al 20%", "20", "20"] 
+    // ];
+
+    /*
+        ============= DON ALEMO S.A ===================
+    */
+    // block.CuotasTotales = [
+    //     [7576793, "quincenal al 20%", "1", "20"], 
+    //     [7576793, "semanal al 10%", "10", "10"], 
+    //     [7576793, "semanal al 10% 4 semanas", "4", "10"], 
+    //     [7576793, "Diario 20%", "20", "20"], 
+    //     [7576793, "semanal 6 /40%", "6", "40"], 
+    //     [7576793, "CUOTA SEMANAL 6", "6", "30"], 
+    //     [7576793, "semanal 12 45%", "12", "45"], 
+    //     [7576793, "sobresaldo", "23", "25.5"], 
+    //     [7576793, "CUOTA MENSUAL ", "1", "20"], 
+    //     [7576793, "CUOTA SEMANAL8", "8", "40"], 
+    //     [7576793, "CUOTA DIARIA ", "23", "15"], 
+    //     [7576793, "CUOTA SEMANAL", "4", "20"], 
+    //     [7576793, "Diario plazo largo35%", "40", "35"], 
+    //     [7576793, "diario40%", "40", "40"]
     // ];
 
     window.sessionStorage.setItem("Lista_cuota", JSON.stringify(block.CuotasTotales));
@@ -4846,6 +4784,8 @@
     $("#buscar_nombre_cliente_buscar").click(function() {
         if( $("#text_nombre_cliente_buscar").val() !== "" ){
 
+            toastr.info('Consultando el cliente....', 'Atención!');
+
             $("#lista_clientes_encontrados").html("");
             $("#datos_cliente").css("display","block");
 
@@ -4859,6 +4799,7 @@
             block.obj = { "r": "buscar_cliente_nombre", "d": block.arrays };
             backend.conexionEnvio(JSON.stringify( block.obj ), function( salida ){
                 let valor = JSON.parse(salida);
+                console.log(valor)
                 if( !valor.e ){
                     let clientesInformacion = valor.d[1];
                     if( clientesInformacion.length > 0){

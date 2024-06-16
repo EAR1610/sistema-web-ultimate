@@ -1363,6 +1363,7 @@
                     <ul class="nav nav-second-level collapse">
                         <!-- <li><a href="javascript:crear_contrato();">Registrar</a></li> -->
                         <li><a href="javascript:vers_contratos();">Consultar</a></li>
+                        <li><a href="javascript:vers_contratos_eliminados();">Contratos eliminados</a></li>
                        <!-- <li><a href="javascript:migrar_cion();">Migrar</a></li>-->
                     </ul>
 
@@ -2893,9 +2894,47 @@
                                         <th>Cuota</th>
                                         <th>Fecha de culminación</th>
                                         <th>Ver Contrato</th>
+                                        <th>Opción</th>
                                     </tr>
                                     </thead>
                                     <tbody id="lista_enorme">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+
+                <div class="col-lg-12" id="contratos_view_eliminados">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Contratos eliminados</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+                            
+                            <div class="col-sm-3 col-md-3 col-xs-12 " >
+                                <select class="form-control m-b" id="lista_asesores_general4">
+                                </select>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id = "datatableContratosEliminados" class = "table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Fecha de prestamo </th>
+                                        <th>A pagar</th>
+                                        <th>Identificador</th>
+                                        <th>DPI</th>
+                                        <th>Nombre cliente</th>
+                                        <th>Asesor</th>
+                                        <th>Prestamo</th>
+                                        <th>Porcentaje</th>
+                                        <th>Cuota</th>
+                                        <th>Fecha de culminación</th>
+                                        <th>Opción</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="lista_enorme_eliminados">
                                     </tbody>
                                 </table>
                             </div>
@@ -3459,14 +3498,14 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyD0IUGt9jsr8baMbhQ9th3sAEXPms8Neqw",
-        authDomain: "axelssmoney.firebaseapp.com",
-        databaseURL: "https://axelssmoney-default-rtdb.firebaseio.com",
-        projectId: "axelssmoney",
-        storageBucket: "axelssmoney.appspot.com",
-        messagingSenderId: "915189749485",
-        appId: "1:915189749485:web:1a3bfd97e0ee9cf1221ee4",
-        measurementId: "G-N2Z1GX04BF"
+        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
+        authDomain: "alexis-1e334.firebaseapp.com",
+        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
+        projectId: "alexis-1e334",
+        storageBucket: "alexis-1e334.appspot.com",
+        messagingSenderId: "343288753135",
+        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
+        measurementId: "G-QPDM99F0RM"
     };
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -3691,6 +3730,7 @@
         $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
         $("#lista_ubicacniones_div").css("display","initial");
         $("#cliente_lista_admi").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_empresa_div").css("display","none");
         $("#HistorialClientes").css("display","none");
         $("#cobrar_couta").css("display","none");
@@ -3834,7 +3874,6 @@
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) { 
-                console.log(valor.d)
                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                 $("#text_baseAsesor").text("Q"+valor.d[2].replace(/\./g, ""));
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
@@ -4276,6 +4315,7 @@
         $("#googleMap").css("display","none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
@@ -5423,7 +5463,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
             var valor = JSON.parse( salida );            
             if ( !valor.e ) {
                 block.lista = valor.d[1];
-                console.log(valor.d[1])
                 block.nuevo = "";
                 block.nuevo2 = "<option value=''>Seleccione</option>";
                 block.lisat = [];
@@ -5611,7 +5650,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [ block.tokens[1], block.tokens[4], $("#lista_asesores_general3").val() ];
         block.obj = { "r": "contratos_lista_all_datatable", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);             
+            var valor = JSON.parse(salida);
             if (!valor.e) { 
                 
                 // Antes de agregar nuevas filas, limpia la tabla
@@ -5628,9 +5667,124 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     block.datos = valor.d[1][index];
                     block.contrato = datos[0];
                     block.cliente = datos[1]; 
+                    block.numContratoCliente = datos[2];
 
                     block.esf = $("#lista_asesores_general3")["0"].options.selectedIndex;
                     block.tesq = $("#lista_asesores_general3")["0"][block.esf].label.split("ID:");
+                    block.calsulo = block.contrato[13];
+                    block.sumas = 0;
+
+                    for(var u= 0; u<block.calsulo.length; u++){
+                        if(!block.calsulo[u].ct && block.calsulo[u].pe==0){                            
+                            block.sumas = block.sumas + parseInt(block.calsulo[u].cp.replace(/\./g, ""));
+                        }else if(block.calsulo[u].pe!==0){
+                            block.sumas = block.sumas + parseInt(block.calsulo[u].cp.replace(/\./g, "")) - parseInt(block.calsulo[u].pe);
+                        }
+                    }
+
+                    //Damos formato a la fechad de Registro del contrato (dd-mm-yyyy);
+                    block.fechaSinFormatoRegistro = block.contrato[5];
+                    let partesFechaRegistroContrato = block.fechaSinFormatoRegistro.split('-');
+                    block.fechaRegistro = `${ partesFechaRegistroContrato[2] }-${ partesFechaRegistroContrato[1] }-${ partesFechaRegistroContrato[0] }`;
+    
+                    //Damos formato a la fechad de Culminacion del contrato (dd-mm-yyyy);
+                    block.fechaSinFormatoCulminacion = block.calsulo[block.calsulo.length - 1].fe;
+                    let partesFecha = block.fechaSinFormatoCulminacion.split('-');
+                    block.fechaCulminacion = `${ partesFecha[2] }-${ partesFecha[1] }-${ partesFecha[0] }`;
+    
+                    block.sumas = block.sumas.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                    block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
+                
+                    block.contratoInfo = '<td><button class="btn btn-primary" onclick="javascript:fijar_monto('+String.fromCharCode(39)+block.cliente[7]+String.fromCharCode(39)+','+String.fromCharCode(39)+block.cliente[8]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[5]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[3]+String.fromCharCode(39)+');">Ver Contrato</button></td></tr>';
+
+                    block.contratoInfoAEliminar = '<td><button class="btn btn-danger" onclick="javascript:eliminar_contrato('+String.fromCharCode(39)+block.cliente[7]+String.fromCharCode(39)+','+String.fromCharCode(39)+block.contrato[0]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[2]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.numContratoCliente+String.fromCharCode(39)+');">Eliminar Contrato</button></td></tr>';
+                    // String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+
+
+                    block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cliente[23]+'</td><td>'+block.cliente[7]+'</td> <td>'+block.cliente[8]+' '+block.cliente[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.contrato[3]+'</td><td>'+block.contrato[7]+'%</td><td>'+block.contrato[8]+'</td><td>'+block.fechaCulminacion+'</td><td><button class="btn btn-primary" ">Ver Contrato</button></td></tr>'; 
+                    
+                    // Agrega la fila a la tabla
+                    table.row.add([
+                        block.fechaRegistro,
+                        block.sumas,
+                        block.cliente[23],
+                        block.cliente[7],
+                        block.cliente[8] + ' ' + block.cliente[10],
+                        block.tesq[0],
+                        block.contrato[3],
+                        block.contrato[7],
+                        block.contrato[8],
+                        block.fechaCulminacion,
+                        block.contratoInfo,
+                        block.contratoInfoAEliminar
+                    ]);
+                }
+
+                table.draw();
+                
+                $("#lista_enorme").append(block.oso);
+                $('#datatableContratos').DataTable({ 
+                    destroy: true,
+                    language: {
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:    "Mostrar _MENU_ elementos",
+                        info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando registros...",
+                        zeroRecords:    "No se encontraron registros",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                            sortDescending: ": activar para ordenar la columna de manera descendente"
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function listado_contrato_eliminado_datable(){
+        toastr.info('Se están consultando los constratos eliminados de este asesor', 'Atención!');
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        block.arrays = [ block.tokens[1], block.tokens[4], $("#lista_asesores_general4").val() ];
+        block.obj = { "r": "contratos_eliminados_lista_all_datatable", "d": block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            console.log(valor)
+            if (!valor.e) { 
+                
+                // Antes de agregar nuevas filas, limpia la tabla
+                $("#lista_enorme_eliminados").empty();
+                block.oso = "";
+
+                // Obtén la referencia a la tabla
+                let table = $('#datatableContratosEliminados').DataTable();
+
+                // Limpia la tabla
+                table.clear();
+                
+                for(let index = 0; index < valor.d[1].length; index++){
+                    block.datos = valor.d[1][index];
+                    block.contrato = datos[0];
+                    block.cliente = datos[1]; 
+                    block.numContratoCliente = datos[2];
+
+                    console.log(block.datos)
+
+                    block.esf = $("#lista_asesores_general4")["0"].options.selectedIndex;
+                    block.tesq = $("#lista_asesores_general4")["0"][block.esf].label.split("ID:");
                     block.calsulo = block.contrato[13];
                     block.sumas = 0;
 
@@ -5656,6 +5810,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     block.sumas = block.sumas.split('').reverse().join('').replace(/^[\.]/,'');
                 
                     block.contratoInfo = '<td><button class="btn btn-primary" onclick="javascript:fijar_monto('+String.fromCharCode(39)+block.cliente[7]+String.fromCharCode(39)+','+String.fromCharCode(39)+block.cliente[8]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[5]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[3]+String.fromCharCode(39)+');">Ver Contrato</button></td></tr>';
+
+                    block.contratoInfoAEliminar = '<td><button class="btn btn-warning" onclick="javascript:restaurar_contrato('+String.fromCharCode(39)+block.cliente[7]+String.fromCharCode(39)+','+String.fromCharCode(39)+block.contrato[0]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.contrato[2]+String.fromCharCode(39)+","+String.fromCharCode(39)+block.numContratoCliente+String.fromCharCode(39)+');">Restaurar Contrato</button></td></tr>';
                     // String.fromCharCode(39)+frutos[k].id+String.fromCharCode(39)+','+String.fromCharCode(39)+frutos[k].c+String.fromCharCode(39)+
 
                     block.oso = block.oso + '<tr><td>'+block.fechaRegistro+'</td> <td>'+block.sumas+'</td><td>'+block.cliente[23]+'</td><td>'+block.cliente[7]+'</td> <td>'+block.cliente[8]+' '+block.cliente[10]+'</td> <td>'+block.tesq[0]+'</td><td>'+block.contrato[3]+'</td><td>'+block.contrato[7]+'%</td><td>'+block.contrato[8]+'</td><td>'+block.fechaCulminacion+'</td><td><button class="btn btn-primary" ">Ver Contrato</button></td></tr>'; 
@@ -5672,14 +5828,14 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                         block.contrato[7],
                         block.contrato[8],
                         block.fechaCulminacion,
-                        block.contratoInfo
+                        block.contratoInfoAEliminar
                     ]);
                 }
 
                 table.draw();
                 
-                $("#lista_enorme").append(block.oso);
-                $('#datatableContratos').DataTable({ 
+                $("#lista_enorme_eliminados").append(block.oso);
+                $('#datatableContratosEliminados').DataTable({
                     destroy: true,
                     language: {
                         processing:     "Procesando...",
@@ -5720,10 +5876,10 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [ block.tokens[1], block.tokens[4], block.unico, $("#lista_asesores_general3").val() ];
         block.obj = { "r": "contratos_lista_all", "d": block.arrays }; 
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);            
+            var valor = JSON.parse(salida);
             if (!valor.e) {
                 block.oso="";
-                block.dat0s =valor.d[1][0];
+                block.dat0s = valor.d[1][0];
                 block.unox = JSON.parse(block.dat0s[0]);
                 block.dosx = block.dat0s[1];
                 block.tresx = block.dat0s[2];
@@ -5776,7 +5932,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 listado_contratos(block.unico);
                 $("#lista_enorme").append(block.oso);
 
-                $('#datatableContratos').DataTable({   
+                $('#datatableContratos').DataTable({
                     destroy: true,                 
                     language: {
                         processing:     "Procesando...",
@@ -5808,27 +5964,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 			}
         });
     }
-
-	function eliminar_lis(id){
-
-		if (window.localStorage.getItem("Money-vars-token") !== null) {
-            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
-        } else {
-            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-        }
-
-        block.arrays = [block.tokens[1],id];
-        block.obj = {"r": "eliminar_contrato", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            if (!valor.e) {
-				toastr.success('Eliminado con exito', 'Atención!');
-				$("#lista_enorme").html("");
-				listado_contratos("0");
-			}
-		});
-
-	}
 
     $("#lista_asesores_general3").change(function(){        
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -5892,6 +6027,16 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
     });
 
+    $("#lista_asesores_general4").change(function(){        
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+
+        listado_contrato_eliminado_datable();
+    });
+
     $("#buscar_contra").keypress(function (e) {
         if (e.which == 13 && $("#buscar_contra").val()!=="") {
             buscar_contratos($("#buscar_contra").val());
@@ -5933,6 +6078,68 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         });
 
     }
+
+    function eliminar_contrato(cedula, idEmpresa, idAsesor, numContratoCliente){
+        
+        swal({
+            title: "¿Desea eliminar el contrato?",
+            text: 'Es necesaria su confirmación, para eliminar este contrato. ¿Desea continuar?',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "¡Si!",
+            cancelButtonText: 'No',
+            closeOnConfirm: true
+        }, function () {
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }    
+    
+            block.arrays = [block.tokens[1], cedula, idEmpresa, idAsesor, numContratoCliente];        
+    
+            block.obj = {"r": "eliminar_contrato", "d": block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                if (!valor.e) {
+                    toastr.success('Eliminado con exito', 'Atención!');				
+                    listado_contrato_datable()
+                }
+            });
+        });
+    } 
+     
+    function restaurar_contrato(cedula, idEmpresa, idAsesor, numContratoCliente){
+        
+        swal({
+            title: "¿Desea restaurar el contrato?",
+            text: 'Es necesaria su confirmación, para restaurar este contrato. ¿Desea continuar?',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "¡Si!",
+            cancelButtonText: 'No',
+            closeOnConfirm: true
+        }, function () {
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }    
+    
+            block.arrays = [block.tokens[1], cedula, idEmpresa, idAsesor, numContratoCliente];        
+    
+            block.obj = {"r": "restaurar_contrato", "d": block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                if (!valor.e) {
+                    toastr.success('Restaurado con exito', 'Atención!');
+                    listado_contrato_eliminado_datable();
+                }
+            });
+        });
+    }  
 
     function fijar_monto(cedula, nombre, fecha, prestado){            
         $("#cobrar_couta").css("display","block");
@@ -8216,6 +8423,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ase").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ayu").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#asig_supervidor").css("display", "none");
         $("#cobrar_couta").css("display", "none");
         $("#lista_asi_ayu").css("display", "none");
@@ -8354,6 +8562,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     function asesores_supervisores() {
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#crear").css("display", "none");
         $("#lista_ase").css("display", "none");
         $("#cobrar_couta").css("display", "none");
@@ -8477,6 +8686,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ase").css("display", "initial");
         $("#crear").css("display", "none");
         $("#cobrar_couta").css("display", "none");
@@ -8614,6 +8824,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 }
                 $("#lista_asesores_general").html(block.listax2);
                 $("#lista_asesores_general3").html(block.listax3);
+                $("#lista_asesores_general4").html(block.listax3);
 
                 liquidar_sincro(block.aline);
             }
@@ -8791,6 +9002,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#crear").css("display", "none");
         $("#busqueda_asignaciones").css("display", "initial");
         $("#lista_asi_ayu").css("display", "none");
@@ -8975,6 +9187,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     function asig_configuracion() {
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#configuracion_general").css("display", "initial");
         $("#asig_supervidor").css("display", "none");
         $("#lista_ayu").css("display", "none");
@@ -9319,6 +9532,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
@@ -9480,6 +9694,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#cobrar_couta").css("display", "none");
         $("#crear").css("display", "none");
         $("#asig_supervidor").css("display", "none");
@@ -9513,6 +9728,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#cobrar_couta").css("display", "none");
@@ -9553,6 +9769,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
@@ -9590,6 +9807,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#cobrar_couta").css("display", "none");
@@ -9637,6 +9855,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#cobrar_couta").css("display", "none");
@@ -9676,6 +9895,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
 
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#cobrar_couta").css("display", "none");
         $("#lista_sup").css("display", "none");
@@ -9707,8 +9927,8 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
     }
 
     function vers_contratos(){
-
         $("#crear_contrato_form").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#cobrar_couta").css("display", "none");
@@ -9740,12 +9960,47 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#lista_ubicacniones_div").css("display", "none");
     }
 
+    function vers_contratos_eliminados(){
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#cobrar_couta").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "initial");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#googleMap").css("display","none");
+        $("#HistorialClientes").css("display","none");
+		$("#flotante2").css("display","none");
+		$("#flotante3").css("display","none");
+        $("#recaduos_ink").css("display", "none");
+		$("#migrar_cion_div").css("display", "none");
+		$("#suplanter").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        $("#utilidades_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
+    }
+
 
     function crear_infor(){
         limpiarCliente();
         $("#contratos_view").css("display", "none");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
@@ -9784,6 +10039,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         $("#googleMap").css("display","initial");
         $("#crear_contrato_form").css("display", "none");
         $("#crear_contrato_form_dos").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");

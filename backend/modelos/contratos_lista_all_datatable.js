@@ -35,7 +35,7 @@ eje = function(arrays,origen,redisClient) {
                                             if( replyContrato !== null && replyContrato !== undefined ) {
                                                 let infoContrato = JSON.parse(replyContrato);
 												redisClient.get("cliente_"+infoContrato[1], function(errCliente, replyCliente){	
-													litado.push( [ infoContrato, JSON.parse(replyCliente) ] );
+													litado.push( [ infoContrato, JSON.parse(replyCliente), String(arrs[ind]).split('_')[5] ] );
 													ind++;
 													iterar(ind, arrs);
 												});
