@@ -1776,14 +1776,14 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyAj2W3P9Qyg93M-4zt4z2C4hRCHU6GEdWE",
+        authDomain: "creditoselamigo-f3217.firebaseapp.com",
+        databaseURL: "https://creditoselamigo-f3217-default-rtdb.firebaseio.com",
+        projectId: "creditoselamigo-f3217",
+        storageBucket: "creditoselamigo-f3217.appspot.com",
+        messagingSenderId: "91763694848",
+        appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
+        measurementId: "G-DY06MSN1DM"
     };
     firebase.initializeApp(firebaseConfig);	
 </script>
@@ -5220,7 +5220,7 @@
         });
     }
 
-    function extraer_cobrosCierre(id_tabla) {
+    function extraer_cobrosCierre(id_asesor, id_tabla) {
         $("#listado_cobros_cierre").empty();
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -5229,11 +5229,15 @@
         }
         var fecha =  $("#fecha_busqueda_cobros_supervisor").val();
         
-        block.estraa = $("#id_asesor_cierre").val();
-        block.estraaq = block.estraa.split("_");
-        block.estra = block.estraaq[0];
-        block.cedulasesor = block.estraaq[1];
-        block.arrays = [block.tokens[1], block.estra, fecha];
+        // block.estraa = $("#id_asesor_cierre").val();
+        // block.estraaq = block.estraa.split("_");
+        // block.estra = block.estraaq[0];
+        // block.cedulasesor = block.estraaq[1];
+        // block.arrays = [block.tokens[1], block.estra, fecha];
+        block.estraa = id_asesor;
+        block.arrays = [block.tokens[1], block.estraa, fecha];
+        const hi = 'sdadad'
+
         block.obj = {"r": "buscar_cobros_fecha", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -5368,7 +5372,7 @@
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
                 const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
                 const gastos = parseFloat($("#text_gastosAsesor").text().slice(1));
-                const totalSistema = base + recaudado - gastos - renovaciones;
+                const totalSistema = base + recaudado - gastos - renovaciones;                
                 $("#text_total_sistema").text("Q "+totalSistema);
             }
             $("#text_renovacionesAsesor").text("Q "+renovaciones);
@@ -5402,17 +5406,15 @@
             });
             
             block.arrays = [ block.tokens[1],block.ase, block.fechaABuscar ];
-            block.obj = { "r": "sumatoria_diario_supervisor", "d": block.arrays }; //Obtiene el token y el ID del asesor
-            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            block.obj = { "r": "sumatoria_diario_supervisor", "d": block.arrays };
+            backend.conexionEnvio(JSON.stringify(block.obj), async function (salida) {
                 var valor = JSON.parse(salida);
                 if (!valor.e) {                
                     $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
-                    $("#text_baseAsesor").text("Q"+valor.d[2]);
+                    $("#text_baseAsesor").text("Q"+valor.d[2].replace(/\./g, ""));
                     const base = parseFloat($("#text_baseAsesor").text().slice(1));
                     const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-                    const totalSistema = base + recaudado;
-                    $("#text_total_sistema").text("Q"+totalSistema);
-
+                    
                     if( valor.d[2] == 0 || valor.d[4] ){
                         $("#registrar_cierre").prop("disabled", true);
                         $("#text_total_asesor").val(valor.d[5]);
@@ -5424,8 +5426,10 @@
                         $("#text_total_asesor").val(0);
                         $("#text_total_asesor").prop("disabled", false);
                     }
-                    totalGastos();
-                    totalRenovaciones();
+                    const gastos = await totalGastos();
+                    const renovaciones = await totalRenovaciones();
+                    const totalSistema = base + recaudado - gastos - renovaciones;
+                    $("#text_total_sistema").text("Q "+totalSistema);
                 } else {
                     $("#text_diferencia_cierre").text("0");
                 }

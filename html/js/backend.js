@@ -3,18 +3,18 @@ var backend = this;
 backend.dev = false;
 
 if(!backend.dev){
-	backend.usuando = "85.10.196.212";
+	backend.usuando = "178.156.148.112";
 } else {
-	backend.usuando = "192.168.1.6";
+	backend.usuando = "192.168.1.27";
 }
 
 backend.conexionEnvio = function (datos,callback){	
 	if ("WebSocket" in window){
 
         if (!backend.dev) {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3000");
         } else {
-            var ws = new WebSocket("ws://" + backend.usuando + ":3210");
+            var ws = new WebSocket("ws://" + backend.usuando + ":3000");
         }
 
 		ws.onopen = function(){

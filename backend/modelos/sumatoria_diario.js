@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-			recibe token y idasesor
+			? recibe token y idasesor
 		*/
 		
 		if (arrays.length==2){
@@ -23,7 +23,7 @@ eje = function(arrays,origen,redisClient) {
 					var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
 					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"					
 					/*
-						toma los monto y los suma
+						? toma los monto y los suma
 					*/					
 					redisClient.keys(coando,function(err3,reply3){
 						if(reply3.length > 0){							
@@ -34,7 +34,8 @@ eje = function(arrays,origen,redisClient) {
 								if(es==reply3.length-1){
 									redisClient.get("base_"+arrays[1]+"_"+dia,function(ersr,replcy) {
 										if( replcy !==null && replcy !== undefined ){
-											var inf = JSON.parse(replcy);											
+											var inf = JSON.parse(replcy);
+											console.log(inf);
 											if( inf !== null && inf !== undefined ) {
 												if( inf[3] ){
 													resolve([true,total,"0","Sin base"]);
@@ -69,6 +70,7 @@ eje = function(arrays,origen,redisClient) {
 										redisClient.get(arrs[ind], function(errorBase, replyBaseRegistrada){
 											let base = JSON.parse(replyBaseRegistrada);
 											if(base[3] == false){ //Tiene apertura abierta
+												console.log(arrs[ind])
 												lista.push(base);
 												recurso(replyBasesRegistradas.length, replyBasesRegistradas);
 											}
@@ -78,14 +80,6 @@ eje = function(arrays,origen,redisClient) {
 									}					
 								} 
 							})
-							// redisClient.get("base_"+arrays[1],function(ersr,replcy) {
-							// 	if(replcy==null){
-							// 		resolve([true,0,0,"Sin base"]);
-							// 	}else{
-							// 		var inf = JSON.parse(replcy);
-							// 		resolve([true,0,inf[1],inf[0]]);
-							// 	}
-							// });
 						}
 					});					
 				} else {

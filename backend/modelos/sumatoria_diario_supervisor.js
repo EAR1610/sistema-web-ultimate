@@ -25,21 +25,21 @@ eje = function(arrays,origen,redisClient) {
 					    toma los monto y los suma
 					*/
 					
-					redisClient.keys(coando,function(err3,reply3){
+					redisClient.keys(coando,function(err3,reply3){						
 
 						if(reply3.length > 0){
 							var total=0;
 							for(var es = 0; es < reply3.length; es ++){
 								var explit  = reply3[es].split("_");
-								total = total + parseInt(explit[2]);
+								total = total + parseInt(explit[2]);								
 								
 								if(es==reply3.length-1){
 									redisClient.get("base_"+arrays[1]+"_"+arrays[2],function(ersr,replcy) {
 										if( replcy!==null && replcy !== undefined ){
-											var inf = JSON.parse(replcy);
+											var inf = JSON.parse(replcy);											
 											if( inf !== null && inf !== undefined ){
 												if (inf[3]){
-													redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {
+													redisClient.get("cierre_"+arrays[1]+"_"+arrays[2],function(ersr,response) {														
 														const response2 = JSON.parse(response);
 														resolve([true, total, inf[1], arrays[2], inf[3], response2[2], response2[4]]);
 													});

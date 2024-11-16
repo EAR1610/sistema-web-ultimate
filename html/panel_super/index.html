@@ -3498,14 +3498,14 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyCgyHs3uUFs2itmF7xZqzWwIbmoBHp5WVE", 	
-        authDomain: "alexis-1e334.firebaseapp.com",
-        databaseURL: "https://alexis-1e334-default-rtdb.firebaseio.com",
-        projectId: "alexis-1e334",
-        storageBucket: "alexis-1e334.appspot.com",
-        messagingSenderId: "343288753135",
-        appId: "1:343288753135:web:5d5e72849d49a8ec80641a",
-        measurementId: "G-QPDM99F0RM"
+        apiKey: "AIzaSyAj2W3P9Qyg93M-4zt4z2C4hRCHU6GEdWE",
+        authDomain: "creditoselamigo-f3217.firebaseapp.com",
+        databaseURL: "https://creditoselamigo-f3217-default-rtdb.firebaseio.com",
+        projectId: "creditoselamigo-f3217",
+        storageBucket: "creditoselamigo-f3217.appspot.com",
+        messagingSenderId: "91763694848",
+        appId: "1:91763694848:web:aacdf5d06c1a6624f3a7e5",
+        measurementId: "G-DY06MSN1DM"
     };
 	firebase.initializeApp(firebaseConfig);
 </script>
@@ -3855,7 +3855,7 @@
         }
     });
 
-    function buscar_cierre(asesor, fecha){        
+    async function buscar_cierre(asesor, fecha){ 
         // fecha para usarla en registrar cierre
         $("#listado_cobros_cierre").empty();        
         block.fecha_cierre = fecha;
@@ -3867,20 +3867,18 @@
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
-        }
+        }        
 
         block.arrays = [block.tokens[1], block.ase, fecha];
-        block.obj = { "r": "sumatoria_diario_supervisor", "d": block.arrays }; //Obtiene el token y el ID del asesor
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+        block.obj = { "r": "sumatoria_diario_supervisor", "d": block.arrays };
+        backend.conexionEnvio(JSON.stringify(block.obj), async function (salida) {
             var valor = JSON.parse(salida);
             if (!valor.e) { 
                 $("#text_recolectadoAsesor").text("Q"+valor.d[1]);
                 $("#text_baseAsesor").text("Q"+valor.d[2].replace(/\./g, ""));
                 const base = parseFloat($("#text_baseAsesor").text().slice(1));
-                const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-                const totalSistema = ( base + recaudado );
-                $("#text_total_sistema").text( "Q "+totalSistema );
-
+                const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));                
+                
                 if ( valor.d[2] == 0 || valor.d[4] ) {
                     $("#registrar_cierre").prop("disabled", true);
                     $("#text_total_asesor").val(valor.d[5]);
@@ -3892,9 +3890,11 @@
                     $("#text_total_asesor").val(0);
                     $("#text_total_asesor").prop("disabled", false);
                 }
-
-                totalGastos();
-                totalRenovaciones();
+                
+                const gastos = await totalGastos();
+                const renovaciones = await totalRenovaciones();
+                const totalSistema = base + recaudado - gastos - renovaciones;
+                $("#text_total_sistema").text("Q "+totalSistema);
             }
         });
         extraer_gastosAsesor();
@@ -4512,8 +4512,7 @@
                         block.iteds[2] = block.iteds[2].split('').reverse().join('').replace(/\./g, "");
                         block.inefd = block.inefd + '<tr><td>' + block.iteds[1] + '</td><td>Q' + block.iteds[2] + '</td></tr>';
                     }
-                    $("#lista_gastos_exeAsesor").html(block.inefd);
-                    
+                    $("#lista_gastos_exeAsesor").html(block.inefd);                    
                 }
         });        
     }
@@ -6737,7 +6736,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         block.arrays = [block.tokens[1],block.asesoreId];
         block.obj = {"r": "sumatoria_diario", "d": block.arrays};
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);            
+            var valor = JSON.parse(salida);    
+            debugger;   
+            console.log(valor);
             if (!valor.e) {                
                 valor.d[1] = valor.d[1].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');                
                 valor.d[1] = valor.d[1].split('').reverse().join('').replace(/^[\.]/,'');                
@@ -8941,7 +8942,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }
     });        
 
-    function totalGastos(){        
+    async function totalGastos(){         
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
@@ -8950,22 +8951,27 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         let gastos = 0;
         block.arrays = [ block.tokens[1],$("#id_asesor_cierre").val().split('_')[0], $("#fecha_cierre").val() ];
         block.obj = {"r": "extrae_gastos", "d": block.arrays};
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            if (!valor.e) {
-                block.pasero = JSON.parse(valor.d[1]);                
-                for(var i= 0; i< block.pasero.length; i++){
-                    gastos += parseFloat(block.pasero[i][2]);
+        gastos = await new Promise((resolve, reject) => {
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                if (!valor.e) {
+                    block.pasero = JSON.parse(valor.d[1]);                
+                    for(var i= 0; i< block.pasero.length; i++){
+                        gastos += parseFloat(block.pasero[i][2]);
+                    }
+                    $("#text_gastosAsesor").text("Q "+ gastos);
+                    resolve(gastos);
+                    // $("#text_total_sistema").text( "Q "+ totalSistema - gastos);
+                } else {
+                    $("#text_gastosAsesor").text("Q "+ 0);
+                    resolve(0);
                 }
-                $("#text_gastosAsesor").text("Q "+ gastos);                
-            } else {
-                $("#text_gastosAsesor").text("Q "+ 0);
-            }
+            });
         });
         return gastos;
     }
     
-    function totalRenovaciones(){
+    async function totalRenovaciones(){
         $("#text_renovacionesAsesor").empty();
         block.fechaABuscar = $("#fecha_cierre").val();
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -8975,22 +8981,28 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }
         let renovaciones = 0;
         block.arrays = [ block.tokens[1], $("#id_asesor_cierre").val().split('_')[0], block.fechaABuscar ];
-        block.obj = {"r": "extrae_renovaciones_supervisor", "d": block.arrays};        
-        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);
-            if (!valor.e) {
-                block.pasero = JSON.parse(valor.d[1]);                
-                for(var i= 0; i< block.pasero.length; i++){
-                    renovaciones += parseFloat(block.pasero[i][2].replace(/\./g, ""));                    
+        block.obj = {"r": "extrae_renovaciones_supervisor", "d": block.arrays};
+        renovaciones = await new Promise((resolve, reject) => {
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                if (!valor.e) {
+                    block.pasero = JSON.parse(valor.d[1]);                
+                    for(var i= 0; i< block.pasero.length; i++){
+                        renovaciones += parseFloat(block.pasero[i][2].replace(/\./g, ""));                    
+                    }
+                    // const base = parseFloat($("#text_baseAsesor").text().slice(1));
+                    // const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
+                    // const gastos = parseFloat($("#text_gastosAsesor").text().slice(1));                
+                    // const totalSistema = base + recaudado - gastos - renovaciones;
+                    // $("#text_total_sistema").text("Q "+totalSistema);
+                    $("#text_renovacionesAsesor").text("Q "+renovaciones);
+                    resolve(renovaciones);
+                } else {
+                    $("#text_renovacionesAsesor").text("Q "+0);
+                    resolve(0);
                 }
-                const base = parseFloat($("#text_baseAsesor").text().slice(1));
-                const recaudado = parseFloat($("#text_recolectadoAsesor").text().slice(1));
-                const gastos = parseFloat($("#text_gastosAsesor").text().slice(1));
-                const totalSistema = base + recaudado - gastos - renovaciones;
-                $("#text_total_sistema").text("Q "+totalSistema);
-            } 
-            $("#text_renovacionesAsesor").text("Q "+renovaciones);
-        });
+            });
+        }); 
         return renovaciones;
     }
 

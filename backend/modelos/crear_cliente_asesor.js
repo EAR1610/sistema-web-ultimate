@@ -8,7 +8,9 @@ eje = function(arrays,origen,redisClient) {
 		var valurl = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/;
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
-		/* recibo tokens, foto_perfil, foto_normal, foto_reverso, foto_frontal, block.pais, tipoletracedula, numerocedula, nom1, nom2, ape1, ape2, direction, departamento, ciudad, barrio, telefofijo, telefomovil, correo, alias, lat, lon */
+		/* 
+			? recibo tokens, foto_perfil, foto_normal, foto_reverso, foto_frontal, block.pais, tipoletracedula, numerocedula, nom1, nom2, ape1, ape2, direction, departamento, ciudad, barrio, telefofijo, telefomovil, correo, alias, lat, lon
+		*/
 				
 		if ( arrays.length == 22 ){
 		
@@ -16,7 +18,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="2"){ //Solmante el Asesor, tiene derecho a este archivo
+				} else if(decoded.t=="2"){ //Solmante el Asesor, tiene derecho a este archivo
 
 					var moment = require("moment-timezone");
 					var hoy = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss');
@@ -35,12 +37,12 @@ eje = function(arrays,origen,redisClient) {
 					redisClient.get("cliente_"+arrays[7],function(err, clienteActualizado){ //El cliente se va actualizar.
 						if( clienteActualizado !== null && clienteActualizado !== undefined ){
 							let actualizaciónCliente= JSON.parse(clienteActualizado);
-							arrays.push(actualizaciónCliente[23]) //Se le adjunta el Identificador.							
+							arrays.push(actualizaciónCliente[23]) //Se le adjunta el Identificador.
 							if( clienteActualizado !== null && clienteActualizado !== undefined){
 								redisClient.set("cliente_"+arrays[7],JSON.stringify(arrays),function(err,reply) {						
 									/*
 										verifico si existe y listo
-									*/						
+									*/
 									redisClient.get("registro_client_"+decoded.d,function(errw,replyw) {
 										if( replyw!==null && reply !== undefined){
 											var esa = JSON.parse(replyw);								
