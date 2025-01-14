@@ -21,7 +21,8 @@ eje = function(arrays,origen,redisClient) {
 				} else if(decoded.t=="1" || decoded.t=="0" || decoded.t=="2" || decoded.t=="5" || decoded.t == "4"){
 					var moment = require("moment-timezone");
 					var dia = moment().tz("America/Guatemala").format('YYYY-MM-DD');
-					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"					
+					var coando = "monto_"+arrays[1]+"_*_"+dia+"_*"
+					console.log(coando);
 					/*
 						? toma los monto y los suma
 					*/					
@@ -32,6 +33,7 @@ eje = function(arrays,origen,redisClient) {
 								var explit  = reply3[es].split("_");
 								total = total + parseInt(explit[2]);								
 								if(es==reply3.length-1){
+									console.log("base_"+arrays[1]+"_"+dia);
 									redisClient.get("base_"+arrays[1]+"_"+dia,function(ersr,replcy) {
 										if( replcy !==null && replcy !== undefined ){
 											var inf = JSON.parse(replcy);
@@ -40,6 +42,7 @@ eje = function(arrays,origen,redisClient) {
 												if( inf[3] ){
 													resolve([true,total,"0","Sin base"]);
 												} else {
+													console.log('resolve([true,total,inf[1],dia])');
 													resolve([true,total,inf[1],dia]);
 												}
 											} else {
@@ -62,14 +65,19 @@ eje = function(arrays,origen,redisClient) {
 								function recurso(ind, arrs){
 									if(ind == arrs.length){
 										if (lista.length > 0){
+											console.log('resolve([true, 0, lista[0][1], lista[0][0]])');
+											console.log(resolve([true, 0, lista[0][1], lista[0][0]]));
 											resolve([true, 0, lista[0][1], lista[0][0]]);
 										}else{
 											resolve([true,0,0,"Sin base"]);		
 										}
 									} else {
+										console.log('arrs[ind]');
+										console.log(arrs[ind]);
 										redisClient.get(arrs[ind], function(errorBase, replyBaseRegistrada){
 											let base = JSON.parse(replyBaseRegistrada);
 											if(base[3] == false){ //Tiene apertura abierta
+												console.log('arrs[ind]')
 												console.log(arrs[ind])
 												lista.push(base);
 												recurso(replyBasesRegistradas.length, replyBasesRegistradas);
