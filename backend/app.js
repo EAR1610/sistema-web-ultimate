@@ -2,16 +2,16 @@ var redis = require('redis');
 var dev = false;
 
 /*
-	Este codigo es el core del sistema
+	? Este codigo es el core del sistema
 */
 
 /*
-	Solo una variable me indica si estoy en produccion o desarrollo
+	? Solo una variable me indica si estoy en produccion o desarrollo
 */
 
 if(!dev){
-	var redisClient = redis.createClient({ host : 'redis-19579.c8.us-east-1-3.ec2.redns.redis-cloud.com', port : 19579 });
-	redisClient.auth('o2UxUuhSBqzpQ2oqYKyxGS6NXCAucqaO',function(err,reply) {
+	var redisClient = redis.createClient({ host : 'redis-10495.c83.us-east-1-2.ec2.redns.redis-cloud.com', port : 10495 });
+	redisClient.auth('RAABKOGsZg1BXOrmvyKyjgY6xfMV6QfX',function(err,reply) {
 		if(!err) {
 			console.log("Bien: Verificando la seguridad del sistema redis "+reply+" "+ Date());
 		} else {
@@ -42,8 +42,8 @@ redisClient.on('error',function() {
 /*
 	Siempre asiganre la clave de acceso del root
 */
-var arrays = [ "admin@creditsk.com","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
-redisClient.set("usuario_admin@creditsk.com_1000000",JSON.stringify(arrays),function(err2,reply2){
+var arrays = [ "admin@Pruebas","123","2019-04-15 00:53:46",true,0,"1000000","Super Admin" ];
+redisClient.set("usuario_admin@Pruebas_1000000",JSON.stringify(arrays),function(err2,reply2){
 	console.log("Asignacion de cuenta admin");
 });
 
@@ -52,14 +52,14 @@ var http = require('http');
 
 var server = http.createServer(function(request, response) {
 	response.writeHead(200);
-	response.write("Online:active:3311");
+	response.write("Online:active:3000");
 	response.end();
 });
 /*
-	Conexion escucho ws en el puerto 3311
+	Conexion escucho ws en el puerto 3000
 */
-server.listen(3311, function() {
-	console.log("Online:active:3311");
+server.listen(3000, function() {
+	console.log("Online:active:3000");
 });
 
 wsServer = new WebSocketServer({

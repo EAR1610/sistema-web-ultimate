@@ -214,29 +214,34 @@ eje = function(arrays,origen,redisClient) {
 													arrays.push(fes);
 												}
 
-												redisClient.keys("registry_*",function(err,cant){
-													var consecutivo = cant.length + 1;
-													/*guardo el orden segun el idasesor que tenga y guardo el contrato en un solo registro*/
-													var oriegn = "registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo;
-													var arraysDB = arrays.slice(0, 11).concat(arrays.slice(15 + 1));
+												redisClient.keys("registry_" + arrays[1] + "_contrato_*", function(err, keys) {
+													let maxNum = 0;
+
+													keys.forEach(key => {
+														const parts = key.split('_');
+														const num = parseInt(parts[parts.length - 1]); // * Último segmento es el número
+														if(num > maxNum) maxNum = num;
+													});
 													
-													redisClient.set("registry_"+arrays[1]+"_contrato_"+arrays[0]+"_"+arrays[2]+"_"+consecutivo,JSON.stringify(arraysDB),function(err,reply) {
-														redisClient.get("registro_contrato_"+arrays[2],function(errw,replyw) {
-															if( replyw!==null && replyw !== undefined ){
-																var esa = JSON.parse(replyw);
-																esa.push(oriegn);
-																redisClient.set("registro_contrato_"+arrays[2],JSON.stringify(esa),function(erwrw,repelyw) {
-																	resolve([true, miEmpresa, otrasEmpresa]);
-																});
-															}else{
-																var esa = [];
-																esa.push(oriegn);
-																redisClient.set("registro_contrato_"+arrays[2],JSON.stringify(esa),function(erwrw,repelyw) {
-																	resolve([true, miEmpresa, otrasEmpresa]);
-																});
-															}
-														});														
-													});													
+													const consecutivo = maxNum + 1;
+													const oriegn = "registry_" + arrays[1] + "_contrato_" + arrays[0] + "_" + arrays[2] + "_" + consecutivo;
+													const arraysDB = arrays.slice(0, 11).concat(arrays.slice(15 + 1));
+													
+													redisClient.set(oriegn, JSON.stringify(arraysDB), function(err, reply) {
+														if(err) {
+															reject([false, "Error al guardar el contrato"]);
+															return;
+														}
+														
+														redisClient.get("registro_contrato_" + arrays[2], function(errw, replyw) {
+															const esa = replyw ? JSON.parse(replyw) : [];
+															esa.push(oriegn);
+															
+															redisClient.set("registro_contrato_" + arrays[2], JSON.stringify(esa), function(erwrw, repelyw) {
+																resolve([true, miEmpresa, otrasEmpresa]);
+															});
+														});
+													});
 												});			   												
 											}else{
 												reject([false,"8"]);

@@ -2232,7 +2232,8 @@
         }
     });
 
-    $("#ampliar_contrato").click(function () {        
+    $("#ampliar_contrato").click(function () {       
+        debugger; 
         if( $("#monto_prestar_ya_admin_ampliacion").val() !== "" && $("#selector_cuotas_selec_ampliacion").val() !== "" && $("#selector_frecuencia_ampliacion").val() !== "" ){
             if( $("#valor_restante_anterior").text() !== "" && $("#valor_restante_anterior").text() !== "0" ) {                            
                 block.loire = $("#valor_restante_anterior").text();
