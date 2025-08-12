@@ -536,12 +536,12 @@
                     <div class="col-sm-12 col-md-6">
                         <form role="form">
                             <div class="form-group">
-                                <label>Aplicar Interes (Ej: 15, 20, 25 y 30)</label>
+                                <label>Aplicar Interes (Ej: 1% al 5%)</label>
                                 <input id="porcentaje_cliente_interes"
                                     type="number"
-                                    min="15"
-                                    max="30"
-                                    step="5"
+                                    min="1"
+                                    max="5"
+                                    step="1"
                                     class="form-control"
                                     onchange="validateInput(this)"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '')">
@@ -843,9 +843,10 @@
                                     <label>Frecuencia de pago</label>
                                     <select class="form-control m-b" id="selector_frecuencia">
                                         <option value="">Seleccione</option>
-                                        <option value="1">Diario</option>
+                                        <!-- <option value="1">Diario</option> -->
                                         <option value="2">Semanal</option>
-                                        <option value="3">Quicenal</option>
+                                        <!-- <option value="3">Quicenal</option> -->
+                                        <option value="7">Catorcenal</option>
                                         <option value="4">Mensual</option>
                                         <!-- <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
                                         <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option> -->
@@ -1076,12 +1077,13 @@
                                     <label>Frecuencia de pago</label>
                                     <select class="form-control m-b" id="selector_frecuencia_ampliacion">
                                         <option value="">Seleccione</option>
-                                        <option value="1">Diario</option>
+                                        <!-- <option value="1">Diario</option> -->
                                         <option value="2">Semanal</option>
-                                        <!-- <option value="3">Quicenal</option>
+                                        <!-- <option value="3">Quicenal</option>-->
+                                        <option value="7">Catorcenal</option>
                                         <option value="4">Mensual</option>
-                                        <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
-                                        <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option> -->
+                                        <!-- <option value="5">FRECUENCIA 25 DIAS 10% EN 4 PAGOS</option>
+                                        <option value="6">FRECUENCIA 30 DIAS 10% CON INTERES - CAPITAL</option>  -->
                                     </select>
                                 </form>
                             </div>
@@ -1724,14 +1726,24 @@
 <script src="../js/lang-es.js"></script>
 
 <script>
+    // const firebaseConfig = {
+    //     apiKey: "AIzaSyA8MlVkPHbgEZmAkd6L8RiKi4ncS2gh8fY",
+    //     authDomain: "creditsk.firebaseapp.com",
+    //     projectId: "creditsk",
+    //     storageBucket: "creditsk.firebasestorage.app",
+    //     messagingSenderId: "51505560468",
+    //     appId: "1:51505560468:web:2d4747c936e8ea9925ed81"
+    // };
     const firebaseConfig = {
-        apiKey: "AIzaSyA8MlVkPHbgEZmAkd6L8RiKi4ncS2gh8fY",
-        authDomain: "creditsk.firebaseapp.com",
-        projectId: "creditsk",
-        storageBucket: "creditsk.firebasestorage.app",
-        messagingSenderId: "51505560468",
-        appId: "1:51505560468:web:2d4747c936e8ea9925ed81"
-    };	
+        apiKey: "AIzaSyDIvIWDZgfC7riw6WoCyKfMgrjxtwcX8hs",
+        authDomain: "financiera-capital-services.firebaseapp.com",
+        projectId: "financiera-capital-services",
+        storageBucket: "financiera-capital-services.firebasestorage.app",
+        messagingSenderId: "5702811544",
+        appId: "1:5702811544:web:f1442d1bc18e5fc22d75ed",
+        measurementId: "G-SB4CXK446B",
+        databaseURL: 'https://financiera-capital-services-default-rtdb.firebaseio.com'
+    };
     firebase.initializeApp(firebaseConfig);	
 </script>
 
@@ -2155,9 +2167,9 @@
     }
 
     function validateInput(input) {
-        const validValues = [15, 20, 25, 30];
+        const validValues = [1, 2, 3, 4, 5];
         if (!validValues.includes(Number(input.value))) {
-            input.value = 15; // Valor predeterminado
+            input.value = 1; // Valor predeterminado
         }
         
         let valorInteres =  (parseInt( block.prestadoContrato.replace(/\./g, '') ) * ( parseInt(input.value) / 100 ) );
@@ -2232,8 +2244,7 @@
         }
     });
 
-    $("#ampliar_contrato").click(function () {       
-        debugger; 
+    $("#ampliar_contrato").click(function () {
         if( $("#monto_prestar_ya_admin_ampliacion").val() !== "" && $("#selector_cuotas_selec_ampliacion").val() !== "" && $("#selector_frecuencia_ampliacion").val() !== "" ){
             if( $("#valor_restante_anterior").text() !== "" && $("#valor_restante_anterior").text() !== "0" ) {                            
                 block.loire = $("#valor_restante_anterior").text();
@@ -3290,7 +3301,6 @@
         block.obj = { "r": "descontar_cuota", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {  
 			var valor = JSON.parse(salida);
-            debugger;
 			if (!valor.e) {
 				toastr.success('Procesado correctamente', 'Atención!');
 				block.cuotas = valor.d[1];
@@ -3416,8 +3426,7 @@
         block.arrays = [ block.tokens[1],block.tokens[5], Numcuota, cedula[0], cedula[1] ];
         block.obj = { "r": "descontar_cuota", "d": block.arrays };
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-			var valor = JSON.parse(salida);
-            debugger;
+			var valor = JSON.parse(salida);            
 			if (!valor.e) {
 				toastr.success('Procesado correctamente', 'Atención!');
 
@@ -3608,8 +3617,7 @@
         return true;
     }   
 
-    $("#crear_contrato").click(function () {   
-        debugger;     
+    $("#crear_contrato").click(function () {             
         if( window.sessionStorage.getItem("Money-vars-registrado") !== null &&  $("#monto_prestar_ya_admin").val() !== "" ) {
             if( block.nuevomonto >= block.min && block.nuevomonto <= block.max  && block.ultima_cuota != undefined ) {
                 block.asesor = $("#selector_asesores_lista").val();
@@ -4747,8 +4755,7 @@
         window.sessionStorage.setItem("Money-perfil","busqueda")
     }
 
-    $("#buscar_cedula_cliente").click(function () {
-        debugger;
+    $("#buscar_cedula_cliente").click(function () {        
         if ( $("#text_cedula_cliente").val() !== "" && $("#text_cedula_cliente").val().length >= 13 ) {
             if (window.localStorage.getItem("Money-vars-token") !== null) {
                 block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -5024,8 +5031,7 @@
 		});		
 	}
 
-    $("#buscar_cedula_cliente2").click(function () {
-        debugger;
+    $("#buscar_cedula_cliente2").click(function () {        
         var clientePago;
         if ($("#text_cedula_cliente2").val() !== "") {		
 			$("#cuotas_coun").css("display","none");			
