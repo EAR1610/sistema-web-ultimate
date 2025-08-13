@@ -80,8 +80,10 @@ eje = function(arrays,origen,redisClient) {
 											if(arrays[10]=="2"){
 												let cuotaD = arrays[8].replace(/\./g, ""),
 													tiempo = arrays[4],
-													indi = moment().tz("America/Guatemala").isoWeekday(), // Obtener el día de la semana actual
-													prox = moment().tz("America/Guatemala").isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del próximo día de la semana actual	
+													fechaBase = arrays[5] ? moment(arrays[5]).tz("America/Guatemala") : moment().tz("America/Guatemala"),
+													indi = fechaBase.isoWeekday(), // Obtener el día de la semana de la fecha base
+													prox = fechaBase.isoWeekday(indi).format('YYYY-MM-DD'); // Obtener la fecha del día de la semana de la fecha base
+													console.log(prox);
 												for (let k = 1; k < tiempo + 1; k++) {
 													let prox2 = moment(prox).add(7, 'days').format('YYYY-MM-DD'); // Agregar 7 días para obtener la próxima fecha del mismo día de la semana
 													let cuota = (k == tiempo) ? ultima_cuota.replace(/\./g, "") : cuotaD;
@@ -91,16 +93,17 @@ eje = function(arrays,origen,redisClient) {
 												if (fes.length > parseInt(arrays[4])) {
 													fes.pop();
 												}
-
 											} else if(arrays[10]=="1"){ 
 												/**
 												 * TODO: FRECUENCIA DE PAGO: DIARIA
 												*/												
 												var cuotaD = arrays[8].replace(".",""),
 													cuotaD2 = cuotaD.replace(".",""),
-													indi = moment().format('E'),
-													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
+													fechaBase = arrays[5] ? moment(arrays[5]).tz("America/Guatemala") : moment().tz("America/Guatemala"),
+													indi = fechaBase.format('E'),
+													prox = fechaBase.format('YYYY-MM-DD'),
 													tiempo = arrays[4];
+													console.log(prox);
 
 													for(var k = 1; k < tiempo + 1; k++){
 														var prox2 = moment(prox).add(1, 'days');
@@ -118,15 +121,16 @@ eje = function(arrays,origen,redisClient) {
 													
 													if(fes.length > parseInt(arrays[4])){
 														fes.pop();
-													}	
-	
+													}
 											}else if(arrays[10]=="3"){ 
 												/**
 												 * TODO: FRECUENCIA DE PAGO: QUINCENAL
 												*/	
 												let cuotaD = arrays[8].replace(/\./g, ""),
-													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
-													tiempo = arrays[4];	
+													fechaBase = arrays[5] ? moment(arrays[5]).tz("America/Guatemala") : moment().tz("America/Guatemala"),
+													prox = fechaBase.format('YYYY-MM-DD'),
+													tiempo = arrays[4];
+													console.log(prox);
 
 												for(let k = 1; k < tiempo+1; k++){
 													let prox2 = moment(prox).add(15, 'days');
@@ -138,14 +142,15 @@ eje = function(arrays,origen,redisClient) {
 													fes.push({ "cp":cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;													
 												}
-											
 											} else if(arrays[10]=="4"){	
 												/**
 												 * TODO: FRECUENCIA DE PAGO: MENSUAL
 												*/	
 												let cuotaD = arrays[8].replace(/\./g, ""),
-													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
+													fechaBase = arrays[5] ? moment(arrays[5]).tz("America/Guatemala") : moment().tz("America/Guatemala"),
+													prox = fechaBase.format('YYYY-MM-DD'),
 													tiempo = arrays[4];
+													console.log(prox);
 
 												for(let k = 1; k < tiempo + 1; k++){
 													let prox2 = moment(prox).add(30, 'days');
@@ -153,7 +158,6 @@ eje = function(arrays,origen,redisClient) {
 													fes.push({ "cp":cuota,"ct":false,"fe":prox2,"pe":0, "pago":"" });
 													prox = prox2;
 												}
-												
 											} else if (arrays[10] == "5") {
 												/**
 												 * TODO: FRECUENCIA DE PAGO: PAGO CONFIGURABLE 4 PAGOS EN 25 DÍAS
@@ -178,12 +182,14 @@ eje = function(arrays,origen,redisClient) {
 												 * TODO: FRECUENCIA DE PAGO: PAGO CONFIGURABLE 3 PAGOS EN 30 DÍAS
 												*/	
 												let cuotaD = arrays[8].replace(/\./g, ""),
-													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
+													fechaBase = arrays[5] ? moment(arrays[5]).tz("America/Guatemala") : moment().tz("America/Guatemala"),
+													prox = fechaBase.format('YYYY-MM-DD'),
 													tiempo = arrays[4],
 													fechaFinal = moment(prox).add(30, 'days'),
 													interes = parseInt( arrays[7].replace(/\./g, "") ),
 													ganancia = (cuotaD * interes) / 100,
 													pagosDeInteres = String( Math.ceil( ganancia / 2) );
+													console.log(prox);
 																																			
 												for(let k = 1; k < tiempo + 1; k++){
 
@@ -200,8 +206,10 @@ eje = function(arrays,origen,redisClient) {
 												 * TODO: FRECUENCIA DE PAGO: CATORCENAL
 												*/	
 												let cuotaD = arrays[8].replace(/\./g, ""),
-													prox = moment().tz("America/Guatemala").format('YYYY-MM-DD'),
+													fechaBase = arrays[5] ? moment(arrays[5]).tz("America/Guatemala") : moment().tz("America/Guatemala"),
+													prox = fechaBase.format('YYYY-MM-DD'),
 													tiempo = arrays[4];	
+													console.log(prox);
 
 												for(let k = 1; k < tiempo+1; k++){
 													let prox2 = moment(prox).add(14, 'days');
@@ -220,7 +228,9 @@ eje = function(arrays,origen,redisClient) {
 												 * ? Si tiene cuotas a descontar
 												*/	
 												var desc = parseInt(arrays[6]);
-												let prox = moment().tz("America/Guatemala").format('YYYY-MM-DD');
+												let fechaBase = arrays[5] ? moment(arrays[5]).tz("America/Guatemala") : moment().tz("America/Guatemala");
+												let prox = fechaBase.format('YYYY-MM-DD');
+												console.log(prox);
 
 												if( desc > 0 ) {
 													for(d = 0; d < desc; d++){
@@ -260,10 +270,10 @@ eje = function(arrays,origen,redisClient) {
 															});
 														});
 													});
-												});			   												
+												});
 											}else{
 												reject([false,"8"]);
-											}											
+											}
 										}
 									});
 								});

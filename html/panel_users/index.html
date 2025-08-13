@@ -725,7 +725,7 @@
                             <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
                                 <form role="form">
                                     <div class="form-group"><label>Fecha</label> <input
-                                            id="fechaActual"
+                                            id="fechaActualContrato"
                                             type="date"
                                             placeholder=""
                                             class="form-control"></div>
@@ -758,7 +758,7 @@
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
-                            <div class="col-sm-6 col-md-3 col-xs-12">
+                            <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
                                     <div class="form-group"><label>Total de prestamo</label> <input onkeyup="format(this)" onchange="format(this)"
                                         id="monto_prestar_ya_admin"
@@ -768,10 +768,8 @@
                                     </div>
                                 </form>
                             </div>
-                            
-                            
-                            
-                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                                
+                            <div class="col-sm-6 col-md-4 col-xs-12">
                                 <form role="form">
                                     <label>Cuota a aplicar</label>
                                     <select class="form-control m-b" id="selector_cuotas_selec">
@@ -838,7 +836,7 @@
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-4 col-xs-12">
+                            <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
                                     <label>Frecuencia de pago</label>
                                     <select class="form-control m-b" id="selector_frecuencia">
@@ -854,13 +852,14 @@
                                 </form>
                             </div>
 
-                            <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
+                            <!-- ESTO AGREGUE PARA ESTUARDO HERRERA -->
+                            <div class="col-sm-6 col-md-2 col-xs-12">
                                 <form role="form">
-                                    <div class="form-group"><label>Fecha</label> <input
-                                            id="fechaActual"
-                                            type="date"
-                                            placeholder=""
-                                            class="form-control"></div>
+                                    <div class="form-group"><label>Fecha de inicio</label> <input
+                                        id="fechaActual"
+                                        type="date"
+                                        placeholder=""
+                                        class="form-control"></div>
                                 </form>
                             </div>
 
@@ -992,7 +991,7 @@
                             <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
                                 <form role="form">
                                     <div class="form-group"><label>Fecha</label> <input
-                                        id="fechaActual"
+                                        id="fechaActualAmpliacion"
                                         type="date"
                                         placeholder=""
                                         class="form-control"></div>
@@ -1091,7 +1090,7 @@
                             <div class="col-sm-6 col-md-2 col-xs-12" style="display:none;">
                                 <form role="form">
                                     <div class="form-group"><label>Fecha</label> <input
-                                            id="fechaActual"
+                                            id="fechaActual2"
                                             type="date"
                                             placeholder=""
                                             class="form-control"></div>
@@ -3440,8 +3439,10 @@
                         block.descontar = parseInt($("#cuota_descontar_sistema").val());
                         block.porcentaje = $("#utilidad_prestada_ampliacion").html();
                         block.quedo_cuota = $("#utilidad_cuota_ampliacion").html();
-                        block.dias = block.dias - block.descontar;                        
-                        if( block.descontar < block.dias ){
+                        block.dias = block.dias - block.descontar;
+                        debugger
+                        // 1
+                        if( block.dias >= block.descontar ){
             
                             if (window.localStorage.getItem("Money-vars-token") !== null) {
                                 block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3623,22 +3624,23 @@
                 block.asesor = $("#selector_asesores_lista").val();
                 block.monto_prestar = $("#monto_prestar_ya_admin").val();
                 block.frecuencia = $("#selector_frecuencia").val();
-                if (block.frecuencia == "5" || block.frecuencia == 5){ //Pago personalizado (25 días en 4 pagos)                    
+
+                if (block.frecuencia == "5" || block.frecuencia == 5){ //Pago personalizado (25 días en 4 pagos)
                     block.fechasCorrectas = validarRangoFechas( $("#PrimeraCuota").val(), $("#SegundaCuota").val(), $("#TerceraCuota").val(), $("#CuartaCuota").val() );
                     if( !block.fechasCorrectas ) {
                         toastr.warning("Las fechas de las cuotas no tienen un orden lógico", "Atención");
                         return;
-                    }                    
+                    }
                 } else {
                     block.dias = parseInt($("#selector_cuotas_selec").val());
                 }
-                
                 block.fecha_prestamo = $("#fechaActual").val();
                 block.descontar = parseInt( $("#cuota_descontar_sistema").val() != "" ? $("#cuota_descontar_sistema").val() : 0 );
                 block.porcentaje = $("#utilidad_prestada").html();
-                block.quedo_cuota = $("#utilidad_cuota").html();
-                block.diasTemp = block.dias - block.descontar;                        
-                if( block.descontar < block.diasTemp ){
+                block.quedo_cuota = $("#utilidad_cuota").html();    
+                debugger
+                // 2              
+                if( block.dias > block.descontar ){
     
                     if (window.localStorage.getItem("Money-vars-token") !== null) {
                         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -3732,9 +3734,10 @@
                 block.descontar = parseInt($("#cuota_descontar_sistema").val());
                 block.porcentaje = $("#utilidad_prestada_ampliacion").html();
                 block.quedo_cuota = $("#utilidad_cuota_ampliacion").html();
-                block.dias = block.dias - block.descontar;                        
-                if( block.descontar < block.dias ){
-    
+                bloc.dias = block.dias - block.descontar; 
+                debugger
+                // 3
+                if( block.dias >= block.descontar ){    
                     if (window.localStorage.getItem("Money-vars-token") !== null) {
                         block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
                     } else {

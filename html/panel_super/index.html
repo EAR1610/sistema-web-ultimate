@@ -3733,7 +3733,6 @@
         }
     });
 
-
     function ubicaciones_operaciones(){
         $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
         $("#lista_ubicacniones_div").css("display","initial");
@@ -6292,9 +6291,9 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }									
 	}
 
-    function recargarCalendar(datosa){        
+    function recargarCalendar(datosa){ 
+        console.log(datosa)       
         $('#calendar').fullCalendar("destroy");
-
         setTimeout(function () {
 
             $('#calendar').fullCalendar({
@@ -6305,9 +6304,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                 },
                 events: datosa
             });
-
         },1000);
-
     }
 
 	function clientes_mapa_zoon(idAsesor){
