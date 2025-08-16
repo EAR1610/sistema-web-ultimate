@@ -780,9 +780,13 @@
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span><span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level collapse">                        
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="javascript:crear_infor();">Registrar</a></li>                        
                         <li><a href="javascript:cliente_lista();">Consultar</a></li>
                     </ul>
+                </li>
+                <li>
+                    <a href="javascript:ubicaciones_operaciones();"><i class="fa fa-map-marker"></i> <span class="nav-label">Ubicaciones</span></a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-hand-holding-usd"></i> <span class="nav-label">Administración</span><span class="fa arrow"></span></a>
@@ -1540,6 +1544,471 @@
                     </div>
                 </div>
 
+                <div class="col-lg-12" id="lista_ubicacniones_div">
+                    <div class="col-lg-12">
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h5>Registro de ubicaciones</h5>
+                                    <button class="btn btn-primary btn-sm pull-right" id="limpiar_agrega" type="button" style="margin-top: -7px;">Limpiar</button>
+                            </div>
+                            <div class="ibox-content row" style="margin-left:0px;margin-right:0px;">
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_departamento" >
+                                    <label>Departamento</label>
+                                    <select class="form-control m-b" id="tipo_departamento">
+                                        <option value="0"></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_departamento" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar departamento</label> <input id="add_departamento_text" type="text" placeholder="Inserte nombre de departamento" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_ciudades" >
+                                    <label>Municipio</label>
+                                    <select class="form-control m-b" id="tipo_ciudades">
+                                        <option value="0"></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_ciudades" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar Municipio</label> <input id="add_ciudad_text" type="text" placeholder="Inserte nombre de ciudad" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="view_barrio" >
+                                    <label>Barrio</label>
+                                    <select class="form-control m-b" id="tipo_barrio">
+                                        <option value="0"></option>
+                                        <option value="add">Agregar nuevo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio" style="display:none;">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar barrio</label> <input id="add_barrio_text" type="text" placeholder="Inserte nombre del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                <!-- <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="number" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                                    </form>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                    <form role="form">
+                                        <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="number" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                                    </form>
+                                </div> -->
+                                <div class="col-sm-12 col-md-2" style="text-align: center;margin-top: 3%;">
+                                    <button class="btn btn-primary btn-block" id="crear_direccion" type="button" >Agregar</button>
+                                </div>
+                                <!-- <div class="col-sm-3 col-md-2 col-xs-6" style="text-align: center;margin-top: 3%;">
+                                    <button class="btn btn-danger btn-block" id="eliminar_direccion" type="button" >Eliminar</button>
+                                </div>                                 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal inmodal" id="popop_new_cliente" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div  class="modal-content animated bounceInRight modalete" style="left: -24%;width: 789px;margin: 30px auto;">
+                <div class="modal-header" style="text-align: inherit;padding: 1px 15px;">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Creación de cliente</h4>
+                </div>
+                <div class="modal-body row" style="margin-left: 0px;margin-right: 0px;">
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                        <img id="foto_m4m" src="../img/default.jpg"
+                             style="height: 111px;cursor:pointer;">
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                        <img id="foto_m1m" src="../img/foto_cedula_front.png"
+                             style="height: 111px;cursor:pointer;">
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                        <img id="foto_m2m" src="../img/foto_cedula_back.png"
+                             style="height:111px;cursor:pointer;">
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                        <img id="foto_m3m" src="../img/foto_resivo.png"
+                             style="width:167px;height:111px;cursor:pointer;">
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <label>Nacionalidad</label>
+                        <select class="form-control m-b" id="pais_selecionadom">
+                            <option value="1">Guatemala</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" id="letra_venezuelam">
+                        <label>Tipo</label>
+                        <select class="form-control m-b" id="tipo_letram">
+                            <option>V</option>
+                            <option>E</option>
+                            <option>J</option>
+                            <option>G</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-sm-6 col-md-6 col-xs-12" id="cedula_divm">
+                        <label>DPI</label>
+                        <div class="input-group"><input placeholder="Inserte su documento personal de identificación" id="numero_idm" type="text" maxlength="13" class="form-control" >
+                        <span class="input-group-append"> <button type="button" id="consultar_registram" class="btn btn-primary"><i class="fa fa-search"></i></button> </span></div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" >
+                        <form role="form">
+                            <div class="form-group"><label>Alias</label> <input id="alias_text" type="text" placeholder="" class="form-control">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
+                        <form role="form">
+                            <div class="form-group"><label>Primer nombre</label>
+                                <input id="nombre_id1m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control"
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
+                        <form role="form">
+                            <div class="form-group"><label>Segundo nombre</label>
+                                <input id="nombre_id2m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control"
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
+                        <form role="form">
+                            <div class="form-group"><label>Primer apellido</label>
+                                <input id="apellido_id1m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control"
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
+                        <form role="form">
+                            <div class="form-group"><label>Segundo apellido</label>
+                                <input id="apellido_id2m"
+                                    type="text"
+                                    placeholder=""
+                                    class="form-control"
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divm">
+                        <form role="form">
+                            <div class="form-group"><label>Dirección</label>
+                                <input id="direccion_ubicam"
+                                    type="text"
+                                    placeholder="Inserte la dirección"
+                                    class="form-control"
+                                ></div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <label>Departamento</label>
+                        <select class="form-control m-b" id="tipo_departamentom">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <label>Municipio</label>
+                        <select class="form-control m-b" id="tipo_ciudadesm">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <label>Barrio</label>
+                        <select class="form-control m-b" id="tipo_barriom">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <form role="form">
+                            <div class="form-group"><label>Telefono Movil</label>
+                                <input id="telefono_fijom"
+                                    type="text"
+                                    maxlength="8"
+                                    placeholder=""
+                                    class="form-control"
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <form role="form">
+                            <div class="form-group"><label>Telefono Fijo</label>
+                                <input id="telefono_celm"
+                                    type="text"
+                                    maxlength="8"
+                                    placeholder=""
+                                    class="form-control"
+                                >
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-xs-12">
+                        <form role="form">
+                            <div class="form-group"><label>Correo electronico</label> <input
+                                    id="correo_electronicom" type="email" placeholder="" class="form-control">
+                            </div>
+                        </form>
+                    </div>
+
+					<div class="col-sm-6 col-md-3 col-xs-12" style="margin-top: 4%;">
+                        <form role="form">
+                            <button class="btn btn-primary btn-sm" style="margin-left: 14px;" id="seguro_admin"
+                                    type="button">Por actualizacion
+                            </button>
+                        </form>
+                    </div>
+
+
+                    <div class="col-xs-12"  style="margin-top: 1px;margin-right: 4%;">
+                        <form role="form">
+                            <button class="btn btn-primary btn-sm" style="margin-left: 14px;" id="registro_finalm" type="button">Registrar en sistema</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                <div class="col-lg-12" id="create_clientes_listo">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Creación de cliente</h5>
+                        </div>
+                        <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                                <img id="foto_m4md" src="../img/default.jpg"
+                                     style="height: 111px;cursor:pointer;">
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                                <img id="foto_m1md" src="../img/foto_cedula_front.png"
+                                     style="height: 111px;cursor:pointer;">
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                                <img id="foto_m2md" src="../img/foto_cedula_back.png"
+                                     style="height:111px;cursor:pointer;">
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
+                                <img id="foto_m3md" src="../img/foto_resivo.png"
+                                     style="width:167px;height:111px;cursor:pointer;">
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <label>Nacionalidad</label>
+                                <select class="form-control m-b" id="pais_selecionadomd">
+                                    <option value="1">Guatemala</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" id="letra_venezuelamd">
+                                <label>Tipo</label>
+                                <select class="form-control m-b" id="tipo_letramd">
+                                    <option>V</option>
+                                    <option>E</option>
+                                    <option>J</option>
+                                    <option>G</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-sm-6 col-md-6 col-xs-6" id="cedula_divmd">
+                                <label>DPI</label>
+                                <div class="input-group"><input placeholder="Inserte su numero de documento de identificación" id="numero_idmd" type="text" maxlength="13" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <span class="input-group-append">
+                                    <button type="button" id="consultar_registramd" class="btn btn-primary"><i class="fa fa-search"></i></button> </span></div>
+                            </div>
+
+
+							<div class="col-sm-6 col-md-3 col-xs-12" >
+                                <form role="form">
+                                    <div class="form-group"><label>Alias</label> <input
+                                            id="alias_textd" type="text" placeholder="" class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
+                                <form role="form">
+                                    <div class="form-group"><label>Primer nombre</label>
+                                        <input id="nombre_id1md"
+                                            type="text"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
+                                <form role="form">
+                                    <div class="form-group"><label>Segundo nombre</label>
+                                        <input id="nombre_id2md"
+                                            type="text"
+                                            placeholder=""
+                                            class="form-control"
+                                        >
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
+                                <form role="form">
+                                    <div class="form-group"><label>Primer apellido</label>
+                                        <input id="apellido_id1md"
+                                            type="text"
+                                            placeholder=""
+                                            class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
+                                <form role="form">
+                                    <div class="form-group"><label>Segundo apellido</label>
+                                        <input id="apellido_id2md"
+                                            type="text"
+                                            placeholder=""
+                                            class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12" id="cedula_divmd">
+                                <form role="form">
+                                    <div class="form-group"><label>Dirección</label>
+                                        <input id="direccion_ubicamd"
+                                            type="text"
+                                            placeholder="Inserte la dirección"
+                                            class="form-control"
+                                        >
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <label>Departamento</label>
+                                <select class="form-control m-b" id="tipo_departamentomd">
+                                    <option value="">Seleccione</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <label>Municipio</label>
+                                <select class="form-control m-b" id="tipo_ciudadesmd">
+                                    <option value="">Seleccione</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <label>Barrio</label>
+                                <select class="form-control m-b" id="tipo_barriomd">
+                                    <option value="">Seleccione</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                <form role="form">
+                                    <div class="form-group"><label>Agregar latitud</label> <input id="add_barrio_lat_text" type="text" placeholder="Inserte latitud del barrio" class="form-control"></div>
+                                </form>
+                            </div>
+                            
+                            <div class="col-sm-6 col-md-4 col-xs-12" id="add_barrio">
+                                <form role="form">
+                                    <div class="form-group"><label>Agregar longitud</label> <input id="add_barrio_lon_text" type="text" placeholder="Inserte longitud del barrio" class="form-control"></div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Telefono Movil</label>
+                                        <input id="telefono_fijomd"
+                                            type="text"
+                                            maxlength="8"
+                                            placeholder=""
+                                            value=""
+                                            class="form-control"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                        >
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Telefono fijo</label>
+                                        <input id="telefono_celmd"
+                                            type="text"
+                                            maxlength="8"
+                                            value=""
+                                            placeholder=""
+                                            class="form-control"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                        >
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xs-12">
+                                <form role="form">
+                                    <div class="form-group"><label>Correo electronico</label> <input
+                                        id="correo_electronicomd" type="email" placeholder="Ingrese el correo" class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-xs-12"  style="margin-top: 3%;margin-right: 4%;">
+                                <form role="form">
+                                    <button class="btn btn-primary btn-sm" style="margin-left: 14px;" id="registro_finalmd"
+                                            type="button">Registrar en sistema
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal inmodal" id="modal_base" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog">
                     <div class="modal-content animated bounceInRight">
@@ -1903,6 +2372,71 @@
         location.href = "../index.html";
     }
 
+    $("#crear_direccion").click(function(){			
+			if($("#view_departamento").css("display")!=="none"){
+				block.depa = $("#tipo_departamento").val();
+			}else{
+				block.depa = $("#add_departamento_text").val();
+			}
+						
+			if($("#view_ciudades").css("display")!=="none"){
+				block.ciud = $("#tipo_ciudades").val();
+			}else{
+				block.ciud = $("#add_ciudad_text").val();
+			}
+						
+			if($("#view_barrio").css("display")!=="none"){
+				block.barr = $("#tipo_barrio").val();
+			}else{
+				block.barr = $("#add_barrio_text").val();
+			}
+			
+			if( block.depa !== "" && block.ciud !== "" && block.barr !== "" ) {
+								
+				if(window.localStorage.getItem("Money-vars-token")!==null){
+					block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+				}else{
+					block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+				}
+				
+				block.arrays = [ block.tokens[1], block.depa, block.ciud, block.barr ];
+				block.obj = { "r":"crea_direccion","d":block.arrays };
+				backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+					var valor = JSON.parse(salida);                    
+					if(!valor.e){
+						$("#add_barrio_lon_text").val("");
+						$("#add_barrio_lat_text").val("");
+						$("#add_barrio_text").val("");
+
+						$("#limpiar_agrega").click();
+						ubicaciones_operaciones();
+						toastr.success('Procesado con éxito','Atención!');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+					}
+				});
+				
+			} else {
+                toastr.warning('Faltan datos para registrar la ubicación','Atencion!');
+            }
+		});
+
+    $("#limpiar_agrega").click(function(){
+        $("#view_departamento").css("display","initial");
+        $("#view_ciudades").css("display","initial");
+        $("#view_barrio").css("display","initial");
+        $("#add_barrio").css("display","none");
+        $("#add_barrio_text").val("");
+        $("#add_departamento").css("display","none");
+        $("#add_departamento_text").val("");
+        $("#add_ciudades").css("display","none");
+        $("#add_ciudad_text").val("");
+        $("#tipo_barrio option[value=0]").attr("selected",true);
+        $("#tipo_ciudades option[value=0]").attr("selected",true);
+        $("#tipo_departamento option[value=0]").attr("selected",true);
+    });
+
     function informe_completo_cierre(){
 
         $("#fecha_busqueda_cobros_supervisor").val('');
@@ -1935,7 +2469,7 @@
         $("#configuracion_general_cuotas").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#liquidacion_page").css("display", "none");
-        $("#contratos_view").css("display", "none");
+        $("#contratos_view").css("display", "none");        
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
         $("#flotante2").css("display","none");
@@ -1972,7 +2506,7 @@
         $("#configuracion_general_cuotas").css("display", "none");
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
-        $("#contratos_view").css("display", "none");
+        $("#contratos_view").css("display", "none");        
         $("#cliente_lista_admi").css("display", "initial");
         $("#listado_liengenerela").html("");
         $("#googleMap").css("display","none");
@@ -2063,6 +2597,84 @@
             }
         });
     }
+
+    function ubicaciones_operaciones(){
+        $("#tipo_departamento").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
+        $("#lista_ubicacniones_div").css("display","initial");
+        $("#cliente_lista_admi").css("display", "none");
+        $("#contratos_view_eliminados").css("display", "none");
+        $("#lista_empresa_div").css("display","none");
+        $("#HistorialClientes").css("display","none");
+        $("#cobrar_couta").css("display","none");
+        $("#googleMap").css("display","none");
+        $("#crear_contrato_form").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");
+        $("#lista_ayu").css("display", "none");
+        $("#lista_sup").css("display", "none");
+        $("#lista_ase").css("display", "none");
+        $("#crear").css("display", "none");
+        $("#asig_supervidor").css("display", "none");
+        $("#lista_asi_ayu").css("display", "none");
+        $("#lista_asi_sup").css("display", "none");
+        $("#configuracion_general").css("display", "none");
+        $("#busqueda_asignaciones").css("display", "none");
+        $("#configuracion_general_cuotas").css("display", "none");
+        $("#liquidacion_page").css("display", "none");
+        $("#liquidacion_page2").css("display", "none");
+        $("#create_clientes_listo").css("display", "none");
+        $("#contratos_view").css("display", "none");
+        $("#consulta_cobros").css("display", "none");
+        $("#consulta_gastos").css("display", "none");
+        $("#consulta_renovaciones").css("display", "none");
+        $("#cierre_view").css("display", "none");
+        
+        if(window.localStorage.getItem("Money-vars-token")!==null){
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        }else{
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+        }
+        
+        block.arrays = [block.tokens[1]];
+        block.obj = {"r":"extraer_departamentos","d":block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+            var valor = JSON.parse(salida);
+            if(!valor.e){
+                block.lista = valor.d[1];
+                block.nuevo = "";
+                for(var e=0; e<block.lista.length; e++){
+                    block.nuevo = block.nuevo + '<option value="'+block.lista[e]+'">'+block.lista[e]+'</option>';
+                }
+                $("#tipo_departamento").html($("#tipo_departamento").html()+block.nuevo);
+            }
+        });
+    }
+
+    $("#tipo_barrio").change(function(){
+			if($("#tipo_barrio").val()=="add"){
+				$("#view_barrio").css("display","none");
+				$("#add_barrio").css("display","initial");
+			}else{
+			    block.departe = $("#tipo_departamento").val();
+			    block.cuidad = $("#tipo_ciudades").val();
+			    block.barrios = $("#tipo_barrio").val();
+
+                if(window.localStorage.getItem("Money-vars-token")!==null){
+                    block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+                }else{
+                    block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+                }
+
+                block.arrays = [block.tokens[1],block.departe,block.cuidad,block.barrios];
+                block.obj = {"r":"ver_direccion_root","d":block.arrays};
+                backend.conexionEnvio(JSON.stringify(block.obj),function(salida){
+                    var valor = JSON.parse(salida);
+                    if(!valor.e){
+                        $("#add_barrio_lat_text").val(valor.d[1]);
+                        $("#add_barrio_lon_text").val(valor.d[2]);
+                    }
+                });
+            }
+		});
 
     function editar_cliente( cedula ){
         block.unicos = JSON.parse( window.localStorage.getItem("Money-vars-cliente-"+cedula));
@@ -3122,6 +3734,37 @@
         });
     }
 
+    function eliminar_contrato(cedula, idEmpresa, idAsesor, numContratoCliente){
+        
+        swal({
+            title: "¿Desea eliminar el contrato?",
+            text: 'Es necesaria su confirmación, para eliminar este contrato. ¿Desea continuar?',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "¡Si!",
+            cancelButtonText: 'No',
+            closeOnConfirm: true
+        }, function () {
+            if (window.localStorage.getItem("Money-vars-token") !== null) {
+                block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+            } else {
+                block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+            }    
+    
+            block.arrays = [block.tokens[1], cedula, idEmpresa, idAsesor, numContratoCliente];        
+    
+            block.obj = {"r": "eliminar_contrato", "d": block.arrays};
+            backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+                var valor = JSON.parse(salida);
+                if (!valor.e) {
+                    toastr.success('Eliminado con exito', 'Atención!');				
+                    listado_contrato_datable()
+                }
+            });
+        });
+    }
+
     function listado_contrato_datable(){
         toastr.info('Se están consultando los datos de los asesores', 'Atención!');
         if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -3232,7 +3875,7 @@
         });
     }
 
-    function fijar_monto(cedula, nombre, fecha, prestado){            
+    function fijar_monto(cedula, nombre, fecha, prestado){  
         $("#cobrar_couta").css("display","block");
 		$("#cedula_elecion").css("display","none");
 		$("#status_prestamo").prop("disabled",false);
@@ -3348,7 +3991,7 @@
                     recargarCalendar(block.todosCal);    
 
                 } else {
-                    toastr.warning('No exite cuotas con este usuario', 'Atención!');
+                    toastr.warning('No existe cuotas con este usuario', 'Atención!');
                     $("#queda_debiendo").text("0");
                     $("#pago_prestame").text("0");
                     $("#deuda_prestame").text("0");
@@ -3362,7 +4005,7 @@
                 }
             });
         } else {
-            toastr.warning('No exite cuotas con este usuario', 'Atención!');
+            toastr.warning('No existe cuotas con este usuario', 'Atención!');
             $("#queda_debiendo").text("0");
             $("#pago_prestame").text("0");
             $("#deuda_prestame").text("0");
@@ -3545,17 +4188,69 @@
                     });
                 }
             }
-
             liqui(0,arrws);
         }
     }
 
     $("#lista_asesores_general3").change(function(){
-        if($("#lista_asesores_general3").val()!==""){
-            block.ase = $("#lista_asesores_general3").val();
-            $("#lista_enorme").html("");
-            listado_contrato_datable();
+        if (window.localStorage.getItem("Money-vars-token") !== null) {
+            block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+        } else {
+            block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
+
+        block.arrays = [ block.tokens[ 1 ],block.tokens[ 4 ],$("#lista_asesores_general3").val()];
+        block.obj = { "r": "down_geo", "d": block.arrays };        
+
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);
+            if (!valor.e) {
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
+                window.localStorage.setItem("Money-vars-tarjetas_old",JSON.stringify(valor.d[1]));
+                $("#cobrar_couta").css("display","none");
+                if($("#lista_asesores_general3").val()!==""){
+                    block.ase = $("#lista_asesores_general3").val();
+                    $("#lista_enorme").html("");            
+                    listado_contrato_datable();
+                }
+            } else {
+                $("#cobrar_couta").css("display","none");
+                toastr.warning('No hay contratos vigentes a este asesor', 'Atención!');
+                // Antes de agregar nuevas filas, limpia la tabla
+                $("#lista_enorme").empty();
+                block.oso = "";
+                
+                // Limpia la tabla
+                table.clear(); 
+                
+                $("#lista_enorme").append(block.oso);
+                $('#datatableContratos').DataTable({ 
+                    destroy: true,
+                    language: {
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:    "Mostrar _MENU_ elementos",
+                        info:           "Mostrando de _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos en total)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando registros...",
+                        zeroRecords:    "No se encontraron registros",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna de manera ascendente",
+                            sortDescending: ": activar para ordenar la columna de manera descendente"
+                        }
+                    }
+                });
+            }
+        });
     });
 
     $("#buscar_contra").keypress(function (e) {
@@ -3982,6 +4677,7 @@
         $("#liquidacion_page2").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#cobrar_couta").css("display","none");
         $("#consulta_gastos").css("display", "none");
@@ -4010,6 +4706,7 @@
         $("#liquidacion_page2").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#consulta_cobros").css("display", "none");
@@ -4305,6 +5002,13 @@
 				}
             });
 
+            setTimeout(function(){
+				$("#nombre_id1md").prop("disabled",false);
+				$("#nombre_id2md").prop("disabled",false);
+				$("#apellido_id1md").prop("disabled",false);
+				$("#apellido_id2md").prop("disabled",false);
+			},10000);
+
         } else {
             toastr.warning('Falta número de identificación', 'Atención!');
         }
@@ -4423,7 +5127,7 @@
 
     function extraer_ciudades() {
         block.depart = $("#tipo_departamento").val();
-        $("#tipo_ciudades").html('<option value=""></option>');
+        $("#tipo_ciudades").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -4488,6 +5192,7 @@
             if (!valor.e) {
                 block.lista = valor.d[1];
                 block.nuevo = "";
+                console.log(blocl.lista)
                 for (var e = 0; e < block.lista.length; e++) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
@@ -4540,7 +5245,7 @@
     function extraer_barrios() {
         block.depart = $("#tipo_departamento").val();
         block.cuidad = $("#tipo_ciudades").val();
-        $("#tipo_barrio").html('<option value=""></option>');
+        $("#tipo_barrio").html('<option value="0"></option><option value="add">Agregar nuevo</option>');
 
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
@@ -4558,6 +5263,7 @@
                 for (var e = 0; e < block.lista.length; e++) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
+                console.log(block.nuevo)
                 $("#tipo_barrio").html($("#tipo_barrio").html() + block.nuevo);
             }
         });
@@ -4632,14 +5338,27 @@
         });
     }
 
-    $("#tipo_ciudades").change(function () {
-        if ($("#tipo_ciudades").val() !== "") {
+    $("#tipo_ciudades").change(function(){
+        debugger;
+        if($("#tipo_ciudades").val()=="add"){
+            $("#view_ciudades").css("display","none");
+            $("#add_ciudades").css("display","initial");
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        } else {
             extraer_barrios();
         }
     });
 
     $("#tipo_departamento").change(function () {
-        if ($("#tipo_departamento").val() !== "") {
+        if($("#tipo_departamento").val()=="add"){
+            $("#view_departamento").css("display","none");
+            $("#add_departamento").css("display","initial");
+            $("#view_ciudades").css("display","none");
+            $("#add_ciudades").css("display","initial");
+            $("#view_barrio").css("display","none");
+            $("#add_barrio").css("display","initial");
+        }else{
             extraer_ciudades();
         }
     });
@@ -4663,6 +5382,7 @@
     });
 
     $("#tipo_departamentomd").change(function () {
+        console.log("Hola")
         if ($("#tipo_departamentomd").val() !== "") {
             extraer_ciudadesmd();
         }
@@ -4967,41 +5687,11 @@
         }
     });
 
-    $("#registro_finalmd").click(function () {
-        block.pais = $("#pais_selecionadomd").val();
-        block.reverso = window.sessionStorage.getItem("Money-vars-foto-id-reversomd");
-        block.normal = window.sessionStorage.getItem("Money-vars-foto-id-normalmd");
-        block.perfil = window.sessionStorage.getItem("Money-vars-foto-idmd");
-        block.fronatls = window.sessionStorage.getItem("Money-vars-foto-frontald");
-        if ($("#pais_selecionadomd").val() == "1") {
-            block.tipo = "C";
-        } else {
-            block.tipo = $("#tipo_letramd").val();
-        }
-        if(block.fronatls==null){
-            block.fronatls="no";
-        }
-        block.alias = $("#alias_textd").val();
-        block.numero = $("#numero_idmd").val();
-        block.nom1 = $("#nombre_id1md").val();
-        block.nom2 = $("#nombre_id2md").val();
-        block.ape1 = $("#apellido_id1md").val();
-        block.ape2 = $("#apellido_id2md").val();
-        block.direction = $("#direccion_ubicamd").val();
-        block.departamento = $("#tipo_departamentomd").val();
-        block.ciudad = $("#tipo_ciudadesmd").val();
-        block.barrio = $("#tipo_barriomd").val();
-        block.telefofijo = $("#telefono_fijomd").val();
-        block.telefomovil = $("#telefono_celmd").val();
-        block.correo = $("#correo_electronicomd").val();
-        block.asesorSuperAsis = "d";
-        block.monto = "No asignada";
-
-        if ($("#telefono_fijomd").val() == "") {
+    function insertar_cliente(){
+        if ($("#telefono_fijom").val() == "") {
             block.telefofijo = "0";
         }
-        
-                if (block.perfil == null) {
+        if (block.perfil == null) {
 			block.perfil = "default_profile_photo.jpg";
 		}
 		if (block.normal == null) {
@@ -5014,13 +5704,9 @@
             block.fronatls="default_invoice.png";
         }
 
-        if (block.perfil == null) {
-            toastr.warning('Falta adjuntar foto frontal del usuario', 'Atención!');
-        } else if (block.normal == null) {
-            toastr.warning('Falta adjuntar foto frontal de la cedula de identidad del usuario', 'Atención!');
-        } else if (block.reverso == null) {
-            toastr.warning('Falta adjuntar foto reverso de la cedula de identidad del usuario', 'Atención!');
-        } else if (block.numero == "") {
+		if(block.blo==1){
+			toastr.warning('Falta datos', 'Atención!');
+		} else if (block.numero == "") {
             toastr.warning('Falta insertar numero de cedula', 'Atención!');
         } else if (block.nom1 == "") {
             toastr.warning('Falta insertar primer nombre', 'Atención!');
@@ -5036,14 +5722,13 @@
             toastr.warning('Falta insertar barrio del usuario', 'Atención!');
         } else if (block.telefomovil == "") {
             toastr.warning('Falta telefono celular del cliente', 'Atención!');
-        } else if (block.asesorSuperAsis == "") {
-            toastr.warning('Falta seleccion de tipo del usuario', 'Atención!');
-        }else if ($("#selector_asesores_listad").val() == "") {
-            toastr.warning('Falta seleccion el asesor', 'Atención!');
-        }else {
-
+        }else{
             if (block.alias == "") {
                 block.alias = "No asignado";
+            }
+
+            if (block.correo == "") {
+                block.correo = "No asignado";
             }
 
             if (window.localStorage.getItem("Money-vars-token") !== null) {
@@ -5052,51 +5737,115 @@
                 block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
             }
 
-            block.estraa = $("#selector_asesores_listad").val();
-            block.estraaq = block.estraa.split("_");
-            block.estra = block.estraaq[0];
-            block.cedulasesor = block.estraaq[1];
-            block.fotoas = block.estraaq[2];
-            block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.asesorSuperAsis, block.monto, block.estra, block.alias, block.fronatls];
-
+            block.telefofijo = $("#telefono_fijomd").val();
+            block.telefomovil = $("#telefono_celmd").val();
+            $("#asesor_foto_selec").attr("src", block.fotoas);
+            $("#text_cedula_asesor").val(block.cedulasesor);
+            block.arrays = [block.tokens[1], block.perfil, block.normal, block.reverso, block.fronatls, block.pais, block.tipo, block.numero, block.nom1, block.nom2, block.ape1, block.ape2, block.direction, block.departamento, block.ciudad, block.barrio, block.telefofijo, block.telefomovil, block.correo, block.alias, block.lat, block.lon ];
+            
             block.obj = {"r": "crear_cliente_admin", "d": block.arrays};
             backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
                 var valor = JSON.parse(salida);
                 if (!valor.e) {
+
                     block.escrito = block.nom1 + " " + block.nom2 + " " + block.ape1 + " " + block.ape2;
+                    $("#text_nombre_cliente").val(block.escrito);
+                    $("#text_cedula_cliente").val(block.numero);
+                    $("#text_alias_cliente").prop("disabled", false);
                     window.sessionStorage.setItem("Money-vars-registrado", block.numero);
-                    window.sessionStorage.removeItem("Money-vars-foto-id-reversomd");
-                    window.sessionStorage.removeItem("Money-vars-foto-id-normalmd");
-                    $("#foto_user_clien").attr("src", window.sessionStorage.getItem("Money-vars-foto-idmd"));
-                    window.sessionStorage.removeItem("Money-vars-foto-idmd");
-                    window.sessionStorage.removeItem("Money-vars-foto-frontald");
-                    $("#telefono_fijomd").val("");
-                    $("#telefono_celmd").val("");
-                    $("#correo_electronicomd").val("");
-                    $("#tipo_cargomd option[value=a]").attr("selected", true);
-                    $("#pais_selecionadomd option[value='1']").attr("selected", true);
-                    $("#selector_asesores_listad option[value='']").attr("selected", true);
-                    $("#tipo_departamentomd option[value='']").attr("selected", true);
-                    $("#tipo_ciudadesmd option[value='']").attr("selected", true);
-                    $("#tipo_barriomd option[value='']").attr("selected", true);
-                    $("#numero_idmd").val("");
-                    $("#nombre_id1md").val("");
-                    $("#nombre_id2md").val("");
-                    $("#apellido_id1md").val("");
-                    $("#apellido_id2md").val("");
-                    $("#direccion_ubicamd").val("");
-                    $("#numero_idmd").prop("disabled", false);
-                    $("#letra_venezuelamd").css("display", "none");
-                    $("#foto_m1md").attr("src", "../img/foto_cedula_front.png");
-                    $("#foto_m4md").attr("src", "../img/default.jpg");
-                    $("#foto_m2md").attr("src", "../img/foto_cedula_back.png");
-                    $("#foto_m3md").attr("src", "../img/foto_resivo.png");
-                    $("#cedula_divmd").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
+                    window.sessionStorage.removeItem("Money-vars-foto-id-reversom");
+                    window.sessionStorage.removeItem("Money-vars-foto-id-normalm");
+                    $("#foto_user_clien").attr("src", window.sessionStorage.getItem("Money-vars-foto-idm"));
+                    window.sessionStorage.removeItem("Money-vars-foto-idm");
+                    window.sessionStorage.removeItem("Money-vars-foto-frontal");
+                    $("#telefono_fijom").val("");
+                    $("#telefono_celm").val("");
+                    $("#correo_electronicom").val("");
+                    $("#tipo_cargom option[value=a]").attr("selected", true);
+                    $("#pais_selecionadom option[value='1']").attr("selected", true);
+                    $("#tipo_departamentom option[value='']").attr("selected", true);
+                    $("#tipo_ciudadesm option[value='']").attr("selected", true);
+                    $("#tipo_barriom option[value='']").attr("selected", true);
+                    $("#numero_idm").val("");
+                    $("#nombre_id1m").val("");
+                    $("#nombre_id2m").val("");
+                    $("#apellido_id1m").val("");
+                    $("#apellido_id2m").val("");
+                    $("#direccion_ubicam").val("");
+                    $("#numero_idm").prop("disabled", false);
+                    $("#buscar_cedula_cliente").prop("disabled", true);
+                    $("#Inserte cedula").prop("disabled", true);
+                    $("#letra_venezuelam").css("display", "none");
+                    $("#foto_m1m").attr("src", "../img/default.jpg");
+                    $("#foto_m2m").attr("src", "../img/foto_cedula_front.png");
+                    $("#foto_m3m").attr("src", "../img/foto_cedula_back.png");
+                    $("#cedula_divm").removeClass("col-sm-6").removeClass("col-md-3").removeClass("col-xs-12").addClass("col-xs-6").addClass("col-sm-6").addClass("col-md-6");
+                    $("#popop_new_cliente").modal("hide");
                     toastr.success('Registrado correctamente', 'Atención!');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 }
             });
         }
+    }
 
+    $("#registro_finalmd").click(function () {
+        block.pais = $("#pais_selecionadomd").val();
+        block.reverso = window.sessionStorage.getItem("Money-vars-foto-id-reversomd");
+        block.normal = window.sessionStorage.getItem("Money-vars-foto-id-normalmd");
+        block.perfil = window.sessionStorage.getItem("Money-vars-foto-idmd");
+        block.fronatls = window.sessionStorage.getItem("Money-vars-foto-frontald");
+        if ($("#pais_selecionadomd").val() == "1") {
+            block.tipo = "C";
+        } else {
+            block.tipo = $("#tipo_letramd").val();
+        }
+
+		if (window.localStorage.getItem("Money-vars-token") !== null) {
+			block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
+		} else {
+			block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
+		}
+
+        if(block.fronatls==null){
+            block.fronatls="default_invoice.png";
+			block.blo = 2;
+        }
+
+        
+        block.alias = $("#alias_textd").val();
+        block.numero = $("#numero_idmd").val();
+        block.nom1 = $("#nombre_id1md").val();
+        block.nom2 = $("#nombre_id2md").val();
+        block.ape1 = $("#apellido_id1md").val();
+        block.ape2 = $("#apellido_id2md").val();
+        block.direction = $("#direccion_ubicamd").val();
+        block.departamento = $("#tipo_departamentomd").val();
+        block.ciudad = $("#tipo_ciudadesmd").val();
+        block.barrio = $("#tipo_barriomd").val();
+        block.telefofijo = $("#telefono_fijomd").val();
+        block.telefomovil = $("#telefono_celmd").val();
+        block.correo = $("#correo_electronicomd").val();
+        block.asesorSuperAsis = "d";
+        block.lat = $("#add_barrio_lat_text").val();
+        block.lon = $("#add_barrio_lon_text").val();
+        block.arrays = [ block.tokens[1] ];
+        block.obj = {"r": "verificar_ubicaciones", "d": block.arrays};
+        backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
+            var valor = JSON.parse(salida);            
+            if(!valor.e){
+                if( valor.d[1][18] === "1" ){                    
+                    if(block.lon.substr(0,1) !== "." && block.lat.substr(0,1) !== "." && block.lat !== "" && block.lon !== "" && block.lat.indexOf(".") >-1 && block.lon.indexOf(".") >- 1 && block.lon.indexOf("-") >- 1 && block.lat.indexOf("e") == -1 && block.lon.indexOf("e") == -1 && block.lat.indexOf(",") == -1 && block.lon.indexOf(",") == -1) {  
+                        insertar_cliente();                        
+                    } else{
+                        toastr.warning('Faltan datos para registrar o coordenadas erradas','Atención!');
+                    }
+                } else {
+                    insertar_cliente();                                        
+                }
+            }
+        })            
     });
 
     $("#crear_contrato_form_dos").css("display", "none");
@@ -5113,6 +5862,8 @@
     $("#liquidacion_page").css("display", "none");
     $("#liquidacion_page2").css("display", "none");
     $("#contratos_view").css("display", "block");
+    $("#lista_ubicacniones_div").css("display", "none");
+    $("#create_clientes_listo").css("display", "none");
     $("#cobrar_couta").css("display","none");
     $("#cierre_view").css("display", "none");
     $("#HistorialClientes").css("display","none");
@@ -5133,6 +5884,7 @@
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
 
@@ -5792,6 +6544,7 @@
         $("#liquidacion_page").css("display", "none");
         $("#create_clientes_listo").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
 
@@ -6026,6 +6779,7 @@
     } else {
         block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
     }
+
     $("#selector_asesores_listad").html("");
     block.listax2c = '<option value="">Seleccione</option>';
     block.lista = '';
@@ -6120,6 +6874,7 @@
         $("#liquidacion_page").css("display", "initial");
         $("#liquidacion_page2").css("display", "initial");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#consulta_cobros").css("display", "none");
@@ -6146,6 +6901,7 @@
         $("#liquidacion_page").css("display", "none");
         $("#liquidacion_page2").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
@@ -6180,6 +6936,7 @@
         $("#liquidacion_page").css("display", "none");
         $("#liquidacion_page2").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
@@ -6214,6 +6971,7 @@
         $("#liquidacion_page").css("display", "none");
         $("#liquidacion_page2").css("display", "none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#HistorialClientes").css("display","none");
         $("#cliente_lista_admi").css("display", "none");
         $("#googleMap").css("display","none");
@@ -6262,9 +7020,10 @@
     function crear_infor(){
         $("#HistorialClientes").css("display","none");
         $("#contratos_view").css("display", "none");
+        $("#lista_ubicacniones_div").css("display", "none");
         $("#cierre_view").css("display", "none");
         $("#crear_contrato_form").css("display", "none");
-        $("#crear_contrato_form_dos").css("display", "none");
+        $("#crear_contrato_form_dos").css("display", "none");        
         $("#lista_ayu").css("display", "none");
         $("#lista_sup").css("display", "none");
         $("#lista_ase").css("display", "none");
@@ -6278,7 +7037,8 @@
         $("#liquidacion_page").css("display", "none");
         $("#consulta_cobros").css("display", "none");
         $("#cobrar_couta").css("display","none");
-        $("#create_clientes_listo").css("display", "initial");
+        $("#cliente_lista_admi").css("display","none");
+        $("#create_clientes_listo").css("display", "initial");        
     }
 
     var actuesli = moment().format('DD/MM/YYYY');

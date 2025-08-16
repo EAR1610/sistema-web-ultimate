@@ -3549,8 +3549,7 @@
         location.href = "../index.html";
     }
 
-    $("#crear_direccion").click(function(){
-			
+    $("#crear_direccion").click(function(){			
 			if($("#view_departamento").css("display")!=="none"){
 				block.depa = $("#tipo_departamento").val();
 			}else{
@@ -3568,10 +3567,6 @@
 			}else{
 				block.barr = $("#add_barrio_text").val();
 			}
-			
-			// block.lat = $("#add_barrio_lat_text").val();
-			
-			// block.lon = $("#add_barrio_lon_text").val();
 			
 			if( block.depa !== "" && block.ciud !== "" && block.barr !== "" ) {
 								
@@ -3656,6 +3651,7 @@
     });
 
     $("#tipo_ciudades").change(function(){
+        debugger;
         if($("#tipo_ciudades").val()=="add"){
             $("#view_ciudades").css("display","none");
             $("#add_ciudades").css("display","initial");
@@ -5971,15 +5967,15 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         });
     }
 
-    $("#lista_asesores_general3").change(function(){        
+    $("#lista_asesores_general3").change(function(){
         if (window.localStorage.getItem("Money-vars-token") !== null) {
             block.tokens = JSON.parse(window.localStorage.getItem("Money-vars-token"));
         } else {
             block.tokens = JSON.parse(window.sessionStorage.getItem("Money-vars-token"));
         }
 
-        block.arrays = [ block.tokens[ 1 ],block.tokens[ 4 ],$("#lista_asesores_general3").val() ];         
-        block.obj = { "r": "down_geo", "d": block.arrays };        
+        block.arrays = [ block.tokens[ 1 ],block.tokens[ 4 ],$("#lista_asesores_general3").val() ];
+        block.obj = { "r": "down_geo", "d": block.arrays };
 
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
             var valor = JSON.parse(salida);
@@ -6147,7 +6143,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         });
     }  
 
-    function fijar_monto(cedula, nombre, fecha, prestado){            
+    function fijar_monto(cedula, nombre, fecha, prestado){         
         $("#cobrar_couta").css("display","block");
 		$("#cedula_elecion").css("display","none");
 		$("#status_prestamo").prop("disabled",false);
@@ -7648,7 +7644,7 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
         }
     });
 
-    $("#tipo_departamentomd").change(function () {
+    $("#tipo_departamentomd").change(function () {        
         if ($("#tipo_departamentomd").val() !== "") {
             extraer_ciudadesmd();
         }
@@ -7855,7 +7851,6 @@ function extraer_cobros_cierre(id_asesor, id_tabla) {
                     }, 1500);
                 }
             });
-
         }
     });
 

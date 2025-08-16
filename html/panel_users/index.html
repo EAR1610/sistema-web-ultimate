@@ -2046,16 +2046,16 @@
         if( window.localStorage.getItem("Configuracion") !== null ){
             block.configuracion = JSON.parse(window.localStorage.getItem("Configuracion"));
         } else {
-            block.configuracion = JSON.parse(window.sessionStorage.getItem("Configuracion"));        
+            block.configuracion = JSON.parse(window.sessionStorage.getItem("Configuracion"));
         }
                 
         if ( block.configuracion[19] == "1" ) block.obj = { "r": "down_geo2", "d": block.arrays };
-        else block.obj = { "r": "down_geo", "d": block.arrays };        
+        else block.obj = { "r": "down_geo", "d": block.arrays };
 
         backend.conexionEnvio(JSON.stringify(block.obj), function (salida) {
-            var valor = JSON.parse(salida);            
+            var valor = JSON.parse(salida);
             if (!valor.e) {
-                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.                
+                block.listao=valor.d[1]; //Obtiene la informaciòn de cada contrato.
                 var map;
                 var mapOptions = {
                     center: {lat: 16.930351030698695, lng: -89.8912385219706},                    
@@ -3263,6 +3263,7 @@
             var valor = JSON.parse(salida);
             if ( !valor.e && valor.d[1] !== null ) {
                 window.sessionStorage.setItem("Configuracion",valor.d[ 1 ] );
+                myMap();
             }
         });
 
@@ -4707,6 +4708,7 @@
                 for (var e = 0; e < block.lista.length; e++) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
+                console.log(block.nuevo)
                 $("#tipo_barrio").html($("#tipo_barrio").html() + block.nuevo);
             }
         });
@@ -6057,6 +6059,7 @@
 		});
 		
 		$("#tipo_ciudades").change(function(){
+             debugger;
 			if($("#tipo_ciudades").val()=="add"){
 				$("#view_ciudades").css("display","none");
 				$("#add_ciudades").css("display","initial");

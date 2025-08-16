@@ -15,7 +15,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t=="1" || decoded.t=="2"){
+				}else if(decoded.t=="1" || decoded.t=="2" || decoded.t=="4"){
 					/*
 						busco registro de contratos de la empresa idEmpresa
 					*/		

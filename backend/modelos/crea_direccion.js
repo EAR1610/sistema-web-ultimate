@@ -9,7 +9,7 @@ eje = function(arrays,origen,redisClient) {
 		var correo = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
 		/*
-		recibe token, departmaneto, ciudad, barrio
+			recibe token, departmaneto, ciudad, barrio
 		*/
 		
 		if ( arrays.length == 4 ){			
@@ -17,7 +17,7 @@ eje = function(arrays,origen,redisClient) {
 			jwt.verify(arrays[0], 'clWve-G*-9)1', function(err, decoded) {
 				if (err) {
 					reject([false,"1"]);
-				}else if(decoded.t == "0" || decoded.t == "2" || decoded.t == "1"){
+				}else if(decoded.t == "0" || decoded.t == "2" || decoded.t == "4" || decoded.t == "1"){
 					if(largoc.test( arrays[1]) && largoc.test(arrays[2]) && largoc.test(arrays[3]) ){
 						String.prototype.capitalize = function() {
 							return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
