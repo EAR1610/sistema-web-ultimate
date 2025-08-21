@@ -35,9 +35,16 @@
         }
     </script>
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
-
-    <script>
-       
+    <script>       
+    
+    const cloudName = "dfp8ka39x";
+    const URL_API = 'https://serviceimages.supersistemas.com.gt';
+    const PORT = '11352' 
+    
+    let reversomd = ""
+    let normalmd = ""
+    let idmd = ""
+    let frontald = ""
 
     function generarPDFPagare(
         nombre,
@@ -310,19 +317,19 @@
 
                     <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
                         <img id="foto_m4m" src="../img/default.jpg"
-                             style="height: 111px;cursor:pointer;">
+                             style="width:100px;height:150px;cursor:pointer;">
                     </div>
                     <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
                         <img id="foto_m1m" src="../img/foto_cedula_front.png"
-                             style="height: 111px;cursor:pointer;">
+                             style="width:150px;height:100px;cursor:pointer;">
                     </div>
                     <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
                         <img id="foto_m2m" src="../img/foto_cedula_back.png"
-                             style="height:111px;cursor:pointer;">
+                             style="width:150px;height:100px;cursor:pointer;">
                     </div>
                     <div class="col-sm-6 col-md-3 col-xs-12" align="center" style="padding: 3%;">
                         <img id="foto_m3m" src="../img/foto_resivo.png"
-                             style="width:167px;height:111px;cursor:pointer;">
+                             style="width:150px;height:100px;cursor:pointer;">
                     </div>
 
                     <div class="col-sm-6 col-md-3 col-xs-12">
@@ -695,8 +702,8 @@
                         </div>
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
-                            <div class="col-sm-6 col-md-2 col-xs-12 profile-image">
-                                <img src="../img/default.jpg" id="foto_user_clien" class="rounded-circle circle-border m-b-md" alt="profile">
+                            <div class="col-sm-6 col-md-2 col-xs-12 profile-image" style="display:flex; justify-content:center; align-items:center; margin-bottom: 10px;">
+                                <img src="../img/default.jpg" id="foto_user_clien" lt="profile" style="width: 200px; height: 150px;border-radius: 10px;">
                             </div>
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
@@ -968,7 +975,7 @@
                         <div class="ibox-content row" style="margin-right: 0px;margin-left: 0px;">
 
                             <div class="col-sm-6 col-md-2 col-xs-12 profile-image">
-                                <img src="../img/default.jpg" id="foto_user_clien" class="rounded-circle circle-border m-b-md" alt="profile">
+                                <img src="../img/default.jpg" id="foto_user_clien" class="rounded-circle circle-border m-b-md" alt="profile" style="width: 150px; height: 150px;">
                             </div>
 
                             <div class="form-group col-sm-6 col-md-2 col-xs-12">
@@ -1803,7 +1810,6 @@
         $("#cuotas_coun").focus();        
     }
     function renovar_contrato( cedula, id ){ 
-        console.log(cedula,id);
         window.localStorage.setItem("Money-vars-pagar",JSON.stringify([id,cedula]));
         ampliar_contrato_link( cedula, id );
     }
@@ -2735,7 +2741,7 @@
             });                
             var tarjeteroFiltrado = '';
             for (var i = 0; i < tarjetasFiltradas.length; i++) {
-                // tarjeteroFiltrado += '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+yes[i].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[i].id+String.fromCharCode(39)+')" type="button">Renovar Contrato</button></p></div></div>';
+                // tarjeteroFiltrado += '<div><div class="ibox-content"><p><butto|n class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p><p><button class="btn btn-warning btn-block" onclick="javascript:renovar_contrato('+String.fromCharCode(39)+yes[i].c+String.fromCharCode(39)+','+String.fromCharCode(39)+yes[i].id+String.fromCharCode(39)+')" type="button">Renovar Contrato</button></p></div></div>';
 
                 tarjeteroFiltrado += '<div><div class="ibox-content"><p><button class="btn btn-primary btn-block" onclick="javascript:monto_meter('+String.fromCharCode(39)+tarjetasFiltradas[i].c+String.fromCharCode(39)+');" type="button">Insertar monto</button></p><p> Nombre: '+tarjetasFiltradas[i].u+'</p><p> Monto: '+tarjetasFiltradas[i].m+'</p><p> Fecha: '+tarjetasFiltradas[i].f+'</p><p> DPI: '+tarjetasFiltradas[i].c+'</p><p> Celular: '+tarjetasFiltradas[i].e+'</p><p> Dirección: '+tarjetasFiltradas[i].d+'</p></div></div>';
             }
@@ -2743,10 +2749,6 @@
             $("#listado_tarjeta").css("display", "block");
         }
     });
-
-
-
-
 
     block.filein = document.querySelector("#foto1");
     block.filein.onchange = function (e) { 
@@ -2763,237 +2765,516 @@
         $("#foto_m1").attr("src", file.url);
     };
 
+    // versión firebase
+    // block.filein1m = document.querySelector("#foto1m");
+    // block.filein1m.onchange = function (e) {
+    //     block.files = e.target.files;
+    //     block.file = block.files[0];
+    //     ImageTools.resize(block.file, {
+    //         width: 259,
+    //         height: 259
+    //     }, function (blob, didItResize) {
+
+    //         var storageRef = firebase.storage().ref();
+    //         var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
+    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    //                 function(snapshot) {
+    //                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //                     switch (snapshot.state) {
+    //                         case firebase.storage.TaskState.PAUSED:
+    //                             break;
+    //                         case firebase.storage.TaskState.RUNNING:
+    //                             break;
+    //                     }
+    //                 }, function(error) {
+    //                     switch (error.code) {
+    //                         case 'storage/unauthorized':
+    //                             break;
+    //                         case 'storage/canceled':
+    //                             break;
+    //                         case 'storage/unknown':
+    //                             break;
+    //                     }
+    //                 }, function() {
+    //                     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    //                         $("#foto_m1m").attr("src", downloadURL);
+	// 						block.blo = 2;
+    //                         window.sessionStorage.setItem("Money-vars-foto-idm", downloadURL);
+    //                     });
+    //                 });
+
+    //     });
+    // };
+
     block.filein1m = document.querySelector("#foto1m");
     block.filein1m.onchange = function (e) {
         block.files = e.target.files;
         block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 259,
-            height: 259
-        }, function (blob, didItResize) {
 
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                    function(snapshot) {
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        switch (snapshot.state) {
-                            case firebase.storage.TaskState.PAUSED:
-                                break;
-                            case firebase.storage.TaskState.RUNNING:
-                                break;
-                        }
-                    }, function(error) {
-                        switch (error.code) {
-                            case 'storage/unauthorized':
-                                break;
-                            case 'storage/canceled':
-                                break;
-                            case 'storage/unknown':
-                                break;
-                        }
-                    }, function() {
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            $("#foto_m1m").attr("src", downloadURL);
-							block.blo = 2;
-                            window.sessionStorage.setItem("Money-vars-foto-idm", downloadURL);
-                        });
-                    });
+        // Validar formatos permitidos
+        if (!["image/jpeg", "image/png", "image/jpg"].includes(block.file.type)) {
+            toastr.warning("Formato no permitido. Solo JPG, JPEG o PNG", "Atención!");
+            return;
+        }
 
+        // Validar tamaño
+        if (block.file.size > 5 * 1024 * 1024) {
+            toastr.warning("La imagen no puede superar 5MB", "Atención!");
+            return;
+        }
+
+        // Si quieres mantener el resize que usabas con ImageTools
+        ImageTools.resize(block.file, { width: 259, height: 259 }, function (blob, didItResize) {
+            const formData = new FormData();
+            formData.append("file", blob);
+            formData.append("puerto", PORT);
+            formData.append("image", idmd);
+
+            fetch(`${URL_API}/imagenes/upload`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.url) {
+                    $("#foto_m1m").attr("src", data.url);
+                    block.blo = 2;
+
+                    // Guardar URL_API en sessionStorage como hacías antes
+                    window.sessionStorage.setItem("Money-vars-foto-idm", data.url);
+                } else {
+                    toastr.error("Error en la subida: " + JSON.stringify(data), "Atención!");
+                }
+            })
+            .catch(err => {
+                toastr.error("Error de conexión: " + err.message, "Atención!");
+            });
         });
     };
 
-    block.filein4m = document.querySelector("#foto4m");    
+    //--versión firebase
+    // block.filein4m = document.querySelector("#foto4m");
+    // block.filein4m.onchange = function (e) {
+    //     block.files = e.target.files;
+    //     block.file = block.files[0];
+    //     ImageTools.resize(block.file, {
+    //         width: 259,
+    //         height: 259
+    //     }, function (blob, didItResize) {
+    //         var storageRef = firebase.storage().ref();
+    //         var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
+    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,function(snapshot) {
+	// 			var progress = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100;
+	// 			switch (snapshot.state) {
+	// 				case firebase.storage.TaskState.PAUSED:
+	// 					break;
+	// 				case firebase.storage.TaskState.RUNNING:
+	// 					break;
+	// 			}
+	// 		}, function(error) {
+	// 			switch (error.code) {
+	// 				case 'storage/unauthorized':
+	// 					break;
+	// 				case 'storage/canceled':
+	// 					break;
+	// 				case 'storage/unknown':
+	// 					break;
+	// 			}
+	// 		}, function() {
+	// 			uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+	// 				$("#foto_m4m").attr("src", downloadURL);
+	// 				block.blo = 2;
+	// 				window.sessionStorage.setItem("Money-vars-foto-frontal", downloadURL);
+	// 			});
+	// 		});
+    //     });
+    // };
+
+    block.filein4m = document.querySelector("#foto4m");
     block.filein4m.onchange = function (e) {
         block.files = e.target.files;
         block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 259,
-            height: 259
-        }, function (blob, didItResize) {
 
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,function(snapshot) {
-				var progress = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100;
-				switch (snapshot.state) {
-					case firebase.storage.TaskState.PAUSED:
-						break;
-					case firebase.storage.TaskState.RUNNING:
-						break;
-				}
-			}, function(error) {
-				switch (error.code) {
-					case 'storage/unauthorized':
-						break;
-					case 'storage/canceled':
-						break;
-					case 'storage/unknown':
-						break;
-				}
-			}, function() {
-				uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-					$("#foto_m4m").attr("src", downloadURL);
-					block.blo = 2;
-					window.sessionStorage.setItem("Money-vars-foto-frontal", downloadURL);
-				});
-			});
+        // Validar formatos permitidos
+        if (!["image/jpeg", "image/png", "image/jpg"].includes(block.file.type)) {
+            toastr.warning("Formato no permitido. Solo JPG, JPEG o PNG", "Atención!");
+            return;
+        }
+
+        // Validar tamaño
+        if (block.file.size > 5 * 1024 * 1024) {
+            toastr.warning("La imagen no puede superar 5MB", "Atención!");
+            return;
+        }
+
+        // Si quieres mantener el resize que usabas con ImageTools
+        ImageTools.resize(block.file, { width: 259, height: 259 }, function (blob, didItResize) {
+            const formData = new FormData();
+            formData.append("file", blob);  
+            formData.append("puerto", PORT);
+            formData.append("image", frontald);
+
+            fetch(`${URL_API}/imagenes/upload`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.url) {
+                    $("#foto_m4m").attr("src", data.url);
+                    block.blo = 2;
+                    // Guardar URL_API en sessionStorage como hacías antes
+                    window.sessionStorage.setItem("Money-vars-foto-frontal", data.url);
+                } else {
+                    toastr.error("Error en la subida: " + JSON.stringify(data), "Atención!");
+                }
+            })
+            .catch(err => {
+                toastr.error("Error de conexión: " + err.message, "Atención!");
+            });
         });
     };
+
+    // Versión firebase
+    // block.filein2 = document.querySelector("#foto2");
+    // block.filein2.onchange = function (e) {
+    //     block.files = e.target.files;
+    //     block.file = block.files[0];
+    //     ImageTools.resize(block.file, {
+    //         width: 300,
+    //         height: 500
+    //     }, function (blob, didItResize) {
+
+    //         var storageRef = firebase.storage().ref();
+    //         var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    //                 function(snapshot) {
+    //                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //                     switch (snapshot.state) {
+    //                         case firebase.storage.TaskState.PAUSED:
+    //                             break;
+    //                         case firebase.storage.TaskState.RUNNING:
+    //                             break;
+    //                     }
+    //                 }, function(error) {
+    //                     switch (error.code) {
+    //                         case 'storage/unauthorized':
+    //                             break;
+    //                         case 'storage/canceled':
+    //                             break;
+    //                         case 'storage/unknown':
+    //                             break;
+    //                     }
+    //                 }, function() {
+    //                     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    //                         $("#foto_m2").attr("src", downloadURL);
+    //                         window.sessionStorage.setItem("Money-vars-foto-id-normal", downloadURL);
+    //                     });
+    //                 });
+
+    //     });        
+    // };
 
     block.filein2 = document.querySelector("#foto2");
     block.filein2.onchange = function (e) {
         block.files = e.target.files;
         block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 300,
-            height: 500
-        }, function (blob, didItResize) {
 
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                    function(snapshot) {
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        switch (snapshot.state) {
-                            case firebase.storage.TaskState.PAUSED:
-                                break;
-                            case firebase.storage.TaskState.RUNNING:
-                                break;
-                        }
-                    }, function(error) {
-                        switch (error.code) {
-                            case 'storage/unauthorized':
-                                break;
-                            case 'storage/canceled':
-                                break;
-                            case 'storage/unknown':
-                                break;
-                        }
-                    }, function() {
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            $("#foto_m2").attr("src", downloadURL);
-                            window.sessionStorage.setItem("Money-vars-foto-id-normal", downloadURL);
-                        });
-                    });
+        // Validar formatos permitidos
+        if (!["image/jpeg", "image/png", "image/jpg"].includes(block.file.type)) {
+            toastr.warning("Formato no permitido. Solo JPG, JPEG o PNG", "Atención!");
+            return;
+        }
 
-        });        
+        // Validar tamaño
+        if (block.file.size > 5 * 1024 * 1024) {
+            toastr.warning("La imagen no puede superar 5MB", "Atención!");
+            return;
+        }
+
+        // Si quieres mantener el resize que usabas con ImageTools
+        ImageTools.resize(block.file, { width: 259, height: 259 }, function (blob, didItResize) {
+            const formData = new FormData();
+            formData.append("file", blob);
+            formData.append("puerto", PORT);
+            formData.append("image", normalmd);
+
+            fetch(`${URL_API}/imagenes/upload`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.url) {
+                    $("#foto_m2").attr("src", data.url);
+                    block.blo = 2;
+
+                    // Guardar URL_API en sessionStorage como hacías antes
+                    window.sessionStorage.setItem("Money-vars-foto-id-normal", data.url);
+                } else {
+                    toastr.error("Error en la subida: " + JSON.stringify(data), "Atención!");
+                }
+            })
+            .catch(err => {
+                toastr.error("Error de conexión: " + err.message, "Atención!");
+            });
+        });
     };
+
+    // versión firebase
+    // block.filein2m = document.querySelector("#foto2m");
+    // block.filein2m.onchange = function (e) {
+    //     block.files = e.target.files;
+    //     block.file = block.files[0];
+    //     ImageTools.resize(block.file, {
+    //         width: 300,
+    //         height: 500
+    //     }, function (blob, didItResize) {
+
+    //         var storageRef = firebase.storage().ref();
+    //         var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
+    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    //                 function(snapshot) {
+    //                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //                     switch (snapshot.state) {
+    //                         case firebase.storage.TaskState.PAUSED:
+    //                             break;
+    //                         case firebase.storage.TaskState.RUNNING:
+    //                             break;
+    //                     }
+    //                 }, function(error) {
+    //                     switch (error.code) {
+    //                         case 'storage/unauthorized':
+    //                             break;
+    //                         case 'storage/canceled':
+    //                             break;
+    //                         case 'storage/unknown':
+    //                             break;
+    //                     }
+    //                 }, function() {
+    //                     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    //                         $("#foto_m2m").attr("src", downloadURL);
+	// 						block.blo = 2;
+    //                         window.sessionStorage.setItem("Money-vars-foto-id-normalm", downloadURL);
+    //                     });
+    //                 });
+    //     });
+    // };
 
     block.filein2m = document.querySelector("#foto2m");
     block.filein2m.onchange = function (e) {
         block.files = e.target.files;
         block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 300,
-            height: 500
-        }, function (blob, didItResize) {
 
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                    function(snapshot) {
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        switch (snapshot.state) {
-                            case firebase.storage.TaskState.PAUSED:
-                                break;
-                            case firebase.storage.TaskState.RUNNING:
-                                break;
-                        }
-                    }, function(error) {
-                        switch (error.code) {
-                            case 'storage/unauthorized':
-                                break;
-                            case 'storage/canceled':
-                                break;
-                            case 'storage/unknown':
-                                break;
-                        }
-                    }, function() {
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            $("#foto_m2m").attr("src", downloadURL);
-							block.blo = 2;
-                            window.sessionStorage.setItem("Money-vars-foto-id-normalm", downloadURL);
-                        });
-                    });
+        // Validar formatos permitidos
+        if (!["image/jpeg", "image/png", "image/jpg"].includes(block.file.type)) {
+            toastr.warning("Formato no permitido. Solo JPG, JPEG o PNG", "Atención!");
+            return;
+        }
+
+        // Validar tamaño
+        if (block.file.size > 5 * 1024 * 1024) {
+            toastr.warning("La imagen no puede superar 5MB", "Atención!");
+            return;
+        }
+
+        // Si quieres mantener el resize que usabas con ImageTools
+        ImageTools.resize(block.file, { width: 259, height: 259 }, function (blob, didItResize) {
+            const formData = new FormData();
+            formData.append("file", blob);
+            formData.append("puerto", PORT);
+            formData.append("image", normalmd);
+
+            fetch(`${URL_API}/imagenes/upload`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.url) {
+                    $("#foto_m2m").attr("src", data.url);
+                    block.blo = 2;
+
+                    // Guardar URL_API en sessionStorage como hacías antes
+                    window.sessionStorage.setItem("Money-vars-foto-id-normalm", data.url);
+                } else {
+                    toastr.error("Error en la subida: " + JSON.stringify(data), "Atención!");
+                }
+            })
+            .catch(err => {
+                toastr.error("Error de conexión: " + err.message, "Atención!");
+            });
         });
     };
+
+    // versión firebase
+    // block.filein3 = document.querySelector("#foto3");
+    // block.filein3.onchange = function (e) {
+    //     block.files = e.target.files;
+    //     block.file = block.files[0];
+    //     ImageTools.resize(block.file, {
+    //         width: 300,
+    //         height: 500
+    //     }, function (blob, didItResize) {
+
+    //         var storageRef = firebase.storage().ref();
+    //         var uploadTask = storageRef.child('images/' + blob.name).put(blob);
+    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    //         function(snapshot) {
+    //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //             switch (snapshot.state) {
+    //                 case firebase.storage.TaskState.PAUSED:
+    //                     break;
+    //                 case firebase.storage.TaskState.RUNNING:
+    //                     break;
+    //             }
+    //         }, function(error) {
+    //             switch (error.code) {
+    //                 case 'storage/unauthorized':
+    //                     break;
+    //                 case 'storage/canceled':
+    //                     break;
+    //                 case 'storage/unknown':
+    //                     break;
+    //             }
+    //         }, function() {
+    //             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    //                 $("#foto_m3").attr("src", downloadURL);
+    //                 window.sessionStorage.setItem("Money-vars-foto-id-reverso", downloadURL);
+    //             });
+    //         });
+    //     });
+    // };
 
     block.filein3 = document.querySelector("#foto3");
     block.filein3.onchange = function (e) {
         block.files = e.target.files;
         block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 300,
-            height: 500
-        }, function (blob, didItResize) {
 
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + blob.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-            function(snapshot) {
-                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED:
-                        break;
-                    case firebase.storage.TaskState.RUNNING:
-                        break;
+        // Validar formatos permitidos
+        if (!["image/jpeg", "image/png", "image/jpg"].includes(block.file.type)) {
+            toastr.warning("Formato no permitido. Solo JPG, JPEG o PNG", "Atención!");
+            return;
+        }
+
+        // Validar tamaño
+        if (block.file.size > 5 * 1024 * 1024) {
+            toastr.warning("La imagen no puede superar 5MB", "Atención!");
+            return;
+        }
+
+        // Si quieres mantener el resize que usabas con ImageTools
+        ImageTools.resize(block.file, { width: 259, height: 259 }, function (blob, didItResize) {
+            const formData = new FormData();
+            formData.append("file", blob);
+            formData.append("puerto", PORT);
+            formData.append("image", reversomd);
+
+            fetch(`${URL_API}/imagenes/upload`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.url) {
+                    $("#foto_m3").attr("src", data.url);
+                    block.blo = 2;
+
+                    // Guardar URL_API en sessionStorage como hacías antes
+                    window.sessionStorage.setItem("Money-vars-foto-id-reverso", data.url);
+                } else {
+                    toastr.error("Error en la subida: " + JSON.stringify(data), "Atención!");
                 }
-            }, function(error) {
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        break;
-                    case 'storage/canceled':
-                        break;
-                    case 'storage/unknown':
-                        break;
-                }
-            }, function() {
-                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                    $("#foto_m3").attr("src", downloadURL);
-                    window.sessionStorage.setItem("Money-vars-foto-id-reverso", downloadURL);
-                });
+            })
+            .catch(err => {
+                toastr.error("Error de conexión: " + err.message, "Atención!");
             });
-
         });
     };
+
+    // version firebase
+    // block.filein3m = document.querySelector("#foto3m");
+    // block.filein3m.onchange = function (e) {
+    //     block.files = e.target.files;
+    //     block.file = block.files[0];
+    //     ImageTools.resize(block.file, {
+    //         width: 300,
+    //         height: 500
+    //     }, function (blob, didItResize) {
+
+    //         var storageRef = firebase.storage().ref();
+    //         var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
+    //         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    //                 function(snapshot) {
+    //                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //                     switch (snapshot.state) {
+    //                         case firebase.storage.TaskState.PAUSED:
+    //                             break;
+    //                         case firebase.storage.TaskState.RUNNING:
+    //                             break;
+    //                     }
+    //                 }, function(error) {
+    //                     switch (error.code) {
+    //                         case 'storage/unauthorized':
+    //                             break;
+    //                         case 'storage/canceled':
+    //                             break;
+    //                         case 'storage/unknown':
+    //                             break;
+    //                     }
+    //                 }, function() {
+    //                     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    //                         $("#foto_m3m").attr("src", downloadURL);
+	// 						block.blo = 2;
+    //                         window.sessionStorage.setItem("Money-vars-foto-id-reversom", downloadURL);
+    //                     });
+    //                 });
+    //     });
+    // };
 
     block.filein3m = document.querySelector("#foto3m");
     block.filein3m.onchange = function (e) {
         block.files = e.target.files;
         block.file = block.files[0];
-        ImageTools.resize(block.file, {
-            width: 300,
-            height: 500
-        }, function (blob, didItResize) {
 
-            var storageRef = firebase.storage().ref();
-            var uploadTask = storageRef.child('images/' + block.file.name).put(blob);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                    function(snapshot) {
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        switch (snapshot.state) {
-                            case firebase.storage.TaskState.PAUSED:
-                                break;
-                            case firebase.storage.TaskState.RUNNING:
-                                break;
-                        }
-                    }, function(error) {
-                        switch (error.code) {
-                            case 'storage/unauthorized':
-                                break;
-                            case 'storage/canceled':
-                                break;
-                            case 'storage/unknown':
-                                break;
-                        }
-                    }, function() {
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            $("#foto_m3m").attr("src", downloadURL);
-							block.blo = 2;
-                            window.sessionStorage.setItem("Money-vars-foto-id-reversom", downloadURL);
-                        });
-                    });
+        // Validar formatos permitidos
+        if (!["image/jpeg", "image/png", "image/jpg"].includes(block.file.type)) {
+            toastr.warning("Formato no permitido. Solo JPG, JPEG o PNG", "Atención!");
+            return;
+        }
+
+        // Validar tamaño
+        if (block.file.size > 5 * 1024 * 1024) {
+            toastr.warning("La imagen no puede superar 5MB", "Atención!");
+            return;
+        }
+
+        // Si quieres mantener el resize que usabas con ImageTools
+        ImageTools.resize(block.file, { width: 259, height: 259 }, function (blob, didItResize) {
+            const formData = new FormData();
+            formData.append("file", blob); 
+            formData.append("puerto", PORT);
+            formData.append("image", reversomd);
+
+            fetch(`${URL_API}/imagenes/upload`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.url) {
+                    $("#foto_m3m").attr("src", data.url);
+                    block.blo = 2;
+
+                    // Guardar URL_API en sessionStorage como hacías antes
+                    window.sessionStorage.setItem("Money-vars-foto-id-reversom", data.url);
+                } else {
+                    toastr.error("Error en la subida: " + JSON.stringify(data), "Atención!");
+                }
+            })
+            .catch(err => {
+                toastr.error("Error de conexión: " + err.message, "Atención!");
+            });
         });
     };
 
@@ -4708,7 +4989,6 @@
                 for (var e = 0; e < block.lista.length; e++) {
                     block.nuevo = block.nuevo + '<option value="' + block.lista[e] + '">' + block.lista[e] + '</option>';
                 }
-                console.log(block.nuevo)
                 $("#tipo_barrio").html($("#tipo_barrio").html() + block.nuevo);
             }
         });
@@ -4831,7 +5111,6 @@
             block.obj = { "r": "buscar_cliente_nombre", "d": block.arrays };
             backend.conexionEnvio(JSON.stringify( block.obj ), function( salida ){
                 let valor = JSON.parse(salida);
-                console.log(valor)
                 if( !valor.e ){
                     let clientesInformacion = valor.d[1];
                     if( clientesInformacion.length > 0){
